@@ -7,8 +7,8 @@ LUCI_TITLE:=LuCI configuration app for luci-theme-aurora
 LUCI_DEPENDS:=+luci-base
 LUCI_PKGARCH:=all
 
-PKG_VERSION:=0.1.0
-PKG_RELEASE:=20251206
+PKG_VERSION:=0.1.1
+PKG_RELEASE:=20251217
 PKG_LICENSE:=Apache-2.0
 
 include $(TOPDIR)/feeds/luci/luci.mk

@@ -156,9 +156,9 @@ return view.extend({
         "oklch(0.58 0.13 189.632)",
         _("Primary Hover Color"),
       ],
-      ["dark_muted", "oklch(0.27 0 0)", _("Muted Color")],
-      ["dark_muted_text", "oklch(0.92 0 0)", _("Muted Text Color")],
-      ["dark_muted_hover", "oklch(0.32 0 0)", _("Muted Hover Color")],
+      ["dark_muted", "oklch(0.373 0.026 259.733)", _("Muted Color")],
+      ["dark_muted_text", "oklch(0.92 0.01 259.733)", _("Muted Text Color")],
+      ["dark_muted_hover", "oklch(0.395 0.026 259.733)", _("Muted Hover Color")],
       ["dark_accent", "oklch(0.35 0.12 25)", _("Accent Color")],
       ["dark_accent_text", "oklch(0.88 0.14 25)", _("Accent Text Color")],
       ["dark_destructive", "oklch(0.28 0.12 25/0.3)", _("Destructive Color")],
@@ -242,17 +242,17 @@ return view.extend({
     ];
 
     const darkStatusColorVars = [
-      ["dark_default", "oklch(0.269 0 0)", _("Default Color")],
-      ["dark_default_text", "oklch(0.985 0 0)", _("Default Text Color")],
+      ["dark_default", "oklch(0.372 0.044 257.287)", _("Default Color")],
+      ["dark_default_text", "oklch(0.985 0.01 257.287)", _("Default Text Color")],
       [
         "dark_default_border",
-        "oklch(0.275 0 0/0.3)",
+        "oklch(0.39 0.044 257.287/0.3)",
         _("Default Border Color"),
       ],
       ["dark_default_shadow", "oklch(0 0 0/0.3)", _("Default Shadow Color")],
-      ["dark_default_start", "oklch(0.28 0 0/0.8)", _("Default Start Color")],
-      ["dark_default_mid", "oklch(0.26 0 0/0.6)", _("Default Mid Color")],
-      ["dark_default_end", "oklch(0.28 0 0/0.8)", _("Default End Color")],
+      ["dark_default_start", "oklch(0.39 0.044 257.287/0.8)", _("Default Start Color")],
+      ["dark_default_mid", "oklch(0.355 0.044 257.287/0.6)", _("Default Mid Color")],
+      ["dark_default_end", "oklch(0.39 0.044 257.287/0.8)", _("Default End Color")],
       ["dark_success", "oklch(0.28 0.09 165/0.3)", _("Success Color")],
       ["dark_success_text", "oklch(0.92 0.09 160)", _("Success Text Color")],
       [
