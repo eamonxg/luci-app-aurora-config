@@ -463,6 +463,10 @@ return view.extend({
     so.default = "mega-menu";
     so.rmempty = false;
 
+    so = structureSubsection.option(form.Flag, "toolbar_enabled", _("Floating Toolbar"));
+    so.default = "1";
+    so.rmempty = false;
+
     so = structureSubsection.option(form.Value, "struct_spacing", _("Spacing"));
     so.default = "0.25rem";
     so.placeholder = "0.25rem";
