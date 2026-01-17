@@ -209,57 +209,99 @@ const createIconUploadButton = (ss, tmpPath) => {
 
 const createIconList = (ss) => {
   const so = ss.option(form.DummyValue, "_icon_list", _("Uploaded Icons"));
-  so.rawhtml = true;
-  so.cfgvalue = () => {
-    return L.resolveDefault(callListIcons(), { icons: [] }).then((response) => {
-      const icons = response?.icons || [];
-      if (icons.length === 0) return `<em>${_("No icons uploaded yet.")}</em>`;
+  so.load = () => L.resolveDefault(callListIcons(), { icons: [] });
+  so.cfgvalue = (section_id, data) => data?.icons || [];
+  so.render = function (option_index, section_id, in_table) {
+    return this.load(section_id).then((data) => {
+      const icons = this.cfgvalue(section_id, data);
 
-      let html = '<ul style="list-style: none; padding: 0; margin: 10px 0;">';
+      const container = E("div", { class: "cbi-value-field" });
+
+      if (icons.length === 0) {
+        container.appendChild(E("em", {}, _("No icons uploaded yet.")));
+        return E("div", { class: "cbi-value", "data-name": this.option }, [
+          E("label", { class: "cbi-value-title" }, this.title),
+          container,
+        ]);
+      }
+
+      const table = E("table", { class: "table" }, [
+        E("tr", { class: "tr table-titles" }, [
+          E("th", { class: "th" }, _("Icon Name")),
+          E("th", { class: "th center" }, _("Actions")),
+        ]),
+      ]);
+
       icons.forEach((icon) => {
-        html += `<li style="padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center;">
-					<span style="font-family: monospace;">${icon}</span>
-					<button class="cbi-button cbi-button-remove" data-icon="${icon}" style="margin-left: 10px;">${_(
-          "Delete"
-        )}</button>
-				</li>`;
-      });
-      html += "</ul>";
-
-      setTimeout(() => {
-        const container = document.querySelector(
-          '[data-name="_icon_list"] .cbi-value-field'
+        const deleteBtn = E(
+          "button",
+          {
+            class: "cbi-button cbi-button-remove",
+            click: ui.createHandlerFn(this, () => {
+              return ui.showModal(_("Delete Icon"), [
+                E("p", {}, _("Delete icon '%s'?").format(icon)),
+                E("div", { class: "right" }, [
+                  E(
+                    "button",
+                    { class: "btn", click: ui.hideModal },
+                    _("Cancel")
+                  ),
+                  " ",
+                  E(
+                    "button",
+                    {
+                      class: "btn cbi-button-negative",
+                      click: () => {
+                        ui.showModal(_("Deleting..."), [
+                          E("p", { class: "spinning" }, _("Deleting icon...")),
+                        ]);
+                        L.resolveDefault(callRemoveIcon(icon), {}).then(
+                          (ret) => {
+                            if (ret.result === 0) {
+                              ui.hideModal();
+                              ui.addNotification(
+                                null,
+                                E("p", _("Icon deleted: %s").format(icon))
+                              );
+                              window.location.reload();
+                            } else {
+                              ui.hideModal();
+                              ui.addNotification(
+                                null,
+                                E(
+                                  "p",
+                                  _("Failed to delete icon: %s").format(icon)
+                                ),
+                                "error"
+                              );
+                            }
+                          }
+                        );
+                      },
+                    },
+                    _("Delete")
+                  ),
+                ]),
+              ]);
+            }),
+          },
+          _("Delete")
         );
-        if (container && !container.dataset.listenerAttached) {
-          container.dataset.listenerAttached = "true";
-          container.addEventListener("click", (e) => {
-            if (
-              e.target.classList.contains("cbi-button-remove") &&
-              e.target.dataset.icon
-            ) {
-              const icon = e.target.dataset.icon;
-              if (confirm(_("Delete icon '%s'?").format(icon))) {
-                L.resolveDefault(callRemoveIcon(icon), {}).then((ret) => {
-                  if (ret.result === 0) {
-                    ui.addNotification(
-                      null,
-                      E("p", _("Icon deleted: %s").format(icon))
-                    );
-                    window.location.reload();
-                  } else {
-                    ui.addNotification(
-                      null,
-                      E("p", _("Failed to delete icon: %s").format(icon))
-                    );
-                  }
-                });
-              }
-            }
-          });
-        }
-      }, 100);
 
-      return html;
+        table.appendChild(
+          E("tr", { class: "tr" }, [
+            E("td", { class: "td", style: "font-family: monospace;" }, icon),
+            E("td", { class: "td center" }, deleteBtn),
+          ])
+        );
+      });
+
+      container.appendChild(table);
+
+      return E("div", { class: "cbi-value", "data-name": this.option }, [
+        E("label", { class: "cbi-value-title" }, this.title),
+        container,
+      ]);
     });
   };
 };
@@ -463,15 +505,31 @@ return view.extend({
     so.default = "mega-menu";
     so.rmempty = false;
 
-    so = structureSubsection.option(form.Flag, "toolbar_enabled", _("Floating Toolbar"));
-    so.default = "1";
-    so.rmempty = false;
-
     so = structureSubsection.option(form.Value, "struct_spacing", _("Spacing"));
     so.default = "0.25rem";
     so.placeholder = "0.25rem";
     so.rmempty = false;
     so.render = renderSpacingControl;
+
+    const toolbarSettingsSection = s.taboption(
+      "toolbar",
+      form.SectionValue,
+      "_toolbar_settings",
+      form.NamedSection,
+      "theme",
+      "aurora",
+      _("Toolbar Settings"),
+      _("Configure floating toolbar visibility and behavior.")
+    );
+    const toolbarSettingsSubsection = toolbarSettingsSection.subsection;
+
+    so = toolbarSettingsSubsection.option(
+      form.Flag,
+      "toolbar_enabled",
+      _("Enable Floating Toolbar")
+    );
+    so.default = "1";
+    so.rmempty = false;
 
     const iconSection = s.taboption(
       "toolbar",
