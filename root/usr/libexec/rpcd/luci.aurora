@@ -385,11 +385,11 @@ case "$1" in
 
 		if [ "$pkg_manager" = "opkg" ]; then
 			logger -t "luci.aurora" "install_package: using opkg"
-			opkg install "$file_path" >/dev/null 2>&1
+			output=$(opkg install "$file_path" 2>&1)
 			result=$?
 		elif [ "$pkg_manager" = "apk" ]; then
 			logger -t "luci.aurora" "install_package: using apk"
-			apk add --allow-untrusted "$file_path" >/dev/null 2>&1
+			output=$(apk add --allow-untrusted "$file_path" 2>&1)
 			result=$?
 		else
 			logger -t "luci.aurora" "install_package: unknown package manager"
@@ -399,6 +399,7 @@ case "$1" in
 
 		json_init
 		json_add_int "result" "$result"
+		json_add_string "output" "$output"
 		if [ $result -eq 0 ]; then
 			json_add_string "message" "Installation successful"
 			logger -t "luci.aurora" "install_package: success"

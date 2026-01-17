@@ -79,42 +79,48 @@ const executeUpdate = (packageName, repo, version, packageFilter) => {
 
       dlg.removeChild(dlg.lastChild);
       dlg.appendChild(
-        E(
-          "p",
-          { class: "spinning" },
-          _("Installing packages... This may take a few minutes.")
-        )
+        E("p", { class: "spinning" }, _("Installing packages..."))
       );
 
       const files = downloadResult.files.trim().split(/\s+/);
+      const outputs = [];
       let installPromise = Promise.resolve();
 
       files.forEach((file) => {
         installPromise = installPromise.then(() =>
-          callInstallPackage(packageName, file).catch((err) => {
-            if (err.message && err.message.includes("timed out")) {
-              return {
-                result: 0,
-                message: "Installation may have completed (timeout)",
-              };
-            }
-            throw err;
-          })
+          callInstallPackage(packageName, file)
+            .then((result) => {
+              if (result.output) outputs.push(result.output);
+              return result;
+            })
+            .catch((err) => {
+              if (err.message && err.message.includes("timed out")) {
+                return {
+                  result: 0,
+                  message: "Installation may have completed (timeout)",
+                };
+              }
+              throw err;
+            })
         );
       });
 
-      return installPromise;
+      return installPromise.then(() => outputs);
     })
-    .then(() => {
+    .then((outputs) => {
       dlg.removeChild(dlg.lastChild);
+
+      if (outputs && outputs.length > 0) {
+        dlg.appendChild(E("h5", {}, _("Installation Output")));
+        outputs.forEach((output) => {
+          if (output) {
+            dlg.appendChild(E("pre", {}, output));
+          }
+        });
+      }
+
       dlg.appendChild(
-        E(
-          "p",
-          {},
-          _(
-            "Installation completed! The page will reload to verify the update."
-          )
-        )
+        E("p", {}, _("Installation completed! The page will reload to verify the update."))
       );
       dlg.appendChild(
         E("div", { class: "right" }, [
