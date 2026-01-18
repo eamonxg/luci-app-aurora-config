@@ -184,9 +184,9 @@ case "$1" in
 			config_installed=$(opkg list-installed | grep "^luci-app-aurora-config " | awk '{print $3}')
 			config_i18n_packages=$(opkg list-installed | grep "^luci-i18n-aurora-config-" | awk -v main_ver="$config_installed" '{ver=$3; if(ver=="0" || ver=="") ver=main_ver; print $1 ":" ver}' | tr '\n' ',' | sed 's/,$//')
 		elif [ "$pkg_manager" = "apk" ]; then
-			theme_installed=$(apk info luci-theme-aurora 2>/dev/null | head -1 | sed -n 's/^luci-theme-aurora-\([^ ]*\) .*/\1/p')
-			config_installed=$(apk info luci-app-aurora-config 2>/dev/null | head -1 | sed -n 's/^luci-app-aurora-config-\([^ ]*\) .*/\1/p')
-			config_i18n_packages=$(apk info 2>/dev/null | grep "^luci-i18n-aurora-config-" | sed -n 's/^\(luci-i18n-aurora-config-[a-z_-]*\)-\([^ ]*\) .*/\1:\2/p' | awk -F: -v main_ver="$config_installed" '{ver=$2; if(ver=="0" || ver=="") ver=main_ver; print $1 ":" ver}' | tr '\n' ',' | sed 's/,$//')
+			theme_installed=$(apk list -I luci-theme-aurora 2>/dev/null | sed -n 's/^luci-theme-aurora-\([^ ]*\) .*/\1/p')
+			config_installed=$(apk list -I luci-app-aurora-config 2>/dev/null | sed -n 's/^luci-app-aurora-config-\([^ ]*\) .*/\1/p')
+			config_i18n_packages=$(apk list -I 2>/dev/null | grep "^luci-i18n-aurora-config-" | sed -n 's/^luci-i18n-aurora-config-\([a-z_-]*\)-\([^ ]*\) .*/luci-i18n-aurora-config-\1:\2/p' | awk -F: -v main_ver="$config_installed" '{ver=$2; if(ver=="0" || ver=="") ver=main_ver; print $1 ":" ver}' | tr '\n' ',' | sed 's/,$//')
 		fi
 
 		json_init
@@ -221,7 +221,7 @@ case "$1" in
 			if [ "$pkg_manager" = "opkg" ]; then
 				theme_installed=$(opkg list-installed | grep "^luci-theme-aurora " | awk '{print $3}')
 			elif [ "$pkg_manager" = "apk" ]; then
-				theme_installed=$(apk info luci-theme-aurora 2>/dev/null | head -1 | sed -n 's/^luci-theme-aurora-\([^ ]*\) .*/\1/p')
+				theme_installed=$(apk list -I luci-theme-aurora 2>/dev/null | sed -n 's/^luci-theme-aurora-\([^ ]*\) .*/\1/p')
 			fi
 			if [ -n "$theme_installed" ] && [ -n "$theme_latest" ]; then
 				theme_installed_ver=$(parse_version "$theme_installed")
@@ -236,7 +236,7 @@ case "$1" in
 			if [ "$pkg_manager" = "opkg" ]; then
 				config_installed=$(opkg list-installed | grep "^luci-app-aurora-config " | awk '{print $3}')
 			elif [ "$pkg_manager" = "apk" ]; then
-				config_installed=$(apk info luci-app-aurora-config 2>/dev/null | head -1 | sed -n 's/^luci-app-aurora-config-\([^ ]*\) .*/\1/p')
+				config_installed=$(apk list -I luci-app-aurora-config 2>/dev/null | sed -n 's/^luci-app-aurora-config-\([^ ]*\) .*/\1/p')
 			fi
 			if [ -n "$config_installed" ] && [ -n "$config_latest" ]; then
 				config_installed_ver=$(parse_version "$config_installed")
@@ -253,7 +253,7 @@ case "$1" in
 		if [ "$pkg_manager" = "opkg" ]; then
 			config_i18n_list=$(opkg list-installed 2>/dev/null | grep "^luci-i18n-aurora-config-" | awk '{print $1 ":" $3}')
 		elif [ "$pkg_manager" = "apk" ]; then
-			config_i18n_list=$(apk info 2>/dev/null | grep "^luci-i18n-aurora-config-" | sed -n 's/^\(luci-i18n-aurora-config-[a-z_-]*\)-\([^ ]*\) .*/\1:\2/p')
+			config_i18n_list=$(apk list -I 2>/dev/null | grep "^luci-i18n-aurora-config-" | sed -n 's/^luci-i18n-aurora-config-\([a-z_-]*\)-\([^ ]*\) .*/luci-i18n-aurora-config-\1:\2/p')
 		fi
 
 		if [ -n "$config_i18n_list" ]; then
