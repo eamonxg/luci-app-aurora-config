@@ -92,7 +92,7 @@ const renderColorPicker = function (option_index, section_id, in_table) {
         value: color.toString({ format: "hex" }),
         style:
           "margin-left: 8px; height: 2em; width: 3em; vertical-align: middle; cursor: pointer;",
-        title: _("Color Picker Helper"),
+        title: _("Click to select color visually"),
         change: () => (input.value = colorInput.value),
       });
       input.parentNode.appendChild(colorInput);
@@ -131,21 +131,21 @@ const createColorSections = (ss, mode, colorVars) => {
       key: "gradient",
       title: _("Gradient Colors"),
       description: _(
-        "Configure gradient colors used for backgrounds and progress bars.The theme background uses a three-color gradient, and progress bars use a two-color gradient.",
+        "Customize the gradient colors used throughout the interface. The page background uses a smooth three-color gradient (start, middle, end), while progress bars use a two-color gradient (start, end).",
       ),
     },
     {
       key: "semantic",
       title: _("Semantic Colors"),
       description: _(
-        "Semantic colors convey different operational behaviors, primarily used for buttons and badge elements. Each semantic type has two colors: the base color for backgrounds and the text color for content. The primary color affects form components (input, radio, checkbox, textarea, select, dynamic list) in hover, focus, and active states.",
+        "Define colors that represent different actions and behaviors. These colors are used for buttons and badges. Each type has two colors: a background color and a text color. The primary color also affects interactive form elements (inputs, checkboxes, radio buttons, etc.) when you hover over or interact with them.",
       ),
     },
     {
       key: "status",
       title: _("Status Colors"),
       description: _(
-        "Status colors indicate different system states and feedback (default, success, info, warning, error). Each status has two colors: the base color for backgrounds and the text color for content. Applied to tooltips, alert messages, labels, and legends.",
+        "Set colors that indicate system status and feedback messages. Each status type (default, success, info, warning, error) has two colors: a background color and a text color. These are used in tooltips, alert messages, status labels, and legends throughout the interface.",
       ),
     },
   ];
@@ -554,7 +554,7 @@ return view.extend({
       "aurora",
       _("Layout"),
       _(
-        "Layout settings control the navigation submenu display style and global component spacing.",
+        "Control how the navigation menu displays and adjust the spacing between interface elements. These settings affect the overall look and feel of the interface.",
       ),
     );
     const structureSubsection = structureSection.subsection;
@@ -569,7 +569,11 @@ return view.extend({
     so.default = "mega-menu";
     so.rmempty = false;
 
-    so = structureSubsection.option(form.Value, "struct_spacing", _("Spacing"));
+    so = structureSubsection.option(
+      form.Value,
+      "struct_spacing",
+      _("Element Spacing"),
+    );
     so.default = "0.25rem";
     so.placeholder = "0.25rem";
     so.rmempty = false;
@@ -583,7 +587,9 @@ return view.extend({
       "theme",
       "aurora",
       _("Toolbar Settings"),
-      _("Configure floating toolbar visibility and behavior."),
+      _(
+        "Enable or disable the floating toolbar that appears on the right side of the screen for quick access to common functions.",
+      ),
     );
     const toolbarSettingsSubsection = toolbarSettingsSection.subsection;
 
@@ -604,7 +610,7 @@ return view.extend({
       "aurora",
       _("Icon Management"),
       _(
-        "Upload and manage custom icons for toolbar items. Icons are stored in <code>/www/luci-static/aurora/images/</code>.",
+        "Upload custom icons for toolbar buttons and theme branding (browser tab logo). Supported formats include SVG, PNG, JPG, and more. Icons are stored in <code>/www/luci-static/aurora/images/</code> and can be used throughout the theme.",
       ),
     );
     const iconSubsection = iconSection.subsection;
@@ -619,7 +625,7 @@ return view.extend({
       "toolbar_item",
       _("Toolbar Items"),
       _(
-        "Configure the floating button group items. You can add, edit, remove, and reorder items by dragging.",
+        "Customize the buttons in your floating toolbar. Add new buttons, edit existing ones, remove unwanted items, or drag to reorder them. Each button needs a title, URL, and icon.",
       ),
     );
     const toolbarSubsection = toolbarSection.subsection;
@@ -633,17 +639,17 @@ return view.extend({
     so.rmempty = false;
     so.editable = true;
 
-    so = toolbarSubsection.option(form.Value, "title", _("Title"));
+    so = toolbarSubsection.option(form.Value, "title", _("Button Title"));
     so.rmempty = false;
-    so.placeholder = _("Button Title");
+    so.placeholder = _("e.g., System Settings");
     so.validate = (section_id, value) =>
-      !value?.trim() ? _("Title is required") : true;
+      !value?.trim() ? _("Button title cannot be empty") : true;
 
-    so = toolbarSubsection.option(form.Value, "url", _("URL"));
+    so = toolbarSubsection.option(form.Value, "url", _("Target URL"));
     so.rmempty = false;
-    so.placeholder = "/cgi-bin/luci/...";
+    so.placeholder = "/cgi-bin/luci/admin/...";
     so.validate = (section_id, value) =>
-      !value?.trim() ? _("URL is required") : true;
+      !value?.trim() ? _("URL cannot be empty") : true;
 
     so = toolbarSubsection.option(form.ListValue, "icon", _("Icon"));
     so.rmempty = false;
@@ -663,7 +669,7 @@ return view.extend({
       );
     };
     so.validate = (section_id, value) =>
-      !value?.trim() ? _("Icon is required") : true;
+      !value?.trim() ? _("Please select an icon") : true;
 
     return m.render().then((mapNode) => {
       const updateVersionLabel = (label, hasUpdate) => {

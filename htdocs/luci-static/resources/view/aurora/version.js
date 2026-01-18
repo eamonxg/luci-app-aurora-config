@@ -83,8 +83,14 @@ const handleUpdate = (ev) => {
   const displayName = ev.target.getAttribute("data-display-name");
   const packageFilter = ev.target.getAttribute("data-package-filter");
 
-  ui.showModal(_(`Update package <em>%h</em>`).format(displayName), [
-    E("p", {}, _(`Update to version <strong>%h</strong>?`).format(version)),
+  ui.showModal(_(`Update Package`), [
+    E(
+      "p",
+      {},
+      _(
+        `Are you sure you want to update <strong>%h</strong> to version <strong>%h</strong>?`,
+      ).format(displayName, version),
+    ),
     E("div", { class: "right" }, [
       E(
         "div",
@@ -110,8 +116,8 @@ const handleUpdate = (ev) => {
 };
 
 const executeUpdate = (packageName, repo, version, packageFilter) => {
-  const dlg = ui.showModal(_("Installing Update"), [
-    E("p", { class: "spinning" }, _("Downloading package...")),
+  const dlg = ui.showModal(_("Updating Package"), [
+    E("p", { class: "spinning" }, _("Downloading update files...")),
   ]);
 
   callDownloadPackage(repo, version, packageFilter || "")
@@ -122,7 +128,7 @@ const executeUpdate = (packageName, repo, version, packageFilter) => {
 
       dlg.removeChild(dlg.lastChild);
       dlg.appendChild(
-        E("p", { class: "spinning" }, _("Installing packages...")),
+        E("p", { class: "spinning" }, _("Installing update packages...")),
       );
 
       const files = downloadResult.files.trim().split(/\s+/);
@@ -140,7 +146,8 @@ const executeUpdate = (packageName, repo, version, packageFilter) => {
               if (err.message && err.message.includes("timed out")) {
                 return {
                   result: 0,
-                  message: "Installation may have completed (timeout)",
+                  message:
+                    "Installation completed (connection timeout during verification)",
                 };
               }
               throw err;
@@ -154,7 +161,7 @@ const executeUpdate = (packageName, repo, version, packageFilter) => {
       dlg.removeChild(dlg.lastChild);
 
       if (outputs && outputs.length > 0) {
-        dlg.appendChild(E("h5", {}, _("Installation Output")));
+        dlg.appendChild(E("h5", {}, _("Installation Details")));
         outputs.forEach((output) => {
           if (output) {
             dlg.appendChild(E("pre", {}, output));
@@ -167,7 +174,7 @@ const executeUpdate = (packageName, repo, version, packageFilter) => {
           "p",
           {},
           _(
-            "Installation completed! The page will reload to verify the update.",
+            "Update completed successfully! Please reload the page to see the changes. If the old version still appears, try a hard refresh (Ctrl+Shift+R or Cmd+Shift+R) or open an incognito/private window.",
           ),
         ),
       );
@@ -194,7 +201,7 @@ const executeUpdate = (packageName, repo, version, packageFilter) => {
         E(
           "p",
           { class: "alert-message error" },
-          _(`Installation failed: %s`).format(err.message || err),
+          _(`Update failed: %s`).format(err.message || err),
         ),
       );
       dlg.appendChild(
@@ -247,7 +254,7 @@ const createUpdateButton = (
       return E("span", { class: "label success" }, _("Up to date"));
     }
   } else {
-    return E("span", { class: "label info" }, _("Checking..."));
+    return E("span", { class: "label info" }, _("Checking for updates..."));
   }
 };
 
@@ -266,7 +273,7 @@ const updateVersionTable = (updateInfo) => {
   packages.forEach((pkg) => {
     const installed = versionData.installed[pkg.key] || _("Not installed");
     const i18nPackages = versionData.i18n[pkg.key] || "";
-    let latest = _("Checking...");
+    let latest = _("Checking for updates...");
     const i18nUpdateMap = {};
 
     if (updateInfo && updateInfo[pkg.key]) {
@@ -325,7 +332,7 @@ const updateVersionTable = (updateInfo) => {
   cbi_update_table(
     "#version-table",
     rows,
-    E("em", {}, _("No version information available")),
+    E("em", {}, _("No packages found. Please check your installation.")),
   );
 };
 
@@ -370,7 +377,9 @@ const checkForUpdates = (forceRefresh) => {
         E(
           "p",
           {},
-          _(`Failed to check for updates: %s`).format(err.message || err),
+          _(
+            `Failed to check for updates: %s. Please check your internet connection.`,
+          ).format(err.message || err),
         ),
         "error",
       );
@@ -400,7 +409,9 @@ return view.extend({
         E(
           "div",
           { class: "cbi-map-descr" },
-          _("Manage Aurora theme and configuration package versions."),
+          _(
+            "Check for and install updates for Aurora theme and configuration packages. Updates are downloaded from the official GitHub repository.",
+          ),
         ),
 
         E("div", { style: "margin: 1em 0" }, [
@@ -419,7 +430,7 @@ return view.extend({
 
         E("table", { id: "version-table", class: "table" }, [
           E("tr", { class: "tr cbi-section-table-titles" }, [
-            E("th", { class: "th col-3 left" }, _("Package")),
+            E("th", { class: "th col-3 left" }, _("Package Name")),
             E("th", { class: "th col-3 left" }, _("Installed Version")),
             E("th", { class: "th col-3 left" }, _("Latest Version")),
             E(
