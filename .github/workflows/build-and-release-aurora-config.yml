@@ -60,6 +60,7 @@ jobs:
 
       - name: Cache SDK
         id: cache
+        if: github.ref_type != 'tag'
         uses: actions/cache@v4
         with:
           path: ${{ env.TMP }}/${{ matrix.target.sdk_dir }}
