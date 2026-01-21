@@ -105,8 +105,9 @@ jobs:
             fi
           done
           ./scripts/feeds update -f base luci
-          ./scripts/feeds install luci-base luci-i18n-base-zh-cn luci-i18n-base-de luci-i18n-base-es luci-i18n-base-fr luci-i18n-base-id luci-i18n-base-it luci-i18n-base-ja luci-i18n-base-ko luci-i18n-base-nl luci-i18n-base-pl luci-i18n-base-ru luci-i18n-base-tr luci-i18n-base-uk luci-i18n-base-vi
+          ./scripts/feeds install luci-base luci-i18n-base-zh-cn luci-i18n-base-zh-tw luci-i18n-base-de luci-i18n-base-es luci-i18n-base-fr luci-i18n-base-id luci-i18n-base-it luci-i18n-base-ja luci-i18n-base-ko luci-i18n-base-nl luci-i18n-base-pl luci-i18n-base-ru luci-i18n-base-tr luci-i18n-base-uk luci-i18n-base-vi
           echo "CONFIG_LUCI_LANG_zh_Hans=y" >> .config
+          echo "CONFIG_LUCI_LANG_zh_Hant=y" >> .config
           echo "CONFIG_LUCI_LANG_de=y" >> .config
           echo "CONFIG_LUCI_LANG_es=y" >> .config
           echo "CONFIG_LUCI_LANG_fr=y" >> .config
