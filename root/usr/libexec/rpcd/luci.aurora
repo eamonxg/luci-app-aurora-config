@@ -3,9 +3,12 @@
 . /lib/functions.sh
 . /usr/share/libubox/jshn.sh
 
-readonly icon_path="/www/luci-static/aurora/images"
-readonly tmp_path="/tmp/aurora_icon.tmp"
-readonly download_path="/tmp/aurora_downloads"
+readonly ICON_PATH="/www/luci-static/aurora/images"
+readonly TMP_UPLOAD_PATH="/tmp/aurora_icon.tmp"
+readonly DOWNLOAD_PATH="/tmp/aurora_downloads"
+readonly CONFIG_FILE="/etc/config/aurora"
+readonly TEMPLATE_FILE="/usr/share/aurora/aurora.template"
+readonly LOG_TAG="luci.aurora"
 
 detect_package_manager() {
 	if command -v opkg >/dev/null 2>&1; then
@@ -56,23 +59,17 @@ version_compare() {
 	local v2_major=$1 v2_minor=$2 v2_patch=$3
 
 	if [ "$v1_major" -gt "$v2_major" ]; then
-		echo "1"
-		return
+		echo "1"; return
 	elif [ "$v1_major" -lt "$v2_major" ]; then
-		echo "-1"
-		return
+		echo "-1"; return
 	elif [ "$v1_minor" -gt "$v2_minor" ]; then
-		echo "1"
-		return
+		echo "1"; return
 	elif [ "$v1_minor" -lt "$v2_minor" ]; then
-		echo "-1"
-		return
+		echo "-1"; return
 	elif [ "$v1_patch" -gt "$v2_patch" ]; then
-		echo "1"
-		return
+		echo "1"; return
 	elif [ "$v1_patch" -lt "$v2_patch" ]; then
-		echo "-1"
-		return
+		echo "-1"; return
 	fi
 
 	local v1_suffix=$(echo "$v1" | sed -E 's/^[0-9]+\.[0-9]+\.[0-9]+//')
@@ -85,31 +82,25 @@ version_compare() {
 	elif [ "$v1_suffix" = "$v2_suffix" ]; then
 		echo "0"
 	else
-		if [ "$v1_suffix" \> "$v2_suffix" ]; then
-			echo "1"
-		else
-			echo "-1"
-		fi
+		[ "$v1_suffix" \> "$v2_suffix" ] && echo "1" || echo "-1"
 	fi
 }
+
 
 case "$1" in
 "list")
 	json_init
-	json_add_object "list_icons"
-	json_close_object
+	json_add_object "list_icons"; json_close_object
 	json_add_object "upload_icon"
 		json_add_string "filename" "filename"
 	json_close_object
 	json_add_object "remove_icon"
 		json_add_string "filename" "filename"
 	json_close_object
-	json_add_object "get_installed_versions"
-	json_close_object
-	json_add_object "check_updates"
-	json_close_object
-	json_add_object "get_system_info"
-	json_close_object
+	json_add_object "reset_defaults"; json_close_object
+	json_add_object "get_installed_versions"; json_close_object
+	json_add_object "check_updates"; json_close_object
+	json_add_object "get_system_info"; json_close_object
 	json_add_object "download_package"
 		json_add_string "repo" "repo"
 		json_add_string "version" "version"
@@ -122,61 +113,56 @@ case "$1" in
 	json_dump
 	json_cleanup
 	;;
+
 "call")
 	case "$2" in
+	"reset_defaults")
+		if [ -f "$TEMPLATE_FILE" ]; then
+			cp "$TEMPLATE_FILE" "$CONFIG_FILE"
+			chmod 644 "$CONFIG_FILE"
+			update_icon_cache_timestamp
+			echo '{ "result": 0 }'
+		else
+			echo '{ "result": 1, "error": "Template file not found at /usr/share/aurora/" }'
+		fi
+		;;
+
 	"list_icons")
 		json_init
 		json_add_array "icons"
-		if [ -d "$icon_path" ]; then
-			for file in "$icon_path"/*; do
+		if [ -d "$ICON_PATH" ]; then
+			for file in "$ICON_PATH"/*; do
 				[ -f "$file" ] && json_add_string "" "$(basename "$file")"
 			done
 		fi
 		json_close_array
-		json_dump
-		json_cleanup
+		json_dump; json_cleanup
 		;;
+
 	"upload_icon")
-		read -r input
-		json_load "$input"
-		json_get_var filename "filename"
-		json_cleanup
-
-		if dirname "$filename" | grep -q "\.\."; then
-			echo '{ "result": 255 }'
-			exit 255
-		fi
-
-		mkdir -p "$icon_path"
-
-		if mv "$tmp_path" "$icon_path/$filename" 2>"/dev/null"; then
-			chmod 0644 "$icon_path/$filename"
+		read -r input; json_load "$input"; json_get_var filename "filename"; json_cleanup
+		if dirname "$filename" | grep -q "\.\."; then echo '{ "result": 255 }'; exit 255; fi
+		
+		mkdir -p "$ICON_PATH"
+		if mv "$TMP_UPLOAD_PATH" "$ICON_PATH/$filename" 2>"/dev/null"; then
+			chmod 0644 "$ICON_PATH/$filename"
 			update_icon_cache_timestamp
 			echo '{ "result": 0 }'
 		else
 			echo '{ "result": 1 }'
 		fi
 		;;
+
 	"remove_icon")
-		read -r input
-		json_load "$input"
-		json_get_var filename "filename"
-		json_cleanup
-
-		if dirname "$filename" | grep -q "\.\."; then
-			echo '{ "result": 255 }'
-			exit 255
-		fi
-
-		rm -f "$icon_path/$filename"
+		read -r input; json_load "$input"; json_get_var filename "filename"; json_cleanup
+		if dirname "$filename" | grep -q "\.\."; then echo '{ "result": 255 }'; exit 255; fi
+		rm -f "$ICON_PATH/$filename"
 		update_icon_cache_timestamp
 		echo '{ "result": 0 }'
 		;;
+
 	"get_installed_versions")
-		read -r input 2>/dev/null || true
-
 		pkg_manager=$(detect_package_manager)
-
 		theme_installed=""
 		config_installed=""
 		config_i18n_packages=""
@@ -192,260 +178,127 @@ case "$1" in
 		fi
 
 		json_init
-		json_add_object "theme"
-			json_add_string "installed_version" "$theme_installed"
-		json_close_object
+		json_add_object "theme"; json_add_string "installed_version" "$theme_installed"; json_close_object
 		json_add_object "config"
 			json_add_string "installed_version" "$config_installed"
 			json_add_string "i18n_packages" "$config_i18n_packages"
 		json_close_object
-		json_dump
-		json_cleanup
+		json_dump; json_cleanup
 		;;
+
 	"check_updates")
-		read -r input 2>/dev/null || true
-
 		pkg_manager=$(detect_package_manager)
-
 		theme_api_url="https://api.github.com/repos/eamonxg/luci-theme-aurora/releases/latest"
 		config_api_url="https://api.github.com/repos/eamonxg/luci-app-aurora-config/releases/latest"
 
 		theme_response=$(wget -qO- --timeout=10 "$theme_api_url" 2>/dev/null)
 		config_response=$(wget -qO- --timeout=10 "$config_api_url" 2>/dev/null)
 
-		theme_latest=""
-		theme_update_available=0
-		config_latest=""
-		config_update_available=0
+		theme_latest=""; theme_update_available=0
+		config_latest=""; config_update_available=0
 
 		if [ -n "$theme_response" ]; then
 			theme_latest=$(echo "$theme_response" | jsonfilter -e '@.tag_name' | sed 's/^v//')
-			if [ "$pkg_manager" = "opkg" ]; then
-				theme_installed=$(opkg list-installed | grep "^luci-theme-aurora " | awk '{print $3}')
-			elif [ "$pkg_manager" = "apk" ]; then
-				theme_installed=$(apk list -I luci-theme-aurora 2>/dev/null | sed -n 's/^luci-theme-aurora-\([^ ]*\) .*/\1/p')
-			fi
+			[ "$pkg_manager" = "opkg" ] && theme_installed=$(opkg list-installed | grep "^luci-theme-aurora " | awk '{print $3}')
+			[ "$pkg_manager" = "apk" ] && theme_installed=$(apk list -I luci-theme-aurora 2>/dev/null | sed -n 's/^luci-theme-aurora-\([^ ]*\) .*/\1/p')
 			if [ -n "$theme_installed" ] && [ -n "$theme_latest" ]; then
-				theme_installed_ver=$(parse_version "$theme_installed")
-				theme_latest_ver=$(parse_version "$theme_latest")
-				comparison=$(version_compare "$theme_latest_ver" "$theme_installed_ver")
+				comparison=$(version_compare "$(parse_version "$theme_latest")" "$(parse_version "$theme_installed")")
 				[ "$comparison" = "1" ] && theme_update_available=1
 			fi
 		fi
 
 		if [ -n "$config_response" ]; then
 			config_latest=$(echo "$config_response" | jsonfilter -e '@.tag_name' | sed 's/^v//')
-			if [ "$pkg_manager" = "opkg" ]; then
-				config_installed=$(opkg list-installed | grep "^luci-app-aurora-config " | awk '{print $3}')
-			elif [ "$pkg_manager" = "apk" ]; then
-				config_installed=$(apk list -I luci-app-aurora-config 2>/dev/null | sed -n 's/^luci-app-aurora-config-\([^ ]*\) .*/\1/p')
-			fi
+			[ "$pkg_manager" = "opkg" ] && config_installed=$(opkg list-installed | grep "^luci-app-aurora-config " | awk '{print $3}')
+			[ "$pkg_manager" = "apk" ] && config_installed=$(apk list -I luci-app-aurora-config 2>/dev/null | sed -n 's/^luci-app-aurora-config-\([^ ]*\) .*/\1/p')
 			if [ -n "$config_installed" ] && [ -n "$config_latest" ]; then
-				config_installed_ver=$(parse_version "$config_installed")
-				config_latest_ver=$(parse_version "$config_latest")
-				comparison=$(version_compare "$config_latest_ver" "$config_installed_ver")
+				comparison=$(version_compare "$(parse_version "$config_latest")" "$(parse_version "$config_installed")")
 				[ "$comparison" = "1" ] && config_update_available=1
 			fi
 		fi
 
-	config_i18n_updates=""
-	if [ -n "$config_latest" ]; then
-		if [ "$pkg_manager" = "opkg" ]; then
-			config_i18n_list=$(opkg list-installed 2>/dev/null | grep "^luci-i18n-aurora-config-" | awk '{print $1 ":" $3}')
-		elif [ "$pkg_manager" = "apk" ]; then
-			config_i18n_list=$(apk list -I 2>/dev/null | grep "^luci-i18n-aurora-config-" | sed -n 's/^luci-i18n-aurora-config-\([a-z_-]*\)-\([^ ]*\) .*/luci-i18n-aurora-config-\1:\2/p')
-		fi
-
-		if [ -n "$config_i18n_list" ]; then
+		config_i18n_updates=""
+		if [ -n "$config_latest" ]; then
+			[ "$pkg_manager" = "opkg" ] && config_i18n_list=$(opkg list-installed 2>/dev/null | grep "^luci-i18n-aurora-config-" | awk '{print $1 ":" $3}')
+			[ "$pkg_manager" = "apk" ] && config_i18n_list=$(apk list -I 2>/dev/null | grep "^luci-i18n-aurora-config-" | sed -n 's/^luci-i18n-aurora-config-\([a-z_-]*\)-\([^ ]*\) .*/luci-i18n-aurora-config-\1:\2/p')
+			
 			for item in $config_i18n_list; do
-				pkg_name=$(echo "$item" | cut -d: -f1)
-				pkg_ver=$(echo "$item" | cut -d: -f2)
-				[ -z "$pkg_name" ] && continue
-
+				pkg_name=$(echo "$item" | cut -d: -f1); pkg_ver=$(echo "$item" | cut -d: -f2)
 				lang_code=$(echo "$pkg_name" | sed 's/^luci-i18n-aurora-config-//')
-
 				if [ "$pkg_manager" = "apk" ]; then
 					latest_i18n_pkg=$(echo "$config_response" | jsonfilter -e '@.assets[*].name' | grep "^luci-i18n-aurora-config-${lang_code}-.*\.apk$" | head -1)
-					if [ -n "$latest_i18n_pkg" ]; then
-						latest_i18n_ver=$(echo "$latest_i18n_pkg" | sed -n "s/^luci-i18n-aurora-config-${lang_code}-\(.*\)\.apk$/\1/p")
-					else
-						latest_i18n_ver=""
-					fi
+					latest_i18n_ver=$(echo "$latest_i18n_pkg" | sed -n "s/^luci-i18n-aurora-config-${lang_code}-\(.*\)\.apk$/\1/p")
 				else
 					latest_i18n_pkg=$(echo "$config_response" | jsonfilter -e '@.assets[*].name' | grep "^luci-i18n-aurora-config-${lang_code}_.*\.ipk$" | head -1)
-					if [ -n "$latest_i18n_pkg" ]; then
-						latest_i18n_ver=$(echo "$latest_i18n_pkg" | sed -n "s/^luci-i18n-aurora-config-${lang_code}_\(.*\)_all\.ipk$/\1/p")
-					else
-						latest_i18n_ver=""
-					fi
+					latest_i18n_ver=$(echo "$latest_i18n_pkg" | sed -n "s/^luci-i18n-aurora-config-${lang_code}_\(.*\)_all\.ipk$/\1/p")
 				fi
-
-				if [ -n "$latest_i18n_ver" ] && [ "$latest_i18n_ver" != "$pkg_ver" ]; then
-					config_i18n_updates="${config_i18n_updates}${pkg_name}:1,"
-				else
-					config_i18n_updates="${config_i18n_updates}${pkg_name}:0,"
-				fi
+				[ -n "$latest_i18n_ver" ] && [ "$latest_i18n_ver" != "$pkg_ver" ] && config_i18n_updates="${config_i18n_updates}${pkg_name}:1," || config_i18n_updates="${config_i18n_updates}${pkg_name}:0,"
 			done
 			config_i18n_updates=$(echo "$config_i18n_updates" | sed 's/,$//')
 		fi
-	fi
-
-	json_init
-	json_add_object "theme"
-		json_add_string "latest_version" "$theme_latest"
-		json_add_boolean "update_available" "$theme_update_available"
-	json_close_object
-	json_add_object "config"
-		json_add_string "latest_version" "$config_latest"
-		json_add_string "i18n_updates" "$config_i18n_updates"
-		json_add_boolean "update_available" "$config_update_available"
-	json_close_object
-
-	json_dump
-	json_cleanup
-		;;
-	"get_system_info")
-		read -r input 2>/dev/null || true
-
-		logger -t "luci.aurora" "get_system_info: called"
-
-		local pkg_manager=$(detect_package_manager)
-		local lang=$(get_system_lang)
-
-		logger -t "luci.aurora" "get_system_info: pkg_manager=$pkg_manager, lang=$lang"
 
 		json_init
-		json_add_string "package_manager" "$pkg_manager"
-		json_add_string "language" "$lang"
-		json_dump
-		json_cleanup
+		json_add_object "theme"; json_add_string "latest_version" "$theme_latest"; json_add_boolean "update_available" "$theme_update_available"; json_close_object
+		json_add_object "config"; json_add_string "latest_version" "$config_latest"; json_add_string "i18n_updates" "$config_i18n_updates"; json_add_boolean "update_available" "$config_update_available"; json_close_object
+		json_dump; json_cleanup
 		;;
+
+	"get_system_info")
+		json_init
+		json_add_string "package_manager" "$(detect_package_manager)"
+		json_add_string "language" "$(get_system_lang)"
+		json_dump; json_cleanup
+		;;
+
 	"download_package")
-		read -r input
-		json_load "$input"
-		json_get_var repo "repo"
-		json_get_var version "version"
-		json_get_var package_filter "package_filter"
-		json_cleanup
-
-		mkdir -p "$download_path"
-
+		read -r input; json_load "$input"; json_get_var repo "repo"; json_get_var version "version"; json_get_var package_filter "package_filter"; json_cleanup
+		mkdir -p "$DOWNLOAD_PATH"
 		tag_name="v$version"
 		api_url="https://api.github.com/repos/eamonxg/$repo/releases/tags/$tag_name"
 		response=$(wget -qO- --timeout=10 "$api_url" 2>/dev/null)
-
-		if [ -z "$response" ]; then
-			echo '{ "error": "Failed to fetch release info", "result": 1 }'
-			exit 1
-		fi
+		[ -z "$response" ] && { echo '{ "error": "Failed to fetch release info", "result": 1 }'; exit 1; }
 
 		pkg_manager=$(detect_package_manager)
-		lang=$(get_system_lang)
-		package_name=""
-		case "$repo" in
-			"luci-theme-aurora")
-				package_name="luci-theme-aurora"
-				;;
-			"luci-app-aurora-config")
-				package_name="luci-app-aurora-config"
-				;;
-		esac
-
-		file_ext="ipk"
-		[ "$pkg_manager" = "apk" ] && file_ext="apk"
-
+		package_name=""; [ "$repo" = "luci-theme-aurora" ] && package_name="luci-theme-aurora"; [ "$repo" = "luci-app-aurora-config" ] && package_name="luci-app-aurora-config"
+		file_ext="ipk"; [ "$pkg_manager" = "apk" ] && file_ext="apk"
 		download_url="https://github.com/eamonxg/$repo/releases/download/$tag_name"
 		downloaded_files=""
 
 		if [ -n "$package_filter" ]; then
-			if [ "$pkg_manager" = "apk" ]; then
-				specific_pkg=$(echo "$response" | jsonfilter -e '@.assets[*].name' | grep "^${package_filter}-.*\.${file_ext}$" | head -1)
-			else
-				specific_pkg=$(echo "$response" | jsonfilter -e '@.assets[*].name' | grep "^${package_filter}_.*\.${file_ext}$" | head -1)
-			fi
-			if [ -n "$specific_pkg" ]; then
-				wget -q -O "$download_path/$specific_pkg" "$download_url/$specific_pkg" 2>/dev/null && downloaded_files="$download_path/$specific_pkg"
-			fi
+			[ "$pkg_manager" = "apk" ] && filter_pkg=$(echo "$response" | jsonfilter -e '@.assets[*].name' | grep "^${package_filter}-.*\.${file_ext}$" | head -1) || filter_pkg=$(echo "$response" | jsonfilter -e '@.assets[*].name' | grep "^${package_filter}_.*\.${file_ext}$" | head -1)
+			[ -n "$filter_pkg" ] && wget -q -O "$DOWNLOAD_PATH/$filter_pkg" "$download_url/$filter_pkg" 2>/dev/null && downloaded_files="$DOWNLOAD_PATH/$filter_pkg"
 		else
-			if [ "$pkg_manager" = "apk" ]; then
-				main_pkg=$(echo "$response" | jsonfilter -e '@.assets[*].name' | grep "^${package_name}-.*\.${file_ext}$" | grep -v "i18n" | head -1)
-			else
-				main_pkg=$(echo "$response" | jsonfilter -e '@.assets[*].name' | grep "^${package_name}_.*\.${file_ext}$" | grep -v "i18n" | head -1)
-			fi
-
-			if [ -n "$main_pkg" ]; then
-				wget -q -O "$download_path/$main_pkg" "$download_url/$main_pkg" 2>/dev/null && downloaded_files="$download_path/$main_pkg"
-			fi
-
-			langs=""
-			if [ -f /etc/config/luci ]; then
-				langs=$(uci -q show luci.languages 2>/dev/null | grep "^luci.languages." | cut -d. -f3 | cut -d= -f1 | tr '\n' ' ')
-			fi
+			[ "$pkg_manager" = "apk" ] && main_pkg=$(echo "$response" | jsonfilter -e '@.assets[*].name' | grep "^${package_name}-.*\.${file_ext}$" | grep -v "i18n" | head -1) || main_pkg=$(echo "$response" | jsonfilter -e '@.assets[*].name' | grep "^${package_name}_.*\.${file_ext}$" | grep -v "i18n" | head -1)
+			[ -n "$main_pkg" ] && wget -q -O "$DOWNLOAD_PATH/$main_pkg" "$download_url/$main_pkg" 2>/dev/null && downloaded_files="$DOWNLOAD_PATH/$main_pkg"
+			
+			langs=$(uci -q show luci.languages 2>/dev/null | grep "^luci.languages." | cut -d. -f3 | cut -d= -f1 | tr '\n' ' ')
 			[ -z "$langs" ] && langs="zh_cn"
-
 			for lang_code in $langs; do
-				lang_code_dash=$(echo "$lang_code" | tr '_' '-')
-				if [ "$pkg_manager" = "apk" ]; then
-					i18n_pkg=$(echo "$response" | jsonfilter -e '@.assets[*].name' | grep "^luci-i18n-.*-${lang_code_dash}-.*\.${file_ext}$" | head -1)
-				else
-					i18n_pkg=$(echo "$response" | jsonfilter -e '@.assets[*].name' | grep "^luci-i18n-.*-${lang_code_dash}_.*\.${file_ext}$" | head -1)
-				fi
-
-				if [ -n "$i18n_pkg" ]; then
-					wget -q -O "$download_path/$i18n_pkg" "$download_url/$i18n_pkg" 2>/dev/null && downloaded_files="$downloaded_files $download_path/$i18n_pkg"
-				fi
+				l_dash=$(echo "$lang_code" | tr '_' '-')
+				[ "$pkg_manager" = "apk" ] && i18n_pkg=$(echo "$response" | jsonfilter -e '@.assets[*].name' | grep "^luci-i18n-.*-${l_dash}-.*\.${file_ext}$" | head -1) || i18n_pkg=$(echo "$response" | jsonfilter -e '@.assets[*].name' | grep "^luci-i18n-.*-${l_dash}_.*\.${file_ext}$" | head -1)
+				[ -n "$i18n_pkg" ] && wget -q -O "$DOWNLOAD_PATH/$i18n_pkg" "$download_url/$i18n_pkg" 2>/dev/null && downloaded_files="$downloaded_files $DOWNLOAD_PATH/$i18n_pkg"
 			done
 		fi
 
 		json_init
-		if [ -n "$downloaded_files" ]; then
-			json_add_string "files" "$downloaded_files"
-			json_add_int "result" 0
-		else
-			json_add_string "error" "Download failed"
-			json_add_int "result" 1
-		fi
-		json_dump
-		json_cleanup
+		[ -n "$downloaded_files" ] && { json_add_string "files" "$downloaded_files"; json_add_int "result" 0; } || { json_add_string "error" "Download failed"; json_add_int "result" 1; }
+		json_dump; json_cleanup
 		;;
+
 	"install_package")
-		read -r input
-		json_load "$input"
-		json_get_var package "package"
-		json_get_var file_path "file_path"
-		json_cleanup
-
-		logger -t "luci.aurora" "install_package: package=$package, file_path=$file_path"
-
+		read -r input; json_load "$input"; json_get_var file_path "file_path"; json_cleanup
 		pkg_manager=$(detect_package_manager)
 		result=1
-
 		if [ "$pkg_manager" = "opkg" ]; then
-			logger -t "luci.aurora" "install_package: using opkg"
-			output=$(opkg install "$file_path" 2>&1)
-			result=$?
+			output=$(opkg install "$file_path" 2>&1); result=$?
 		elif [ "$pkg_manager" = "apk" ]; then
-			logger -t "luci.aurora" "install_package: using apk"
-			output=$(apk add --allow-untrusted "$file_path" 2>&1)
-			result=$?
-		else
-			logger -t "luci.aurora" "install_package: unknown package manager"
-			echo '{ "error": "Unknown package manager" }'
-			exit 1
+			output=$(apk add --allow-untrusted "$file_path" 2>&1); result=$?
 		fi
-
 		json_init
 		json_add_int "result" "$result"
 		json_add_string "output" "$output"
-		if [ $result -eq 0 ]; then
-			json_add_string "message" "Installation successful"
-			logger -t "luci.aurora" "install_package: success"
-		else
-			json_add_string "message" "Installation failed"
-			logger -t "luci.aurora" "install_package: failed with code $result"
-		fi
-		json_dump
-		json_cleanup
+		[ $result -eq 0 ] && json_add_string "message" "Installation successful" || json_add_string "message" "Installation failed"
+		json_dump; json_cleanup
 		;;
 	esac
 	;;

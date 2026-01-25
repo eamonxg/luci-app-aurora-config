@@ -10,35 +10,32 @@ const CACHE_KEY = "aurora.version.cache";
 const CACHE_TTL = 1800000;
 
 const versionCache = {
-  get: () => {
+  get() {
     try {
       const cached = localStorage.getItem(CACHE_KEY);
       if (!cached) return null;
-
-      const data = JSON.parse(cached);
-      const now = Date.now();
-
-      if (now - data.timestamp > CACHE_TTL) {
-        localStorage.removeItem(CACHE_KEY);
+      const { timestamp, value } = JSON.parse(cached);
+      if (Date.now() - timestamp > CACHE_TTL) {
+        this.clear();
         return null;
       }
-
-      return data.value;
+      return value;
     } catch (e) {
       return null;
     }
   },
 
-  set: (value) => {
+  set(value) {
     try {
-      const data = {
-        timestamp: Date.now(),
-        value: value,
-      };
+      const data = { timestamp: Date.now(), value };
       localStorage.setItem(CACHE_KEY, JSON.stringify(data));
     } catch (e) {
       console.error("Failed to cache version data:", e);
     }
+  },
+
+  clear() {
+    localStorage.removeItem(CACHE_KEY);
   },
 };
 
@@ -74,6 +71,11 @@ const callCheckUpdates = rpc.declare({
 const callGetInstalledVersions = rpc.declare({
   object: "luci.aurora",
   method: "get_installed_versions",
+});
+
+const callResetDefaults = rpc.declare({
+  object: "luci.aurora",
+  method: "reset_defaults",
 });
 
 const renderColorPicker = function (option_index, section_id, in_table) {
@@ -277,11 +279,11 @@ const createIconUploadButton = (ss, tmpPath) => {
         return L.resolveDefault(callUploadIcon(filename), {})
           .then((ret) => {
             if (ret?.result === 0) {
+              window.location.reload();
               ui.addNotification(
                 null,
                 E("p", _("Icon uploaded successfully: %s").format(filename)),
               );
-              setTimeout(() => window.location.reload(), 1000);
             } else {
               const errorMsg = ret?.error || "Unknown error";
               ui.addNotification(
@@ -569,41 +571,105 @@ return view.extend({
     const configVersion =
       installedVersions?.config?.installed_version || "Unknown";
 
-    const versionBadges = E(
+    const headerBar = E(
       "div",
       {
         style:
-          "display: flex; flex-wrap: wrap; gap: 0.5em 1em; align-items: center;",
+          "display: flex; flex-wrap: wrap; gap: 1em; align-items: center; justify-content: space-between;",
       },
       [
-        E("span", { style: "white-space: nowrap;" }, [
-          document.createTextNode("Theme: "),
-          E(
-            "span",
-            {
-              id: "theme-version",
-              class: "label success",
-              style: "cursor: pointer;",
-            },
-            `v${themeVersion}`,
-          ),
+        E("div", { style: "display: flex; flex-wrap: wrap; gap: 1em;" }, [
+          E("span", { style: "white-space: nowrap;" }, [
+            document.createTextNode("Theme: "),
+            E(
+              "span",
+              {
+                id: "theme-version",
+                class: "label success",
+                style: "cursor: pointer;",
+              },
+              `v${themeVersion}`,
+            ),
+          ]),
+          E("span", { style: "white-space: nowrap;" }, [
+            document.createTextNode("Config: "),
+            E(
+              "span",
+              {
+                id: "config-version",
+                class: "label success",
+                style: "cursor: pointer;",
+              },
+              `v${configVersion}`,
+            ),
+          ]),
         ]),
-        E("span", { style: "white-space: nowrap;" }, [
-          document.createTextNode("Config: "),
-          E(
-            "span",
-            {
-              id: "config-version",
-              class: "label success",
-              style: "cursor: pointer;",
-            },
-            `v${configVersion}`,
-          ),
-        ]),
+        E(
+          "button",
+          {
+            class: "cbi-button cbi-button-reset",
+            click: ui.createHandlerFn(this, function () {
+              return ui.showModal(_("Reset to Defaults"), [
+                E(
+                  "p",
+                  {},
+                  _(
+                    "Are you sure you want to reset all theme settings to original defaults?",
+                  ),
+                ),
+                E("div", { class: "right" }, [
+                  E(
+                    "button",
+                    { class: "btn", click: ui.hideModal },
+                    _("Cancel"),
+                  ),
+                  " ",
+                  E(
+                    "button",
+                    {
+                      class: "btn cbi-button-negative",
+                      click: () => {
+                        ui.showModal(_("Resetting..."), [
+                          E("p", { class: "spinning" }, _("Restoring...")),
+                        ]);
+                        return L.resolveDefault(callResetDefaults(), {}).then(
+                          (ret) => {
+                            ui.hideModal();
+                            if (ret?.result === 0) {
+                              window.location.reload();
+                              ui.addNotification(
+                                null,
+                                E("p", _("Settings reset successfully.")),
+                                "info",
+                              );
+                            } else {
+                              ui.addNotification(
+                                null,
+                                E(
+                                  "p",
+                                  _("Error: %s").format(
+                                    ret?.error || "Unknown",
+                                  ),
+                                ),
+                                "error",
+                              );
+                            }
+                          },
+                        );
+                      },
+                    },
+                    _("Confirm Reset"),
+                  ),
+                ]),
+              ]);
+            }),
+          },
+          _("Reset to Defaults"),
+        ),
       ],
     );
 
-    m.description = versionBadges;
+    m.description = headerBar;
 
     const s = m.section(form.NamedSection, "theme", "aurora");
 

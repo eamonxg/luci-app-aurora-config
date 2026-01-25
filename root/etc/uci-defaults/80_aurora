@@ -1,18 +1,28 @@
 #!/bin/sh
 
-[ -f /etc/config/aurora ] && exit 0
+readonly CONF_FILE="/etc/config/aurora"
+readonly TEMPLATE_DIR="/usr/share/aurora"
+readonly TEMPLATE_FILE="$TEMPLATE_DIR/aurora.template"
+readonly LOG_TAG="aurora"
 
-logger -t aurora "Initializing Aurora theme configuration"
+log() {
+    logger -t "$LOG_TAG" "$1"
+}
 
-theme_version="0"
-if command -v opkg >/dev/null 2>&1; then
-	theme_version=$(opkg list-installed luci-theme-aurora 2>/dev/null | awk '{print $3}' | head -1)
-elif command -v apk >/dev/null 2>&1; then
-	theme_version=$(apk list -I luci-theme-aurora 2>/dev/null | sed -n 's/^luci-theme-aurora-\([^ ]*\) .*/\1/p' | head -1)
-fi
-[ -z "$theme_version" ] && theme_version="0.9.0"
+get_theme_version() {
+    local version="0.9.0" 
+    if command -v opkg >/dev/null 2>&1; then
+        version=$(opkg list-installed luci-theme-aurora 2>/dev/null | awk '{print $3}' | head -1)
+    elif command -v apk >/dev/null 2>&1; then
+        version=$(apk list -I luci-theme-aurora 2>/dev/null | sed -n 's/^luci-theme-aurora-\([^ ]*\) .*/\1/p' | head -1)
+    fi
+    echo "${version:-0.9.0}"
+}
 
-cat > /etc/config/aurora <<EOF
+generate_config_content() {
+    local version="$1"
+    
+    cat <<EOF
 config aurora 'theme'
 	option light_background_start 'oklch(0.968 0.007 247.896)'
 	option light_background_mid 'oklch(0.968 0.007 247.896)'
@@ -72,7 +82,7 @@ config aurora 'theme'
 	option struct_container_max_width '80rem'
 	option nav_submenu_type 'mega-menu'
 	option toolbar_enabled '1'
-	option icon_cache_version '$theme_version'
+	option icon_cache_version '$version'
 	option logo_svg 'logo.svg'
 	option logo_png 'logo_32.png'
 
@@ -100,5 +110,30 @@ config toolbar_item
 	option icon 'network.svg'
 	option enabled '1'
 EOF
+}
+
+
+main() {
+    log "Initializing Aurora theme configuration"
+
+    [ -d "$TEMPLATE_DIR" ] || mkdir -p "$TEMPLATE_DIR"
+
+    local current_version=$(get_theme_version)
+    
+    generate_config_content "$current_version" > "$TEMPLATE_FILE"
+    
+    chmod 444 "$TEMPLATE_FILE"
+    log "Template created at $TEMPLATE_FILE (read-only)"
+
+    if [ ! -f "$CONF_FILE" ]; then
+        cp "$TEMPLATE_FILE" "$CONF_FILE"
+        chmod 644 "$CONF_FILE" 
+        log "First-time initialization: Config created from template"
+    else
+        log "Configuration already exists, skipping initialization"
+    fi
+}
+
+main
 
 exit 0
