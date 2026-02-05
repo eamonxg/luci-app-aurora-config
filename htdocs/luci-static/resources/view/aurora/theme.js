@@ -593,314 +593,397 @@ return view.extend({
       ),
     );
 
-    so = presetSection.option(
-      form.ListValue,
-      "_theme_preset",
-      _("Preset"),
-    );
-    if (themePresets.length > 0) {
-      themePresets.forEach((preset) => {
-        if (preset?.name)
-          so.value(preset.name, preset.label || preset.name);
-      });
-    } else {
-      so.value("aurora", _("Aurora"));
-      so.value("noir", _("Noir (Modern Dark)"));
-    }
-    so.default = "aurora";
-    so.cfgvalue = function () {
-      return localStorage.getItem("aurora.theme_preset") || this.default;
-    };
-    so.write = function (section_id, value) {
-      localStorage.setItem("aurora.theme_preset", value);
-    };
-    so.render = function (option_index, section_id, in_table) {
-      const el = form.ListValue.prototype.render.apply(this, [
-        option_index,
-        section_id,
-        in_table,
-      ]);
-      return Promise.resolve(el).then((node) => {
-        const select = node.querySelector("select");
-        if (select) {
-          select.id = "aurora-theme-preset";
-          select.addEventListener("change", () => {
-            localStorage.setItem("aurora.theme_preset", select.value);
-          });
-        }
-        return node;
-      });
+    const buildPresetOptions = () => {
+      if (themePresets.length > 0) {
+        const options = themePresets
+          .filter((preset) => preset?.name)
+          .map((preset) => ({
+            name: preset.name,
+            label: preset.label || preset.name,
+          }));
+        if (options.length > 0) return options;
+      }
+      return [
+        { name: "aurora", label: _("Aurora") },
+        { name: "noir", label: _("Noir (Modern Dark)") },
+      ];
     };
 
     so = presetSection.option(
-      form.Button,
-      "_apply_theme_preset",
-      _("Apply Preset"),
+      form.DummyValue,
+      "_preset_actions",
+      _("Actions"),
     );
-    so.inputstyle = "apply";
-    so.inputtitle = _("Click to apply");
-    so.onclick = ui.createHandlerFn(this, () => {
-      const select =
-        document.querySelector("#aurora-theme-preset") ||
-        document.querySelector('select[name$="._theme_preset"]');
-      const presetName =
-        select?.value || localStorage.getItem("aurora.theme_preset") || "aurora";
-      const presetLabel =
-        select?.selectedOptions?.[0]?.textContent || presetName;
+    so.render = function () {
+      const self = this;
+      const presetOptions = buildPresetOptions();
+      const defaultPreset = "aurora";
+      const storedPreset = localStorage.getItem("aurora.theme_preset");
+      const hasStoredPreset = presetOptions.some(
+        (preset) => preset.name === storedPreset,
+      );
+      const initialPreset = hasStoredPreset ? storedPreset : defaultPreset;
 
-      return ui.showModal(_("Apply Theme Preset"), [
-        E(
-          "p",
-          {},
-          _(
-            "Apply preset '%s'? This will overwrite the entire theme configuration in /etc/config/aurora.",
-          ).format(presetLabel),
-        ),
-        E("div", { class: "right" }, [
-          E("button", { class: "btn", click: ui.hideModal }, _("Cancel")),
-          " ",
+      if (!hasStoredPreset) {
+        localStorage.setItem("aurora.theme_preset", initialPreset);
+      }
+
+      const select = E(
+        "select",
+        {
+          id: "aurora-theme-preset",
+          class: "cbi-input-select",
+        },
+        presetOptions.map((preset) =>
           E(
-            "button",
+            "option",
             {
-              class: "btn cbi-button-action important",
-              click: () => {
-                ui.showModal(_("Applying..."), [
-                  E("p", { class: "spinning" }, _("Updating theme...")),
-                ]);
-                return L.resolveDefault(callApplyThemePreset(presetName), {}).then(
-                  (ret) => {
-                    ui.hideModal();
-                    if (ret?.result === 0) {
-                      ui.addNotification(
-                        null,
-                        E("p", _("Preset applied successfully.")),
-                        "info",
-                      );
-                      window.location.reload();
-                    } else {
-                      ui.addNotification(
-                        null,
-                        E(
-                          "p",
-                          _("Apply failed: %s").format(
-                            ret?.error || "Unknown",
-                          ),
-                        ),
-                        "error",
-                      );
-                    }
-                  },
-                );
-              },
+              value: preset.name,
+              selected: preset.name === initialPreset ? "selected" : null,
             },
-            _("Apply"),
+            preset.label,
           ),
-        ]),
-      ]);
-    });
+        ),
+      );
 
-    so = presetSection.option(
-      form.Button,
-      "_export_config",
-      _("Export Configuration"),
-    );
-    so.inputstyle = "apply";
-    so.inputtitle = _("Click to export");
-    so.onclick = ui.createHandlerFn(this, () => {
-      return L.resolveDefault(callExportConfig(), null)
-        .then((res) => {
-          if (!res || res.result !== 0) {
-            throw new Error(res?.error || _("Export failed"));
-          }
+      select.addEventListener("change", () => {
+        localStorage.setItem("aurora.theme_preset", select.value);
+      });
 
-          const form = E(
-            "form",
-            {
-              method: "post",
-              action: L.env.cgi_base + "/cgi-download",
-              enctype: "application/x-www-form-urlencoded",
-            },
-            [
-              E("input", {
-                type: "hidden",
-                name: "sessionid",
-                value: rpc.getSessionID(),
-              }),
-              E("input", { type: "hidden", name: "path", value: res.path }),
-              E("input", {
-                type: "hidden",
-                name: "filename",
-                value: res.filename || "aurora",
-              }),
-            ],
-          );
+      const resolvePresetSelection = () => {
+        const presetName =
+          select?.value ||
+          localStorage.getItem("aurora.theme_preset") ||
+          defaultPreset;
+        const presetLabel =
+          select?.selectedOptions?.[0]?.textContent || presetName;
+        return { presetName, presetLabel };
+      };
 
-          document.body.appendChild(form);
-          form.submit();
-          form.parentNode.removeChild(form);
+      const applyButton = E(
+        "button",
+        {
+          class: "cbi-button cbi-button-apply",
+          title: _("Apply Preset"),
+          click: ui.createHandlerFn(self, () => {
+            const { presetName, presetLabel } = resolvePresetSelection();
 
-          ui.addNotification(
-            null,
-            E("p", _("Configuration exported successfully.")),
-            "info",
-          );
-        })
-        .catch((err) => {
-          ui.addNotification(
-            null,
-            E("p", _("Export failed: %s").format(err.message || err)),
-            "error",
-          );
-        });
-    });
-
-    so = presetSection.option(
-      form.Button,
-      "_import_config",
-      _("Import Configuration"),
-    );
-    so.inputstyle = "add";
-    so.inputtitle = _("Click to import");
-    so.onclick = ui.createHandlerFn(this, function (ev) {
-      const btn = ev.target;
-      const originalLabel = btn?.firstChild?.data;
-
-      return ui
-        .uploadFile(CONFIG_IMPORT_PATH, btn)
-        .then(
-          L.bind(function (res) {
-            if (!res?.name)
-              throw new Error(_("No file selected or upload failed"));
-            if (btn?.firstChild) btn.firstChild.data = _("Checking file…");
-            return fs.read(CONFIG_IMPORT_PATH);
-          }, this),
-        )
-        .then(
-          L.bind(function (content) {
-            const preview = content || "";
-
-            ui.showModal(_("Apply configuration?"), [
+            return ui.showModal(_("Apply Theme Preset"), [
               E(
                 "p",
                 {},
                 _(
-                  "The uploaded configuration will replace /etc/config/aurora. Press 'Continue' to apply and reload, or 'Cancel' to abort.",
-                ),
+                  "Apply preset '%s'? This will overwrite the entire theme configuration in /etc/config/aurora.",
+                ).format(presetLabel),
               ),
-              E("pre", {}, preview),
               E("div", { class: "right" }, [
-                E(
-                  "button",
-                  {
-                    class: "btn",
-                    click: ui.createHandlerFn(this, () =>
-                      fs.remove(CONFIG_IMPORT_PATH).finally(ui.hideModal),
-                    ),
-                  },
-                  _("Cancel"),
-                ),
+                E("button", { class: "btn", click: ui.hideModal }, _("Cancel")),
                 " ",
                 E(
                   "button",
                   {
                     class: "btn cbi-button-action important",
-                    click: ui.createHandlerFn(this, () => {
-                      ui.showModal(_("Importing..."), [
-                        E("p", { class: "spinning" }, _("Applying...")),
+                    click: () => {
+                      ui.showModal(_("Applying..."), [
+                        E("p", { class: "spinning" }, _("Updating theme...")),
                       ]);
-                      return L.resolveDefault(callImportConfig(), {}).then(
+                      return L.resolveDefault(
+                        callApplyThemePreset(presetName),
+                        {},
+                      ).then((ret) => {
+                        ui.hideModal();
+                        if (ret?.result === 0) {
+                          ui.addNotification(
+                            null,
+                            E("p", _("Preset applied successfully.")),
+                            "info",
+                          );
+                          window.location.reload();
+                        } else {
+                          ui.addNotification(
+                            null,
+                            E(
+                              "p",
+                              _("Apply failed: %s").format(
+                                ret?.error || "Unknown",
+                              ),
+                            ),
+                            "error",
+                          );
+                        }
+                      });
+                    },
+                  },
+                  _("Apply"),
+                ),
+              ]),
+            ]);
+          }),
+        },
+        _("Apply"),
+      );
+
+      const exportButton = E(
+        "button",
+        {
+          class: "cbi-button cbi-button-apply",
+          title: _("Export Configuration"),
+          click: ui.createHandlerFn(self, () => {
+            return L.resolveDefault(callExportConfig(), null)
+              .then((res) => {
+                if (!res || res.result !== 0) {
+                  throw new Error(res?.error || _("Export failed"));
+                }
+
+                const form = E(
+                  "form",
+                  {
+                    method: "post",
+                    action: L.env.cgi_base + "/cgi-download",
+                    enctype: "application/x-www-form-urlencoded",
+                  },
+                  [
+                    E("input", {
+                      type: "hidden",
+                      name: "sessionid",
+                      value: rpc.getSessionID(),
+                    }),
+                    E("input", {
+                      type: "hidden",
+                      name: "path",
+                      value: res.path,
+                    }),
+                    E("input", {
+                      type: "hidden",
+                      name: "filename",
+                      value: res.filename || "aurora",
+                    }),
+                  ],
+                );
+
+                document.body.appendChild(form);
+                form.submit();
+                form.parentNode.removeChild(form);
+
+                ui.addNotification(
+                  null,
+                  E("p", _("Configuration exported successfully.")),
+                  "info",
+                );
+              })
+              .catch((err) => {
+                ui.addNotification(
+                  null,
+                  E("p", _("Export failed: %s").format(err.message || err)),
+                  "error",
+                );
+              });
+          }),
+        },
+        _("Export"),
+      );
+
+      const importButton = E(
+        "button",
+        {
+          class: "cbi-button cbi-button-add",
+          title: _("Import Configuration"),
+          click: ui.createHandlerFn(self, function (ev) {
+            const btn = ev.currentTarget || ev.target;
+            const originalLabel = btn?.firstChild?.data;
+
+            return ui
+              .uploadFile(CONFIG_IMPORT_PATH, btn)
+              .then(
+                L.bind(function (res) {
+                  if (!res?.name)
+                    throw new Error(_("No file selected or upload failed"));
+                  if (btn?.firstChild)
+                    btn.firstChild.data = _("Checking file…");
+                  return fs.read(CONFIG_IMPORT_PATH);
+                }, this),
+              )
+              .then(
+                L.bind(function (content) {
+                  const preview = content || "";
+
+                  ui.showModal(_("Apply configuration?"), [
+                    E(
+                      "p",
+                      {},
+                      _(
+                        "The uploaded configuration will replace /etc/config/aurora. Press 'Continue' to apply and reload, or 'Cancel' to abort.",
+                      ),
+                    ),
+                    E("pre", {}, preview),
+                    E("div", { class: "right" }, [
+                      E(
+                        "button",
+                        {
+                          class: "btn",
+                          click: ui.createHandlerFn(this, () =>
+                            fs.remove(CONFIG_IMPORT_PATH).finally(ui.hideModal),
+                          ),
+                        },
+                        _("Cancel"),
+                      ),
+                      " ",
+                      E(
+                        "button",
+                        {
+                          class: "btn cbi-button-action important",
+                          click: ui.createHandlerFn(this, () => {
+                            ui.showModal(_("Importing..."), [
+                              E("p", { class: "spinning" }, _("Applying...")),
+                            ]);
+                            return L.resolveDefault(callImportConfig(), {}).then(
+                              (ret) => {
+                                ui.hideModal();
+                                if (ret?.result === 0) {
+                                  ui.addNotification(
+                                    null,
+                                    E(
+                                      "p",
+                                      _("Configuration imported successfully."),
+                                    ),
+                                    "info",
+                                  );
+                                  window.location.reload();
+                                } else {
+                                  const errorMsg =
+                                    ret?.error || "Unknown error";
+                                  ui.addNotification(
+                                    null,
+                                    E(
+                                      "p",
+                                      _("Import failed: %s").format(errorMsg),
+                                    ),
+                                    "error",
+                                  );
+                                }
+                              },
+                            );
+                          }),
+                        },
+                        _("Continue"),
+                      ),
+                    ]),
+                  ]);
+                }, this),
+              )
+              .catch((err) => {
+                ui.addNotification(
+                  null,
+                  E("p", _("Import failed: %s").format(err.message || err)),
+                  "error",
+                );
+                return L.resolveDefault(fs.remove(CONFIG_IMPORT_PATH), {});
+              })
+              .finally(() => {
+                if (btn?.firstChild && originalLabel !== undefined)
+                  btn.firstChild.data = originalLabel;
+              });
+          }),
+        },
+        _("Import"),
+      );
+
+      const resetButton = E(
+        "button",
+        {
+          class: "cbi-button cbi-button-reset",
+          title: _("Reset to Defaults"),
+          click: ui.createHandlerFn(self, () => {
+            return ui.showModal(_("Reset to Defaults"), [
+              E(
+                "p",
+                {},
+                _(
+                  "Are you sure you want to reset all theme settings to original defaults?",
+                ),
+              ),
+              E("div", { class: "right" }, [
+                E("button", { class: "btn", click: ui.hideModal }, _("Cancel")),
+                " ",
+                E(
+                  "button",
+                  {
+                    class: "btn cbi-button-negative",
+                    click: () => {
+                      ui.showModal(_("Resetting..."), [
+                        E("p", { class: "spinning" }, _("Restoring...")),
+                      ]);
+                      return L.resolveDefault(callResetDefaults(), {}).then(
                         (ret) => {
                           ui.hideModal();
                           if (ret?.result === 0) {
+                            window.location.reload();
                             ui.addNotification(
                               null,
-                              E("p", _("Configuration imported successfully.")),
+                              E("p", _("Settings reset successfully.")),
                               "info",
                             );
-                            window.location.reload();
                           } else {
-                            const errorMsg = ret?.error || "Unknown error";
                             ui.addNotification(
                               null,
-                              E("p", _("Import failed: %s").format(errorMsg)),
+                              E("p", _("Error: %s").format(ret?.error || "Unknown")),
                               "error",
                             );
                           }
                         },
                       );
-                    }),
+                    },
                   },
-                  _("Continue"),
+                  _("Confirm Reset"),
                 ),
               ]),
             ]);
-          }, this),
-        )
-        .catch((err) => {
-          ui.addNotification(
-            null,
-            E("p", _("Import failed: %s").format(err.message || err)),
-            "error",
-          );
-          return L.resolveDefault(fs.remove(CONFIG_IMPORT_PATH), {});
-        })
-        .finally(() => {
-          if (btn?.firstChild && originalLabel !== undefined)
-            btn.firstChild.data = originalLabel;
-        });
-    });
+          }),
+        },
+        _("Reset"),
+      );
 
-    so = presetSection.option(
-      form.Button,
-      "_reset_defaults",
-      _("Reset to Defaults"),
-    );
-    so.inputstyle = "reset";
-    so.inputtitle = _("Click to reset");
-    so.onclick = ui.createHandlerFn(this, () => {
-      return ui.showModal(_("Reset to Defaults"), [
-        E(
-          "p",
-          {},
-          _(
-            "Are you sure you want to reset all theme settings to original defaults?",
-          ),
-        ),
-        E("div", { class: "right" }, [
-          E("button", { class: "btn", click: ui.hideModal }, _("Cancel")),
-          " ",
+      const presetGroup = E(
+        "div",
+        {
+          style:
+            "display:flex; flex-wrap:wrap; gap:0.5em; align-items:center;",
+        },
+        [
           E(
-            "button",
-            {
-              class: "btn cbi-button-negative",
-              click: () => {
-                ui.showModal(_("Resetting..."), [
-                  E("p", { class: "spinning" }, _("Restoring...")),
-                ]);
-                return L.resolveDefault(callResetDefaults(), {}).then((ret) => {
-                  ui.hideModal();
-                  if (ret?.result === 0) {
-                    window.location.reload();
-                    ui.addNotification(
-                      null,
-                      E("p", _("Settings reset successfully.")),
-                      "info",
-                    );
-                  } else {
-                    ui.addNotification(
-                      null,
-                      E("p", _("Error: %s").format(ret?.error || "Unknown")),
-                      "error",
-                    );
-                  }
-                });
-              },
-            },
-            _("Confirm Reset"),
+            "span",
+            { style: "font-weight: 600; white-space: nowrap;" },
+            _("Preset"),
           ),
-        ]),
+          select,
+          applyButton,
+        ],
+      );
+
+      const actionGroup = E(
+        "div",
+        {
+          style:
+            "display:flex; flex-wrap:wrap; gap:0.5em; align-items:center;",
+        },
+        [exportButton, importButton, resetButton],
+      );
+
+      const toolbar = E(
+        "div",
+        {
+          class: "aurora-preset-toolbar",
+          style:
+            "display:flex; flex-wrap:wrap; gap:0.75em 1em; align-items:center;",
+        },
+        [presetGroup, actionGroup],
+      );
+
+      return E("div", { class: "cbi-value", "data-name": this.option }, [
+        E("label", { class: "cbi-value-title" }, this.title),
+        E("div", { class: "cbi-value-field" }, toolbar),
       ]);
-    });
+    };
 
     const s = m.section(form.NamedSection, "theme", "aurora");
 
