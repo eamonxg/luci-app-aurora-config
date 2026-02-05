@@ -8,6 +8,7 @@ readonly TMP_UPLOAD_PATH="/tmp/aurora_icon.tmp"
 readonly DOWNLOAD_PATH="/tmp/aurora_downloads"
 readonly CONFIG_FILE="/etc/config/aurora"
 readonly TEMPLATE_FILE="/usr/share/aurora/aurora.template"
+readonly NOIR_TEMPLATE="/usr/share/aurora/noir.template"
 readonly IMPORT_CONFIG_TMP="/tmp/aurora_config_import.tmp"
 readonly EXPORT_CONFIG_TMP="/tmp/aurora_config_export.conf"
 
@@ -17,6 +18,7 @@ detect_package_manager() {
 	elif command -v apk >/dev/null 2>&1; then echo "apk";
 	else echo "unknown"; fi
 	}
+
 get_system_lang() {
 	local lang=""
 	if [ -f /etc/config/luci ]; then
@@ -84,6 +86,10 @@ case "$1" in
 	json_close_object
 	json_add_object "reset_defaults"; json_close_object
 	json_add_object "get_theme_config"; json_close_object
+	json_add_object "get_theme_presets"; json_close_object
+	json_add_object "apply_theme_preset"
+		json_add_string "name" "name"
+	json_close_object
 	json_add_object "export_config"; json_close_object
 	json_add_object "import_config"; json_close_object
 	json_add_object "get_installed_versions"; json_close_object
@@ -124,6 +130,57 @@ case "$1" in
 		done
 		json_close_object
 		json_dump; json_cleanup
+		;;
+
+	"get_theme_presets")
+		json_init
+		json_add_array "presets"
+		json_add_object ""
+			json_add_string "name" "aurora"
+			json_add_string "label" "Aurora"
+		json_close_object
+		json_add_object ""
+			json_add_string "name" "noir"
+			json_add_string "label" "Noir (Modern Dark)"
+		json_close_object
+		json_close_array
+		json_dump; json_cleanup
+		;;
+
+	"apply_theme_preset")
+		read -r input; json_load "$input"; json_get_var name "name"; json_cleanup
+
+		case "$name" in
+		"aurora")
+			template="$TEMPLATE_FILE"
+			;;
+		"noir")
+			template="$NOIR_TEMPLATE"
+			;;
+		*)
+			echo '{ "result": 1, "error": "Unknown preset" }'
+			exit 0
+			;;
+		esac
+
+		if [ ! -f "$template" ]; then
+			echo '{ "result": 1, "error": "Template file not found" }'
+			exit 0
+		fi
+
+		if ! grep -Eq "^config[[:space:]]+aurora" "$template" 2>/dev/null; then
+			echo '{ "result": 1, "error": "Invalid preset content" }'
+			exit 0
+		fi
+
+		if ! cp "$template" "$CONFIG_FILE" 2>/dev/null; then
+			echo '{ "result": 1, "error": "Failed to write config file" }'
+			exit 0
+		fi
+
+		chmod 644 "$CONFIG_FILE" 2>/dev/null
+		update_icon_cache_timestamp
+		echo '{ "result": 0 }'
 		;;
 
 	"export_config")

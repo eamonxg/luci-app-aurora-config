@@ -10,6 +10,7 @@
           "check_updates",
           "get_system_info",
           "get_theme_config",
+          "get_theme_presets",
           "export_config"
         ],
         "file": ["read", "list", "stat"]
@@ -30,7 +31,8 @@
           "download_package",
           "install_package",
           "reset_defaults",
-          "import_config"
+          "import_config",
+          "apply_theme_preset"
         ],
         "file": ["write", "remove", "exec", "stat"]
       },

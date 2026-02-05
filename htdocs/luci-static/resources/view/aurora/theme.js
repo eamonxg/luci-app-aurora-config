@@ -79,6 +79,17 @@ const callGetThemeConfig = rpc.declare({
   method: "get_theme_config",
 });
 
+const callGetThemePresets = rpc.declare({
+  object: "luci.aurora",
+  method: "get_theme_presets",
+});
+
+const callApplyThemePreset = rpc.declare({
+  object: "luci.aurora",
+  method: "apply_theme_preset",
+  params: ["name"],
+});
+
 const callExportConfig = rpc.declare({
   object: "luci.aurora",
   method: "export_config",
@@ -442,13 +453,15 @@ return view.extend({
     return Promise.all([
       uci.load("aurora"),
       L.resolveDefault(callGetThemeConfig(), {}),
+      L.resolveDefault(callGetThemePresets(), {}),
       L.resolveDefault(callGetInstalledVersions(), {}),
     ]);
   },
 
   render(loadData) {
     const themeConfig = loadData[1]?.theme || {};
-    const installedVersions = loadData[2];
+    const themePresets = loadData[2]?.presets || [];
+    const installedVersions = loadData[3];
 
     // Order matches luci-theme-aurora/.dev/src/media/main.css @theme inline
     const baseColorVars = [
@@ -509,7 +522,7 @@ return view.extend({
         key: "component",
         title: _("Component Colors"),
         description: _(
-          "Customize component surfaces and UI elements such as links, inputs, headers, tabs, tooltips, and progress bars.",
+          "Customize component surfaces and UI elements such as links, inputs, headers, tooltips, and progress bars.",
         ),
         vars: componentColorVars,
       },
@@ -568,42 +581,125 @@ return view.extend({
 
     m.description = headerBar;
 
-    const s = m.section(form.NamedSection, "theme", "aurora");
+    let so;
 
-    s.tab("colors", _("Color"));
-    s.tab("structure", _("Structure"));
-    s.tab("icons_toolbar", _("Icons & Toolbar"));
-
-    const colorSection = s.taboption(
-      "colors",
-      form.SectionValue,
-      "_colors",
+    const presetSection = m.section(
       form.NamedSection,
       "theme",
       "aurora",
-    );
-    const colorSubsection = colorSection.subsection;
-    colorSubsection.tab("light", _("Light Mode"));
-    colorSubsection.tab("dark", _("Dark Mode"));
-
-    createColorSections(colorSubsection, "light", colorGroups, themeConfig);
-    createColorSections(colorSubsection, "dark", colorGroups, themeConfig);
-
-    const configActionsSection = s.taboption(
-      "colors",
-      form.SectionValue,
-      "_config_actions",
-      form.NamedSection,
-      "theme",
-      "aurora",
-      _("Configuration"),
+      _("Theme Presets & Configuration"),
       _(
-        "Import, export, or reset the Aurora theme configuration stored in /etc/config/aurora.",
+        "Apply a preset or import/export/reset the Aurora theme configuration stored in /etc/config/aurora.",
       ),
     );
-    const configActionsSubsection = configActionsSection.subsection;
 
-    let so = configActionsSubsection.option(
+    so = presetSection.option(
+      form.ListValue,
+      "_theme_preset",
+      _("Preset"),
+    );
+    if (themePresets.length > 0) {
+      themePresets.forEach((preset) => {
+        if (preset?.name)
+          so.value(preset.name, preset.label || preset.name);
+      });
+    } else {
+      so.value("aurora", _("Aurora"));
+      so.value("noir", _("Noir (Modern Dark)"));
+    }
+    so.default = "aurora";
+    so.cfgvalue = function () {
+      return localStorage.getItem("aurora.theme_preset") || this.default;
+    };
+    so.write = function (section_id, value) {
+      localStorage.setItem("aurora.theme_preset", value);
+    };
+    so.render = function (option_index, section_id, in_table) {
+      const el = form.ListValue.prototype.render.apply(this, [
+        option_index,
+        section_id,
+        in_table,
+      ]);
+      return Promise.resolve(el).then((node) => {
+        const select = node.querySelector("select");
+        if (select) {
+          select.id = "aurora-theme-preset";
+          select.addEventListener("change", () => {
+            localStorage.setItem("aurora.theme_preset", select.value);
+          });
+        }
+        return node;
+      });
+    };
+
+    so = presetSection.option(
+      form.Button,
+      "_apply_theme_preset",
+      _("Apply Preset"),
+    );
+    so.inputstyle = "apply";
+    so.inputtitle = _("Click to apply");
+    so.onclick = ui.createHandlerFn(this, () => {
+      const select =
+        document.querySelector("#aurora-theme-preset") ||
+        document.querySelector('select[name$="._theme_preset"]');
+      const presetName =
+        select?.value || localStorage.getItem("aurora.theme_preset") || "aurora";
+      const presetLabel =
+        select?.selectedOptions?.[0]?.textContent || presetName;
+
+      return ui.showModal(_("Apply Theme Preset"), [
+        E(
+          "p",
+          {},
+          _(
+            "Apply preset '%s'? This will overwrite the entire theme configuration in /etc/config/aurora.",
+          ).format(presetLabel),
+        ),
+        E("div", { class: "right" }, [
+          E("button", { class: "btn", click: ui.hideModal }, _("Cancel")),
+          " ",
+          E(
+            "button",
+            {
+              class: "btn cbi-button-action important",
+              click: () => {
+                ui.showModal(_("Applying..."), [
+                  E("p", { class: "spinning" }, _("Updating theme...")),
+                ]);
+                return L.resolveDefault(callApplyThemePreset(presetName), {}).then(
+                  (ret) => {
+                    ui.hideModal();
+                    if (ret?.result === 0) {
+                      ui.addNotification(
+                        null,
+                        E("p", _("Preset applied successfully.")),
+                        "info",
+                      );
+                      window.location.reload();
+                    } else {
+                      ui.addNotification(
+                        null,
+                        E(
+                          "p",
+                          _("Apply failed: %s").format(
+                            ret?.error || "Unknown",
+                          ),
+                        ),
+                        "error",
+                      );
+                    }
+                  },
+                );
+              },
+            },
+            _("Apply"),
+          ),
+        ]),
+      ]);
+    });
+
+    so = presetSection.option(
       form.Button,
       "_export_config",
       _("Export Configuration"),
@@ -658,7 +754,7 @@ return view.extend({
         });
     });
 
-    so = configActionsSubsection.option(
+    so = presetSection.option(
       form.Button,
       "_import_config",
       _("Import Configuration"),
@@ -754,7 +850,7 @@ return view.extend({
         });
     });
 
-    so = configActionsSubsection.option(
+    so = presetSection.option(
       form.Button,
       "_reset_defaults",
       _("Reset to Defaults"),
@@ -805,6 +901,27 @@ return view.extend({
         ]),
       ]);
     });
+
+    const s = m.section(form.NamedSection, "theme", "aurora");
+
+    s.tab("colors", _("Color"));
+    s.tab("structure", _("Structure"));
+    s.tab("icons_toolbar", _("Icons & Toolbar"));
+
+    const colorSection = s.taboption(
+      "colors",
+      form.SectionValue,
+      "_colors",
+      form.NamedSection,
+      "theme",
+      "aurora",
+    );
+    const colorSubsection = colorSection.subsection;
+    colorSubsection.tab("light", _("Light Mode"));
+    colorSubsection.tab("dark", _("Dark Mode"));
+
+    createColorSections(colorSubsection, "light", colorGroups, themeConfig);
+    createColorSections(colorSubsection, "dark", colorGroups, themeConfig);
 
     const structureSection = s.taboption(
       "structure",
