@@ -9,12 +9,14 @@
           "get_installed_versions",
           "check_updates",
           "get_system_info",
-          "get_theme_config"
+          "get_theme_config",
+          "export_config"
         ],
         "file": ["read", "list", "stat"]
       },
       "file": {
         "/tmp/aurora_icon.tmp": ["read", "write"],
+        "/tmp/aurora_config_export.conf": ["read"],
         "/tmp/aurora_downloads/*": ["read", "list"],
         "/www/luci-static/aurora/images/*": ["read", "list"]
       }
@@ -27,12 +29,14 @@
           "remove_icon",
           "download_package",
           "install_package",
-          "reset_defaults"
+          "reset_defaults",
+          "import_config"
         ],
         "file": ["write", "remove", "exec", "stat"]
       },
       "file": {
         "/tmp/aurora_icon.tmp": ["read", "write"],
+        "/tmp/aurora_config_import.tmp": ["read", "write", "remove"],
         "/tmp/aurora_downloads/*": ["read", "write", "remove"],
         "/www/luci-static/aurora/images/*": ["read", "write", "remove"]
       }

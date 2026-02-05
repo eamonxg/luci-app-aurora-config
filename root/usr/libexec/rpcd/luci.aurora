@@ -8,6 +8,8 @@ readonly TMP_UPLOAD_PATH="/tmp/aurora_icon.tmp"
 readonly DOWNLOAD_PATH="/tmp/aurora_downloads"
 readonly CONFIG_FILE="/etc/config/aurora"
 readonly TEMPLATE_FILE="/usr/share/aurora/aurora.template"
+readonly IMPORT_CONFIG_TMP="/tmp/aurora_config_import.tmp"
+readonly EXPORT_CONFIG_TMP="/tmp/aurora_config_export.conf"
 
 
 detect_package_manager() {
@@ -82,6 +84,8 @@ case "$1" in
 	json_close_object
 	json_add_object "reset_defaults"; json_close_object
 	json_add_object "get_theme_config"; json_close_object
+	json_add_object "export_config"; json_close_object
+	json_add_object "import_config"; json_close_object
 	json_add_object "get_installed_versions"; json_close_object
 	json_add_object "check_updates"; json_close_object
 	json_add_object "get_system_info"; json_close_object
@@ -120,6 +124,39 @@ case "$1" in
 		done
 		json_close_object
 		json_dump; json_cleanup
+		;;
+
+	"export_config")
+		if [ -f "$CONFIG_FILE" ]; then
+			if cp "$CONFIG_FILE" "$EXPORT_CONFIG_TMP" 2>/dev/null; then
+				chmod 0644 "$EXPORT_CONFIG_TMP"
+				json_init
+				json_add_int "result" 0
+				json_add_string "filename" "aurora"
+				json_add_string "path" "$EXPORT_CONFIG_TMP"
+				json_dump; json_cleanup
+			else
+				echo '{ "result": 1, "error": "Failed to prepare export file" }'
+			fi
+		else
+			echo '{ "result": 1, "error": "Config file not found" }'
+		fi
+		;;
+
+	"import_config")
+		if [ ! -f "$IMPORT_CONFIG_TMP" ]; then
+			echo '{ "result": 1, "error": "Upload file not found" }'
+		else
+			if grep -Eq "^config[[:space:]]+aurora" "$IMPORT_CONFIG_TMP" 2>/dev/null; then
+				cp "$IMPORT_CONFIG_TMP" "$CONFIG_FILE"
+				chmod 644 "$CONFIG_FILE"
+				rm -f "$IMPORT_CONFIG_TMP"
+				echo '{ "result": 0 }'
+			else
+				rm -f "$IMPORT_CONFIG_TMP"
+				echo '{ "result": 1, "error": "Invalid config file" }'
+			fi
+		fi
 		;;
 
 	"list_icons")

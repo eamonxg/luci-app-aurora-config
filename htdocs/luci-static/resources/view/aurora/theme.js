@@ -8,6 +8,7 @@
 
 const CACHE_KEY = "aurora.version.cache";
 const CACHE_TTL = 1800000;
+const CONFIG_IMPORT_PATH = "/tmp/aurora_config_import.tmp";
 
 const versionCache = {
   get() {
@@ -76,6 +77,16 @@ const callGetInstalledVersions = rpc.declare({
 const callGetThemeConfig = rpc.declare({
   object: "luci.aurora",
   method: "get_theme_config",
+});
+
+const callExportConfig = rpc.declare({
+  object: "luci.aurora",
+  method: "export_config",
+});
+
+const callImportConfig = rpc.declare({
+  object: "luci.aurora",
+  method: "import_config",
 });
 
 const callResetDefaults = rpc.declare({
@@ -553,68 +564,6 @@ return view.extend({
             ),
           ]),
         ]),
-        E(
-          "button",
-          {
-            class: "cbi-button cbi-button-reset",
-            click: ui.createHandlerFn(this, function () {
-              return ui.showModal(_("Reset to Defaults"), [
-                E(
-                  "p",
-                  {},
-                  _(
-                    "Are you sure you want to reset all theme settings to original defaults?",
-                  ),
-                ),
-                E("div", { class: "right" }, [
-                  E(
-                    "button",
-                    { class: "btn", click: ui.hideModal },
-                    _("Cancel"),
-                  ),
-                  " ",
-                  E(
-                    "button",
-                    {
-                      class: "btn cbi-button-negative",
-                      click: () => {
-                        ui.showModal(_("Resetting..."), [
-                          E("p", { class: "spinning" }, _("Restoring...")),
-                        ]);
-                        return L.resolveDefault(callResetDefaults(), {}).then(
-                          (ret) => {
-                            ui.hideModal();
-                            if (ret?.result === 0) {
-                              window.location.reload();
-                              ui.addNotification(
-                                null,
-                                E("p", _("Settings reset successfully.")),
-                                "info",
-                              );
-                            } else {
-                              ui.addNotification(
-                                null,
-                                E(
-                                  "p",
-                                  _("Error: %s").format(
-                                    ret?.error || "Unknown",
-                                  ),
-                                ),
-                                "error",
-                              );
-                            }
-                          },
-                        );
-                      },
-                    },
-                    _("Confirm Reset"),
-                  ),
-                ]),
-              ]);
-            }),
-          },
-          _("Reset to Defaults"),
-        ),
       ],
     );
 
@@ -641,6 +590,223 @@ return view.extend({
     createColorSections(colorSubsection, "light", colorGroups, themeConfig);
     createColorSections(colorSubsection, "dark", colorGroups, themeConfig);
 
+    const configActionsSection = s.taboption(
+      "colors",
+      form.SectionValue,
+      "_config_actions",
+      form.NamedSection,
+      "theme",
+      "aurora",
+      _("Configuration"),
+      _(
+        "Import, export, or reset the Aurora theme configuration stored in /etc/config/aurora.",
+      ),
+    );
+    const configActionsSubsection = configActionsSection.subsection;
+
+    let so = configActionsSubsection.option(
+      form.Button,
+      "_export_config",
+      _("Export Configuration"),
+    );
+    so.inputstyle = "apply";
+    so.inputtitle = _("Click to export");
+    so.onclick = ui.createHandlerFn(this, () => {
+      return L.resolveDefault(callExportConfig(), null)
+        .then((res) => {
+          if (!res || res.result !== 0) {
+            throw new Error(res?.error || _("Export failed"));
+          }
+
+          const form = E(
+            "form",
+            {
+              method: "post",
+              action: L.env.cgi_base + "/cgi-download",
+              enctype: "application/x-www-form-urlencoded",
+            },
+            [
+              E("input", {
+                type: "hidden",
+                name: "sessionid",
+                value: rpc.getSessionID(),
+              }),
+              E("input", { type: "hidden", name: "path", value: res.path }),
+              E("input", {
+                type: "hidden",
+                name: "filename",
+                value: res.filename || "aurora",
+              }),
+            ],
+          );
+
+          document.body.appendChild(form);
+          form.submit();
+          form.parentNode.removeChild(form);
+
+          ui.addNotification(
+            null,
+            E("p", _("Configuration exported successfully.")),
+            "info",
+          );
+        })
+        .catch((err) => {
+          ui.addNotification(
+            null,
+            E("p", _("Export failed: %s").format(err.message || err)),
+            "error",
+          );
+        });
+    });
+
+    so = configActionsSubsection.option(
+      form.Button,
+      "_import_config",
+      _("Import Configuration"),
+    );
+    so.inputstyle = "add";
+    so.inputtitle = _("Click to import");
+    so.onclick = ui.createHandlerFn(this, function (ev) {
+      const btn = ev.target;
+      const originalLabel = btn?.firstChild?.data;
+
+      return ui
+        .uploadFile(CONFIG_IMPORT_PATH, btn)
+        .then(
+          L.bind(function (res) {
+            if (!res?.name)
+              throw new Error(_("No file selected or upload failed"));
+            if (btn?.firstChild) btn.firstChild.data = _("Checking file…");
+            return fs.read(CONFIG_IMPORT_PATH);
+          }, this),
+        )
+        .then(
+          L.bind(function (content) {
+            const preview = content || "";
+
+            ui.showModal(_("Apply configuration?"), [
+              E(
+                "p",
+                {},
+                _(
+                  "The uploaded configuration will replace /etc/config/aurora. Press 'Continue' to apply and reload, or 'Cancel' to abort.",
+                ),
+              ),
+              E("pre", {}, preview),
+              E("div", { class: "right" }, [
+                E(
+                  "button",
+                  {
+                    class: "btn",
+                    click: ui.createHandlerFn(this, () =>
+                      fs.remove(CONFIG_IMPORT_PATH).finally(ui.hideModal),
+                    ),
+                  },
+                  _("Cancel"),
+                ),
+                " ",
+                E(
+                  "button",
+                  {
+                    class: "btn cbi-button-action important",
+                    click: ui.createHandlerFn(this, () => {
+                      ui.showModal(_("Importing..."), [
+                        E("p", { class: "spinning" }, _("Applying...")),
+                      ]);
+                      return L.resolveDefault(callImportConfig(), {}).then(
+                        (ret) => {
+                          ui.hideModal();
+                          if (ret?.result === 0) {
+                            ui.addNotification(
+                              null,
+                              E("p", _("Configuration imported successfully.")),
+                              "info",
+                            );
+                            window.location.reload();
+                          } else {
+                            const errorMsg = ret?.error || "Unknown error";
+                            ui.addNotification(
+                              null,
+                              E("p", _("Import failed: %s").format(errorMsg)),
+                              "error",
+                            );
+                          }
+                        },
+                      );
+                    }),
+                  },
+                  _("Continue"),
+                ),
+              ]),
+            ]);
+          }, this),
+        )
+        .catch((err) => {
+          ui.addNotification(
+            null,
+            E("p", _("Import failed: %s").format(err.message || err)),
+            "error",
+          );
+          return L.resolveDefault(fs.remove(CONFIG_IMPORT_PATH), {});
+        })
+        .finally(() => {
+          if (btn?.firstChild && originalLabel !== undefined)
+            btn.firstChild.data = originalLabel;
+        });
+    });
+
+    so = configActionsSubsection.option(
+      form.Button,
+      "_reset_defaults",
+      _("Reset to Defaults"),
+    );
+    so.inputstyle = "reset";
+    so.inputtitle = _("Click to reset");
+    so.onclick = ui.createHandlerFn(this, () => {
+      return ui.showModal(_("Reset to Defaults"), [
+        E(
+          "p",
+          {},
+          _(
+            "Are you sure you want to reset all theme settings to original defaults?",
+          ),
+        ),
+        E("div", { class: "right" }, [
+          E("button", { class: "btn", click: ui.hideModal }, _("Cancel")),
+          " ",
+          E(
+            "button",
+            {
+              class: "btn cbi-button-negative",
+              click: () => {
+                ui.showModal(_("Resetting..."), [
+                  E("p", { class: "spinning" }, _("Restoring...")),
+                ]);
+                return L.resolveDefault(callResetDefaults(), {}).then((ret) => {
+                  ui.hideModal();
+                  if (ret?.result === 0) {
+                    window.location.reload();
+                    ui.addNotification(
+                      null,
+                      E("p", _("Settings reset successfully.")),
+                      "info",
+                    );
+                  } else {
+                    ui.addNotification(
+                      null,
+                      E("p", _("Error: %s").format(ret?.error || "Unknown")),
+                      "error",
+                    );
+                  }
+                });
+              },
+            },
+            _("Confirm Reset"),
+          ),
+        ]),
+      ]);
+    });
+
     const structureSection = s.taboption(
       "structure",
       form.SectionValue,
@@ -655,7 +821,7 @@ return view.extend({
     );
     const structureSubsection = structureSection.subsection;
 
-    let so = structureSubsection.option(
+    so = structureSubsection.option(
       form.ListValue,
       "nav_submenu_type",
       _("Navigation Submenu Type"),
