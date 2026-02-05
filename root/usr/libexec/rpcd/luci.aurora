@@ -81,6 +81,7 @@ case "$1" in
 		json_add_string "filename" "filename"
 	json_close_object
 	json_add_object "reset_defaults"; json_close_object
+	json_add_object "get_theme_config"; json_close_object
 	json_add_object "get_installed_versions"; json_close_object
 	json_add_object "check_updates"; json_close_object
 	json_add_object "get_system_info"; json_close_object
@@ -107,6 +108,18 @@ case "$1" in
 		else
 			echo '{ "result": 1, "error": "Template file not found" }'
 		fi
+		;;
+
+	"get_theme_config")
+		json_init
+		json_add_object "theme"
+		keys=$(uci -q show aurora.theme | sed -n 's/^aurora\.theme\.//p' | sed 's/=.*$//')
+		for key in $keys; do
+			value=$(uci -q get "aurora.theme.$key")
+			json_add_string "$key" "$value"
+		done
+		json_close_object
+		json_dump; json_cleanup
 		;;
 
 	"list_icons")
