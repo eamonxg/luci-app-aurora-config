@@ -464,7 +464,6 @@ return view.extend({
     const componentColorVars = [
       ["header_bg", _("Header Background")],
       ["header_interactive", _("Header Interactive")],
-      ["tab_bg", _("Tab Background")],
       ["progress_bar_start", _("Progress Bar Start")],
       ["progress_bar_end", _("Progress Bar End")],
       ["terminal_bg", _("Terminal Background")],
