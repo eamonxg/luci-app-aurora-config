@@ -163,7 +163,7 @@ const executeUpdate = (packageName, repo, version, packageFilter) => {
           "p",
           {},
           _(
-            "Update completed successfully! Please reload the page to see the changes. If the old version still appears, try a hard refresh (Ctrl+Shift+R or Cmd+Shift+R) or open an incognito/private window.",
+            "Update completed successfully! Please reload the page to see the changes. If the old version still appears, try again in an incognito/private window or after clearing your browser cache.",
           ),
         ),
       );
@@ -386,13 +386,31 @@ return view.extend({
       [
         E("h2", {}, _("Version Management")),
 
-        E(
-          "div",
-          { class: "cbi-map-descr" },
+        E("div", { class: "cbi-map-descr" }, [
           _(
-            "Check for and install updates for Aurora theme and configuration packages. Updates are downloaded from the official GitHub repository.",
+            "Check for and install updates for Aurora theme and configuration packages. Updates are downloaded from the latest releases of the Aurora theme and configuration plugin GitHub repositories.",
           ),
-        ),
+          " ",
+          E(
+            "a",
+            {
+              href: "https://github.com/eamonxg/luci-theme-aurora/releases/latest",
+              target: "_blank",
+              rel: "noreferrer",
+            },
+            "Theme Releases",
+          ),
+          " ",
+          E(
+            "a",
+            {
+              href: "https://github.com/eamonxg/luci-app-aurora-config/releases/latest",
+              target: "_blank",
+              rel: "noreferrer",
+            },
+            "Config Releases",
+          ),
+        ]),
 
         E("div", { style: "margin: 1em 0" }, [
           E(

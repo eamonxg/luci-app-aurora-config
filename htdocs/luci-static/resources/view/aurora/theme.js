@@ -514,7 +514,7 @@ return view.extend({
         key: "base",
         title: _("Base Colors"),
         description: _(
-          "Define foundational colors used across the interface, including backgrounds, text, borders, and primary brand accents.",
+          "The theme layout uses three layers: background (Background) → page container (Page) → panel card (Panel). These variables define each layer's background color (Background) and foreground/text color (Foreground). The primary color (Primary) is mainly used for focused/active states of inputs, selects, radios, checkboxes, and dropdowns, and is also used for key buttons and the page footer.",
         ),
         vars: baseColorVars,
       },
@@ -522,7 +522,7 @@ return view.extend({
         key: "component",
         title: _("Component Colors"),
         description: _(
-          "Customize component surfaces and UI elements such as links, inputs, headers, tooltips, and progress bars.",
+          "Controls colors used by specific UI components: top navigation bar (Header) and boxed dropdown hover background (Header Interactive), progress bar gradient (Progress Bar Start/End), log panel (Terminal), overlay mask (Overlay), links (Link), checked radios/checkboxes (Input Checked), tooltip bubble (Tooltip), and section header surfaces (Label Surface).",
         ),
         vars: componentColorVars,
       },
@@ -530,7 +530,7 @@ return view.extend({
         key: "semantic_status",
         title: _("Semantic & Status Colors"),
         description: _(
-          "Set colors for semantic roles and status feedback such as secondary, muted, destructive, accent, default, info, warning, success, and error.",
+          "Semantic colors represent different actions and intents, commonly used in buttons and badges. For example, destructive (Destructive) maps to high‑risk actions like delete or reset. Status colors represent system feedback states, commonly used in tooltip messages (Tooltip), alert dialogs (Alert), status tags (Tag), and legends (Legend). Each status type (Default, Info, Warning, Success, Error) has two colors: a background color and a foreground/text color (Foreground).",
         ),
         vars: semanticStatusColorVars,
       },
@@ -627,8 +627,8 @@ return view.extend({
                 "p",
                 {},
                 _(
-                  "Apply preset '%s'? This will overwrite the entire theme configuration in /etc/config/aurora.",
-                ).format(presetLabel),
+                  "Apply preset '%s'? This will switch the full theme style to the '%s' preset and overwrite the theme configuration file at /etc/config/aurora.",
+                ).format(presetLabel, presetLabel),
               ),
               E("div", { class: "right" }, [
                 E("button", { class: "btn", click: ui.hideModal }, _("Cancel")),
@@ -766,7 +766,7 @@ return view.extend({
                       "p",
                       {},
                       _(
-                        "The uploaded configuration will replace /etc/config/aurora. Press 'Continue' to apply and reload, or 'Cancel' to abort.",
+                        "Please upload the Aurora configuration file named 'aurora'. This will overwrite the theme configuration at /etc/config/aurora. Press 'Continue' to apply and reload, or 'Cancel' to abort.",
                       ),
                     ),
                     E("pre", {}, preview),
@@ -853,7 +853,7 @@ return view.extend({
                 "p",
                 {},
                 _(
-                  "Are you sure you want to reset all theme settings to original defaults?",
+                  "Are you sure you want to reset all theme settings (Color, Structure, Icons & Toolbar) back to the default theme's original configuration? This will revert everything to the default theme's initial state.",
                 ),
               ),
               E("div", { class: "right" }, [
