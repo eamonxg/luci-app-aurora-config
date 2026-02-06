@@ -137,27 +137,27 @@ case "$1" in
 
 	"get_theme_presets")
 		json_init
-		json_add_array "presets"
-		json_add_object ""
-			json_add_string "name" "classic"
-			json_add_string "label" "Classic"
-		json_close_object
-		json_add_object ""
-			json_add_string "name" "sage-green"
-			json_add_string "label" "Sage Green"
-		json_close_object
-		json_add_object ""
-			json_add_string "name" "amber-sand"
-			json_add_string "label" "Amber Sand"
-		json_close_object
-		json_add_object ""
-			json_add_string "name" "monochrome"
-			json_add_string "label" "Monochrome"
-		json_close_object
-		json_add_object ""
-			json_add_string "name" "sky-blue"
-			json_add_string "label" "Sky Blue"
-		json_close_object
+	json_add_array "presets"
+	json_add_object ""
+		json_add_string "name" "classic"
+		json_add_string "label" "Classic"
+	json_close_object
+	json_add_object ""
+		json_add_string "name" "monochrome"
+		json_add_string "label" "Monochrome"
+	json_close_object
+	json_add_object ""
+		json_add_string "name" "sage-green"
+		json_add_string "label" "Sage Green"
+	json_close_object
+	json_add_object ""
+		json_add_string "name" "amber-sand"
+		json_add_string "label" "Amber Sand"
+	json_close_object
+	json_add_object ""
+		json_add_string "name" "sky-blue"
+		json_add_string "label" "Sky Blue"
+	json_close_object
 		json_close_array
 		json_dump; json_cleanup
 		;;

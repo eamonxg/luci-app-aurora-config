@@ -558,9 +558,9 @@ return view.extend({
       }
       return [
         { name: "classic", label: _("Classic") },
+        { name: "monochrome", label: _("Monochrome") },
         { name: "sage-green", label: _("Sage Green") },
         { name: "amber-sand", label: _("Amber Sand") },
-        { name: "monochrome", label: _("Monochrome") },
         { name: "sky-blue", label: _("Sky Blue") },
       ];
     };
