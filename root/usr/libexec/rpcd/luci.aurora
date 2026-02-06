@@ -9,6 +9,9 @@ readonly DOWNLOAD_PATH="/tmp/aurora_downloads"
 readonly CONFIG_FILE="/etc/config/aurora"
 readonly CLASSIC_TEMPLATE="/usr/share/aurora/classic.template"
 readonly SAGE_GREEN_TEMPLATE="/usr/share/aurora/sage-green.template"
+readonly AMBER_SAND_TEMPLATE="/usr/share/aurora/amber-sand.template"
+readonly MONOCHROME_TEMPLATE="/usr/share/aurora/monochrome.template"
+readonly SKY_BLUE_TEMPLATE="/usr/share/aurora/sky-blue.template"
 readonly IMPORT_CONFIG_TMP="/tmp/aurora_config_import.tmp"
 readonly EXPORT_CONFIG_TMP="/tmp/aurora_config_export.conf"
 
@@ -143,6 +146,18 @@ case "$1" in
 			json_add_string "name" "sage-green"
 			json_add_string "label" "Sage Green"
 		json_close_object
+		json_add_object ""
+			json_add_string "name" "amber-sand"
+			json_add_string "label" "Amber Sand"
+		json_close_object
+		json_add_object ""
+			json_add_string "name" "monochrome"
+			json_add_string "label" "Monochrome"
+		json_close_object
+		json_add_object ""
+			json_add_string "name" "sky-blue"
+			json_add_string "label" "Sky Blue"
+		json_close_object
 		json_close_array
 		json_dump; json_cleanup
 		;;
@@ -156,6 +171,15 @@ case "$1" in
 			;;
 		"sage-green")
 			template="$SAGE_GREEN_TEMPLATE"
+			;;
+		"amber-sand")
+			template="$AMBER_SAND_TEMPLATE"
+			;;
+		"monochrome")
+			template="$MONOCHROME_TEMPLATE"
+			;;
+		"sky-blue")
+			template="$SKY_BLUE_TEMPLATE"
 			;;
 		*)
 			echo '{ "result": 1, "error": "Unknown preset" }'

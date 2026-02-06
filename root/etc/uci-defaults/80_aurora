@@ -3,6 +3,9 @@
 readonly CONF_FILE="/etc/config/aurora"
 readonly CLASSIC_TEMPLATE="/usr/share/aurora/classic.template"
 readonly SAGE_GREEN_TEMPLATE="/usr/share/aurora/sage-green.template"
+readonly AMBER_SAND_TEMPLATE="/usr/share/aurora/amber-sand.template"
+readonly MONOCHROME_TEMPLATE="/usr/share/aurora/monochrome.template"
+readonly SKY_BLUE_TEMPLATE="/usr/share/aurora/sky-blue.template"
 readonly LOG_TAG="aurora"
 
 log() {
@@ -17,10 +20,16 @@ main() {
         template="$CLASSIC_TEMPLATE"
     elif [ -f "$SAGE_GREEN_TEMPLATE" ]; then
         template="$SAGE_GREEN_TEMPLATE"
+    elif [ -f "$AMBER_SAND_TEMPLATE" ]; then
+        template="$AMBER_SAND_TEMPLATE"
+    elif [ -f "$MONOCHROME_TEMPLATE" ]; then
+        template="$MONOCHROME_TEMPLATE"
+    elif [ -f "$SKY_BLUE_TEMPLATE" ]; then
+        template="$SKY_BLUE_TEMPLATE"
     fi
 
     if [ -z "$template" ]; then
-        log "Template missing: $CLASSIC_TEMPLATE, $SAGE_GREEN_TEMPLATE"
+        log "Template missing: $CLASSIC_TEMPLATE, $SAGE_GREEN_TEMPLATE, $AMBER_SAND_TEMPLATE, $MONOCHROME_TEMPLATE, $SKY_BLUE_TEMPLATE"
         exit 0
     fi
 
