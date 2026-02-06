@@ -1,7 +1,8 @@
 #!/bin/sh
 
 readonly CONF_FILE="/etc/config/aurora"
-readonly TEMPLATE_FILE="/usr/share/aurora/classic.template"
+readonly CLASSIC_TEMPLATE="/usr/share/aurora/classic.template"
+readonly SAGE_GREEN_TEMPLATE="/usr/share/aurora/sage-green.template"
 readonly LOG_TAG="aurora"
 
 log() {
@@ -11,13 +12,20 @@ log() {
 main() {
     log "Initializing Aurora theme configuration"
 
-    if [ ! -f "$TEMPLATE_FILE" ]; then
-        log "Template missing: $TEMPLATE_FILE"
+    template=""
+    if [ -f "$CLASSIC_TEMPLATE" ]; then
+        template="$CLASSIC_TEMPLATE"
+    elif [ -f "$SAGE_GREEN_TEMPLATE" ]; then
+        template="$SAGE_GREEN_TEMPLATE"
+    fi
+
+    if [ -z "$template" ]; then
+        log "Template missing: $CLASSIC_TEMPLATE, $SAGE_GREEN_TEMPLATE"
         exit 0
     fi
 
     if [ ! -f "$CONF_FILE" ]; then
-        if cp "$TEMPLATE_FILE" "$CONF_FILE"; then
+        if cp "$template" "$CONF_FILE"; then
             chmod 644 "$CONF_FILE"
             log "First-time initialization: Config created from template"
         else

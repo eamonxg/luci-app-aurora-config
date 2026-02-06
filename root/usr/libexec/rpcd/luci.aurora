@@ -8,7 +8,7 @@ readonly TMP_UPLOAD_PATH="/tmp/aurora_icon.tmp"
 readonly DOWNLOAD_PATH="/tmp/aurora_downloads"
 readonly CONFIG_FILE="/etc/config/aurora"
 readonly CLASSIC_TEMPLATE="/usr/share/aurora/classic.template"
-readonly MODERN_DARK_TEMPLATE="/usr/share/aurora/modern-dark.template"
+readonly SAGE_GREEN_TEMPLATE="/usr/share/aurora/sage-green.template"
 readonly IMPORT_CONFIG_TMP="/tmp/aurora_config_import.tmp"
 readonly EXPORT_CONFIG_TMP="/tmp/aurora_config_export.conf"
 
@@ -140,8 +140,8 @@ case "$1" in
 			json_add_string "label" "Classic"
 		json_close_object
 		json_add_object ""
-			json_add_string "name" "modern-dark"
-			json_add_string "label" "Modern Dark"
+			json_add_string "name" "sage-green"
+			json_add_string "label" "Sage Green"
 		json_close_object
 		json_close_array
 		json_dump; json_cleanup
@@ -154,8 +154,8 @@ case "$1" in
 		"classic")
 			template="$CLASSIC_TEMPLATE"
 			;;
-		"modern-dark")
-			template="$MODERN_DARK_TEMPLATE"
+		"sage-green")
+			template="$SAGE_GREEN_TEMPLATE"
 			;;
 		*)
 			echo '{ "result": 1, "error": "Unknown preset" }'

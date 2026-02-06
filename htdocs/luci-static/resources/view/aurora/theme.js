@@ -558,7 +558,7 @@ return view.extend({
       }
       return [
         { name: "classic", label: _("Classic") },
-        { name: "modern-dark", label: _("Modern Dark") },
+        { name: "sage-green", label: _("Sage Green") },
       ];
     };
 
@@ -566,15 +566,10 @@ return view.extend({
       const presetOptions = buildPresetOptions();
       const defaultPreset = "classic";
       const storedPreset = localStorage.getItem("aurora.theme_preset");
-      const legacyMap = { aurora: "classic", noir: "modern-dark" };
-      const normalizedPreset = legacyMap[storedPreset] || storedPreset;
-      if (normalizedPreset && normalizedPreset !== storedPreset) {
-        localStorage.setItem("aurora.theme_preset", normalizedPreset);
-      }
       const hasStoredPreset = presetOptions.some(
-        (preset) => preset.name === normalizedPreset,
+        (preset) => preset.name === storedPreset,
       );
-      const initialPreset = hasStoredPreset ? normalizedPreset : defaultPreset;
+      const initialPreset = hasStoredPreset ? storedPreset : defaultPreset;
 
       if (!hasStoredPreset) {
         localStorage.setItem("aurora.theme_preset", initialPreset);
@@ -603,18 +598,14 @@ return view.extend({
 
       const resolvePresetSelection = () => {
         const stored = localStorage.getItem("aurora.theme_preset");
-        const normalizedStored = legacyMap[stored] || stored;
-        if (normalizedStored && normalizedStored !== stored) {
-          localStorage.setItem("aurora.theme_preset", normalizedStored);
-        }
         const storedPreset = presetOptions.find(
-          (preset) => preset.name === normalizedStored,
+          (preset) => preset.name === stored,
         );
-        if (storedPreset && select.value !== normalizedStored) {
-          select.value = normalizedStored;
+        if (storedPreset && select.value !== stored) {
+          select.value = stored;
         }
         const presetName =
-          (storedPreset && normalizedStored) || select?.value || defaultPreset;
+          (storedPreset && stored) || select?.value || defaultPreset;
         const presetLabel =
           select?.selectedOptions?.[0]?.textContent || presetName;
         return { presetName, presetLabel };
