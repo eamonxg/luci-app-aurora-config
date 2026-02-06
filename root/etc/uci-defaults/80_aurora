@@ -1,134 +1,45 @@
 #!/bin/sh
 
 readonly CONF_FILE="/etc/config/aurora"
-readonly TEMPLATE_DIR="/usr/share/aurora"
-readonly TEMPLATE_FILE="$TEMPLATE_DIR/aurora.template"
+readonly CLASSIC_TEMPLATE="/usr/share/aurora/classic.template"
+readonly SAGE_GREEN_TEMPLATE="/usr/share/aurora/sage-green.template"
+readonly AMBER_SAND_TEMPLATE="/usr/share/aurora/amber-sand.template"
+readonly MONOCHROME_TEMPLATE="/usr/share/aurora/monochrome.template"
+readonly SKY_BLUE_TEMPLATE="/usr/share/aurora/sky-blue.template"
 readonly LOG_TAG="aurora"
 
 log() {
     logger -t "$LOG_TAG" "$1"
 }
 
-get_theme_version() {
-    local version="0.9.0" 
-    if command -v opkg >/dev/null 2>&1; then
-        version=$(opkg list-installed luci-theme-aurora 2>/dev/null | awk '{print $3}' | head -1)
-    elif command -v apk >/dev/null 2>&1; then
-        version=$(apk list -I luci-theme-aurora 2>/dev/null | sed -n 's/^luci-theme-aurora-\([^ ]*\) .*/\1/p' | head -1)
-    fi
-    echo "${version:-0.9.0}"
-}
-
-generate_config_content() {
-    local version="$1"
-    
-    cat <<EOF
-config aurora 'theme'
-	option light_background_start 'oklch(0.968 0.007 247.896)'
-	option light_background_mid 'oklch(0.968 0.007 247.896)'
-	option light_background_end 'oklch(0.968 0.007 247.896)'
-	option light_progress_start 'oklch(0.68 0.11 233)'
-	option light_progress_end 'oklch(0.7535 0.1034 198.37)'
-	option light_primary 'oklch(0.68 0.11 233)'
-	option light_primary_text 'oklch(0.6656 0.1055 234.61)'
-	option light_muted 'oklch(0.97 0 0)'
-	option light_muted_text 'oklch(0.35 0 0)'
-	option light_destructive 'oklch(0.94 0.05 25)'
-	option light_destructive_text 'oklch(0.35 0.12 25)'
-	option light_accent 'oklch(0.62 0.22 25)'
-	option light_accent_text 'oklch(0.97 0.02 25)'
-	option light_success 'oklch(0.94 0.05 160)'
-	option light_success_text 'oklch(0.32 0.09 165)'
-	option light_info 'oklch(0.94 0.05 230)'
-	option light_info_text 'oklch(0.35 0.08 240)'
-	option light_warning 'oklch(0.95 0.05 90)'
-	option light_warning_text 'oklch(0.35 0.08 60)'
-	option light_error 'oklch(0.94 0.05 25)'
-	option light_error_text 'oklch(0.35 0.12 25)'
-	option light_default 'oklch(0.97 0 0)'
-	option light_default_text 'oklch(0.205 0 0)'
-	option light_header_bg 'oklch(0.968 0.007 247.896)'
-	option light_view_bg 'oklch(1 0 0)'
-	option light_card_bg 'oklch(1 0 0)'
-	option dark_background_start 'oklch(0.2077 0.0398 265.75)'
-	option dark_background_mid 'oklch(0.3861 0.059 188.42)'
-	option dark_background_end 'oklch(0.4318 0.0865 166.91)'
-	option dark_progress_start 'oklch(0.4318 0.0865 166.91)'
-	option dark_progress_end 'oklch(62.1% 0.145 189.632)'
-	option dark_primary 'oklch(0.48 0.118 190.485)'
-	option dark_primary_text 'oklch(0.73 0.168 188.745)'
-	option dark_muted 'oklch(0.373 0.026 259.733)'
-	option dark_muted_text 'oklch(0.82 0.035 259.733)'
-	option dark_destructive 'oklch(0.258 0.092 26.042)'
-	option dark_destructive_text 'oklch(0.88 0.14 26.042)'
-	option dark_accent 'oklch(0.35 0.12 25)'
-	option dark_accent_text 'oklch(0.88 0.14 25)'
-	option dark_success 'oklch(0.378 0.077 168.94/0.5)'
-	option dark_success_text 'oklch(0.92 0.09 160)'
-	option dark_info 'oklch(0.391 0.09 240.876/0.5)'
-	option dark_info_text 'oklch(0.88 0.06 230)'
-	option dark_warning 'oklch(0.414 0.112 45.904/0.5)'
-	option dark_warning_text 'oklch(0.924 0.12 95.746)'
-	option dark_error 'oklch(0.41 0.159 10.272/0.5)'
-	option dark_error_text 'oklch(0.88 0.14 25)'
-	option dark_default 'oklch(0.274 0.006 286.033/0.5)'
-	option dark_default_text 'oklch(0.985 0.01 285.805)'
-	option dark_header_bg 'oklch(0.21 0.034 264.665)'
-	option dark_view_bg 'oklch(0.21 0.034 264.665)'
-	option dark_card_bg 'oklch(0.279 0.041 260.031)'
-	option struct_font_sans '"Lato", ui-sans-serif, system-ui, sans-serif'
-	option struct_font_mono 'ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace'
-	option struct_spacing '0.25rem'
-	option struct_container_max_width '80rem'
-	option nav_submenu_type 'mega-menu'
-	option toolbar_enabled '1'
-	option icon_cache_version '$version'
-	option logo_svg 'logo.svg'
-	option logo_png 'logo_32.png'
-
-config toolbar_item
-	option title 'Overview'
-	option url '/cgi-bin/luci/admin/status/overview'
-	option icon 'overview.svg'
-	option enabled '1'
-
-config toolbar_item
-	option title 'System'
-	option url '/cgi-bin/luci/admin/system/system'
-	option icon 'system.svg'
-	option enabled '1'
-
-config toolbar_item
-	option title 'Software'
-	option url '/cgi-bin/luci/admin/system/package-manager'
-	option icon 'software.svg'
-	option enabled '0'
-
-config toolbar_item
-	option title 'Network'
-	option url '/cgi-bin/luci/admin/network/network'
-	option icon 'network.svg'
-	option enabled '1'
-EOF
-}
-
-
 main() {
     log "Initializing Aurora theme configuration"
 
-    [ -d "$TEMPLATE_DIR" ] || mkdir -p "$TEMPLATE_DIR"
+    template=""
+    if [ -f "$CLASSIC_TEMPLATE" ]; then
+        template="$CLASSIC_TEMPLATE"
+    elif [ -f "$SAGE_GREEN_TEMPLATE" ]; then
+        template="$SAGE_GREEN_TEMPLATE"
+    elif [ -f "$AMBER_SAND_TEMPLATE" ]; then
+        template="$AMBER_SAND_TEMPLATE"
+    elif [ -f "$MONOCHROME_TEMPLATE" ]; then
+        template="$MONOCHROME_TEMPLATE"
+    elif [ -f "$SKY_BLUE_TEMPLATE" ]; then
+        template="$SKY_BLUE_TEMPLATE"
+    fi
 
-    local current_version=$(get_theme_version)
-    
-    generate_config_content "$current_version" > "$TEMPLATE_FILE"
-    
-    chmod 444 "$TEMPLATE_FILE"
-    log "Template created at $TEMPLATE_FILE (read-only)"
+    if [ -z "$template" ]; then
+        log "Template missing: $CLASSIC_TEMPLATE, $SAGE_GREEN_TEMPLATE, $AMBER_SAND_TEMPLATE, $MONOCHROME_TEMPLATE, $SKY_BLUE_TEMPLATE"
+        exit 0
+    fi
 
     if [ ! -f "$CONF_FILE" ]; then
-        cp "$TEMPLATE_FILE" "$CONF_FILE"
-        chmod 644 "$CONF_FILE" 
-        log "First-time initialization: Config created from template"
+        if cp "$template" "$CONF_FILE"; then
+            chmod 644 "$CONF_FILE"
+            log "First-time initialization: Config created from template"
+        else
+            log "Failed to create config from template"
+        fi
     else
         log "Configuration already exists, skipping initialization"
     fi

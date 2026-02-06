@@ -8,6 +8,7 @@
 
 const CACHE_KEY = "aurora.version.cache";
 const CACHE_TTL = 1800000;
+const CONFIG_IMPORT_PATH = "/tmp/aurora_config_import.tmp";
 
 const versionCache = {
   get() {
@@ -73,10 +74,59 @@ const callGetInstalledVersions = rpc.declare({
   method: "get_installed_versions",
 });
 
+const callGetThemeConfig = rpc.declare({
+  object: "luci.aurora",
+  method: "get_theme_config",
+});
+
+const callGetThemePresets = rpc.declare({
+  object: "luci.aurora",
+  method: "get_theme_presets",
+});
+
+const callApplyThemePreset = rpc.declare({
+  object: "luci.aurora",
+  method: "apply_theme_preset",
+  params: ["name"],
+});
+
+const callExportConfig = rpc.declare({
+  object: "luci.aurora",
+  method: "export_config",
+});
+
+const callImportConfig = rpc.declare({
+  object: "luci.aurora",
+  method: "import_config",
+});
+
 const callResetDefaults = rpc.declare({
   object: "luci.aurora",
   method: "reset_defaults",
 });
+
+const resolveCssColor = (() => {
+  let resolverEl = null;
+
+  return (value) => {
+    if (!value || typeof value !== "string") return null;
+    if (!document || !document.documentElement) return null;
+
+    if (!resolverEl) {
+      resolverEl = document.createElement("span");
+      resolverEl.style.cssText =
+        "position:absolute;left:-9999px;top:-9999px;visibility:hidden;pointer-events:none;";
+      (document.body || document.documentElement).appendChild(resolverEl);
+    }
+
+    resolverEl.style.color = "";
+    resolverEl.style.color = value;
+    if (!resolverEl.style.color) return null;
+
+    const computed = getComputedStyle(resolverEl).color;
+    return computed || null;
+  };
+})();
 
 const renderColorPicker = function (option_index, section_id, in_table) {
   const el = form.Value.prototype.render.apply(this, [
@@ -87,11 +137,19 @@ const renderColorPicker = function (option_index, section_id, in_table) {
   return Promise.resolve(el).then((element) => {
     const input = element.querySelector('input[type="text"]');
     if (input) {
-      const color = new Color(input.value);
-      if (color.alpha < 1) color.alpha = 1;
+      let colorHex = null;
+      const resolved = resolveCssColor(input.value);
+      try {
+        const color = new Color(resolved || input.value);
+        if (color.alpha < 1) color.alpha = 1;
+        colorHex = color.toString({ format: "hex" });
+      } catch (e) {
+        return element;
+      }
+
       const colorInput = E("input", {
         type: "color",
-        value: color.toString({ format: "hex" }),
+        value: colorHex,
         style:
           "margin-left: 8px; height: 2em; width: 3em; vertical-align: middle; cursor: pointer;",
         title: _("Click to select color visually"),
@@ -103,17 +161,30 @@ const renderColorPicker = function (option_index, section_id, in_table) {
   });
 };
 
-const addColorInputs = (ss, colorVars) => {
-  colorVars.forEach(([key, defaultValue, label]) => {
-    const so = ss.option(form.Value, key, label);
-    so.default = defaultValue;
-    so.placeholder = defaultValue;
+const addColorInputs = (ss, mode, colorVars, defaults) => {
+  colorVars.forEach(([key, label]) => {
+    const optionKey = `${mode}_${key}`;
+    const defaultValue = defaults?.[optionKey];
+    const so = ss.option(form.Value, optionKey, label);
+    if (defaultValue !== undefined) {
+      so.default = defaultValue;
+      so.placeholder = defaultValue;
+    }
     so.rmempty = false;
     so.render = renderColorPicker;
   });
 };
 
-const createColorSection = (ss, tab, id, title, description, colorVars) => {
+const createColorSection = (
+  ss,
+  tab,
+  id,
+  title,
+  description,
+  colorVars,
+  mode,
+  defaults,
+) => {
   const o = ss.taboption(
     tab,
     form.SectionValue,
@@ -124,46 +195,13 @@ const createColorSection = (ss, tab, id, title, description, colorVars) => {
     title,
     description,
   );
-  addColorInputs(o.subsection, colorVars);
+  addColorInputs(o.subsection, mode, colorVars, defaults);
 };
 
-const createColorSections = (ss, mode, colorVars) => {
-  const sections = [
-    {
-      key: "gradient",
-      title: _("Gradient Colors"),
-      description: _(
-        "Customize the gradient colors used throughout the interface. The page background uses a smooth three-color gradient (start, middle, end), while progress bars use a two-color gradient (start, end).",
-      ),
-    },
-    {
-      key: "semantic",
-      title: _("Semantic Colors"),
-      description: _(
-        "Define colors that represent different actions and behaviors. These colors are used for buttons and badges. Each type has two colors: a background color and a text color. The primary color also affects interactive form elements (inputs, checkboxes, radio buttons, etc.) when you hover over or interact with them.",
-      ),
-    },
-    {
-      key: "status",
-      title: _("Status Colors"),
-      description: _(
-        "Set colors that indicate system status and feedback messages. Each status type (default, success, info, warning, error) has two colors: a background color and a text color. These are used in tooltips, alert messages, status labels, and legends throughout the interface.",
-      ),
-    },
-    {
-      key: "component",
-      title: _("Component Colors"),
-      description: _(
-        "Set colors for major interface components including headers, view backgrounds, and card containers.",
-      ),
-    },
-  ];
-
-  sections.forEach(({ key, title, description }) => {
+const createColorSections = (ss, mode, colorGroups, defaults) => {
+  colorGroups.forEach(({ key, title, description, vars }) => {
     const id = `_${mode}_${key}`;
-    const vars =
-      colorVars[`${mode}${key.charAt(0).toUpperCase()}${key.slice(1)}`];
-    createColorSection(ss, mode, id, title, description, vars);
+    createColorSection(ss, mode, id, title, description, vars, mode, defaults);
   });
 };
 
@@ -414,155 +452,89 @@ return view.extend({
   load: function () {
     return Promise.all([
       uci.load("aurora"),
+      L.resolveDefault(callGetThemeConfig(), {}),
+      L.resolveDefault(callGetThemePresets(), {}),
       L.resolveDefault(callGetInstalledVersions(), {}),
     ]);
   },
 
   render(loadData) {
-    const installedVersions = loadData[1];
+    const themeConfig = loadData[1]?.theme || {};
+    const themePresets = loadData[2]?.presets || [];
+    const installedVersions = loadData[3];
 
-    const colorVars = {
-      lightGradient: [
-        [
-          "light_background_start",
-          "oklch(0.968 0.007 247.896)",
-          _("Background Start Color"),
-        ],
-        [
-          "light_background_mid",
-          "oklch(0.968 0.007 247.896)",
-          _("Background Mid Color"),
-        ],
-        [
-          "light_background_end",
-          "oklch(0.968 0.007 247.896)",
-          _("Background End Color"),
-        ],
-        [
-          "light_progress_start",
-          "oklch(0.68 0.11 233)",
-          _("Progress Start Color"),
-        ],
-        [
-          "light_progress_end",
-          "oklch(0.7535 0.1034 198.37)",
-          _("Progress End Color"),
-        ],
-      ],
-      darkGradient: [
-        [
-          "dark_background_start",
-          "oklch(0.2077 0.0398 265.75)",
-          _("Background Start Color"),
-        ],
-        [
-          "dark_background_mid",
-          "oklch(0.3861 0.059 188.42)",
-          _("Background Mid Color"),
-        ],
-        [
-          "dark_background_end",
-          "oklch(0.4318 0.0865 166.91)",
-          _("Background End Color"),
-        ],
-        [
-          "dark_progress_start",
-          "oklch(0.4318 0.0865 166.91)",
-          _("Progress Start Color"),
-        ],
-        [
-          "dark_progress_end",
-          "oklch(62.1% 0.145 189.632)",
-          _("Progress End Color"),
-        ],
-      ],
-      lightSemantic: [
-        ["light_primary", "oklch(0.68 0.11 233)", _("Primary Color")],
-        [
-          "light_primary_text",
-          "oklch(0.6656 0.1055 234.61)",
-          _("Primary Text Color"),
-        ],
-        ["light_muted", "oklch(0.97 0 0)", _("Muted Color")],
-        ["light_muted_text", "oklch(0.35 0 0)", _("Muted Text Color")],
-        ["light_accent", "oklch(0.62 0.22 25)", _("Accent Color")],
-        ["light_accent_text", "oklch(0.97 0.02 25)", _("Accent Text Color")],
-        ["light_destructive", "oklch(0.94 0.05 25)", _("Destructive Color")],
-        [
-          "light_destructive_text",
-          "oklch(0.35 0.12 25)",
-          _("Destructive Text Color"),
-        ],
-      ],
-      darkSemantic: [
-        ["dark_primary", "oklch(0.48 0.118 190.485)", _("Primary Color")],
-        [
-          "dark_primary_text",
-          "oklch(0.73 0.168 188.745)",
-          _("Primary Text Color"),
-        ],
-        ["dark_muted", "oklch(0.373 0.026 259.733)", _("Muted Color")],
-        ["dark_muted_text", "oklch(0.82 0.035 259.733)", _("Muted Text Color")],
-        ["dark_accent", "oklch(0.35 0.12 25)", _("Accent Color")],
-        ["dark_accent_text", "oklch(0.88 0.14 25)", _("Accent Text Color")],
-        [
-          "dark_destructive",
-          "oklch(0.258 0.092 26.042)",
-          _("Destructive Color"),
-        ],
-        [
-          "dark_destructive_text",
-          "oklch(0.88 0.14 26.042)",
-          _("Destructive Text Color"),
-        ],
-      ],
-      lightStatus: [
-        ["light_success", "oklch(0.94 0.05 160)", _("Success Color")],
-        ["light_success_text", "oklch(0.32 0.09 165)", _("Success Text Color")],
-        ["light_info", "oklch(0.94 0.05 230)", _("Info Color")],
-        ["light_info_text", "oklch(0.35 0.08 240)", _("Info Text Color")],
-        ["light_warning", "oklch(0.95 0.05 90)", _("Warning Color")],
-        ["light_warning_text", "oklch(0.35 0.08 60)", _("Warning Text Color")],
-        ["light_error", "oklch(0.94 0.05 25)", _("Error Color")],
-        ["light_error_text", "oklch(0.35 0.12 25)", _("Error Text Color")],
-        ["light_default", "oklch(0.97 0 0)", _("Default Color")],
-        ["light_default_text", "oklch(0.205 0 0)", _("Default Text Color")],
-      ],
-      darkStatus: [
-        ["dark_success", "oklch(0.378 0.077 168.94/0.5)", _("Success Color")],
-        ["dark_success_text", "oklch(0.92 0.09 160)", _("Success Text Color")],
-        ["dark_info", "oklch(0.391 0.09 240.876/0.5)", _("Info Color")],
-        ["dark_info_text", "oklch(0.88 0.06 230)", _("Info Text Color")],
-        ["dark_warning", "oklch(0.414 0.112 45.904/0.5)", _("Warning Color")],
-        [
-          "dark_warning_text",
-          "oklch(0.924 0.12 95.746)",
-          _("Warning Text Color"),
-        ],
-        ["dark_error", "oklch(0.41 0.159 10.272/0.5)", _("Error Color")],
-        ["dark_error_text", "oklch(0.88 0.14 25)", _("Error Text Color")],
-        ["dark_default", "oklch(0.274 0.006 286.033/0.5)", _("Default Color")],
-        [
-          "dark_default_text",
-          "oklch(0.985 0.01 285.805)",
-          _("Default Text Color"),
-        ],
-      ],
-      lightComponent: [
-        [
-          "light_header_bg",
-          "oklch(0.968 0.007 247.896)",
-          _("Header Background"),
-        ],
-        ["light_view_bg", "oklch(1 0 0)", _("View Background")],
-        ["light_card_bg", "oklch(1 0 0)", _("Card Background")],
-      ],
-      darkComponent: [
-        ["dark_header_bg", "oklch(0.21 0.034 264.665)", _("Header Background")],
-        ["dark_view_bg", "oklch(0.21 0.034 264.665)", _("View Background")],
-        ["dark_card_bg", "oklch(0.279 0.041 260.031)", _("Card Background")],
-      ],
-    };
+    // Order matches luci-theme-aurora/.dev/src/media/main.css @theme inline
+    const baseColorVars = [
+      ["background", _("Background")],
+      ["foreground", _("Foreground")],
+      ["page_bg", _("Page Background")],
+      ["panel_bg", _("Panel Background")],
+      ["primary", _("Primary")],
+      ["primary_foreground", _("Primary Foreground")],
+      ["border", _("Border")],
+    ];
+
+    const componentColorVars = [
+      ["header_bg", _("Header Background")],
+      ["header_interactive", _("Header Interactive")],
+      ["progress_bar_start", _("Progress Bar Start")],
+      ["progress_bar_end", _("Progress Bar End")],
+      ["terminal_bg", _("Terminal Background")],
+      ["terminal_foreground", _("Terminal Foreground")],
+      ["tooltip_bg", _("Tooltip Background")],
+      ["overlay_base", _("Overlay Base")],
+      ["link", _("Link")],
+      ["input_checked", _("Input Checked")],
+      ["label_surface", _("Label Surface")],
+    ];
+
+    const semanticStatusColorVars = [
+      ["secondary", _("Secondary")],
+      ["secondary_foreground", _("Secondary Foreground")],
+      ["destructive", _("Destructive")],
+      ["destructive_foreground", _("Destructive Foreground")],
+      ["accent", _("Accent")],
+      ["accent_foreground", _("Accent Foreground")],
+      ["muted", _("Muted")],
+      ["muted_foreground", _("Muted Foreground")],
+      ["default", _("Default")],
+      ["default_foreground", _("Default Foreground")],
+      ["info", _("Info")],
+      ["info_foreground", _("Info Foreground")],
+      ["warning", _("Warning")],
+      ["warning_foreground", _("Warning Foreground")],
+      ["success", _("Success")],
+      ["success_foreground", _("Success Foreground")],
+      ["error", _("Error")],
+      ["error_foreground", _("Error Foreground")],
+    ];
+
+    const colorGroups = [
+      {
+        key: "base",
+        title: _("Base Colors"),
+        description: _(
+          "Define foundational colors used across the interface, including backgrounds, text, borders, and primary brand accents.",
+        ),
+        vars: baseColorVars,
+      },
+      {
+        key: "component",
+        title: _("Component Colors"),
+        description: _(
+          "Customize component surfaces and UI elements such as links, inputs, headers, tooltips, and progress bars.",
+        ),
+        vars: componentColorVars,
+      },
+      {
+        key: "semantic_status",
+        title: _("Semantic & Status Colors"),
+        description: _(
+          "Set colors for semantic roles and status feedback such as secondary, muted, destructive, accent, default, info, warning, success, and error.",
+        ),
+        vars: semanticStatusColorVars,
+      },
+    ];
 
     const m = new form.Map("aurora", _("Aurora Theme Settings"));
 
@@ -570,6 +542,398 @@ return view.extend({
       installedVersions?.theme?.installed_version || "Unknown";
     const configVersion =
       installedVersions?.config?.installed_version || "Unknown";
+
+    let so;
+    const viewCtx = this;
+
+    const buildPresetOptions = () => {
+      if (themePresets.length > 0) {
+        const options = themePresets
+          .filter((preset) => preset?.name)
+          .map((preset) => ({
+            name: preset.name,
+            label: preset.label || preset.name,
+          }));
+        if (options.length > 0) return options;
+      }
+      return [
+        { name: "classic", label: _("Classic") },
+        { name: "monochrome", label: _("Monochrome") },
+        { name: "sage-green", label: _("Sage Green") },
+        { name: "amber-sand", label: _("Amber Sand") },
+        { name: "sky-blue", label: _("Sky Blue") },
+      ];
+    };
+
+    const buildPresetToolbarNode = () => {
+      const presetOptions = buildPresetOptions();
+      const defaultPreset = "classic";
+      const storedPreset = localStorage.getItem("aurora.theme_preset");
+      const hasStoredPreset = presetOptions.some(
+        (preset) => preset.name === storedPreset,
+      );
+      const initialPreset = hasStoredPreset ? storedPreset : defaultPreset;
+
+      if (!hasStoredPreset) {
+        localStorage.setItem("aurora.theme_preset", initialPreset);
+      }
+
+      const select = E(
+        "select",
+        {
+          class: "cbi-input-select",
+        },
+        presetOptions.map((preset) =>
+          E(
+            "option",
+            {
+              value: preset.name,
+              selected: preset.name === initialPreset ? "selected" : null,
+            },
+            preset.label,
+          ),
+        ),
+      );
+
+      select.addEventListener("change", () => {
+        localStorage.setItem("aurora.theme_preset", select.value);
+      });
+
+      const resolvePresetSelection = () => {
+        const stored = localStorage.getItem("aurora.theme_preset");
+        const storedPreset = presetOptions.find(
+          (preset) => preset.name === stored,
+        );
+        if (storedPreset && select.value !== stored) {
+          select.value = stored;
+        }
+        const presetName =
+          (storedPreset && stored) || select?.value || defaultPreset;
+        const presetLabel =
+          select?.selectedOptions?.[0]?.textContent || presetName;
+        return { presetName, presetLabel };
+      };
+
+      const applyButton = E(
+        "button",
+        {
+          class: "cbi-button cbi-button-apply",
+          title: _("Apply Preset"),
+          click: ui.createHandlerFn(viewCtx, () => {
+            const { presetName, presetLabel } = resolvePresetSelection();
+
+            return ui.showModal(_("Apply Theme Preset"), [
+              E(
+                "p",
+                {},
+                _(
+                  "Apply preset '%s'? This will overwrite the entire theme configuration in /etc/config/aurora.",
+                ).format(presetLabel),
+              ),
+              E("div", { class: "right" }, [
+                E("button", { class: "btn", click: ui.hideModal }, _("Cancel")),
+                " ",
+                E(
+                  "button",
+                  {
+                    class: "btn cbi-button-action important",
+                    click: () => {
+                      ui.showModal(_("Applying..."), [
+                        E("p", { class: "spinning" }, _("Updating theme...")),
+                      ]);
+                      return L.resolveDefault(
+                        callApplyThemePreset(presetName),
+                        {},
+                      ).then((ret) => {
+                        ui.hideModal();
+                        if (ret?.result === 0) {
+                          ui.addNotification(
+                            null,
+                            E("p", _("Preset applied successfully.")),
+                            "info",
+                          );
+                          window.location.reload();
+                        } else {
+                          ui.addNotification(
+                            null,
+                            E(
+                              "p",
+                              _("Apply failed: %s").format(
+                                ret?.error || "Unknown",
+                              ),
+                            ),
+                            "error",
+                          );
+                        }
+                      });
+                    },
+                  },
+                  _("Apply"),
+                ),
+              ]),
+            ]);
+          }),
+        },
+        _("Apply"),
+      );
+
+      const exportButton = E(
+        "button",
+        {
+          class: "cbi-button cbi-button-apply",
+          title: _("Export Configuration"),
+          click: ui.createHandlerFn(viewCtx, () => {
+            return L.resolveDefault(callExportConfig(), null)
+              .then((res) => {
+                if (!res || res.result !== 0) {
+                  throw new Error(res?.error || _("Export failed"));
+                }
+
+                const form = E(
+                  "form",
+                  {
+                    method: "post",
+                    action: L.env.cgi_base + "/cgi-download",
+                    enctype: "application/x-www-form-urlencoded",
+                  },
+                  [
+                    E("input", {
+                      type: "hidden",
+                      name: "sessionid",
+                      value: rpc.getSessionID(),
+                    }),
+                    E("input", {
+                      type: "hidden",
+                      name: "path",
+                      value: res.path,
+                    }),
+                    E("input", {
+                      type: "hidden",
+                      name: "filename",
+                      value: res.filename || "aurora",
+                    }),
+                  ],
+                );
+
+                document.body.appendChild(form);
+                form.submit();
+                form.parentNode.removeChild(form);
+
+                ui.addNotification(
+                  null,
+                  E("p", _("Configuration exported successfully.")),
+                  "info",
+                );
+              })
+              .catch((err) => {
+                ui.addNotification(
+                  null,
+                  E("p", _("Export failed: %s").format(err.message || err)),
+                  "error",
+                );
+              });
+          }),
+        },
+        _("Export"),
+      );
+
+      const importButton = E(
+        "button",
+        {
+          class: "cbi-button cbi-button-add",
+          title: _("Import Configuration"),
+          click: ui.createHandlerFn(viewCtx, function (ev) {
+            const btn = ev.currentTarget || ev.target;
+            const originalLabel = btn?.firstChild?.data;
+
+            return ui
+              .uploadFile(CONFIG_IMPORT_PATH, btn)
+              .then(
+                L.bind(function (res) {
+                  if (!res?.name)
+                    throw new Error(_("No file selected or upload failed"));
+                  if (btn?.firstChild)
+                    btn.firstChild.data = _("Checking file…");
+                  return fs.read(CONFIG_IMPORT_PATH);
+                }, this),
+              )
+              .then(
+                L.bind(function (content) {
+                  const preview = content || "";
+
+                  ui.showModal(_("Apply configuration?"), [
+                    E(
+                      "p",
+                      {},
+                      _(
+                        "The uploaded configuration will replace /etc/config/aurora. Press 'Continue' to apply and reload, or 'Cancel' to abort.",
+                      ),
+                    ),
+                    E("pre", {}, preview),
+                    E("div", { class: "right" }, [
+                      E(
+                        "button",
+                        {
+                          class: "btn",
+                          click: ui.createHandlerFn(this, () =>
+                            fs.remove(CONFIG_IMPORT_PATH).finally(ui.hideModal),
+                          ),
+                        },
+                        _("Cancel"),
+                      ),
+                      " ",
+                      E(
+                        "button",
+                        {
+                          class: "btn cbi-button-action important",
+                          click: ui.createHandlerFn(this, () => {
+                            ui.showModal(_("Importing..."), [
+                              E("p", { class: "spinning" }, _("Applying...")),
+                            ]);
+                            return L.resolveDefault(
+                              callImportConfig(),
+                              {},
+                            ).then((ret) => {
+                              ui.hideModal();
+                              if (ret?.result === 0) {
+                                ui.addNotification(
+                                  null,
+                                  E(
+                                    "p",
+                                    _("Configuration imported successfully."),
+                                  ),
+                                  "info",
+                                );
+                                window.location.reload();
+                              } else {
+                                const errorMsg = ret?.error || "Unknown error";
+                                ui.addNotification(
+                                  null,
+                                  E(
+                                    "p",
+                                    _("Import failed: %s").format(errorMsg),
+                                  ),
+                                  "error",
+                                );
+                              }
+                            });
+                          }),
+                        },
+                        _("Continue"),
+                      ),
+                    ]),
+                  ]);
+                }, this),
+              )
+              .catch((err) => {
+                ui.addNotification(
+                  null,
+                  E("p", _("Import failed: %s").format(err.message || err)),
+                  "error",
+                );
+                return L.resolveDefault(fs.remove(CONFIG_IMPORT_PATH), {});
+              })
+              .finally(() => {
+                if (btn?.firstChild && originalLabel !== undefined)
+                  btn.firstChild.data = originalLabel;
+              });
+          }),
+        },
+        _("Import"),
+      );
+
+      const resetButton = E(
+        "button",
+        {
+          class: "cbi-button cbi-button-reset",
+          title: _("Reset to Defaults"),
+          click: ui.createHandlerFn(viewCtx, () => {
+            return ui.showModal(_("Reset to Defaults"), [
+              E(
+                "p",
+                {},
+                _(
+                  "Are you sure you want to reset all theme settings to original defaults?",
+                ),
+              ),
+              E("div", { class: "right" }, [
+                E("button", { class: "btn", click: ui.hideModal }, _("Cancel")),
+                " ",
+                E(
+                  "button",
+                  {
+                    class: "btn cbi-button-negative",
+                    click: () => {
+                      ui.showModal(_("Resetting..."), [
+                        E("p", { class: "spinning" }, _("Restoring...")),
+                      ]);
+                      return L.resolveDefault(callResetDefaults(), {}).then(
+                        (ret) => {
+                          ui.hideModal();
+                          if (ret?.result === 0) {
+                            window.location.reload();
+                            ui.addNotification(
+                              null,
+                              E("p", _("Settings reset successfully.")),
+                              "info",
+                            );
+                          } else {
+                            ui.addNotification(
+                              null,
+                              E(
+                                "p",
+                                _("Error: %s").format(ret?.error || "Unknown"),
+                              ),
+                              "error",
+                            );
+                          }
+                        },
+                      );
+                    },
+                  },
+                  _("Confirm Reset"),
+                ),
+              ]),
+            ]);
+          }),
+        },
+        _("Reset"),
+      );
+
+      const presetGroup = E(
+        "div",
+        {
+          style: "display:flex; flex-wrap:wrap; gap:0.5em; align-items:center;",
+        },
+        [
+          E(
+            "span",
+            { style: "font-weight: 600; white-space: nowrap;" },
+            _("Preset"),
+          ),
+          select,
+          applyButton,
+        ],
+      );
+
+      const actionGroup = E(
+        "div",
+        {
+          style: "display:flex; flex-wrap:wrap; gap:0.5em; align-items:center;",
+        },
+        [exportButton, importButton, resetButton],
+      );
+
+      return E(
+        "div",
+        {
+          class: "aurora-preset-toolbar",
+          style:
+            "display:flex; flex-wrap:wrap; gap:0.75em 1em; align-items:center;",
+        },
+        [presetGroup, actionGroup],
+      );
+    };
 
     const headerBar = E(
       "div",
@@ -580,7 +944,7 @@ return view.extend({
       [
         E("div", { style: "display: flex; flex-wrap: wrap; gap: 1em;" }, [
           E("span", { style: "white-space: nowrap;" }, [
-            document.createTextNode("Theme: "),
+            document.createTextNode(_("Theme: ")),
             E(
               "span",
               {
@@ -592,7 +956,7 @@ return view.extend({
             ),
           ]),
           E("span", { style: "white-space: nowrap;" }, [
-            document.createTextNode("Config: "),
+            document.createTextNode(_("Config: ")),
             E(
               "span",
               {
@@ -604,68 +968,7 @@ return view.extend({
             ),
           ]),
         ]),
-        E(
-          "button",
-          {
-            class: "cbi-button cbi-button-reset",
-            click: ui.createHandlerFn(this, function () {
-              return ui.showModal(_("Reset to Defaults"), [
-                E(
-                  "p",
-                  {},
-                  _(
-                    "Are you sure you want to reset all theme settings to original defaults?",
-                  ),
-                ),
-                E("div", { class: "right" }, [
-                  E(
-                    "button",
-                    { class: "btn", click: ui.hideModal },
-                    _("Cancel"),
-                  ),
-                  " ",
-                  E(
-                    "button",
-                    {
-                      class: "btn cbi-button-negative",
-                      click: () => {
-                        ui.showModal(_("Resetting..."), [
-                          E("p", { class: "spinning" }, _("Restoring...")),
-                        ]);
-                        return L.resolveDefault(callResetDefaults(), {}).then(
-                          (ret) => {
-                            ui.hideModal();
-                            if (ret?.result === 0) {
-                              window.location.reload();
-                              ui.addNotification(
-                                null,
-                                E("p", _("Settings reset successfully.")),
-                                "info",
-                              );
-                            } else {
-                              ui.addNotification(
-                                null,
-                                E(
-                                  "p",
-                                  _("Error: %s").format(
-                                    ret?.error || "Unknown",
-                                  ),
-                                ),
-                                "error",
-                              );
-                            }
-                          },
-                        );
-                      },
-                    },
-                    _("Confirm Reset"),
-                  ),
-                ]),
-              ]);
-            }),
-          },
-          _("Reset to Defaults"),
-        ),
+        buildPresetToolbarNode(),
       ],
     );
 
@@ -689,8 +992,8 @@ return view.extend({
     colorSubsection.tab("light", _("Light Mode"));
     colorSubsection.tab("dark", _("Dark Mode"));
 
-    createColorSections(colorSubsection, "light", colorVars);
-    createColorSections(colorSubsection, "dark", colorVars);
+    createColorSections(colorSubsection, "light", colorGroups, themeConfig);
+    createColorSections(colorSubsection, "dark", colorGroups, themeConfig);
 
     const structureSection = s.taboption(
       "structure",
@@ -706,7 +1009,7 @@ return view.extend({
     );
     const structureSubsection = structureSection.subsection;
 
-    let so = structureSubsection.option(
+    so = structureSubsection.option(
       form.ListValue,
       "nav_submenu_type",
       _("Navigation Submenu Type"),
