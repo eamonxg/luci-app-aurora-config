@@ -543,55 +543,8 @@ return view.extend({
     const configVersion =
       installedVersions?.config?.installed_version || "Unknown";
 
-    const headerBar = E(
-      "div",
-      {
-        style:
-          "display: flex; flex-wrap: wrap; gap: 1em; align-items: center; justify-content: space-between;",
-      },
-      [
-        E("div", { style: "display: flex; flex-wrap: wrap; gap: 1em;" }, [
-          E("span", { style: "white-space: nowrap;" }, [
-            document.createTextNode("Theme: "),
-            E(
-              "span",
-              {
-                id: "theme-version",
-                class: "label success",
-                style: "cursor: pointer;",
-              },
-              `v${themeVersion}`,
-            ),
-          ]),
-          E("span", { style: "white-space: nowrap;" }, [
-            document.createTextNode("Config: "),
-            E(
-              "span",
-              {
-                id: "config-version",
-                class: "label success",
-                style: "cursor: pointer;",
-              },
-              `v${configVersion}`,
-            ),
-          ]),
-        ]),
-      ],
-    );
-
-    m.description = headerBar;
-
     let so;
-
-    const presetSection = m.section(
-      form.NamedSection,
-      "theme",
-      "aurora",
-      _("Theme Presets & Configuration"),
-      _(
-        "Apply a preset or import/export/reset the Aurora theme configuration stored in /etc/config/aurora.",
-      ),
-    );
+    const viewCtx = this;
 
     const buildPresetOptions = () => {
       if (themePresets.length > 0) {
@@ -609,13 +562,7 @@ return view.extend({
       ];
     };
 
-    so = presetSection.option(
-      form.DummyValue,
-      "_preset_actions",
-      _("Actions"),
-    );
-    so.render = function () {
-      const self = this;
+    const buildPresetToolbarNode = () => {
       const presetOptions = buildPresetOptions();
       const defaultPreset = "aurora";
       const storedPreset = localStorage.getItem("aurora.theme_preset");
@@ -631,7 +578,6 @@ return view.extend({
       const select = E(
         "select",
         {
-          id: "aurora-theme-preset",
           class: "cbi-input-select",
         },
         presetOptions.map((preset) =>
@@ -651,10 +597,15 @@ return view.extend({
       });
 
       const resolvePresetSelection = () => {
+        const stored = localStorage.getItem("aurora.theme_preset");
+        const storedPreset = presetOptions.find(
+          (preset) => preset.name === stored,
+        );
+        if (storedPreset && select.value !== stored) {
+          select.value = stored;
+        }
         const presetName =
-          select?.value ||
-          localStorage.getItem("aurora.theme_preset") ||
-          defaultPreset;
+          (storedPreset && stored) || select?.value || defaultPreset;
         const presetLabel =
           select?.selectedOptions?.[0]?.textContent || presetName;
         return { presetName, presetLabel };
@@ -665,7 +616,7 @@ return view.extend({
         {
           class: "cbi-button cbi-button-apply",
           title: _("Apply Preset"),
-          click: ui.createHandlerFn(self, () => {
+          click: ui.createHandlerFn(viewCtx, () => {
             const { presetName, presetLabel } = resolvePresetSelection();
 
             return ui.showModal(_("Apply Theme Preset"), [
@@ -677,7 +628,11 @@ return view.extend({
                 ).format(presetLabel),
               ),
               E("div", { class: "right" }, [
-                E("button", { class: "btn", click: ui.hideModal }, _("Cancel")),
+                E(
+                  "button",
+                  { class: "btn", click: ui.hideModal },
+                  _("Cancel"),
+                ),
                 " ",
                 E(
                   "button",
@@ -728,7 +683,7 @@ return view.extend({
         {
           class: "cbi-button cbi-button-apply",
           title: _("Export Configuration"),
-          click: ui.createHandlerFn(self, () => {
+          click: ui.createHandlerFn(viewCtx, () => {
             return L.resolveDefault(callExportConfig(), null)
               .then((res) => {
                 if (!res || res.result !== 0) {
@@ -788,7 +743,7 @@ return view.extend({
         {
           class: "cbi-button cbi-button-add",
           title: _("Import Configuration"),
-          click: ui.createHandlerFn(self, function (ev) {
+          click: ui.createHandlerFn(viewCtx, function (ev) {
             const btn = ev.currentTarget || ev.target;
             const originalLabel = btn?.firstChild?.data;
 
@@ -822,7 +777,9 @@ return view.extend({
                         {
                           class: "btn",
                           click: ui.createHandlerFn(this, () =>
-                            fs.remove(CONFIG_IMPORT_PATH).finally(ui.hideModal),
+                            fs
+                              .remove(CONFIG_IMPORT_PATH)
+                              .finally(ui.hideModal),
                           ),
                         },
                         _("Cancel"),
@@ -893,7 +850,7 @@ return view.extend({
         {
           class: "cbi-button cbi-button-reset",
           title: _("Reset to Defaults"),
-          click: ui.createHandlerFn(self, () => {
+          click: ui.createHandlerFn(viewCtx, () => {
             return ui.showModal(_("Reset to Defaults"), [
               E(
                 "p",
@@ -903,7 +860,11 @@ return view.extend({
                 ),
               ),
               E("div", { class: "right" }, [
-                E("button", { class: "btn", click: ui.hideModal }, _("Cancel")),
+                E(
+                  "button",
+                  { class: "btn", click: ui.hideModal },
+                  _("Cancel"),
+                ),
                 " ",
                 E(
                   "button",
@@ -926,7 +887,10 @@ return view.extend({
                           } else {
                             ui.addNotification(
                               null,
-                              E("p", _("Error: %s").format(ret?.error || "Unknown")),
+                              E(
+                                "p",
+                                _("Error: %s").format(ret?.error || "Unknown"),
+                              ),
                               "error",
                             );
                           }
@@ -969,7 +933,7 @@ return view.extend({
         [exportButton, importButton, resetButton],
       );
 
-      const toolbar = E(
+      return E(
         "div",
         {
           class: "aurora-preset-toolbar",
@@ -978,12 +942,46 @@ return view.extend({
         },
         [presetGroup, actionGroup],
       );
-
-      return E("div", { class: "cbi-value", "data-name": this.option }, [
-        E("label", { class: "cbi-value-title" }, this.title),
-        E("div", { class: "cbi-value-field" }, toolbar),
-      ]);
     };
+
+    const headerBar = E(
+      "div",
+      {
+        style:
+          "display: flex; flex-wrap: wrap; gap: 1em; align-items: center; justify-content: space-between;",
+      },
+      [
+        E("div", { style: "display: flex; flex-wrap: wrap; gap: 1em;" }, [
+          E("span", { style: "white-space: nowrap;" }, [
+            document.createTextNode("Theme: "),
+            E(
+              "span",
+              {
+                id: "theme-version",
+                class: "label success",
+                style: "cursor: pointer;",
+              },
+              `v${themeVersion}`,
+            ),
+          ]),
+          E("span", { style: "white-space: nowrap;" }, [
+            document.createTextNode("Config: "),
+            E(
+              "span",
+              {
+                id: "config-version",
+                class: "label success",
+                style: "cursor: pointer;",
+              },
+              `v${configVersion}`,
+            ),
+          ]),
+        ]),
+        buildPresetToolbarNode(),
+      ],
+    );
+
+    m.description = headerBar;
 
     const s = m.section(form.NamedSection, "theme", "aurora");
 
