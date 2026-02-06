@@ -557,8 +557,8 @@ return view.extend({
         if (options.length > 0) return options;
       }
       return [
-        { name: "classic", label: _("原始主题") },
-        { name: "modern-dark", label: _("现代 Dark") },
+        { name: "classic", label: _("Classic") },
+        { name: "modern-dark", label: _("Modern Dark") },
       ];
     };
 
@@ -962,7 +962,7 @@ return view.extend({
       [
         E("div", { style: "display: flex; flex-wrap: wrap; gap: 1em;" }, [
           E("span", { style: "white-space: nowrap;" }, [
-            document.createTextNode("Theme: "),
+            document.createTextNode(_("Theme: ")),
             E(
               "span",
               {
@@ -974,7 +974,7 @@ return view.extend({
             ),
           ]),
           E("span", { style: "white-space: nowrap;" }, [
-            document.createTextNode("Config: "),
+            document.createTextNode(_("Config: ")),
             E(
               "span",
               {

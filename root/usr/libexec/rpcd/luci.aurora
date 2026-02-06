@@ -137,11 +137,11 @@ case "$1" in
 		json_add_array "presets"
 		json_add_object ""
 			json_add_string "name" "classic"
-			json_add_string "label" "原始主题"
+			json_add_string "label" "Classic"
 		json_close_object
 		json_add_object ""
 			json_add_string "name" "modern-dark"
-			json_add_string "label" "现代 Dark"
+			json_add_string "label" "Modern Dark"
 		json_close_object
 		json_close_array
 		json_dump; json_cleanup
