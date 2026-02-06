@@ -637,11 +637,7 @@ return view.extend({
                 ).format(presetLabel),
               ),
               E("div", { class: "right" }, [
-                E(
-                  "button",
-                  { class: "btn", click: ui.hideModal },
-                  _("Cancel"),
-                ),
+                E("button", { class: "btn", click: ui.hideModal }, _("Cancel")),
                 " ",
                 E(
                   "button",
@@ -786,9 +782,7 @@ return view.extend({
                         {
                           class: "btn",
                           click: ui.createHandlerFn(this, () =>
-                            fs
-                              .remove(CONFIG_IMPORT_PATH)
-                              .finally(ui.hideModal),
+                            fs.remove(CONFIG_IMPORT_PATH).finally(ui.hideModal),
                           ),
                         },
                         _("Cancel"),
@@ -802,33 +796,33 @@ return view.extend({
                             ui.showModal(_("Importing..."), [
                               E("p", { class: "spinning" }, _("Applying...")),
                             ]);
-                            return L.resolveDefault(callImportConfig(), {}).then(
-                              (ret) => {
-                                ui.hideModal();
-                                if (ret?.result === 0) {
-                                  ui.addNotification(
-                                    null,
-                                    E(
-                                      "p",
-                                      _("Configuration imported successfully."),
-                                    ),
-                                    "info",
-                                  );
-                                  window.location.reload();
-                                } else {
-                                  const errorMsg =
-                                    ret?.error || "Unknown error";
-                                  ui.addNotification(
-                                    null,
-                                    E(
-                                      "p",
-                                      _("Import failed: %s").format(errorMsg),
-                                    ),
-                                    "error",
-                                  );
-                                }
-                              },
-                            );
+                            return L.resolveDefault(
+                              callImportConfig(),
+                              {},
+                            ).then((ret) => {
+                              ui.hideModal();
+                              if (ret?.result === 0) {
+                                ui.addNotification(
+                                  null,
+                                  E(
+                                    "p",
+                                    _("Configuration imported successfully."),
+                                  ),
+                                  "info",
+                                );
+                                window.location.reload();
+                              } else {
+                                const errorMsg = ret?.error || "Unknown error";
+                                ui.addNotification(
+                                  null,
+                                  E(
+                                    "p",
+                                    _("Import failed: %s").format(errorMsg),
+                                  ),
+                                  "error",
+                                );
+                              }
+                            });
                           }),
                         },
                         _("Continue"),
@@ -869,11 +863,7 @@ return view.extend({
                 ),
               ),
               E("div", { class: "right" }, [
-                E(
-                  "button",
-                  { class: "btn", click: ui.hideModal },
-                  _("Cancel"),
-                ),
+                E("button", { class: "btn", click: ui.hideModal }, _("Cancel")),
                 " ",
                 E(
                   "button",
@@ -919,8 +909,7 @@ return view.extend({
       const presetGroup = E(
         "div",
         {
-          style:
-            "display:flex; flex-wrap:wrap; gap:0.5em; align-items:center;",
+          style: "display:flex; flex-wrap:wrap; gap:0.5em; align-items:center;",
         },
         [
           E(
@@ -936,8 +925,7 @@ return view.extend({
       const actionGroup = E(
         "div",
         {
-          style:
-            "display:flex; flex-wrap:wrap; gap:0.5em; align-items:center;",
+          style: "display:flex; flex-wrap:wrap; gap:0.5em; align-items:center;",
         },
         [exportButton, importButton, resetButton],
       );
