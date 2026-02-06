@@ -1,7 +1,7 @@
 #!/bin/sh
 
 readonly CONF_FILE="/etc/config/aurora"
-readonly TEMPLATE_FILE="/usr/share/aurora/aurora.template"
+readonly TEMPLATE_FILE="/usr/share/aurora/classic.template"
 readonly LOG_TAG="aurora"
 
 log() {

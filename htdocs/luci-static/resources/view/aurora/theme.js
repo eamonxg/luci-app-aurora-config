@@ -557,19 +557,24 @@ return view.extend({
         if (options.length > 0) return options;
       }
       return [
-        { name: "aurora", label: _("Aurora") },
-        { name: "noir", label: _("Noir (Modern Dark)") },
+        { name: "classic", label: _("原始主题") },
+        { name: "modern-dark", label: _("现代 Dark") },
       ];
     };
 
     const buildPresetToolbarNode = () => {
       const presetOptions = buildPresetOptions();
-      const defaultPreset = "aurora";
+      const defaultPreset = "classic";
       const storedPreset = localStorage.getItem("aurora.theme_preset");
+      const legacyMap = { aurora: "classic", noir: "modern-dark" };
+      const normalizedPreset = legacyMap[storedPreset] || storedPreset;
+      if (normalizedPreset && normalizedPreset !== storedPreset) {
+        localStorage.setItem("aurora.theme_preset", normalizedPreset);
+      }
       const hasStoredPreset = presetOptions.some(
-        (preset) => preset.name === storedPreset,
+        (preset) => preset.name === normalizedPreset,
       );
-      const initialPreset = hasStoredPreset ? storedPreset : defaultPreset;
+      const initialPreset = hasStoredPreset ? normalizedPreset : defaultPreset;
 
       if (!hasStoredPreset) {
         localStorage.setItem("aurora.theme_preset", initialPreset);
@@ -598,14 +603,18 @@ return view.extend({
 
       const resolvePresetSelection = () => {
         const stored = localStorage.getItem("aurora.theme_preset");
+        const normalizedStored = legacyMap[stored] || stored;
+        if (normalizedStored && normalizedStored !== stored) {
+          localStorage.setItem("aurora.theme_preset", normalizedStored);
+        }
         const storedPreset = presetOptions.find(
-          (preset) => preset.name === stored,
+          (preset) => preset.name === normalizedStored,
         );
-        if (storedPreset && select.value !== stored) {
-          select.value = stored;
+        if (storedPreset && select.value !== normalizedStored) {
+          select.value = normalizedStored;
         }
         const presetName =
-          (storedPreset && stored) || select?.value || defaultPreset;
+          (storedPreset && normalizedStored) || select?.value || defaultPreset;
         const presetLabel =
           select?.selectedOptions?.[0]?.textContent || presetName;
         return { presetName, presetLabel };
