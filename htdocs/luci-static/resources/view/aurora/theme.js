@@ -470,7 +470,6 @@ return view.extend({
       ["page_bg", _("Page Background")],
       ["panel_bg", _("Panel Background")],
       ["primary", _("Primary")],
-      ["primary_foreground", _("Primary Foreground")],
       ["border", _("Border")],
     ];
 
