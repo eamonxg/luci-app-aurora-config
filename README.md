@@ -10,26 +10,20 @@
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-Apache%202.0-blue?logo=apache"></a>
 </div>
 
-## Features
-
-- **Seamless Updates**: Update the theme and config app directly from the interface—no CLI or SSH required.
-- **Professional Color System**: Customize the visual language, including Gradient Colors, Semantic Colors, and Status Colors
-- **Layout & Density Control**: Adjust navigation submenu styles and global element spacing to fit your screen perfectly.
-- **Brand Identity**: Customize the theme logo (favicon) and configure floating toolbar shortcuts for frequently used pages.
-
-## Preview
-
 <div align="center">
-  <img src="https://raw.githubusercontent.com/eamonxg/assets/master/aurora/preview/config/config-overview.png" alt="Overview" width="100%">
-  <br>
-  <sub><strong>Dashboard Overview</strong> — A modern, intuitive configuration interface.</sub>
+  <img src="https://raw.githubusercontent.com/eamonxg/assets/master/aurora/preview/config/theme-settings-showcase.png" alt="Theme Settings Showcase" width="100%">
 </div>
 
-<br>
+## Features
 
-|                                                              Interface Layout                                                               |                                                                  Branding & Toolbar                                                                   |                                                                         Update Center                                                                         |
-| :-----------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| <img src="https://raw.githubusercontent.com/eamonxg/assets/master/aurora/preview/config/config-structure.png" width="100%" alt="Structure"> | <img src="https://raw.githubusercontent.com/eamonxg/assets/master/aurora/preview/config/config-icons-toolbar.png" width="100%" alt="Icons & Toolbar"> | <img src="https://raw.githubusercontent.com/eamonxg/assets/master/aurora/preview/config/config-version-management.png" width="100%" alt="Version Management"> |
+- **Professional Color System**: Built-in theme presets (Classic, Monochrome, Sage Green, Amber Sand, Sky Blue) and an easy color editor to tune the look and feel.
+- **Layout & Density Control**: Adjust navigation submenu styles and global element spacing to fit your screen perfectly.
+- **Brand Identity**: Customize the theme logo (favicon) and configure floating toolbar shortcuts for frequently used pages.
+- **Seamless Updates**: Update the theme and config app directly from the interface—no CLI or SSH required.
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/eamonxg/assets/master/aurora/preview/config/multi-theme-showcase.png" alt="Multi Theme Showcase" width="1200">
+</div>
 
 ## Compatibility
 

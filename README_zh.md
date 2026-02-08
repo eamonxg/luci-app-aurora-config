@@ -10,26 +10,20 @@
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-Apache%202.0-blue?logo=apache"></a>
 </div>
 
-## 功能特性
-
-- **无缝更新**：直接在界面中更新主题和配置应用，无需使用 CLI 命令行或 SSH。
-- **专业配色系统**：自定义视觉语言，包括渐变色（Gradient Colors）、语义色（Semantic Colors）和状态色（Status Colors）。
-- **布局与间距控制**：调整导航子菜单样式和全局元素间距，完美适配您的屏幕显示。
-- **品牌标识**：自定义主题 Logo（favicon）并配置常用页面的悬浮工具栏快捷方式。
-
-## 预览
-
 <div align="center">
-  <img src="https://raw.githubusercontent.com/eamonxg/assets/master/aurora/preview/config/config-overview.png" alt="Overview" width="100%">
-  <br>
-  <sub><strong>仪表盘总览</strong> — 现代化、直观的配置界面。</sub>
+  <img src="https://raw.githubusercontent.com/eamonxg/assets/master/aurora/preview/config/theme-settings-showcase.png" alt="Theme Settings Showcase" width="100%">
 </div>
 
-<br>
+## 功能特性
 
-|                                                                  界面布局                                                                   |                                                                     品牌与工具栏                                                                      |                                                                           更新中心                                                                            |
-| :-----------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| <img src="https://raw.githubusercontent.com/eamonxg/assets/master/aurora/preview/config/config-structure.png" width="100%" alt="Structure"> | <img src="https://raw.githubusercontent.com/eamonxg/assets/master/aurora/preview/config/config-icons-toolbar.png" width="100%" alt="Icons & Toolbar"> | <img src="https://raw.githubusercontent.com/eamonxg/assets/master/aurora/preview/config/config-version-management.png" width="100%" alt="Version Management"> |
+- **专业配色系统**：内置 5 种主题预设（Classic、Monochrome、Sage Green、Amber Sand、Sky Blue），并提供直观的配色编辑，轻松调整整体风格。
+- **布局与间距控制**：调整导航子菜单样式和全局元素间距，完美适配您的屏幕显示。
+- **品牌标识**：自定义主题 Logo（favicon）并配置常用页面的悬浮工具栏快捷方式。
+- **无缝更新**：直接在界面中更新主题和配置应用，无需使用 CLI 命令行或 SSH。
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/eamonxg/assets/master/aurora/preview/config/multi-theme-showcase.png" alt="Multi Theme Showcase" width="1200">
+</div>
 
 ## 兼容性
 
