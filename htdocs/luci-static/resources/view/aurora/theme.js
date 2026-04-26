@@ -84,10 +84,29 @@ const callGetThemePresets = rpc.declare({
   method: "get_theme_presets",
 });
 
+const callGetFontPresets = rpc.declare({
+  object: "luci.aurora",
+  method: "get_font_presets",
+});
+
 const callApplyThemePreset = rpc.declare({
   object: "luci.aurora",
   method: "apply_theme_preset",
   params: ["name"],
+});
+
+const callPrepareFont = rpc.declare({
+  object: "luci.aurora",
+  method: "prepare_font",
+  params: ["sans", "mono"],
+  expect: { "": { result: -1, error: "RPC call failed (timeout or transport error)" } },
+});
+
+const callGetFontStatus = rpc.declare({
+  object: "luci.aurora",
+  method: "get_font_status",
+  params: ["job_id"],
+  expect: { "": { state: "missing", error: "RPC call failed" } },
 });
 
 const callExportConfig = rpc.declare({
@@ -449,12 +468,37 @@ const createIconList = (ss) => {
 };
 
 return view.extend({
+  handleSave: function (ev) {
+    const save = L.bind(function () {
+      return this.super("handleSave", ev);
+    }, this);
+
+    if (typeof this.prepareAuroraFonts === "function") {
+      return this.prepareAuroraFonts().then(save);
+    }
+
+    return save();
+  },
+
+  handleSaveApply: function (ev) {
+    const saveApply = L.bind(function () {
+      return this.super("handleSaveApply", ev);
+    }, this);
+
+    if (typeof this.prepareAuroraFonts === "function") {
+      return this.prepareAuroraFonts().then(saveApply);
+    }
+
+    return saveApply();
+  },
+
   load: function () {
     return Promise.all([
       uci.load("aurora"),
       L.resolveDefault(callGetThemeConfig(), {}),
       L.resolveDefault(callGetThemePresets(), {}),
       L.resolveDefault(callGetInstalledVersions(), {}),
+      L.resolveDefault(callGetFontPresets(), {}),
     ]);
   },
 
@@ -462,6 +506,7 @@ return view.extend({
     const themeConfig = loadData[1]?.theme || {};
     const themePresets = loadData[2]?.presets || [];
     const installedVersions = loadData[3];
+    const fontPresetsBySlot = loadData[4]?.fonts || {};
 
     // Order matches luci-theme-aurora/.dev/src/media/main.css @theme inline
     const baseColorVars = [
@@ -562,6 +607,37 @@ return view.extend({
         { name: "sage-green", label: _("Sage Green") },
         { name: "amber-sand", label: _("Amber Sand") },
         { name: "sky-blue", label: _("Sky Blue") },
+      ];
+    };
+
+    const FONT_DEFAULT_STACKS = {
+      sans: '"Lato", ui-sans-serif, system-ui, sans-serif',
+      mono: 'ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace',
+    };
+
+    const buildFontOptions = (slot) => {
+      const list = fontPresetsBySlot?.[slot];
+      if (Array.isArray(list) && list.length > 0) {
+        const options = list
+          .filter((font) => font?.name)
+          .map((font) => ({
+            name: font.name,
+            label: font.label || font.name,
+            source: font.source || "",
+            family: font.family || "",
+            stack: font.stack || "",
+          }));
+        if (options.length > 0) return options;
+      }
+      const fallbackStack = FONT_DEFAULT_STACKS[slot] || "";
+      if (!fallbackStack) return [];
+      return [
+        {
+          name: "default",
+          label: slot === "sans" ? "Lato" : _("System Mono"),
+          source: _("Built-in"),
+          stack: fallbackStack,
+        },
       ];
     };
 
@@ -978,6 +1054,7 @@ return view.extend({
 
     s.tab("colors", _("Color"));
     s.tab("structure", _("Structure"));
+    s.tab("fonts", _("Fonts"));
     s.tab("icons_toolbar", _("Icons & Toolbar"));
 
     const colorSection = s.taboption(
@@ -1038,6 +1115,185 @@ return view.extend({
     so.placeholder = "80rem";
     so.rmempty = false;
     so.render = renderContainerMaxWidthControl;
+
+    const fontSection = s.taboption(
+      "fonts",
+      form.SectionValue,
+      "_font_settings",
+      form.NamedSection,
+      "theme",
+      "aurora",
+      _("Font Settings"),
+      _("Pick a sans-serif font for body text and a monospaced font for code."),
+    );
+    const fontSubsection = fontSection.subsection;
+
+    const fontSlotOpts = {};
+
+    const findFontByPreset = (slot, preset) =>
+      buildFontOptions(slot).find((font) => font.name === preset);
+
+    const findFontByStack = (slot, stack) =>
+      buildFontOptions(slot).find((font) => font.stack === stack);
+
+    const getDefaultFont = (slot) =>
+      findFontByPreset(slot, "default") || buildFontOptions(slot)[0];
+
+    const addFontSlot = (ss, slot) => {
+      const options = buildFontOptions(slot);
+      const stackKey = "struct_font_" + slot;
+      const legacyPresetKey = "font_" + slot + "_preset";
+      const legacyFont = findFontByPreset(
+        slot,
+        themeConfig[legacyPresetKey] || "default",
+      );
+      const defaultFont = getDefaultFont(slot);
+
+      const presetOpt = ss.option(
+        form.ListValue,
+        stackKey,
+        slot === "sans" ? _("Sans-serif Typeface") : _("Monospace Typeface"),
+      );
+      presetOpt.default =
+        themeConfig[stackKey] ||
+        legacyFont?.stack ||
+        defaultFont?.stack ||
+        "";
+      presetOpt.rmempty = false;
+      options.forEach((font) => {
+        if (font.stack) {
+          presetOpt.value(
+            font.stack,
+            font.source
+              ? "%s (%s)".format(font.label, font.source)
+              : font.label,
+          );
+        }
+      });
+      fontSlotOpts[slot] = presetOpt;
+    };
+
+    addFontSlot(fontSubsection, "sans");
+    addFontSlot(fontSubsection, "mono");
+
+    const getFontSelection = (slot) => {
+      const value =
+        (fontSlotOpts[slot] && fontSlotOpts[slot].formvalue("theme")) ||
+        getDefaultFont(slot)?.stack ||
+        "";
+      const font =
+        findFontByStack(slot, value) ||
+        getDefaultFont(slot) ||
+        { name: "default" };
+
+      return {
+        preset: font.name || "default",
+        stack: font.stack || value,
+      };
+    };
+
+    const getSelectedFonts = () => {
+      const sans = getFontSelection("sans");
+      const mono = getFontSelection("mono");
+
+      return {
+        sans: sans.preset,
+        mono: mono.preset,
+        sansStack: sans.stack,
+        monoStack: mono.stack,
+      };
+    };
+
+    const applyFontCss = (selected) => {
+      return fetch(
+        "/luci-static/aurora/fonts/aurora-font.css?v=" + Date.now(),
+        { cache: "no-store" },
+      )
+        .then((r) => {
+          if (!r.ok) throw new Error(_("Font CSS file is not available"));
+          return r.text();
+        })
+        .then((css) => {
+          if (!css) throw new Error(_("Font CSS file is empty"));
+
+          let styleEl = document.getElementById("aurora-preview-fonts");
+          if (!styleEl) {
+            styleEl = document.createElement("style");
+            styleEl.id = "aurora-preview-fonts";
+            document.head.appendChild(styleEl);
+          }
+          styleEl.textContent = css;
+
+          if (selected.sansStack) {
+            document.documentElement.style.setProperty(
+              "--font-sans",
+              selected.sansStack,
+            );
+          }
+          if (selected.monoStack) {
+            document.documentElement.style.setProperty(
+              "--font-mono",
+              selected.monoStack,
+            );
+          }
+        });
+    };
+
+    const pollFontCache = (jobId, remaining, selected) => {
+      if (!jobId || remaining <= 0) return;
+
+      window.setTimeout(() => {
+        L.resolveDefault(callGetFontStatus(jobId), {}).then((status) => {
+          if (status && status.state === "done") {
+            const current = getSelectedFonts();
+            if (
+              current.sans === selected.sans &&
+              current.mono === selected.mono
+            ) {
+              applyFontCss(selected);
+            }
+          } else if (status && status.state !== "missing") {
+            pollFontCache(jobId, remaining - 1, selected);
+          }
+        });
+      }, 1500);
+    };
+
+    const prepareSelectedFonts = () => {
+      const selected = getSelectedFonts();
+      const statusNode = E(
+        "p",
+        { class: "spinning" },
+        _("Preparing selected fonts..."),
+      );
+
+      ui.showModal(_("Preparing Fonts"), [statusNode]);
+
+      return callPrepareFont(selected.sans, selected.mono)
+        .then((res) => {
+          if (!res || res.result !== 0) {
+            throw new Error(res?.error || _("unknown error"));
+          }
+
+          pollFontCache(res.job_id, 20, selected);
+
+          return applyFontCss(selected);
+        })
+        .then(() => {
+          ui.hideModal();
+        })
+        .catch((err) => {
+          ui.hideModal();
+          ui.addNotification(
+            null,
+            E("p", _("Font preparation failed: ") + (err.message || String(err))),
+            "warning",
+          );
+          return Promise.reject(err);
+        });
+    };
+
+    this.prepareAuroraFonts = prepareSelectedFonts;
 
     const iconSection = s.taboption(
       "icons_toolbar",

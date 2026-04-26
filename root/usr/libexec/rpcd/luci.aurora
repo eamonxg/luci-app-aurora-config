@@ -4,6 +4,9 @@
 . /usr/share/libubox/jshn.sh
 
 readonly ICON_PATH="/www/luci-static/aurora/images"
+readonly FONT_PATH="/www/luci-static/aurora/fonts"
+readonly FONT_CSS_FILE="$FONT_PATH/aurora-font.css"
+readonly FONT_JOB_PATH="/tmp/aurora_font_jobs"
 readonly TMP_UPLOAD_PATH="/tmp/aurora_icon.tmp"
 readonly DOWNLOAD_PATH="/tmp/aurora_downloads"
 readonly CONFIG_FILE="/etc/config/aurora"
@@ -12,8 +15,26 @@ readonly SAGE_GREEN_TEMPLATE="/usr/share/aurora/sage-green.template"
 readonly AMBER_SAND_TEMPLATE="/usr/share/aurora/amber-sand.template"
 readonly MONOCHROME_TEMPLATE="/usr/share/aurora/monochrome.template"
 readonly SKY_BLUE_TEMPLATE="/usr/share/aurora/sky-blue.template"
+readonly FONT_PRESETS_FILE="/usr/share/aurora/font-presets.conf"
 readonly IMPORT_CONFIG_TMP="/tmp/aurora_config_import.tmp"
 readonly EXPORT_CONFIG_TMP="/tmp/aurora_config_export.conf"
+list_font_entries() {
+	local slot_filter="$1"
+	local file="$FONT_PRESETS_FILE"
+
+	[ -r "$file" ] || return 1
+
+	while IFS='|' read -r slot name label source family stack css_url; do
+		case "$slot" in
+		""|"#"*) continue ;;
+		esac
+		[ -z "$name" ] && continue
+		[ -n "$slot_filter" ] && [ "$slot" != "$slot_filter" ] && continue
+		printf '%s|%s|%s|%s|%s|%s|%s\n' \
+			"$slot" "$name" "$label" "$source" "$family" "$stack" "$css_url"
+	done < "$file"
+}
+
 
 
 detect_package_manager() {
@@ -38,6 +59,392 @@ update_icon_cache_timestamp() {
 	uci -q commit aurora
 }
 
+cleanup_custom_fonts() {
+	local slot="$1"
+	mkdir -p "$FONT_PATH"
+	if [ -n "$slot" ]; then
+		rm -f "$FONT_PATH"/aurora-font-${slot}-*.woff2 \
+		      "$FONT_PATH"/aurora-font-${slot}-*.tmp \
+		      "$FONT_PATH"/aurora-font-${slot}.remote.* \
+		      "$FONT_PATH"/aurora-font-${slot}-*.face \
+		      "$FONT_PATH/aurora-font-${slot}.css" \
+		      "$FONT_PATH/aurora-font-${slot}.face" \
+		      "$FONT_PATH/aurora-font-${slot}.face.tmp" \
+		      "$FONT_PATH/aurora-font-${slot}.preset" 2>/dev/null
+	else
+		rm -f "$FONT_PATH"/aurora-font-sans-*.woff2 \
+		      "$FONT_PATH"/aurora-font-mono-*.woff2 \
+		      "$FONT_PATH"/aurora-font-sans-*.tmp \
+		      "$FONT_PATH"/aurora-font-mono-*.tmp \
+		      "$FONT_PATH"/aurora-font-sans.remote.* \
+		      "$FONT_PATH"/aurora-font-mono.remote.* \
+		      "$FONT_PATH"/aurora-font-sans.css \
+		      "$FONT_PATH"/aurora-font-mono.css \
+		      "$FONT_PATH"/aurora-font-sans.face \
+		      "$FONT_PATH"/aurora-font-mono.face \
+		      "$FONT_PATH"/aurora-font-sans.face.tmp \
+		      "$FONT_PATH"/aurora-font-mono.face.tmp \
+		      "$FONT_PATH"/aurora-font-sans.preset \
+		      "$FONT_PATH"/aurora-font-mono.preset 2>/dev/null
+	fi
+}
+
+fetch_url() {
+	local output="$1"
+	shift
+	local tries_arg=""
+
+	if wget --help 2>&1 | grep -q -- '--tries'; then
+		tries_arg="--tries=1"
+	fi
+
+	if command -v timeout >/dev/null 2>&1; then
+		timeout 12 wget -qO "$output" --timeout=8 $tries_arg "$@"
+	else
+		wget -qO "$output" --timeout=8 $tries_arg "$@"
+	fi
+}
+
+write_font_job_status() {
+	local job_id="$1" state="$2" sans_status="$3" mono_status="$4" sans_error="$5" mono_error="$6"
+	local status_file="$FONT_JOB_PATH/$job_id.status"
+
+	mkdir -p "$FONT_JOB_PATH"
+	{
+		printf "state='%s'\n" "$state"
+		printf "sans_status='%s'\n" "$sans_status"
+		printf "mono_status='%s'\n" "$mono_status"
+		printf "sans_error='%s'\n" "$sans_error"
+		printf "mono_error='%s'\n" "$mono_error"
+	} > "$status_file.tmp"
+	mv "$status_file.tmp" "$status_file"
+}
+
+write_default_font_face() {
+	cat <<'EOF'
+@font-face {
+  font-display: swap;
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/luci-static/aurora/fonts/lato-v24-latin-regular.woff2") format("woff2");
+}
+EOF
+}
+
+get_font_stack() {
+	local slot="$1" preset="$2" meta
+
+	meta=$(get_font_meta "$slot" "$preset") || return 1
+	echo "$meta" | cut -d'|' -f4
+}
+
+get_font_preset_by_stack() {
+	local slot="$1" stack="$2" font_name meta meta_stack
+
+	[ -z "$stack" ] && {
+		echo "default"
+		return 0
+	}
+
+	for font_name in $(list_font_names "$slot"); do
+		meta=$(get_font_meta "$slot" "$font_name") || continue
+		meta_stack=$(echo "$meta" | cut -d'|' -f4)
+		if [ "$stack" = "$meta_stack" ]; then
+			echo "$font_name"
+			return 0
+		fi
+	done
+
+	return 1
+}
+
+get_font_preset_from_uci() {
+	local slot="$1" stack legacy
+
+	stack=$(uci -q get "aurora.theme.struct_font_$slot")
+	if [ -n "$stack" ] && get_font_preset_by_stack "$slot" "$stack"; then
+		return 0
+	fi
+
+	legacy=$(uci -q get "aurora.theme.font_${slot}_preset")
+	if [ -n "$legacy" ] && get_font_meta "$slot" "$legacy" >/dev/null 2>&1; then
+		echo "$legacy"
+		return 0
+	fi
+
+	echo "default"
+}
+
+write_combined_font_css() {
+	local sans_preset="${1:-default}" mono_preset="${2:-default}"
+	local tmp_file="$FONT_CSS_FILE.tmp"
+	local slot preset meta css_url preset_file face_file
+
+	get_font_meta "sans" "$sans_preset" >/dev/null 2>&1 || return 1
+	get_font_meta "mono" "$mono_preset" >/dev/null 2>&1 || return 1
+
+	mkdir -p "$FONT_PATH"
+	{
+		for slot in sans mono; do
+			case "$slot" in
+			sans) preset="$sans_preset" ;;
+			mono) preset="$mono_preset" ;;
+			esac
+
+			[ "${preset:-default}" = "default" ] && continue
+
+			preset_file="$FONT_PATH/aurora-font-${slot}.preset"
+			face_file="$FONT_PATH/aurora-font-${slot}.face"
+			if [ ! -s "$face_file" ] || [ "$(cat "$preset_file" 2>/dev/null)" != "$preset" ]; then
+				meta=$(get_font_meta "$slot" "$preset") || continue
+				css_url=$(echo "$meta" | cut -d'|' -f5-)
+				[ -n "$css_url" ] && printf '@import url("%s");\n' "$css_url"
+			fi
+		done
+
+		write_default_font_face
+
+		for slot in sans mono; do
+			case "$slot" in
+			sans) preset="$sans_preset" ;;
+			mono) preset="$mono_preset" ;;
+			esac
+
+			[ "${preset:-default}" = "default" ] && continue
+
+			preset_file="$FONT_PATH/aurora-font-${slot}.preset"
+			face_file="$FONT_PATH/aurora-font-${slot}.face"
+			if [ -s "$face_file" ] && [ "$(cat "$preset_file" 2>/dev/null)" = "$preset" ]; then
+				printf '\n'
+				cat "$face_file"
+				printf '\n'
+			fi
+		done
+	} > "$tmp_file" || return 1
+
+	chmod 644 "$tmp_file"
+	mv "$tmp_file" "$FONT_CSS_FILE"
+	return 0
+}
+
+prepare_font_slot() {
+	local slot="$1" preset="$2"
+	local preset_file="$FONT_PATH/aurora-font-${slot}.preset"
+	local current_preset
+
+	if [ "${preset:-default}" = "default" ]; then
+		cleanup_custom_fonts "$slot"
+		return 0
+	fi
+
+	get_font_meta "$slot" "$preset" >/dev/null 2>&1 || return 1
+
+	current_preset=$(cat "$preset_file" 2>/dev/null)
+	if [ "$current_preset" != "$preset" ] || [ ! -s "$FONT_PATH/aurora-font-${slot}.face" ]; then
+		cleanup_custom_fonts "$slot"
+	fi
+
+	mkdir -p "$FONT_PATH"
+	printf '%s' "$preset" > "$preset_file"
+	chmod 644 "$preset_file"
+	return 0
+}
+
+cache_font_slot() {
+	local slot="$1" preset="$2"
+	local meta css_url font_css url local_file idx ok_count css_tmp face_tmp
+	local preset_file="$FONT_PATH/aurora-font-${slot}.preset"
+	local face_file="$FONT_PATH/aurora-font-${slot}.face"
+
+	[ "${preset:-default}" = "default" ] && return 0
+	if [ -s "$face_file" ] && [ "$(cat "$preset_file" 2>/dev/null)" = "$preset" ]; then
+		return 0
+	fi
+
+	meta=$(get_font_meta "$slot" "$preset") || return 1
+	css_url=$(echo "$meta" | cut -d'|' -f5-)
+	[ -n "$css_url" ] || return 1
+
+	css_tmp="$FONT_PATH/aurora-font-${slot}.remote.$$"
+	fetch_url "$css_tmp" \
+		--header "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
+		"$css_url" 2>/dev/null || {
+		rm -f "$css_tmp"
+		return 1
+	}
+
+	font_css=$(cat "$css_tmp" 2>/dev/null)
+	rm -f "$css_tmp"
+	[ -n "$font_css" ] || return 1
+
+	idx=1
+	ok_count=0
+	for url in $(printf '%s\n' "$font_css" | grep -o 'https://[^ )]*\.woff2'); do
+		local_file="aurora-font-${slot}-$(printf '%03d' "$idx").woff2"
+		if fetch_url "$FONT_PATH/$local_file.tmp" "$url" 2>/dev/null; then
+			mv "$FONT_PATH/$local_file.tmp" "$FONT_PATH/$local_file"
+			chmod 644 "$FONT_PATH/$local_file"
+			font_css=$(printf '%s' "$font_css" | sed "s|${url}|/luci-static/aurora/fonts/${local_file}|g")
+			ok_count=$((ok_count + 1))
+		else
+			rm -f "$FONT_PATH/$local_file.tmp"
+		fi
+		idx=$((idx + 1))
+	done
+
+	[ -f "$preset_file" ] && [ "$(cat "$preset_file" 2>/dev/null)" = "$preset" ] || return 1
+
+	if [ "$ok_count" -gt 0 ]; then
+		face_tmp="$FONT_PATH/aurora-font-${slot}.face.tmp"
+		printf '%s' "$font_css" > "$face_tmp"
+		chmod 644 "$face_tmp"
+		mv "$face_tmp" "$FONT_PATH/aurora-font-${slot}.face"
+	fi
+
+	return 0
+}
+
+font_job_worker() {
+	local job_id="$1" sans_preset="$2" mono_preset="$3"
+	local sans_status="ready" mono_status="ready" sans_error="" mono_error=""
+
+	write_font_job_status "$job_id" "running" "$sans_status" "$mono_status" "$sans_error" "$mono_error"
+
+	if [ "${sans_preset:-default}" != "default" ]; then
+		if cache_font_slot "sans" "$sans_preset"; then
+			sans_status="cached"
+		else
+			sans_status="remote"
+			sans_error="local_cache_failed"
+		fi
+		write_combined_font_css "$sans_preset" "$mono_preset"
+		write_font_job_status "$job_id" "running" "$sans_status" "$mono_status" "$sans_error" "$mono_error"
+	fi
+
+	if [ "${mono_preset:-default}" != "default" ]; then
+		if cache_font_slot "mono" "$mono_preset"; then
+			mono_status="cached"
+		else
+			mono_status="remote"
+			mono_error="local_cache_failed"
+		fi
+		write_combined_font_css "$sans_preset" "$mono_preset"
+	fi
+
+	update_icon_cache_timestamp
+	write_font_job_status "$job_id" "done" "$sans_status" "$mono_status" "$sans_error" "$mono_error"
+}
+
+start_font_job() {
+	local sans_preset="$1" mono_preset="$2"
+	local job_id
+
+	[ -z "$sans_preset" ] && sans_preset=$(get_font_preset_from_uci "sans")
+	[ -z "$mono_preset" ] && mono_preset=$(get_font_preset_from_uci "mono")
+	[ -z "$sans_preset" ] && sans_preset="default"
+	[ -z "$mono_preset" ] && mono_preset="default"
+
+	if ! prepare_font_slot "sans" "$sans_preset"; then
+		json_init
+		json_add_int "result" 1
+		json_add_string "error" "Invalid sans font preset"
+		json_dump; json_cleanup
+		return 0
+	fi
+
+	if ! prepare_font_slot "mono" "$mono_preset"; then
+		json_init
+		json_add_int "result" 1
+		json_add_string "error" "Invalid mono font preset"
+		json_dump; json_cleanup
+		return 0
+	fi
+
+	if ! write_combined_font_css "$sans_preset" "$mono_preset"; then
+		json_init
+		json_add_int "result" 1
+		json_add_string "error" "Failed to write font CSS"
+		json_dump; json_cleanup
+		return 0
+	fi
+
+	update_icon_cache_timestamp
+	job_id="$(date +%s)-$$"
+	write_font_job_status "$job_id" "queued" "ready" "ready" "" ""
+	(font_job_worker "$job_id" "$sans_preset" "$mono_preset") </dev/null >/dev/null 2>&1 &
+
+	json_init
+	json_add_int "result" 0
+	json_add_string "job_id" "$job_id"
+	json_dump; json_cleanup
+}
+
+sync_font_css_from_uci() {
+	local sans_preset mono_preset
+
+	sans_preset=$(get_font_preset_from_uci "sans")
+	mono_preset=$(get_font_preset_from_uci "mono")
+
+	prepare_font_slot "sans" "$sans_preset" || return 1
+	prepare_font_slot "mono" "$mono_preset" || return 1
+	write_combined_font_css "$sans_preset" "$mono_preset"
+}
+
+cleanup_legacy_font_options() {
+	local sans_preset mono_preset sans_stack mono_stack
+
+	if ! uci -q get aurora.theme.struct_font_sans >/dev/null 2>&1; then
+		sans_preset=$(uci -q get aurora.theme.font_sans_preset)
+		[ -z "$sans_preset" ] && sans_preset="default"
+		sans_stack=$(get_font_stack "sans" "$sans_preset" 2>/dev/null) || sans_stack=$(get_font_stack "sans" "default")
+		uci -q set aurora.theme.struct_font_sans="$sans_stack"
+	fi
+
+	if ! uci -q get aurora.theme.struct_font_mono >/dev/null 2>&1; then
+		mono_preset=$(uci -q get aurora.theme.font_mono_preset)
+		[ -z "$mono_preset" ] && mono_preset="default"
+		mono_stack=$(get_font_stack "mono" "$mono_preset" 2>/dev/null) || mono_stack=$(get_font_stack "mono" "default")
+		uci -q set aurora.theme.struct_font_mono="$mono_stack"
+	fi
+
+	uci -q delete aurora.theme.font_sans_preset
+	uci -q delete aurora.theme.font_mono_preset
+	uci -q delete aurora.theme.font_sans_face
+	uci -q delete aurora.theme.font_mono_face
+	uci -q commit aurora
+}
+
+json_add_font() {
+	local name="$1" label="$2" source="$3" family="$4" stack="$5" css_url="$6"
+
+	json_add_object ""
+		json_add_string "name" "$name"
+		json_add_string "label" "$label"
+		json_add_string "source" "$source"
+		json_add_string "family" "$family"
+		json_add_string "stack" "$stack"
+		json_add_string "css_url" "$css_url"
+	json_close_object
+}
+
+get_font_meta() {
+	local slot="$1" name="$2" entry
+
+	while IFS= read -r entry; do
+		[ "$(echo "$entry" | cut -d'|' -f2)" = "$name" ] || continue
+		echo "$entry" | cut -d'|' -f3-
+		return 0
+	done <<EOF
+$(list_font_entries "$slot")
+EOF
+
+	return 1
+}
+
+list_font_names() {
+	list_font_entries "$1" | cut -d'|' -f2
+}
 
 version_compare() {
 	local v1 v2
@@ -90,6 +497,18 @@ case "$1" in
 	json_add_object "reset_defaults"; json_close_object
 	json_add_object "get_theme_config"; json_close_object
 	json_add_object "get_theme_presets"; json_close_object
+	json_add_object "get_font_presets"; json_close_object
+	json_add_object "get_font_status"
+		json_add_string "job_id" "job_id"
+	json_close_object
+	json_add_object "prepare_font"
+		json_add_string "sans" "sans"
+		json_add_string "mono" "mono"
+	json_close_object
+	json_add_object "apply_font"
+		json_add_string "sans" "sans"
+		json_add_string "mono" "mono"
+	json_close_object
 	json_add_object "apply_theme_preset"
 		json_add_string "name" "name"
 	json_close_object
@@ -116,6 +535,9 @@ case "$1" in
 		if [ -f "$CLASSIC_TEMPLATE" ]; then
 			cp "$CLASSIC_TEMPLATE" "$CONFIG_FILE"
 			chmod 644 "$CONFIG_FILE"
+			cleanup_custom_fonts
+			cleanup_legacy_font_options
+			sync_font_css_from_uci
 			update_icon_cache_timestamp
 			echo '{ "result": 0 }'
 		else
@@ -162,6 +584,68 @@ case "$1" in
 		json_dump; json_cleanup
 		;;
 
+	"get_font_presets")
+		json_init
+		json_add_object "fonts"
+		for slot_name in sans mono; do
+			json_add_array "$slot_name"
+			for font_name in $(list_font_names "$slot_name"); do
+				meta=$(get_font_meta "$slot_name" "$font_name") || continue
+				label=$(echo "$meta" | cut -d'|' -f1)
+				source=$(echo "$meta" | cut -d'|' -f2)
+				family=$(echo "$meta" | cut -d'|' -f3)
+				stack=$(echo "$meta" | cut -d'|' -f4)
+				css_url=$(echo "$meta" | cut -d'|' -f5-)
+				json_add_font "$font_name" "$label" "$source" "$family" "$stack" "$css_url"
+			done
+			json_close_array
+		done
+		json_close_object
+		json_dump; json_cleanup
+		;;
+
+	"get_font_status")
+		read -r input; json_load "$input" 2>/dev/null
+		json_get_var job_id "job_id"
+		json_cleanup
+
+		case "$job_id" in
+		""|*[!A-Za-z0-9_.-]*)
+			json_init
+			json_add_string "state" "missing"
+			json_add_string "error" "job_not_found"
+			json_dump; json_cleanup
+			exit 0
+			;;
+		esac
+
+		status_file="$FONT_JOB_PATH/$job_id.status"
+		if [ -n "$job_id" ] && [ -f "$status_file" ]; then
+			. "$status_file"
+			json_init
+			json_add_string "state" "${state:-unknown}"
+			json_add_string "sans_status" "${sans_status:-unknown}"
+			json_add_string "mono_status" "${mono_status:-unknown}"
+			json_add_string "sans_error" "${sans_error:-}"
+			json_add_string "mono_error" "${mono_error:-}"
+			json_dump; json_cleanup
+		else
+			json_init
+			json_add_string "state" "missing"
+			json_add_string "error" "job_not_found"
+			json_dump; json_cleanup
+		fi
+		;;
+
+	"prepare_font"|"apply_font")
+		read -r input; json_load "$input" 2>/dev/null
+		json_get_var sans_preset "sans"
+		json_get_var mono_preset "mono"
+		json_cleanup
+
+		start_font_job "$sans_preset" "$mono_preset"
+		;;
+
 	"apply_theme_preset")
 		read -r input; json_load "$input"; json_get_var name "name"; json_cleanup
 
@@ -203,6 +687,9 @@ case "$1" in
 		fi
 
 		chmod 644 "$CONFIG_FILE" 2>/dev/null
+		cleanup_custom_fonts
+		cleanup_legacy_font_options
+		sync_font_css_from_uci
 		update_icon_cache_timestamp
 		echo '{ "result": 0 }'
 		;;
@@ -231,6 +718,9 @@ case "$1" in
 			if grep -Eq "^config[[:space:]]+aurora" "$IMPORT_CONFIG_TMP" 2>/dev/null; then
 				cp "$IMPORT_CONFIG_TMP" "$CONFIG_FILE"
 				chmod 644 "$CONFIG_FILE"
+				cleanup_legacy_font_options
+				sync_font_css_from_uci
+				update_icon_cache_timestamp
 				rm -f "$IMPORT_CONFIG_TMP"
 				echo '{ "result": 0 }'
 			else

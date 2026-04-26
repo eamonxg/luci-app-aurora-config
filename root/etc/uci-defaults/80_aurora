@@ -6,10 +6,54 @@ readonly SAGE_GREEN_TEMPLATE="/usr/share/aurora/sage-green.template"
 readonly AMBER_SAND_TEMPLATE="/usr/share/aurora/amber-sand.template"
 readonly MONOCHROME_TEMPLATE="/usr/share/aurora/monochrome.template"
 readonly SKY_BLUE_TEMPLATE="/usr/share/aurora/sky-blue.template"
+readonly FONT_PRESETS_FILE="/usr/share/aurora/font-presets.conf"
 readonly LOG_TAG="aurora"
 
 log() {
     logger -t "$LOG_TAG" "$1"
+}
+
+font_stack() {
+    local slot="$1" preset="${2:-default}" fallback
+    fallback='"Lato", ui-sans-serif, system-ui, sans-serif'
+    [ "$slot" = "mono" ] && fallback='ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace'
+
+    [ -r "$FONT_PRESETS_FILE" ] || {
+        echo "$fallback"
+        return
+    }
+
+    while IFS='|' read -r f_slot f_name _ _ _ f_stack _; do
+        case "$f_slot" in
+        ""|"#"*) continue ;;
+        esac
+        [ "$f_slot" = "$slot" ] || continue
+        [ "$f_name" = "$preset" ] || continue
+        [ -n "$f_stack" ] && {
+            echo "$f_stack"
+            return
+        }
+    done < "$FONT_PRESETS_FILE"
+
+    echo "$fallback"
+}
+
+cleanup_legacy_font_options() {
+    [ -f "$CONF_FILE" ] || return 0
+
+    if ! uci -q get aurora.theme.struct_font_sans >/dev/null 2>&1; then
+        uci -q set aurora.theme.struct_font_sans="$(font_stack sans "$(uci -q get aurora.theme.font_sans_preset)")"
+    fi
+
+    if ! uci -q get aurora.theme.struct_font_mono >/dev/null 2>&1; then
+        uci -q set aurora.theme.struct_font_mono="$(font_stack mono "$(uci -q get aurora.theme.font_mono_preset)")"
+    fi
+
+    uci -q delete aurora.theme.font_sans_preset
+    uci -q delete aurora.theme.font_mono_preset
+    uci -q delete aurora.theme.font_sans_face
+    uci -q delete aurora.theme.font_mono_face
+    uci -q commit aurora
 }
 
 main() {
@@ -43,6 +87,8 @@ main() {
     else
         log "Configuration already exists, skipping initialization"
     fi
+
+    cleanup_legacy_font_options
 }
 
 main
