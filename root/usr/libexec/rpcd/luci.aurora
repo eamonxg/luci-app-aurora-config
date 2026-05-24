@@ -517,6 +517,7 @@ case "$1" in
 	json_add_object "get_installed_versions"; json_close_object
 	json_add_object "check_updates"; json_close_object
 	json_add_object "get_system_info"; json_close_object
+	json_add_object "remove_login_bg"; json_close_object
 	json_add_object "download_package"
 		json_add_string "repo" "repo"
 		json_add_string "version" "version"
@@ -759,7 +760,14 @@ case "$1" in
 	"remove_icon")
 		read -r input; json_load "$input"; json_get_var filename "filename"; json_cleanup
 		if dirname "$filename" | grep -q "\.\."; then echo '{ "result": 255 }'; exit 255; fi
+		current_login_bg=$(uci -q get aurora.theme.struct_login_bg)
+		current_file=$(printf '%s' "$current_login_bg" | sed "s|url('/luci-static/aurora/images/||;s|')||")
 		rm -f "$ICON_PATH/$filename"
+		if [ -n "$current_file" ] && [ "$current_file" = "$filename" ]; then
+			uci -q delete aurora.theme.struct_login_bg
+			uci -q delete aurora.theme.struct_login_bg_media
+			uci -q commit aurora
+		fi
 		update_icon_cache_timestamp
 		echo '{ "result": 0 }'
 		;;

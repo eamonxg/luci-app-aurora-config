@@ -332,148 +332,25 @@ const renderRadiusControl = createRangeControlRenderer({
   displayWidth: 70,
 });
 
-const createIconUploadButton = (ss, tmpPath) => {
-  const so = ss.option(form.Button, "_upload_icon", _("Upload Icon"));
-  so.inputstyle = "add";
-  so.inputtitle = _("Click me to upload");
-  so.onclick = ui.createHandlerFn(this, () => {
-    return ui
-      .uploadFile(tmpPath, event.target)
-      .then((res) => {
-        if (!res?.name) throw new Error(_("No file selected or upload failed"));
-        const filename = res.name.split("/").pop().split("\\").pop();
-        return L.resolveDefault(callUploadIcon(filename), {})
-          .then((ret) => {
-            if (ret?.result === 0) {
-              window.location.reload();
-              ui.addNotification(
-                null,
-                E("p", _("Icon uploaded successfully: %s").format(filename)),
-              );
-            } else {
-              const errorMsg = ret?.error || "Unknown error";
-              ui.addNotification(
-                null,
-                E("p", _("Failed to upload icon: %s").format(errorMsg)),
-              );
-              return L.resolveDefault(fs.remove(tmpPath), {});
-            }
-          })
-          .catch((err) => {
-            ui.addNotification(
-              null,
-              E("p", _("RPC call failed: %s").format(err.message || err)),
-            );
-            return L.resolveDefault(fs.remove(tmpPath), {});
-          });
-      })
-      .catch((e) => {
-        ui.addNotification(
-          null,
-          E("p", _("Upload error: %s").format(e.message)),
-        );
-        return L.resolveDefault(fs.remove(tmpPath), {});
-      });
-  });
+const toLoginBgUrl = (filename) =>
+  "url('/luci-static/aurora/images/" + filename + "')";
+
+const fromLoginBgUrl = (value) => {
+  if (!value || typeof value !== "string") return "";
+  const match = value.match(/\/images\/([^')]+)/);
+  return match ? match[1] : "";
 };
 
-const createIconList = (ss) => {
-  const so = ss.option(form.DummyValue, "_icon_list", _("Uploaded Icons"));
-  so.load = () => L.resolveDefault(callListIcons(), { icons: [] });
-  so.cfgvalue = (section_id, data) => data?.icons || [];
-  so.render = function (option_index, section_id, in_table) {
-    return this.load(section_id).then((data) => {
-      const icons = this.cfgvalue(section_id, data);
+const isImageFile = (filename) =>
+  /\.(jpg|jpeg|png|gif|webp|avif|svg|bmp|ico)$/i.test(filename);
 
-      const container = E("div", { class: "cbi-value-field" });
-
-      if (icons.length === 0) {
-        container.appendChild(E("em", {}, _("No icons uploaded yet.")));
-        return E("div", { class: "cbi-value", "data-name": this.option }, [
-          E("label", { class: "cbi-value-title" }, this.title),
-          container,
-        ]);
-      }
-
-      const table = E("table", { class: "table" }, [
-        E("tr", { class: "tr table-titles" }, [
-          E("th", { class: "th" }, _("Icon Name")),
-          E("th", { class: "th center" }, _("Actions")),
-        ]),
-      ]);
-
-      icons.forEach((icon) => {
-        const deleteBtn = E(
-          "button",
-          {
-            class: "cbi-button cbi-button-remove",
-            click: ui.createHandlerFn(this, () => {
-              return ui.showModal(_("Delete Icon"), [
-                E("p", {}, _("Delete icon '%s'?").format(icon)),
-                E("div", { class: "right" }, [
-                  E(
-                    "button",
-                    { class: "btn", click: ui.hideModal },
-                    _("Cancel"),
-                  ),
-                  " ",
-                  E(
-                    "button",
-                    {
-                      class: "btn cbi-button-negative",
-                      click: () => {
-                        ui.showModal(_("Deleting..."), [
-                          E("p", { class: "spinning" }, _("Deleting icon...")),
-                        ]);
-                        L.resolveDefault(callRemoveIcon(icon), {}).then(
-                          (ret) => {
-                            if (ret.result === 0) {
-                              ui.hideModal();
-                              ui.addNotification(
-                                null,
-                                E("p", _("Icon deleted: %s").format(icon)),
-                              );
-                              window.location.reload();
-                            } else {
-                              ui.hideModal();
-                              ui.addNotification(
-                                null,
-                                E(
-                                  "p",
-                                  _("Failed to delete icon: %s").format(icon),
-                                ),
-                                "error",
-                              );
-                            }
-                          },
-                        );
-                      },
-                    },
-                    _("Delete"),
-                  ),
-                ]),
-              ]);
-            }),
-          },
-          _("Delete"),
-        );
-
-        table.appendChild(
-          E("tr", { class: "tr" }, [
-            E("td", { class: "td", style: "font-family: monospace;" }, icon),
-            E("td", { class: "td center" }, deleteBtn),
-          ]),
-        );
-      });
-
-      container.appendChild(table);
-
-      return E("div", { class: "cbi-value", "data-name": this.option }, [
-        E("label", { class: "cbi-value-title" }, this.title),
-        container,
-      ]);
-    });
-  };
+const getAssetType = (filename) => {
+  if (/^login-bg\./i.test(filename)) return _("Login Background");
+  if (filename === "logo.svg") return _("Site Logo");
+  if (filename === "favicon.ico") return _("Favicon");
+  if (filename.endsWith(".svg")) return _("SVG Icon");
+  if (/\.(png|jpg|jpeg|webp|gif|avif|bmp)$/i.test(filename)) return _("Image");
+  return _("File");
 };
 
 return view.extend({
@@ -938,7 +815,7 @@ return view.extend({
                 "p",
                 {},
                 _(
-                  "Are you sure you want to reset all theme settings (Color, Structure, Icons & Toolbar) back to the default theme's original configuration? This will revert everything to the default theme's initial state.",
+                  "Are you sure you want to reset all theme settings (Color, Structure, Login & Branding) back to the default theme's original configuration? This will revert everything to the default theme's initial state.",
                 ),
               ),
               E("div", { class: "right" }, [
@@ -1064,7 +941,7 @@ return view.extend({
     s.tab("colors", _("Color"));
     s.tab("structure", _("Structure"));
     s.tab("fonts", _("Fonts"));
-    s.tab("icons_toolbar", _("Icons & Toolbar"));
+    s.tab("icons_branding", _("Login & Branding"));
 
     const colorSection = s.taboption(
       "colors",
@@ -1314,37 +1191,201 @@ return view.extend({
 
     this.prepareAuroraFonts = prepareSelectedFonts;
 
-    const iconSection = s.taboption(
-      "icons_toolbar",
+    const assetSection = s.taboption(
+      "icons_branding",
       form.SectionValue,
-      "_icon_management",
+      "_asset_library",
       form.NamedSection,
       "theme",
       "aurora",
-      _("Icon Management"),
-      _(
-        "Upload theme branding assets (browser tab favicon) and custom toolbar icons. Supported formats include SVG, PNG, JPG, and more. Uploaded assets are stored in<code>/www/luci-static/aurora/images/</code> and can be used throughout the theme.",
-      ),
+      _("Asset Library"),
+      _("Manage image files used by the theme. All files are stored in <code>/www/luci-static/aurora/images/</code>."),
     );
-    const iconSubsection = iconSection.subsection;
-    createIconUploadButton(iconSubsection, "/tmp/aurora_icon.tmp");
-    createIconList(iconSubsection);
+    const assetSubsection = assetSection.subsection;
+
+    const uploadSo = assetSubsection.option(form.Button, "_upload_asset", _("Upload Asset"));
+    uploadSo.inputstyle = "add";
+    uploadSo.inputtitle = _("Upload image file");
+    uploadSo.onclick = ui.createHandlerFn(this, function () {
+      const fileInput = E("input", { type: "file", style: "display:none", accept: "image/*,.svg" });
+      document.body.appendChild(fileInput);
+
+      return new Promise((resolve) => {
+        const makeRadio = (value, labelText, checked) => {
+          const id = "aurora-asset-type-" + value;
+          const radio = E("input", { type: "radio", id, name: "aurora_asset_type", value });
+          if (checked) radio.checked = true;
+          return E("label", {
+            for: id,
+            style: "display:flex;align-items:center;gap:0.6em;padding:0.35em 0;cursor:pointer;",
+          }, [radio, labelText]);
+        };
+        const cancelFn = () => {
+          document.body.removeChild(fileInput);
+          ui.hideModal();
+          resolve(null);
+        };
+        ui.showModal(_("Upload Asset"), [
+          E("p", { style: "margin-bottom:0.25em;font-weight:600;" }, _("Select what this image will be used for:")),
+          E("div", { style: "margin:0.25em 0 1em;" }, [
+            makeRadio("icon", _("Logo / Icon"), true),
+            makeRadio("media", _("Login background image"), false),
+          ]),
+          E("div", { class: "right" }, [
+            E("button", { class: "btn", click: cancelFn }, _("Cancel")),
+            " ",
+            E("button", {
+              class: "btn cbi-button-action important",
+              click: () => {
+                const checked = document.querySelector('input[name="aurora_asset_type"]:checked');
+                const type = checked ? checked.value : "icon";
+                ui.hideModal();
+                fileInput.onchange = () => {
+                  const file = fileInput.files[0];
+                  document.body.removeChild(fileInput);
+                  resolve(file ? { type, file } : null);
+                };
+                fileInput.click();
+              },
+            }, _("Choose File")),
+          ]),
+        ]);
+      }).then((selection) => {
+        if (!selection) return;
+        const { type, file } = selection;
+        const tmpPath = "/tmp/aurora_icon.tmp";
+
+        ui.showModal(_("Uploading…"), [E("p", { class: "spinning" }, _("Uploading…"))]);
+
+        const formData = new FormData();
+        formData.append("sessionid", rpc.getSessionID());
+        formData.append("filename", tmpPath);
+        formData.append("filemode", "0600");
+        formData.append("filedata", file, file.name);
+
+        return fetch("/cgi-bin/cgi-upload", { method: "POST", credentials: "include", body: formData })
+          .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+          .then(() => {
+              return L.resolveDefault(callUploadIcon(file.name), {}).then((ret) => {
+                if (ret?.result === 0) {
+                  ui.addNotification(null, E("p", _("Uploaded: %s").format(file.name)));
+                  window.location.reload();
+                } else {
+                  ui.addNotification(null, E("p", _("Failed to upload: %s").format(ret?.error || "Unknown")));
+                  return L.resolveDefault(fs.remove(tmpPath), {});
+                }
+              });
+          })
+          .catch((err) => {
+
+            ui.hideModal();
+
+            ui.addNotification(null, E("p", _("Upload failed: %s").format(err.message || err)));
+            return L.resolveDefault(fs.remove(tmpPath), {});
+          });
+      });
+    });
+
+    const assetTableSo = assetSubsection.option(form.DummyValue, "_asset_table", " ");
+    assetTableSo.load = () => L.resolveDefault(callListIcons(), { icons: [] });
+    assetTableSo.cfgvalue = (section_id, data) => data?.icons || [];
+    assetTableSo.render = function (option_index, section_id, in_table) {
+      return this.load(section_id).then((data) => {
+        const icons = this.cfgvalue(section_id, data);
+
+        if (icons.length === 0) {
+          return E("div", { "data-name": this.option, style: "padding:0.5em 0;" }, [
+            E("em", {}, _("No assets uploaded yet.")),
+          ]);
+        }
+
+        const table = E("table", { class: "table" }, [
+          E("tr", { class: "tr table-titles" }, [
+            E("th", { class: "th" }, _("Filename")),
+            E("th", { class: "th" }, _("Usage")),
+            E("th", { class: "th center" }, _("Actions")),
+          ]),
+        ]);
+
+        icons.forEach((icon) => {
+          const deleteBtn = E(
+            "button",
+            {
+              class: "cbi-button cbi-button-remove",
+              click: ui.createHandlerFn(this, () => {
+                return ui.showModal(_("Delete Asset"), [
+                  E("p", {}, _("Delete '%s'?").format(icon)),
+                  E("div", { class: "right" }, [
+                    E(
+                      "button",
+                      { class: "btn", click: ui.hideModal },
+                      _("Cancel"),
+                    ),
+                    " ",
+                    E(
+                      "button",
+                      {
+                        class: "btn cbi-button-negative",
+                        click: () => {
+                          ui.showModal(_("Deleting…"), [
+                            E("p", { class: "spinning" }, _("Deleting…")),
+                          ]);
+                          L.resolveDefault(callRemoveIcon(icon), {}).then((ret) => {
+                            ui.hideModal();
+                            if (ret?.result === 0) {
+                              ui.addNotification(
+                                null,
+                                E("p", _("Deleted: %s").format(icon)),
+                              );
+                              window.location.reload();
+                            } else {
+                              ui.addNotification(
+                                null,
+                                E("p", _("Failed to delete: %s").format(icon)),
+                                "error",
+                              );
+                            }
+                          });
+                        },
+                      },
+                      _("Delete"),
+                    ),
+                  ]),
+                ]);
+              }),
+            },
+            _("Delete"),
+          );
+
+          table.appendChild(
+            E("tr", { class: "tr" }, [
+              E("td", { class: "td", style: "font-family:monospace;" }, icon),
+              E("td", { class: "td" }, getAssetType(icon)),
+              E("td", { class: "td center" }, deleteBtn),
+            ]),
+          );
+        });
+
+        return E("div", { "data-name": this.option }, table);
+      });
+    };
 
     const logoSection = s.taboption(
-      "icons_toolbar",
+      "icons_branding",
       form.SectionValue,
-      "_logo_settings",
+      "_branding_settings",
       form.NamedSection,
       "theme",
       "aurora",
-      _("Logo Settings"),
+      _("Site Branding"),
       _(
-        "Select custom logos for your browser tab icon (favicon). For best compatibility, upload both SVG and PNG formats. Modern browsers will use the SVG version, while older browsers will fall back to the 32x32 PNG version.",
+        "Select the SVG icon used as the browser tab favicon and the login page logo. Upload your SVG file using the Asset Library above, then select it here. For PWA home screen icon customization, replace <code>pwa/apple-touch-icon.png</code> in the icon library.",
       ),
     );
     const logoSubsection = logoSection.subsection;
 
-    so = logoSubsection.option(form.ListValue, "logo_svg", _("SVG Logo"));
+
+    so = logoSubsection.option(form.ListValue, "logo_svg", _("Logo Icon"));
     so.default = "logo.svg";
     so.rmempty = false;
     so.load = function (section_id) {
@@ -1367,24 +1408,23 @@ return view.extend({
       );
     };
 
-    so = logoSubsection.option(
-      form.ListValue,
-      "logo_png",
-      _("PNG Logo (32x32)"),
+    so = logoSubsection.option(form.ListValue, "struct_login_bg", _("Login Background"));
+    so.description = _(
+      "Select a static image from the Asset Library. Shown as a full-screen background on the login page.",
     );
-    so.default = "logo_32.png";
-    so.rmempty = false;
+    so.rmempty = true;
     so.load = function (section_id) {
       return L.resolveDefault(callListIcons(), { icons: [] }).then(
         L.bind((response) => {
           const icons = response?.icons || [];
           this.keylist = [];
           this.vallist = [];
+          this.value("", _("None (Animated Aurora)"));
           if (icons.length > 0) {
             icons.forEach(
               L.bind((icon) => {
-                if (icon.endsWith(".png")) {
-                  this.value(icon, icon);
+                if (isImageFile(icon) && !icon.endsWith(".svg")) {
+                  this.value(toLoginBgUrl(icon), icon);
                 }
               }, this),
             );
@@ -1393,9 +1433,27 @@ return view.extend({
         }, this),
       );
     };
+    so.cfgvalue = function (section_id) {
+      let value = uci.get("aurora", section_id, "struct_login_bg");
+      if (!value) {
+        const legacy = uci.get("aurora", section_id, "struct_login_bg_media");
+        if (legacy) value = toLoginBgUrl(legacy);
+      }
+      const file = fromLoginBgUrl(value);
+      if (file && /\.(mp4|webm|ogg)$/i.test(file)) return "";
+      return value || "";
+    };
+    so.write = function (section_id, value) {
+      uci.unset("aurora", section_id, "struct_login_bg_media");
+      if (!value) {
+        uci.unset("aurora", section_id, "struct_login_bg");
+        return;
+      }
+      uci.set("aurora", section_id, "struct_login_bg", value);
+    };
 
     const toolbarSection = s.taboption(
-      "icons_toolbar",
+      "icons_branding",
       form.SectionValue,
       "_toolbar_settings",
       form.NamedSection,
