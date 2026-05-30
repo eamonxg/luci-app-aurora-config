@@ -2,49 +2,7 @@
 "require view";
 "require rpc";
 "require ui";
-
-const CACHE_KEY = "aurora.version.cache";
-const CACHE_TTL = 1800000;
-
-const versionCache = {
-  get() {
-    try {
-      const cached = localStorage.getItem(CACHE_KEY);
-      if (!cached) return null;
-      const { timestamp, value } = JSON.parse(cached);
-      if (Date.now() - timestamp > CACHE_TTL) {
-        this.clear();
-        return null;
-      }
-      return value;
-    } catch (e) {
-      return null;
-    }
-  },
-
-  set(value) {
-    try {
-      const data = { timestamp: Date.now(), value };
-      localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-    } catch (e) {
-      console.error("Failed to cache version data:", e);
-    }
-  },
-
-  clear() {
-    localStorage.removeItem(CACHE_KEY);
-  },
-};
-
-const callGetInstalledVersions = rpc.declare({
-  object: "luci.aurora",
-  method: "get_installed_versions",
-});
-
-const callCheckUpdates = rpc.declare({
-  object: "luci.aurora",
-  method: "check_updates",
-});
+"require utils.version-api";
 
 const callDownloadPackage = rpc.declare({
   object: "luci.aurora",
@@ -174,7 +132,7 @@ const executeUpdate = (packageName, repo, version, packageFilter) => {
             {
               class: "btn cbi-button-positive",
               click: () => {
-                versionCache.clear();
+                utils_version_api.versionCache.clear();
                 ui.hideModal();
                 window.location.reload();
               },
@@ -324,7 +282,7 @@ const checkForUpdates = (forceRefresh) => {
   }
 
   if (!forceRefresh) {
-    const cached = versionCache.get();
+    const cached = utils_version_api.versionCache.get();
     if (cached) {
       updateVersionTable(cached);
       if (btn) {
@@ -337,9 +295,9 @@ const checkForUpdates = (forceRefresh) => {
 
   updateVersionTable(null);
 
-  callCheckUpdates()
+  utils_version_api.callCheckUpdates()
     .then((updateData) => {
-      versionCache.set(updateData);
+      utils_version_api.versionCache.set(updateData);
       updateVersionTable(updateData);
       if (btn) {
         btn.disabled = false;
@@ -367,7 +325,7 @@ const checkForUpdates = (forceRefresh) => {
 };
 
 return view.extend({
-  load: () => L.resolveDefault(callGetInstalledVersions(), null),
+  load: () => L.resolveDefault(utils_version_api.callGetInstalledVersions(), null),
 
   render: (installedData) => {
     if (installedData) {

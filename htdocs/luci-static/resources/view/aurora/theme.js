@@ -5,45 +5,14 @@
 "require rpc";
 "require ui";
 "require fs";
+"require utils.version-api";
 
-const CACHE_KEY = "aurora.version.cache";
-const CACHE_TTL = 1800000;
 const CONFIG_IMPORT_PATH = "/tmp/aurora_config_import.tmp";
-
-const versionCache = {
-  get() {
-    try {
-      const cached = localStorage.getItem(CACHE_KEY);
-      if (!cached) return null;
-      const { timestamp, value } = JSON.parse(cached);
-      if (Date.now() - timestamp > CACHE_TTL) {
-        this.clear();
-        return null;
-      }
-      return value;
-    } catch (e) {
-      return null;
-    }
-  },
-
-  set(value) {
-    try {
-      const data = { timestamp: Date.now(), value };
-      localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-    } catch (e) {
-      console.error("Failed to cache version data:", e);
-    }
-  },
-
-  clear() {
-    localStorage.removeItem(CACHE_KEY);
-  },
-};
 
 document.querySelector("head").appendChild(
   E("script", {
     type: "text/javascript",
-    src: L.resource("view/aurora/color.global.js"),
+    src: L.resource("utils/color.global.js"),
   }),
 );
 
@@ -62,16 +31,6 @@ const callRemoveIcon = rpc.declare({
   object: "luci.aurora",
   method: "remove_icon",
   params: ["filename"],
-});
-
-const callCheckUpdates = rpc.declare({
-  object: "luci.aurora",
-  method: "check_updates",
-});
-
-const callGetInstalledVersions = rpc.declare({
-  object: "luci.aurora",
-  method: "get_installed_versions",
 });
 
 const callGetThemeConfig = rpc.declare({
@@ -404,7 +363,7 @@ return view.extend({
       uci.load("aurora"),
       L.resolveDefault(callGetThemeConfig(), {}),
       L.resolveDefault(callGetThemePresets(), {}),
-      L.resolveDefault(callGetInstalledVersions(), {}),
+      L.resolveDefault(utils_version_api.callGetInstalledVersions(), {}),
       L.resolveDefault(callGetFontPresets(), {}),
     ]);
   },
@@ -1645,15 +1604,15 @@ return view.extend({
               (window.location.href = L.url("admin/system/aurora/version"));
         });
 
-        const cached = versionCache.get();
+        const cached = utils_version_api.versionCache.get();
         if (cached) {
           updateVersionLabel(labels.theme, cached?.theme?.update_available);
           updateVersionLabel(labels.config, cached?.config?.update_available);
         } else {
-          L.resolveDefault(callCheckUpdates(), null)
+          L.resolveDefault(utils_version_api.callCheckUpdates(), null)
             .then((updateData) => {
               if (updateData) {
-                versionCache.set(updateData);
+                utils_version_api.versionCache.set(updateData);
                 updateVersionLabel(
                   labels.theme,
                   updateData?.theme?.update_available,
