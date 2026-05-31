@@ -87,6 +87,11 @@ const callResetDefaults = rpc.declare({
   method: "reset_defaults",
 });
 
+const callWritePwaManifest = rpc.declare({
+  object: "luci.aurora",
+  method: "write_pwa_manifest",
+});
+
 const resolveCssColor = (() => {
   let resolverEl = null;
 
@@ -342,24 +347,24 @@ return view.extend({
     const save = L.bind(function () {
       return this.super("handleSave", ev);
     }, this);
+    const writePwa = () => L.resolveDefault(callWritePwaManifest(), {});
 
     if (typeof this.prepareAuroraFonts === "function") {
-      return this.prepareAuroraFonts().then(save);
+      return this.prepareAuroraFonts().then(save).then(writePwa);
     }
-
-    return save();
+    return save().then(writePwa);
   },
 
   handleSaveApply: function (ev) {
     const saveApply = L.bind(function () {
       return this.super("handleSaveApply", ev);
     }, this);
+    const writePwa = () => L.resolveDefault(callWritePwaManifest(), {});
 
     if (typeof this.prepareAuroraFonts === "function") {
-      return this.prepareAuroraFonts().then(saveApply);
+      return this.prepareAuroraFonts().then(saveApply).then(writePwa);
     }
-
-    return saveApply();
+    return saveApply().then(writePwa);
   },
 
   load: function () {
@@ -911,7 +916,7 @@ return view.extend({
     s.tab("colors", _("Color"));
     s.tab("structure", _("Structure"));
     s.tab("fonts", _("Fonts"));
-    s.tab("icons_branding", _("Login & Branding"));
+    s.tab("icons_branding", _("Branding"));
 
     const colorSection = s.taboption(
       "colors",
@@ -1382,13 +1387,13 @@ return view.extend({
       "aurora",
       _("Site Branding"),
       _(
-        "Select the SVG icon used as the browser tab favicon and the login page logo. Upload your SVG file using the Asset Library above, then select it here. For PWA home screen icon customization, replace <code>pwa/apple-touch-icon.png</code> in the icon library.",
+        "Select the icon used as the browser tab favicon and login page logo. Upload files using the Asset Library above, then select them here.",
       ),
     );
     const logoSubsection = logoSection.subsection;
 
 
-    so = logoSubsection.option(form.ListValue, "logo_svg", _("Logo Icon"));
+    so = logoSubsection.option(form.ListValue, "logo_svg", _("Logo / Favicon"));
     so.default = "logo.svg";
     so.rmempty = false;
     so.load = function (section_id) {
@@ -1400,7 +1405,7 @@ return view.extend({
           if (icons.length > 0) {
             icons.forEach(
               L.bind((icon) => {
-                if (icon.endsWith(".svg")) {
+                if (isImageFile(icon)) {
                   this.value(icon, icon);
                 }
               }, this),
@@ -1410,6 +1415,69 @@ return view.extend({
         }, this),
       );
     };
+
+    so = logoSubsection.option(form.ListValue, "favicon_png", _("Favicon (PNG)"));
+    so.description = _("Optional PNG favicon for browsers that do not support SVG favicons.");
+    so.rmempty = true;
+    so.load = function (section_id) {
+      return L.resolveDefault(callListIcons(), { icons: [] }).then(
+        L.bind(function (response) {
+          const icons = response?.icons || [];
+          this.keylist = [];
+          this.vallist = [];
+          this.value("", _("(None)"));
+          icons.forEach(L.bind(function (icon) {
+            if (/\.png$/i.test(icon)) this.value(icon, icon);
+          }, this));
+          return form.ListValue.prototype.load.apply(this, [section_id]);
+        }, this)
+      );
+    };
+
+    so = logoSubsection.option(form.ListValue, "favicon_ico", _("Favicon (ICO / Legacy)"));
+    so.description = _("ICO favicon served to legacy browsers as fallback.");
+    so.default = "favicon.ico";
+    so.rmempty = false;
+    so.load = function (section_id) {
+      return L.resolveDefault(callListIcons(), { icons: [] }).then(
+        L.bind(function (response) {
+          const icons = response?.icons || [];
+          this.keylist = [];
+          this.vallist = [];
+          icons.forEach(L.bind(function (icon) {
+            if (/\.ico$/i.test(icon)) this.value(icon, icon);
+          }, this));
+          return form.ListValue.prototype.load.apply(this, [section_id]);
+        }, this)
+      );
+    };
+
+    const pwaIconSlots = [
+      ["pwa_apple_touch", _("Apple Touch Icon"),  "apple-touch-icon.png"],
+      ["pwa_icon_192",    _("App Icon 192×192"),  "app-icon-192x192.png"],
+      ["pwa_icon_512",    _("App Icon 512×512"),  "app-icon-512x512.png"],
+    ];
+
+    pwaIconSlots.forEach(function ([key, label, defaultVal]) {
+      so = logoSubsection.option(form.ListValue, key, label);
+      so.default = defaultVal;
+      so.rmempty = false;
+      so.load = function (section_id) {
+        return L.resolveDefault(callListIcons(), { icons: [] }).then(
+          L.bind(function (response) {
+            const icons = response?.icons || [];
+            this.keylist = [];
+            this.vallist = [];
+            icons.forEach(L.bind(function (icon) {
+              if (isImageFile(icon) && !/\.svg$/i.test(icon)) {
+                this.value(icon, icon);
+              }
+            }, this));
+            return form.ListValue.prototype.load.apply(this, [section_id]);
+          }, this)
+        );
+      };
+    });
 
     so = logoSubsection.option(form.ListValue, "struct_login_bg", _("Login Background"));
     so.description = _(

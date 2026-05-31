@@ -518,6 +518,7 @@ case "$1" in
 	json_add_object "check_updates"; json_close_object
 	json_add_object "get_system_info"; json_close_object
 	json_add_object "remove_login_bg"; json_close_object
+	json_add_object "write_pwa_manifest"; json_close_object
 	json_add_object "download_package"
 		json_add_string "repo" "repo"
 		json_add_string "version" "version"
@@ -771,6 +772,50 @@ case "$1" in
 		fi
 		update_icon_cache_timestamp
 		echo '{ "result": 0 }'
+		;;
+
+	"write_pwa_manifest")
+		icon_192=$(uci -q get aurora.theme.pwa_icon_192)
+		icon_512=$(uci -q get aurora.theme.pwa_icon_512)
+		[ -z "$icon_192" ] && icon_192="app-icon-192x192.png"
+		[ -z "$icon_512" ] && icon_512="app-icon-512x512.png"
+
+		manifest_file="$ICON_PATH/app.webmanifest"
+		tmp_file="${manifest_file}.tmp"
+
+		cat > "$tmp_file" <<MANIFEST
+{
+  "name": "LuCI Aurora",
+  "short_name": "Aurora",
+  "start_url": "/cgi-bin/luci",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#f8fafc",
+  "icons": [
+    {
+      "src": "/luci-static/aurora/images/${icon_192}",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/luci-static/aurora/images/${icon_512}",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
+MANIFEST
+
+		if mv "$tmp_file" "$manifest_file" 2>/dev/null; then
+			chmod 0644 "$manifest_file"
+			echo '{ "result": 0 }'
+		else
+			rm -f "$tmp_file"
+			echo '{ "result": 1, "error": "Failed to write manifest" }'
+		fi
 		;;
 
 	"get_installed_versions")

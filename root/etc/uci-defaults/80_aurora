@@ -89,6 +89,12 @@ main() {
     fi
 
     cleanup_legacy_font_options
+
+    # Remove legacy logo_png option
+    if uci -q get aurora.theme.logo_png >/dev/null 2>&1; then
+        uci -q delete aurora.theme.logo_png
+        uci -q commit aurora
+    fi
 }
 
 main
