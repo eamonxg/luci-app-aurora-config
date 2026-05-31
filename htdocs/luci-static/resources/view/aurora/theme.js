@@ -1023,11 +1023,6 @@ return view.extend({
     const addFontSlot = (ss, slot) => {
       const options = buildFontOptions(slot);
       const stackKey = "struct_font_" + slot;
-      const legacyPresetKey = "font_" + slot + "_preset";
-      const legacyFont = findFontByPreset(
-        slot,
-        themeConfig[legacyPresetKey] || "default",
-      );
       const defaultFont = getDefaultFont(slot);
 
       const presetOpt = ss.option(
@@ -1035,8 +1030,7 @@ return view.extend({
         stackKey,
         slot === "sans" ? _("Sans-serif Typeface") : _("Monospace Typeface"),
       );
-      presetOpt.default =
-        themeConfig[stackKey] || legacyFont?.stack || defaultFont?.stack || "";
+      presetOpt.default = themeConfig[stackKey] || defaultFont?.stack || "";
       presetOpt.rmempty = false;
       options.forEach((font) => {
         if (font.stack) {
@@ -1623,17 +1617,9 @@ return view.extend({
       );
     };
     so.cfgvalue = function (section_id) {
-      let value = uci.get("aurora", section_id, "struct_login_bg");
-      if (!value) {
-        const legacy = uci.get("aurora", section_id, "struct_login_bg_media");
-        if (legacy) value = toLoginBgUrl(legacy);
-      }
-      const file = fromLoginBgUrl(value);
-      if (file && /\.(mp4|webm|ogg)$/i.test(file)) return "";
-      return value || "";
+      return uci.get("aurora", section_id, "struct_login_bg") || "";
     };
     so.write = function (section_id, value) {
-      uci.unset("aurora", section_id, "struct_login_bg_media");
       if (!value) {
         uci.unset("aurora", section_id, "struct_login_bg");
         uci.unset("aurora", section_id, "light_login_bg_lqip");

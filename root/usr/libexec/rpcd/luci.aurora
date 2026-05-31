@@ -160,16 +160,10 @@ get_font_preset_by_stack() {
 }
 
 get_font_preset_from_uci() {
-	local slot="$1" stack legacy
+	local slot="$1" stack
 
 	stack=$(uci -q get "aurora.theme.struct_font_$slot")
 	if [ -n "$stack" ] && get_font_preset_by_stack "$slot" "$stack"; then
-		return 0
-	fi
-
-	legacy=$(uci -q get "aurora.theme.font_${slot}_preset")
-	if [ -n "$legacy" ] && get_font_meta "$slot" "$legacy" >/dev/null 2>&1; then
-		echo "$legacy"
 		return 0
 	fi
 
@@ -391,29 +385,6 @@ sync_font_css_from_uci() {
 	write_combined_font_css "$sans_preset" "$mono_preset"
 }
 
-cleanup_legacy_font_options() {
-	local sans_preset mono_preset sans_stack mono_stack
-
-	if ! uci -q get aurora.theme.struct_font_sans >/dev/null 2>&1; then
-		sans_preset=$(uci -q get aurora.theme.font_sans_preset)
-		[ -z "$sans_preset" ] && sans_preset="default"
-		sans_stack=$(get_font_stack "sans" "$sans_preset" 2>/dev/null) || sans_stack=$(get_font_stack "sans" "default")
-		uci -q set aurora.theme.struct_font_sans="$sans_stack"
-	fi
-
-	if ! uci -q get aurora.theme.struct_font_mono >/dev/null 2>&1; then
-		mono_preset=$(uci -q get aurora.theme.font_mono_preset)
-		[ -z "$mono_preset" ] && mono_preset="default"
-		mono_stack=$(get_font_stack "mono" "$mono_preset" 2>/dev/null) || mono_stack=$(get_font_stack "mono" "default")
-		uci -q set aurora.theme.struct_font_mono="$mono_stack"
-	fi
-
-	uci -q delete aurora.theme.font_sans_preset
-	uci -q delete aurora.theme.font_mono_preset
-	uci -q delete aurora.theme.font_sans_face
-	uci -q delete aurora.theme.font_mono_face
-	uci -q commit aurora
-}
 
 json_add_font() {
 	local name="$1" label="$2" source="$3" family="$4" stack="$5" css_url="$6"
@@ -538,7 +509,6 @@ case "$1" in
 			cp "$CLASSIC_TEMPLATE" "$CONFIG_FILE"
 			chmod 644 "$CONFIG_FILE"
 			cleanup_custom_fonts
-			cleanup_legacy_font_options
 			sync_font_css_from_uci
 			update_icon_cache_timestamp
 			echo '{ "result": 0 }'
@@ -691,7 +661,6 @@ case "$1" in
 		uci -q commit aurora
 		chmod 644 "$CONFIG_FILE" 2>/dev/null
 		cleanup_custom_fonts
-		cleanup_legacy_font_options
 		sync_font_css_from_uci
 		update_icon_cache_timestamp
 		echo '{ "result": 0 }'
@@ -721,7 +690,6 @@ case "$1" in
 			if grep -Eq "^config[[:space:]]+aurora" "$IMPORT_CONFIG_TMP" 2>/dev/null; then
 				cp "$IMPORT_CONFIG_TMP" "$CONFIG_FILE"
 				chmod 644 "$CONFIG_FILE"
-				cleanup_legacy_font_options
 				sync_font_css_from_uci
 				update_icon_cache_timestamp
 				rm -f "$IMPORT_CONFIG_TMP"
@@ -767,7 +735,6 @@ case "$1" in
 		rm -f "$ICON_PATH/$filename"
 		if [ -n "$current_file" ] && [ "$current_file" = "$filename" ]; then
 			uci -q delete aurora.theme.struct_login_bg
-			uci -q delete aurora.theme.struct_login_bg_media
 			uci -q commit aurora
 		fi
 		update_icon_cache_timestamp
