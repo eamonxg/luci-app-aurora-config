@@ -143,10 +143,32 @@ for preset in classic sage-green amber-sand monochrome sky-blue; do
 done
 
 js_keys="$(mktemp)"
-awk '/^const COLOR_TOKENS = \[/,/^\];/' "$THEME_JS" \
+token_metadata="$(
+  awk '/^const COLOR_TOKENS = \[/,/^\];/' "$THEME_JS"
+)"
+printf '%s\n' "$token_metadata" \
   | sed -n 's/^[[:space:]]*key: "\([a-z0-9_]*\)",[[:space:]]*$/\1/p' >"$js_keys"
 check_key_set "theme.js COLOR_TOKENS" "$js_keys"
 rm -f "$js_keys"
+
+layer_one_count="$(printf '%s\n' "$token_metadata" | grep -c '^[[:space:]]*layer: 1,')"
+layer_two_count="$(printf '%s\n' "$token_metadata" | grep -c '^[[:space:]]*layer: 2,')"
+if [ "$layer_one_count" -ne 11 ] || [ "$layer_two_count" -ne 56 ]; then
+  printf 'theme.js token layers: expected 11 basic and 56 advanced, found %s and %s\n' \
+    "$layer_one_count" "$layer_two_count" >&2
+  failed=1
+fi
+
+if ! rg -q 'option\.depends\("struct_advanced_colors", "1"\)' "$THEME_JS" ||
+   ! rg -q 'option\.retain = true' "$THEME_JS"; then
+  printf '%s\n' "Advanced color fields must depend on the flag and retain hidden values" >&2
+  failed=1
+fi
+
+if ! rg -q 'triggerValidation' "$THEME_JS"; then
+  printf '%s\n' "Async color resolution must refresh LuCI field validation" >&2
+  failed=1
+fi
 
 old_lqip="$(
   rg -n 'light_login_bg_lqip' "$ROOT/htdocs" "$ROOT/root" || true
