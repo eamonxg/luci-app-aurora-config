@@ -4,6 +4,7 @@ set -eu
 
 ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
 THEME_JS="$ROOT/htdocs/luci-static/resources/view/aurora/theme.js"
+RPCD="$ROOT/root/usr/libexec/rpcd/luci.aurora"
 
 expected="$(mktemp)"
 actual="$(mktemp)"
@@ -150,6 +151,15 @@ printf '%s\n' "$token_metadata" \
   | sed -n 's/^[[:space:]]*key: "\([a-z0-9_]*\)",[[:space:]]*$/\1/p' >"$js_keys"
 check_key_set "theme.js COLOR_TOKENS" "$js_keys"
 rm -f "$js_keys"
+
+backend_keys="$(mktemp)"
+awk '
+  /^readonly COLOR_TOKEN_KEYS="$/ { collecting = 1; next }
+  collecting && /^"$/ { exit }
+  collecting { print }
+' "$RPCD" >"$backend_keys"
+check_key_set "rpcd COLOR_TOKEN_KEYS" "$backend_keys"
+rm -f "$backend_keys"
 
 layer_one_count="$(printf '%s\n' "$token_metadata" | grep -c '^[[:space:]]*layer: 1,')"
 layer_two_count="$(printf '%s\n' "$token_metadata" | grep -c '^[[:space:]]*layer: 2,')"
