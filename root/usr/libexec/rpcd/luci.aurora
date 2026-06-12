@@ -108,6 +108,9 @@ cleanup_preset_snapshot() {
 	PRESET_UCI_DIR=""
 }
 
+trap cleanup_preset_snapshot EXIT
+trap 'cleanup_preset_snapshot; exit 1' HUP INT TERM
+
 is_safe_color_value() {
 	local value="$1"
 
@@ -869,6 +872,7 @@ case "$1" in
 		fi
 
 		uci -q set aurora.theme.active_preset="$name"
+		uci -q set aurora.theme.icon_cache_version="$(date +%s)"
 		if ! uci -q commit aurora; then
 			uci -q revert aurora
 			cleanup_preset_snapshot
@@ -878,7 +882,6 @@ case "$1" in
 
 		cleanup_preset_snapshot
 		chmod 644 "$CONFIG_FILE" 2>/dev/null
-		update_icon_cache_timestamp
 		echo '{ "result": 0 }'
 		;;
 
