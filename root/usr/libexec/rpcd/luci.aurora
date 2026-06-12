@@ -18,6 +18,203 @@ readonly SKY_BLUE_TEMPLATE="/usr/share/aurora/sky-blue.template"
 readonly FONT_PRESETS_FILE="/usr/share/aurora/font-presets.conf"
 readonly IMPORT_CONFIG_TMP="/tmp/aurora_config_import.tmp"
 readonly EXPORT_CONFIG_TMP="/tmp/aurora_config_export.conf"
+readonly COLOR_TOKEN_KEYS="
+canvas
+surface
+surface_raised
+content
+brand
+on_brand
+link
+info
+warning
+success
+danger
+surface_subtle
+surface_muted
+content_muted
+content_subtle
+brand_faint
+brand_soft
+brand_emphasis
+brand_hover
+focus_ring
+border_faint
+border_subtle
+border_strong
+glass_surface
+glass_raised
+scrim
+info_surface
+info_content
+info_border
+warning_surface
+warning_content
+warning_border
+success_surface
+success_content
+success_border
+danger_surface
+danger_content
+danger_border
+header_bg
+header_interactive_bg
+header_glass_bg
+tooltip_bg
+terminal_bg
+terminal_content
+progress_track_bg
+progress_start
+progress_end
+input_bg
+input_checked_content
+button_secondary_bg
+button_secondary_hover_bg
+button_secondary_content
+button_secondary_border
+button_muted_bg
+button_muted_hover_bg
+button_muted_content
+button_muted_border
+neutral_status_surface
+neutral_status_content
+neutral_status_border
+card_action_bg
+interface_badge_bg
+segmented_control_bg
+ifacebox_header_bg
+table_header_bg
+table_row_hover_bg
+table_row_alternate_bg
+"
+
+PRESET_UCI_DIR=""
+
+resolve_preset_path() {
+	case "$1" in
+	classic) echo "$CLASSIC_TEMPLATE" ;;
+	sage-green) echo "$SAGE_GREEN_TEMPLATE" ;;
+	amber-sand) echo "$AMBER_SAND_TEMPLATE" ;;
+	monochrome) echo "$MONOCHROME_TEMPLATE" ;;
+	sky-blue) echo "$SKY_BLUE_TEMPLATE" ;;
+	*) return 1 ;;
+	esac
+}
+
+cleanup_preset_snapshot() {
+	if [ -n "$PRESET_UCI_DIR" ] && [ -d "$PRESET_UCI_DIR" ]; then
+		rm -rf "$PRESET_UCI_DIR"
+	fi
+	PRESET_UCI_DIR=""
+}
+
+is_safe_color_value() {
+	local value="$1"
+
+	printf '%s' "$value" | grep -q '[;{}<>]' && return 1
+	printf '%s' "$value" | LC_ALL=C grep -q '[[:cntrl:]]' && return 1
+	return 0
+}
+
+is_color_token_key() {
+	local candidate="$1" token
+
+	for token in $COLOR_TOKEN_KEYS; do
+		[ "$candidate" = "$token" ] && return 0
+	done
+	return 1
+}
+
+load_preset_snapshot() {
+	local template="$1" count mode token value
+
+	cleanup_preset_snapshot
+	[ -f "$template" ] || return 1
+	grep -Eq "^config[[:space:]]+aurora" "$template" 2>/dev/null || return 1
+
+	count=$(grep -Ec "^[[:space:]]*option[[:space:]]+(light|dark)_" "$template" || true)
+	[ "$count" -eq 134 ] || return 1
+
+	PRESET_UCI_DIR=$(mktemp -d /tmp/aurora-preset.XXXXXX) || return 1
+	cp "$template" "$PRESET_UCI_DIR/aurora" || {
+		cleanup_preset_snapshot
+		return 1
+	}
+
+	for mode in light dark; do
+		for token in $COLOR_TOKEN_KEYS; do
+			value=$(uci -c "$PRESET_UCI_DIR" -q get "aurora.theme.${mode}_${token}") || {
+				cleanup_preset_snapshot
+				return 1
+			}
+			is_safe_color_value "$value" || {
+				cleanup_preset_snapshot
+				return 1
+			}
+		done
+	done
+
+	return 0
+}
+
+clear_current_color_options() {
+	uci -q show aurora.theme \
+		| sed -n 's/^aurora\.theme\.\(\(light\|dark\)_[^=]*\)=.*/\1/p' \
+		| while IFS= read -r option_name; do
+			[ -n "$option_name" ] && uci -q delete "aurora.theme.$option_name"
+		done
+}
+
+write_preset_snapshot() {
+	local mode token value
+
+	for mode in light dark; do
+		for token in $COLOR_TOKEN_KEYS; do
+			value=$(uci -c "$PRESET_UCI_DIR" -q get "aurora.theme.${mode}_${token}") || return 1
+			uci -q set "aurora.theme.${mode}_${token}=$value" || return 1
+		done
+	done
+}
+
+validate_import_color_options() {
+	local import_dir option_name mode token value
+
+	import_dir=$(mktemp -d /tmp/aurora-import.XXXXXX) || return 1
+	cp "$IMPORT_CONFIG_TMP" "$import_dir/aurora" || {
+		rm -rf "$import_dir"
+		return 1
+	}
+
+	while IFS= read -r option_name; do
+		[ -n "$option_name" ] || continue
+		case "$option_name" in
+		light_*) mode="light"; token="${option_name#light_}" ;;
+		dark_*) mode="dark"; token="${option_name#dark_}" ;;
+		*) continue ;;
+		esac
+
+		is_color_token_key "$token" || {
+			rm -rf "$import_dir"
+			return 1
+		}
+
+		value=$(uci -c "$import_dir" -q get "aurora.theme.${mode}_${token}") || {
+			rm -rf "$import_dir"
+			return 1
+		}
+		is_safe_color_value "$value" || {
+			rm -rf "$import_dir"
+			return 1
+		}
+	done <<-EOF
+	$(uci -c "$import_dir" -q show aurora.theme \
+		| sed -n 's/^aurora\.theme\.\([^=]*\)=.*/\1/p')
+	EOF
+
+	rm -rf "$import_dir"
+	return 0
+}
+
 list_font_entries() {
 	local slot_filter="$1"
 	local file="$FONT_PRESETS_FILE"
@@ -468,6 +665,9 @@ case "$1" in
 	json_add_object "reset_defaults"; json_close_object
 	json_add_object "get_theme_config"; json_close_object
 	json_add_object "get_theme_presets"; json_close_object
+	json_add_object "get_theme_preset"
+		json_add_string "name" "name"
+	json_close_object
 	json_add_object "get_font_presets"; json_close_object
 	json_add_object "get_font_status"
 		json_add_string "job_id" "job_id"
@@ -559,6 +759,36 @@ case "$1" in
 		json_dump; json_cleanup
 		;;
 
+	"get_theme_preset")
+		read -r input; json_load "$input" 2>/dev/null
+		json_get_var name "name"
+		json_cleanup
+
+		template=$(resolve_preset_path "$name") || {
+			echo '{ "result": 1, "error": "Unknown preset" }'
+			exit 0
+		}
+
+		if ! load_preset_snapshot "$template"; then
+			echo '{ "result": 1, "error": "Invalid preset content" }'
+			exit 0
+		fi
+
+		json_init
+		json_add_int "result" 0
+		json_add_string "name" "$name"
+		json_add_object "colors"
+		for mode in light dark; do
+			for token in $COLOR_TOKEN_KEYS; do
+				value=$(uci -c "$PRESET_UCI_DIR" -q get "aurora.theme.${mode}_${token}")
+				json_add_string "${mode}_${token}" "$value"
+			done
+		done
+		json_close_object
+		json_dump; json_cleanup
+		cleanup_preset_snapshot
+		;;
+
 	"get_font_presets")
 		json_init
 		json_add_object "fonts"
@@ -620,48 +850,34 @@ case "$1" in
 	"apply_theme_preset")
 		read -r input; json_load "$input"; json_get_var name "name"; json_cleanup
 
-		case "$name" in
-		"classic")
-			template="$CLASSIC_TEMPLATE"
-			;;
-		"sage-green")
-			template="$SAGE_GREEN_TEMPLATE"
-			;;
-		"amber-sand")
-			template="$AMBER_SAND_TEMPLATE"
-			;;
-		"monochrome")
-			template="$MONOCHROME_TEMPLATE"
-			;;
-		"sky-blue")
-			template="$SKY_BLUE_TEMPLATE"
-			;;
-		*)
+		template=$(resolve_preset_path "$name") || {
 			echo '{ "result": 1, "error": "Unknown preset" }'
 			exit 0
-			;;
-		esac
+		}
 
-		if [ ! -f "$template" ]; then
-			echo '{ "result": 1, "error": "Template file not found" }'
-			exit 0
-		fi
-
-		if ! grep -Eq "^config[[:space:]]+aurora" "$template" 2>/dev/null; then
+		if ! load_preset_snapshot "$template"; then
 			echo '{ "result": 1, "error": "Invalid preset content" }'
 			exit 0
 		fi
 
-		if ! cp "$template" "$CONFIG_FILE" 2>/dev/null; then
-			echo '{ "result": 1, "error": "Failed to write config file" }'
+		clear_current_color_options
+		if ! write_preset_snapshot; then
+			uci -q revert aurora
+			cleanup_preset_snapshot
+			echo '{ "result": 1, "error": "Failed to write preset colors" }'
 			exit 0
 		fi
 
 		uci -q set aurora.theme.active_preset="$name"
-		uci -q commit aurora
+		if ! uci -q commit aurora; then
+			uci -q revert aurora
+			cleanup_preset_snapshot
+			echo '{ "result": 1, "error": "Failed to commit preset colors" }'
+			exit 0
+		fi
+
+		cleanup_preset_snapshot
 		chmod 644 "$CONFIG_FILE" 2>/dev/null
-		cleanup_custom_fonts
-		sync_font_css_from_uci
 		update_icon_cache_timestamp
 		echo '{ "result": 0 }'
 		;;
@@ -687,7 +903,8 @@ case "$1" in
 		if [ ! -f "$IMPORT_CONFIG_TMP" ]; then
 			echo '{ "result": 1, "error": "Upload file not found" }'
 		else
-			if grep -Eq "^config[[:space:]]+aurora" "$IMPORT_CONFIG_TMP" 2>/dev/null; then
+			if grep -Eq "^config[[:space:]]+aurora" "$IMPORT_CONFIG_TMP" 2>/dev/null \
+				&& validate_import_color_options; then
 				cp "$IMPORT_CONFIG_TMP" "$CONFIG_FILE"
 				chmod 644 "$CONFIG_FILE"
 				sync_font_css_from_uci
