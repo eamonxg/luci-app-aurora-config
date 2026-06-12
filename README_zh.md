@@ -27,21 +27,21 @@
 
 ## 兼容性
 
-| 组件                  | 要求        | 说明                     |
-| :-------------------- | :---------- | :----------------------- |
-| **LuCI Theme Aurora** | `≥ v0.12.0` | 旧版本将忽略这些配置。   |
-| **OpenWrt**           | `≥ 23.05`   | 不支持基于 Lua 的 LuCI。 |
+| 组件                  | 要求        | 说明                              |
+| :-------------------- | :---------- | :-------------------------------- |
+| **LuCI Theme Aurora** | `≥ v0.12.7` | 需要匹配的两层颜色 Token 契约。   |
+| **OpenWrt**           | `≥ 23.05`   | 不支持基于 Lua 的 LuCI。          |
 
 ## 安装
 
 ### 使用 opkg:
 
 ```sh
-cd /tmp && uclient-fetch -O luci-app-aurora-config.ipk https://github.com/eamonxg/luci-app-aurora-config/releases/latest/download/luci-app-aurora-config_0.4.0-r20260531_all.ipk && opkg install luci-app-aurora-config.ipk
+cd /tmp && uclient-fetch -O luci-app-aurora-config.ipk https://github.com/eamonxg/luci-app-aurora-config/releases/latest/download/luci-app-aurora-config_0.5.0-r20260612_all.ipk && opkg install luci-app-aurora-config.ipk
 ```
 
 ### 使用 apk:
 
 ```sh
-cd /tmp && uclient-fetch -O luci-app-aurora-config.apk https://github.com/eamonxg/luci-app-aurora-config/releases/latest/download/luci-app-aurora-config-0.4.0-r20260531.apk && apk add --allow-untrusted luci-app-aurora-config.apk
+cd /tmp && uclient-fetch -O luci-app-aurora-config.apk https://github.com/eamonxg/luci-app-aurora-config/releases/latest/download/luci-app-aurora-config-0.5.0-r20260612.apk && apk add --allow-untrusted luci-app-aurora-config.apk
 ```
