@@ -8,8 +8,57 @@ readonly MONOCHROME_TEMPLATE="/usr/share/aurora/monochrome.template"
 readonly SKY_BLUE_TEMPLATE="/usr/share/aurora/sky-blue.template"
 readonly LOG_TAG="aurora"
 
+# Bump when the meaning of stored color tokens changes incompatibly. v2 marks
+# the two-layer flip: light_/dark_ status inputs (success/info/warning/danger)
+# went from "light surface" to "dark content", with surfaces now derived via
+# oklch(from var(--token) ...). Pre-v2 snapshots leave content the same colour
+# as the derived surface -> invisible label text and icons in both modes.
+readonly SCHEMA_VERSION="2"
+
 log() {
     logger -t "$LOG_TAG" "$1"
+}
+
+# Re-seed every light_/dark_ colour token from the template, dropping any stale
+# or legacy keys first. Fonts (struct_*), toolbar items, nav mode, icon and
+# logo/favicon options are left untouched.
+reseed_colors_from_template() {
+    local template="$1" dir key value
+
+    dir=$(mktemp -d /tmp/aurora-migrate.XXXXXX) || return 1
+    cp "$template" "$dir/aurora" || { rm -rf "$dir"; return 1; }
+
+    uci -q show aurora.theme \
+        | sed -n 's/^aurora\.theme\.\(\(light\|dark\)_[^=]*\)=.*/\1/p' \
+        | while IFS= read -r key; do
+            [ -n "$key" ] && uci -q delete "aurora.theme.$key"
+        done
+
+    uci -c "$dir" -q show aurora.theme \
+        | sed -n 's/^aurora\.theme\.\(\(light\|dark\)_[^=]*\)=.*/\1/p' \
+        | while IFS= read -r key; do
+            value=$(uci -c "$dir" -q get "aurora.theme.$key") || continue
+            uci -q set "aurora.theme.$key=$value"
+        done
+
+    rm -rf "$dir"
+    return 0
+}
+
+migrate_color_schema() {
+    local template="$1" stored
+
+    stored=$(uci -q get aurora.theme.config_version)
+    [ "$stored" = "$SCHEMA_VERSION" ] && return 0
+
+    log "Migrating colour tokens to schema v$SCHEMA_VERSION (was '${stored:-unset}')"
+    if reseed_colors_from_template "$template"; then
+        uci -q set aurora.theme.config_version="$SCHEMA_VERSION"
+        uci -q commit aurora
+        log "Colour token migration complete"
+    else
+        log "Colour token migration failed; leaving existing config untouched"
+    fi
 }
 
 main() {
@@ -36,12 +85,15 @@ main() {
     if [ ! -f "$CONF_FILE" ]; then
         if cp "$template" "$CONF_FILE"; then
             chmod 644 "$CONF_FILE"
-            log "First-time initialization: Config created from template"
+            uci -q set aurora.theme.config_version="$SCHEMA_VERSION"
+            uci -q commit aurora
+            log "First-time initialization: Config created from template at schema v$SCHEMA_VERSION"
         else
             log "Failed to create config from template"
         fi
     else
-        log "Configuration already exists, skipping initialization"
+        log "Configuration already exists, checking colour token schema"
+        migrate_color_schema "$template"
     fi
 }
 
