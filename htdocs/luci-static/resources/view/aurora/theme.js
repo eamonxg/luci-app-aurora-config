@@ -231,6 +231,12 @@ const COLOR_TOKENS = [
     group: "semantic",
   },
   {
+    key: "brand_emphasis_hover",
+    label: _("Brand Emphasis Hover"),
+    layer: 2,
+    group: "semantic",
+  },
+  {
     key: "brand_hover",
     label: _("Brand Hover"),
     layer: 2,
