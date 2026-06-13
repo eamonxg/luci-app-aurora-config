@@ -1004,16 +1004,12 @@ const renderColorField = function (optionIndex, sectionId, inTable) {
   });
 };
 
-const addColorInputs = (section, mode, tokens, editor, advanced) => {
+const addColorInputs = (section, mode, tokens, editor) => {
   tokens.forEach((token) => {
     const optionKey = colorOptionName(mode, token.key);
     const option = section.option(form.Value, optionKey, token.label);
     option.rmempty = true;
     if (token.description) option.description = token.description;
-    if (advanced) {
-      option.depends("struct_advanced_colors", "1");
-      option.retain = true;
-    }
     option.colorEditor = editor;
     option.colorMode = mode;
     option.colorToken = token;
@@ -1044,19 +1040,31 @@ const createColorSections = (section, mode, editor) => {
       form.NamedSection,
       "theme",
       "aurora",
-      group.title,
-      group.description,
+      group.advanced ? "" : group.title,
+      group.advanced ? "" : group.description,
     );
     if (group.advanced) {
-      sectionValue.depends("struct_advanced_colors", "1");
+      const baseRender = sectionValue.render.bind(sectionValue);
+      sectionValue.render = (...args) =>
+        Promise.resolve(baseRender(...args)).then((node) =>
+          E("details", { class: "cbi-section aurora-advanced-group" }, [
+            E(
+              "summary",
+              { style: "cursor:pointer;font-weight:600;margin:.5em 0;" },
+              group.title,
+            ),
+            group.description
+              ? E(
+                  "div",
+                  { style: "opacity:.75;margin:.25em 0 .5em;" },
+                  group.description,
+                )
+              : "",
+            node,
+          ]),
+        );
     }
-    addColorInputs(
-      sectionValue.subsection,
-      mode,
-      tokens,
-      editor,
-      group.advanced,
-    );
+    addColorInputs(sectionValue.subsection, mode, tokens, editor);
   });
 };
 
@@ -1744,18 +1752,6 @@ return view.extend({
     s.tab("colors", _("Color"));
     s.tab("layout_typography", _("Layout & Typography"));
     s.tab("icons_branding", _("Branding"));
-
-    so = s.taboption(
-      "colors",
-      form.Flag,
-      "struct_advanced_colors",
-      _("Advanced color configuration"),
-    );
-    so.description = _(
-      "Show semantic formulas and component-specific color overrides.",
-    );
-    so.default = "0";
-    so.rmempty = false;
 
     const colorSection = s.taboption(
       "colors",

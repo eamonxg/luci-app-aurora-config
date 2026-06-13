@@ -169,9 +169,14 @@ if [ "$layer_one_count" -ne 11 ] || [ "$layer_two_count" -ne 56 ]; then
   failed=1
 fi
 
-if ! rg -q 'option\.depends\("struct_advanced_colors", "1"\)' "$THEME_JS" ||
-   ! rg -q 'option\.retain = true' "$THEME_JS"; then
-  printf '%s\n' "Advanced color fields must depend on the flag and retain hidden values" >&2
+if ! rg -q 'aurora-advanced-group' "$THEME_JS" ||
+   ! rg -q 'E\("details"' "$THEME_JS"; then
+  printf '%s\n' "Advanced color groups must render as collapsible <details> disclosure" >&2
+  failed=1
+fi
+
+if rg -q 'struct_advanced_colors' "$THEME_JS"; then
+  printf '%s\n' "Removed advanced-color flag must not reappear in theme.js" >&2
   failed=1
 fi
 
