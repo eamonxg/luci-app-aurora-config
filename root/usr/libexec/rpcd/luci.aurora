@@ -18,6 +18,7 @@ readonly SKY_BLUE_TEMPLATE="/usr/share/aurora/sky-blue.template"
 readonly FONT_PRESETS_FILE="/usr/share/aurora/font-presets.conf"
 readonly IMPORT_CONFIG_TMP="/tmp/aurora_config_import.tmp"
 readonly EXPORT_CONFIG_TMP="/tmp/aurora_config_export.conf"
+readonly PRESET_UCI_PACKAGE="aurora_preset"
 readonly COLOR_TOKEN_KEYS="
 canvas
 surface
@@ -139,14 +140,14 @@ load_preset_snapshot() {
 	[ "$count" -eq 134 ] || return 1
 
 	PRESET_UCI_DIR=$(mktemp -d /tmp/aurora-preset.XXXXXX) || return 1
-	cp "$template" "$PRESET_UCI_DIR/aurora" || {
+	cp "$template" "$PRESET_UCI_DIR/$PRESET_UCI_PACKAGE" || {
 		cleanup_preset_snapshot
 		return 1
 	}
 
 	for mode in light dark; do
 		for token in $COLOR_TOKEN_KEYS; do
-			value=$(uci -c "$PRESET_UCI_DIR" -q get "aurora.theme.${mode}_${token}") || {
+			value=$(uci -c "$PRESET_UCI_DIR" -q get "$PRESET_UCI_PACKAGE.theme.${mode}_${token}") || {
 				cleanup_preset_snapshot
 				return 1
 			}
@@ -175,7 +176,7 @@ write_preset_snapshot() {
 
 	for mode in light dark; do
 		for token in $COLOR_TOKEN_KEYS; do
-			value=$(uci -c "$PRESET_UCI_DIR" -q get "aurora.theme.${mode}_${token}") || {
+			value=$(uci -c "$PRESET_UCI_DIR" -q get "$PRESET_UCI_PACKAGE.theme.${mode}_${token}") || {
 				PRESET_WRITE_ERROR="read ${mode}_${token} from snapshot"
 				return 1
 			}
