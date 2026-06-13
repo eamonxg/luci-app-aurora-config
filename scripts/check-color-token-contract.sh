@@ -185,6 +185,16 @@ if ! rg -q 'triggerValidation' "$THEME_JS"; then
   failed=1
 fi
 
+if rg -q 'setCustomValidity\(_\("Color expression is resolving\."\)\)' "$THEME_JS"; then
+  printf '%s\n' "Pending color resolution must not mark every field invalid" >&2
+  failed=1
+fi
+
+if ! rg -q 'ui\.tabs\.updateTabs' "$THEME_JS"; then
+  printf '%s\n' "Async color validation must refresh LuCI tab error counts" >&2
+  failed=1
+fi
+
 old_lqip="$(
   rg -n 'light_login_bg_lqip' "$ROOT/htdocs" "$ROOT/root" || true
 )"

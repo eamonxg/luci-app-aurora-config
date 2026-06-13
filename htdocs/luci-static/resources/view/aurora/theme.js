@@ -761,6 +761,12 @@ const createColorEditor = (themeConfig, presetColors) => {
     field?.option.triggerValidation(field.sectionId);
   };
 
+  const refreshTabErrors = (mode) => {
+    const field = fields[mode].values().next().value;
+    const mapRoot = field?.option?.map?.root;
+    if (mapRoot) ui.tabs.updateTabs(null, mapRoot);
+  };
+
   const updateField = (mode, key, result) => {
     const field = fields[mode].get(key);
     const state = stateFor(mode, key);
@@ -827,18 +833,14 @@ const createColorEditor = (themeConfig, presetColors) => {
             error: error?.message || _("Unable to resolve color expressions."),
           });
         });
-      });
+      })
+      .finally(() => refreshTabErrors(mode));
 
   const schedule = (mode) => {
     window.clearTimeout(timers[mode]);
     COLOR_TOKENS.forEach(({ key }) => {
       const state = stateFor(mode, key);
       state.pending = true;
-      const field = fields[mode].get(key);
-      if (field) {
-        field.input.setCustomValidity(_("Color expression is resolving."));
-        triggerValidation(field);
-      }
     });
     timers[mode] = window.setTimeout(() => refresh(mode), 120);
   };
