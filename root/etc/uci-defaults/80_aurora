@@ -8,38 +8,49 @@ readonly MONOCHROME_TEMPLATE="/usr/share/aurora/monochrome.template"
 readonly SKY_BLUE_TEMPLATE="/usr/share/aurora/sky-blue.template"
 readonly LOG_TAG="aurora"
 
-# Bump when the meaning of stored color tokens changes incompatibly. v2 marks
-# the two-layer flip: light_/dark_ status inputs (success/info/warning/danger)
-# went from "light surface" to "dark content", with surfaces now derived via
-# oklch(from var(--token) ...). Pre-v2 snapshots leave content the same colour
-# as the derived surface -> invisible label text and icons in both modes.
-readonly SCHEMA_VERSION="2"
+# Bump when the meaning of stored color tokens changes incompatibly.
+# v2: two-layer flip -- light_/dark_ status inputs (success/info/warning/danger)
+#     went from "light surface" to "dark content", surfaces derived via
+#     oklch(from var(--token) ...). Pre-flip snapshots leave content the same
+#     colour as the derived surface -> invisible label text and icons.
+# v3: fixes a re-seed bug in v2 that left ~14 colour keys empty (a nested
+#     command substitution inside a pipe-fed `while read` swallowed stdin and
+#     skipped keys). v3 re-runs a corrected re-seed, so devices stuck at v2
+#     with a half-migrated config are repaired.
+readonly SCHEMA_VERSION="3"
 
 log() {
     logger -t "$LOG_TAG" "$1"
 }
 
-# Re-seed every light_/dark_ colour token from the template, dropping any stale
-# or legacy keys first. Fonts (struct_*), toolbar items, nav mode, icon and
+# Re-seed every light_/dark_ colour token from the template. Key lists are
+# captured into variables first so no uci command runs inside a pipe-fed
+# `while read` (a nested command substitution there can swallow stdin and
+# silently skip keys). Sets first, then prunes legacy keys, so no key is ever
+# left deleted-but-unset. Fonts (struct_*), toolbar items, nav mode, icon and
 # logo/favicon options are left untouched.
 reseed_colors_from_template() {
-    local template="$1" dir key value
+    local template="$1" dir key value tmpl_keys live_keys
 
     dir=$(mktemp -d /tmp/aurora-migrate.XXXXXX) || return 1
     cp "$template" "$dir/aurora" || { rm -rf "$dir"; return 1; }
 
-    uci -q show aurora.theme \
-        | sed -n 's/^aurora\.theme\.\(\(light\|dark\)_[^=]*\)=.*/\1/p' \
-        | while IFS= read -r key; do
-            [ -n "$key" ] && uci -q delete "aurora.theme.$key"
-        done
+    tmpl_keys=$(uci -c "$dir" -q show aurora.theme \
+        | sed -n 's/^aurora\.theme\.\(\(light\|dark\)_[^=]*\)=.*/\1/p')
+    live_keys=$(uci -q show aurora.theme \
+        | sed -n 's/^aurora\.theme\.\(\(light\|dark\)_[^=]*\)=.*/\1/p')
 
-    uci -c "$dir" -q show aurora.theme \
-        | sed -n 's/^aurora\.theme\.\(\(light\|dark\)_[^=]*\)=.*/\1/p' \
-        | while IFS= read -r key; do
-            value=$(uci -c "$dir" -q get "aurora.theme.$key") || continue
-            uci -q set "aurora.theme.$key=$value"
-        done
+    [ -n "$tmpl_keys" ] || { rm -rf "$dir"; return 1; }
+
+    for key in $tmpl_keys; do
+        value=$(uci -c "$dir" -q get "aurora.theme.$key") || { rm -rf "$dir"; return 1; }
+        uci -q set "aurora.theme.$key=$value" || { rm -rf "$dir"; return 1; }
+    done
+
+    for key in $live_keys; do
+        uci -c "$dir" -q get "aurora.theme.$key" >/dev/null 2>&1 \
+            || uci -q delete "aurora.theme.$key"
+    done
 
     rm -rf "$dir"
     return 0
