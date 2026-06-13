@@ -930,23 +930,27 @@ const renderColorField = function (optionIndex, sectionId, inTable) {
     const presetValue = editor.presetColors?.[optionKey] || "";
     input.placeholder = presetValue || _("Follow theme stylesheet");
 
-    const swatch = E("span", {
-      style:
-        "display:inline-block;width:2rem;height:2rem;margin-left:.5rem;border:1px solid currentColor;border-radius:.5rem;vertical-align:middle;background:transparent;",
-      title: _("Resolved color"),
-    });
     const picker = E("input", {
       type: "color",
       value: "#000000",
       style:
-        "width:3rem;height:2rem;margin-left:.5rem;padding:0;border:0;background:transparent;vertical-align:middle;cursor:pointer;",
+        "position:absolute;inset:0;width:100%;height:100%;margin:0;padding:0;border:0;opacity:0;cursor:pointer;",
       title: _("Choose a literal color"),
     });
+    const swatch = E(
+      "span",
+      {
+        style:
+          "position:relative;display:inline-block;width:2rem;height:2rem;margin-left:.5rem;border:1px solid currentColor;border-radius:.5rem;vertical-align:middle;background:transparent;overflow:hidden;cursor:pointer;",
+        title: _("Resolved color — click to pick"),
+      },
+      [picker],
+    );
     const status = E("small", {
       style: "display:block;margin-top:.35rem;opacity:.75;",
     });
 
-    const controls = E("span", {}, [swatch, picker]);
+    const controls = E("span", {}, [swatch]);
     input.parentNode.appendChild(controls);
     input.parentNode.appendChild(status);
 
