@@ -168,13 +168,21 @@ clear_current_color_options() {
 		done
 }
 
+PRESET_WRITE_ERROR=""
+
 write_preset_snapshot() {
-	local mode token value
+	local mode token value uci_err
 
 	for mode in light dark; do
 		for token in $COLOR_TOKEN_KEYS; do
-			value=$(uci -c "$PRESET_UCI_DIR" -q get "aurora.theme.${mode}_${token}") || return 1
-			uci -q set "aurora.theme.${mode}_${token}=$value" || return 1
+			value=$(uci -c "$PRESET_UCI_DIR" -q get "aurora.theme.${mode}_${token}") || {
+				PRESET_WRITE_ERROR="read ${mode}_${token} from snapshot"
+				return 1
+			}
+			uci_err=$(uci -q set "aurora.theme.${mode}_${token}=$value" 2>&1) || {
+				PRESET_WRITE_ERROR="set ${mode}_${token}=[${value}]: ${uci_err}"
+				return 1
+			}
 		done
 	done
 }
@@ -867,7 +875,11 @@ case "$1" in
 		if ! write_preset_snapshot; then
 			uci -q revert aurora
 			cleanup_preset_snapshot
-			echo '{ "result": 1, "error": "Failed to write preset colors" }'
+			json_init
+			json_add_int "result" 1
+			json_add_string "error" "Failed to write preset colors: ${PRESET_WRITE_ERROR}"
+			json_dump
+			json_cleanup
 			exit 0
 		fi
 
