@@ -1739,7 +1739,7 @@ return view.extend({
           "div",
           {
             style:
-              "display:none;margin-bottom:0.75em;padding:0.6em 0.875em;border-radius:0.375em;border:1px solid var(--border-subtle);",
+              "display:none;margin-bottom:0.75em;padding:0.6em 0.875em;border-radius:0.375em;border:1px solid var(--hairline);",
           },
           [
             E(
@@ -1754,7 +1754,7 @@ return view.extend({
               "div",
               {
                 style:
-                  "height:4px;border-radius:2px;overflow:hidden;background:var(--progress-track-bg);",
+                  "height:4px;border-radius:2px;overflow:hidden;background:var(--surface-sunken);",
               },
               [progressBar],
             ),
@@ -1771,12 +1771,12 @@ return view.extend({
           "div",
           {
             style:
-              "border:2px dashed var(--border-strong);border-radius:0.5em;padding:1.25em 1em;text-align:center;cursor:pointer;margin-bottom:0.75em;transition:border-color 0.15s,background 0.15s;",
+              "border:2px dashed var(--hairline);border-radius:0.5em;padding:1.25em 1em;text-align:center;cursor:pointer;margin-bottom:0.75em;transition:border-color 0.15s,background 0.15s;",
             click: () => fileInput.click(),
             dragover: (e) => {
               e.preventDefault();
               dropzone.style.borderColor = "var(--brand)";
-              dropzone.style.background = "var(--brand-faint)";
+              dropzone.style.background = "var(--brand-subtle)";
             },
             dragleave: () => {
               dropzone.style.borderColor = "";
@@ -1892,7 +1892,7 @@ return view.extend({
         const makeRow = (icon) => {
           const placeholder = E("div", {
             style:
-              "width:40px;height:40px;border-radius:4px;background:var(--surface-subtle);",
+              "width:40px;height:40px;border-radius:4px;background:var(--surface-sunken);",
           });
           const previewCell = E(
             "td",
