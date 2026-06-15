@@ -17,7 +17,14 @@ readonly LOG_TAG="aurora"
 #     command substitution inside a pipe-fed `while read` swallowed stdin and
 #     skipped keys). v3 re-runs a corrected re-seed, so devices stuck at v2
 #     with a half-migrated config are repaired.
-readonly SCHEMA_VERSION="3"
+# v4: single-plane token redesign. The two-layer taxonomy (canvas/content/
+#     surface_raised + ~57 derived expression tokens) is gone. The schema is now
+#     10 editable inputs (canvas->bg, content->text, surface_raised dropped) plus
+#     17 engine-derived flat colours. The re-seed prunes EVERY legacy light_/dark_
+#     key absent from the new template, clearing stale overrides that header.ut
+#     would otherwise inject against now-nonexistent CSS variables. Custom colours
+#     reset to the active template defaults (no value mapping).
+readonly SCHEMA_VERSION="4"
 
 log() {
     logger -t "$LOG_TAG" "$1"

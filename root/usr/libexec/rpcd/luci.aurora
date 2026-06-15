@@ -19,11 +19,14 @@ readonly FONT_PRESETS_FILE="/usr/share/aurora/font-presets.conf"
 readonly IMPORT_CONFIG_TMP="/tmp/aurora_config_import.tmp"
 readonly EXPORT_CONFIG_TMP="/tmp/aurora_config_export.conf"
 readonly PRESET_UCI_PACKAGE="aurora_preset"
+# 10 editable inputs + 17 engine-derived tokens (see utils/tokens.global.js and
+# the theme's tokens/spec.js). Must match the keys emitted into the preset
+# templates by scripts/gen-presets.mjs. expected_count below derives from this
+# list (count * 2 for light_/dark_).
 readonly COLOR_TOKEN_KEYS="
-canvas
+bg
 surface
-surface_raised
-content
+text
 brand
 on_brand
 link
@@ -31,63 +34,23 @@ info
 warning
 success
 danger
-surface_subtle
-surface_muted
-content_muted
-content_subtle
-brand_faint
-brand_soft
-brand_emphasis
-brand_emphasis_hover
+text_muted
+text_subtle
+surface_sunken
+surface_overlay
+hairline
+hover_faint
 brand_hover
+brand_subtle
 focus_ring
-border_faint
-border_subtle
-border_strong
-glass_surface
-glass_raised
-scrim
-info_surface
-info_content
-info_border
-warning_surface
-warning_content
-warning_border
-success_surface
-success_content
-success_border
-danger_surface
-danger_content
-danger_border
-header_bg
-header_interactive_bg
-header_glass_bg
-tooltip_bg
-terminal_bg
-terminal_content
-progress_track_bg
 progress_start
 progress_end
-input_bg
-input_checked_content
-button_secondary_bg
-button_secondary_hover_bg
-button_secondary_content
-button_secondary_border
-button_muted_bg
-button_muted_hover_bg
-button_muted_content
-button_muted_border
-neutral_status_surface
-neutral_status_content
-neutral_status_border
-card_action_bg
-interface_badge_bg
-segmented_control_bg
-ifacebox_header_bg
-table_header_bg
-table_row_hover_bg
-table_row_alternate_bg
+info_surface
+warning_surface
+success_surface
+danger_surface
+scrim
+mega_menu_bg
 "
 
 PRESET_UCI_DIR=""

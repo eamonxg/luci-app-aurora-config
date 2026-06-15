@@ -9,24 +9,30 @@
 
 const CONFIG_IMPORT_PATH = "/tmp/aurora_config_import.tmp";
 
-const colorLibraryReady = new Promise((resolve, reject) => {
-  if (typeof Color === "function") {
-    resolve();
-    return;
-  }
-
-  const script = E("script", {
-    type: "text/javascript",
-    src: L.resource("utils/color.global.js"),
+const loadGlobalScript = (src) =>
+  new Promise((resolve, reject) => {
+    const script = E("script", {
+      type: "text/javascript",
+      src: L.resource(src),
+    });
+    script.addEventListener("load", resolve, { once: true });
+    script.addEventListener(
+      "error",
+      () => reject(new Error(_("Unable to load %s.").format(src))),
+      { once: true },
+    );
+    document.querySelector("head").appendChild(script);
   });
-  script.addEventListener("load", resolve, { once: true });
-  script.addEventListener(
-    "error",
-    () => reject(new Error(_("Unable to load the color conversion library."))),
-    { once: true },
-  );
-  document.querySelector("head").appendChild(script);
-});
+
+// color.global.js (colorjs.io) powers swatch conversion; tokens.global.js is the
+// shared derivation engine (mirrors the theme's tokens/spec.js) used to expand
+// the 10 editable inputs into the full set of stored/derived colour tokens.
+const colorLibraryReady = (async () => {
+  if (typeof Color !== "function")
+    await loadGlobalScript("utils/color.global.js");
+  if (typeof AuroraTokens === "undefined")
+    await loadGlobalScript("utils/tokens.global.js");
+})();
 
 const callUploadIcon = rpc.declare({
   object: "luci.aurora",
@@ -112,8 +118,8 @@ const callWritePwaManifest = rpc.declare({
 
 const COLOR_TOKENS = [
   {
-    key: "canvas",
-    label: _("Canvas"),
+    key: "bg",
+    label: _("Background"),
     description: _("The outer application background."),
     layer: 1,
     group: "foundation",
@@ -121,20 +127,13 @@ const COLOR_TOKENS = [
   {
     key: "surface",
     label: _("Surface"),
-    description: _("The main page and content background."),
+    description: _("Cards, panels, forms, and page content background."),
     layer: 1,
     group: "foundation",
   },
   {
-    key: "surface_raised",
-    label: _("Raised Surface"),
-    description: _("Cards, panels, forms, and elevated content."),
-    layer: 1,
-    group: "foundation",
-  },
-  {
-    key: "content",
-    label: _("Content"),
+    key: "text",
+    label: _("Text"),
     description: _("The primary text and icon color."),
     layer: 1,
     group: "identity",
@@ -188,364 +187,20 @@ const COLOR_TOKENS = [
     layer: 1,
     group: "status",
   },
-  {
-    key: "surface_subtle",
-    label: _("Subtle Surface"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "surface_muted",
-    label: _("Muted Surface"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "content_muted",
-    label: _("Muted Content"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "content_subtle",
-    label: _("Subtle Content"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "brand_faint",
-    label: _("Faint Brand"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "brand_soft",
-    label: _("Soft Brand"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "brand_emphasis",
-    label: _("Brand Emphasis"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "brand_emphasis_hover",
-    label: _("Brand Emphasis Hover"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "brand_hover",
-    label: _("Brand Hover"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "focus_ring",
-    label: _("Focus Ring"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "border_faint",
-    label: _("Faint Border"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "border_subtle",
-    label: _("Subtle Border"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "border_strong",
-    label: _("Strong Border"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "glass_surface",
-    label: _("Surface Glass"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "glass_raised",
-    label: _("Raised Glass"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "scrim",
-    label: _("Scrim"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "info_surface",
-    label: _("Info Surface"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "info_content",
-    label: _("Info Content"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "info_border",
-    label: _("Info Border"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "warning_surface",
-    label: _("Warning Surface"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "warning_content",
-    label: _("Warning Content"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "warning_border",
-    label: _("Warning Border"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "success_surface",
-    label: _("Success Surface"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "success_content",
-    label: _("Success Content"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "success_border",
-    label: _("Success Border"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "danger_surface",
-    label: _("Danger Surface"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "danger_content",
-    label: _("Danger Content"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "danger_border",
-    label: _("Danger Border"),
-    layer: 2,
-    group: "semantic",
-  },
-  {
-    key: "header_bg",
-    label: _("Header Background"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "header_interactive_bg",
-    label: _("Header Interactive Background"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "header_glass_bg",
-    label: _("Header Glass Background"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "tooltip_bg",
-    label: _("Tooltip Background"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "terminal_bg",
-    label: _("Terminal Background"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "terminal_content",
-    label: _("Terminal Content"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "progress_track_bg",
-    label: _("Progress Track"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "progress_start",
-    label: _("Progress Start"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "progress_end",
-    label: _("Progress End"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "input_bg",
-    label: _("Input Background"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "input_checked_content",
-    label: _("Checked Input Content"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "button_secondary_bg",
-    label: _("Secondary Button Background"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "button_secondary_hover_bg",
-    label: _("Secondary Button Hover"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "button_secondary_content",
-    label: _("Secondary Button Content"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "button_secondary_border",
-    label: _("Secondary Button Border"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "button_muted_bg",
-    label: _("Muted Button Background"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "button_muted_hover_bg",
-    label: _("Muted Button Hover"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "button_muted_content",
-    label: _("Muted Button Content"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "button_muted_border",
-    label: _("Muted Button Border"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "neutral_status_surface",
-    label: _("Neutral Status Surface"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "neutral_status_content",
-    label: _("Neutral Status Content"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "neutral_status_border",
-    label: _("Neutral Status Border"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "card_action_bg",
-    label: _("Card Action Background"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "interface_badge_bg",
-    label: _("Interface Badge Background"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "segmented_control_bg",
-    label: _("Segmented Control Background"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "ifacebox_header_bg",
-    label: _("Interface Box Header"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "table_header_bg",
-    label: _("Table Header Background"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "table_row_hover_bg",
-    label: _("Table Row Hover"),
-    layer: 2,
-    group: "component",
-  },
-  {
-    key: "table_row_alternate_bg",
-    label: _("Alternate Table Row"),
-    layer: 2,
-    group: "component",
-  },
 ];
 
 const COLOR_GROUPS = [
   {
     key: "foundation",
     title: _("Surfaces"),
-    description: _(
-      "Set the application canvas, page surface, and raised panel surface.",
-    ),
+    description: _("Set the application background and surface colors."),
     advanced: false,
   },
   {
     key: "identity",
     title: _("Content & Identity"),
     description: _(
-      "Set primary content, brand, content on brand, and link colors.",
+      "Set primary text, brand, content on brand, and link colors.",
     ),
     advanced: false,
   },
@@ -554,22 +209,6 @@ const COLOR_GROUPS = [
     title: _("Status Accents"),
     description: _("Set the broad accents used by status families."),
     advanced: false,
-  },
-  {
-    key: "semantic",
-    title: _("Semantic Overrides"),
-    description: _(
-      "Override derived surfaces, content levels, borders, glass, scrim, and status families.",
-    ),
-    advanced: true,
-  },
-  {
-    key: "component",
-    title: _("Component Overrides"),
-    description: _(
-      "Override colors owned by specific shell, input, button, badge, card, and table responsibilities.",
-    ),
-    advanced: true,
   },
 ];
 
@@ -715,6 +354,26 @@ const createColorEditor = (themeConfig, presetColors) => {
       COLOR_TOKENS.map(({ key }) => [key, valueFor(mode, key)]),
     );
 
+  // Expand the 10 editable inputs into the full resolved token set (inputs +
+  // derived) via the shared engine. Returns null if the engine is not loaded
+  // yet or any input is blank, so callers fall back to the baked theme values.
+  const resolvedForMode = (mode) => {
+    if (typeof AuroraTokens === "undefined") return null;
+    const inputs = {};
+    for (const { key } of COLOR_TOKENS) {
+      const value = valueFor(mode, key).trim();
+      if (!value) return null;
+      inputs[key] = value;
+    }
+    try {
+      return AuroraTokens.resolve(mode, inputs);
+    } catch (_error) {
+      return null;
+    }
+  };
+
+  const isInputToken = (key) => COLOR_TOKENS.some((token) => token.key === key);
+
   const rememberPreview = (property) => {
     if (previewOriginal.has(property)) return;
     previewOriginal.set(property, {
@@ -761,6 +420,18 @@ const createColorEditor = (themeConfig, presetColors) => {
         restorePreviewProperty(property);
       }
     });
+
+    // Derived tokens are baked literals in the theme stylesheet, so changing an
+    // input no longer cascades on its own -- recompute and preview them too.
+    const resolved = resolvedForMode(mode);
+    if (resolved) {
+      Object.keys(resolved).forEach((key) => {
+        if (isInputToken(key)) return;
+        const property = `--${cssTokenName(key)}`;
+        rememberPreview(property);
+        document.documentElement.style.setProperty(property, resolved[key]);
+      });
+    }
   };
 
   const triggerValidation = (field) => {
@@ -914,6 +585,7 @@ const createColorEditor = (themeConfig, presetColors) => {
     destroy,
     presetColors,
     register,
+    resolvedForMode,
     schedule,
     stateFor,
     validate,
@@ -1234,10 +906,28 @@ const fromLoginBgUrl = (value) => {
 const isImageFile = (filename) =>
   /\.(jpg|jpeg|png|gif|webp|avif|svg|bmp|ico)$/i.test(filename);
 
+// Expand the 10 editable inputs into the full resolved token set and stage every
+// resulting key (inputs + derived) into UCI so the saved snapshot fully overrides
+// the theme's baked _tokens.css defaults. No-op until the engine is loaded and all
+// inputs are present, in which case the baked theme defaults remain in effect.
+const persistDerivedTokens = (editor) => {
+  if (!editor) return;
+  ["light", "dark"].forEach((mode) => {
+    const resolved = editor.resolvedForMode(mode);
+    if (!resolved) return;
+    Object.keys(resolved).forEach((key) => {
+      uci.set("aurora", "theme", `${mode}_${key}`, resolved[key]);
+    });
+  });
+};
+
 return view.extend({
   handleSave: function (ev) {
     const save = L.bind(function () {
-      return this.super("handleSave", [ev]);
+      return colorLibraryReady
+        .catch(() => {})
+        .then(() => persistDerivedTokens(this.colorEditor))
+        .then(() => this.super("handleSave", [ev]));
     }, this);
     const writePwa = () => L.resolveDefault(callWritePwaManifest(), {});
     const cleanup = () => this.colorEditor?.cleanupPreview();
@@ -1258,7 +948,10 @@ return view.extend({
 
   handleSaveApply: function (ev, mode) {
     const save = L.bind(function () {
-      return this.super("handleSave", [ev]);
+      return colorLibraryReady
+        .catch(() => {})
+        .then(() => persistDerivedTokens(this.colorEditor))
+        .then(() => this.super("handleSave", [ev]));
     }, this);
     const writePwa = () => L.resolveDefault(callWritePwaManifest(), {});
     const cleanup = () => this.colorEditor?.cleanupPreview();
