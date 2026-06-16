@@ -168,6 +168,149 @@ const COLOR_TOKENS = [
   },
 ];
 
+const DERIVED_COLOR_TOKENS = [
+  {
+    key: "text_muted",
+    label: _("Text Muted"),
+    description: _("Muted secondary text. Source: Text + Background."),
+    group: "hierarchy",
+    derived: true,
+  },
+  {
+    key: "text_subtle",
+    label: _("Text Subtle"),
+    description: _("Lowest-emphasis text. Source: Text + Background."),
+    group: "hierarchy",
+    derived: true,
+  },
+  {
+    key: "surface_sunken",
+    label: _("Surface Sunken"),
+    description: _("Inset backgrounds. Source: Background or Surface."),
+    group: "hierarchy",
+    derived: true,
+  },
+  {
+    key: "surface_overlay",
+    label: _("Surface Overlay"),
+    description: _("Raised panel backgrounds. Source: Background or Surface."),
+    group: "hierarchy",
+    derived: true,
+  },
+  {
+    key: "hairline",
+    label: _("Hairline"),
+    description: _("Subtle borders and dividers. Source: Text."),
+    group: "hierarchy",
+    derived: true,
+  },
+  {
+    key: "hover_faint",
+    label: _("Hover Faint"),
+    description: _("Neutral hover fill. Source: Background or Text."),
+    group: "hierarchy",
+    derived: true,
+  },
+  {
+    key: "brand_hover",
+    label: _("Brand Hover"),
+    description: _("Branded hover color. Source: Brand."),
+    group: "brand_interaction",
+    derived: true,
+  },
+  {
+    key: "brand_subtle",
+    label: _("Brand Subtle"),
+    description: _("Soft brand background. Source: Brand + Background."),
+    group: "brand_interaction",
+    derived: true,
+  },
+  {
+    key: "brand_subtle_hover",
+    label: _("Brand Subtle Hover"),
+    description: _("Soft brand hover fill. Source: Brand Subtle."),
+    group: "brand_interaction",
+    derived: true,
+  },
+  {
+    key: "focus_ring",
+    label: _("Focus Ring"),
+    description: _("Keyboard focus outline. Source: Brand."),
+    group: "brand_interaction",
+    derived: true,
+  },
+  {
+    key: "progress_start",
+    label: _("Progress Start"),
+    description: _("Progress gradient start. Source: Brand + Surface Sunken."),
+    group: "brand_interaction",
+    derived: true,
+  },
+  {
+    key: "progress_end",
+    label: _("Progress End"),
+    description: _("Progress gradient end. Source: Brand."),
+    group: "brand_interaction",
+    derived: true,
+  },
+  {
+    key: "info_surface",
+    label: _("Info Surface"),
+    description: _("Info message background. Source: Info Accent."),
+    group: "status_surfaces",
+    derived: true,
+  },
+  {
+    key: "warning_surface",
+    label: _("Warning Surface"),
+    description: _("Warning message background. Source: Warning Accent."),
+    group: "status_surfaces",
+    derived: true,
+  },
+  {
+    key: "success_surface",
+    label: _("Success Surface"),
+    description: _("Success message background. Source: Success Accent."),
+    group: "status_surfaces",
+    derived: true,
+  },
+  {
+    key: "danger_surface",
+    label: _("Danger Surface"),
+    description: _("Danger message background. Source: Danger Accent."),
+    group: "status_surfaces",
+    derived: true,
+  },
+  {
+    key: "danger_surface_hover",
+    label: _("Danger Surface Hover"),
+    description: _("Danger surface hover fill. Source: Danger Surface."),
+    group: "status_surfaces",
+    derived: true,
+  },
+  {
+    key: "scrim",
+    label: _("Scrim"),
+    description: _("Modal backdrop overlay. Source: Theme default."),
+    group: "hierarchy",
+    derived: true,
+  },
+  {
+    key: "mega_menu_bg",
+    label: _("Mega Menu Background"),
+    description: _("Mega menu panel background. Source: Surface layer."),
+    group: "hierarchy",
+    derived: true,
+  },
+  {
+    key: "mega_menu_scrim",
+    label: _("Mega Menu Scrim"),
+    description: _("Mega menu backdrop overlay. Source: Theme default."),
+    group: "hierarchy",
+    derived: true,
+  },
+];
+
 const COLOR_GROUPS = [
   {
     key: "foundation",
@@ -188,8 +331,52 @@ const COLOR_GROUPS = [
   },
 ];
 
+const DERIVED_COLOR_GROUPS = [
+  {
+    key: "brand_interaction",
+    title: _("Brand Interaction"),
+    description: _("Derived from Brand for interaction details."),
+  },
+  {
+    key: "hierarchy",
+    title: _("Text & Surface Hierarchy"),
+    description: _("Derived from Text, Background, and Surface."),
+  },
+  {
+    key: "status_surfaces",
+    title: _("Status Surfaces"),
+    description: _("Derived from status accent colors."),
+  },
+];
+
+const ALL_COLOR_TOKENS = COLOR_TOKENS.concat(DERIVED_COLOR_TOKENS);
+const COLOR_FORMAT_HELP = _(
+  "Color fields accept #hex, rgb(), hsl(), lab(), and oklch(). The picker fills hex.",
+);
+
 const cssTokenName = (key) => key.replaceAll("_", "-");
 const colorOptionName = (mode, key) => `${mode}_${key}`;
+
+const toRuntimeColor = (value) => {
+  const raw = value?.trim?.() || "";
+  if (!raw || typeof Color !== "function") return raw;
+
+  try {
+    return new Color(raw).to("srgb").toString({ format: "hex" });
+  } catch (_error) {
+    return raw;
+  }
+};
+
+const toPickerColor = (value) => {
+  const color = new Color(value).to("srgb");
+  color.alpha = 1;
+  return color.toString({ format: "hex" });
+};
+
+const sameColorValue = (a, b) =>
+  Boolean(a && b) &&
+  toRuntimeColor(a).toLowerCase() === toRuntimeColor(b).toLowerCase();
 
 const readThemeConfigFromUci = () => {
   const config = {};
@@ -202,7 +389,9 @@ const readThemeConfigFromUci = () => {
   copyOption("struct_font_sans");
   copyOption("struct_font_mono");
   ["light", "dark"].forEach((mode) => {
-    COLOR_TOKENS.forEach(({ key }) => copyOption(colorOptionName(mode, key)));
+    ALL_COLOR_TOKENS.forEach(({ key }) =>
+      copyOption(colorOptionName(mode, key)),
+    );
   });
 
   return config;
@@ -269,21 +458,22 @@ const createColorResolver = () => {
     return framePromise;
   };
 
-  const resolveMode = (mode, values) => {
+  const resolveMode = (mode, values, tokens = COLOR_TOKENS) => {
     queue = queue.catch(() => {}).then(async () => {
       const { root, probe } = await ensureFrame();
       root.setAttribute("data-darkmode", mode === "dark" ? "true" : "false");
 
-      COLOR_TOKENS.forEach(({ key }) => {
+      ALL_COLOR_TOKENS.forEach(({ key }) => {
         root.style.removeProperty(`--${cssTokenName(key)}`);
       });
-      COLOR_TOKENS.forEach(({ key }) => {
+      ALL_COLOR_TOKENS.forEach(({ key }) => {
         const value = values[key]?.trim();
-        if (value) root.style.setProperty(`--${cssTokenName(key)}`, value);
+        if (value)
+          root.style.setProperty(`--${cssTokenName(key)}`, toRuntimeColor(value));
       });
 
       const results = new Map();
-      COLOR_TOKENS.forEach(({ key }) => {
+      tokens.forEach(({ key }) => {
         const name = cssTokenName(key);
         probe.parentElement.style.color = "rgb(1 2 3)";
         probe.style.color = `var(--${name}, rgb(1 2 3))`;
@@ -320,6 +510,7 @@ const createColorEditor = (themeConfig, presetColors) => {
   const resolver = createColorResolver();
   const fields = { light: new Map(), dark: new Map() };
   const states = { light: new Map(), dark: new Map() };
+  const derivedOverrides = { light: new Map(), dark: new Map() };
   const timers = { light: null, dark: null };
   const previewOriginal = new Map();
   let modeObserver = null;
@@ -342,15 +533,16 @@ const createColorEditor = (themeConfig, presetColors) => {
     return themeConfig[colorOptionName(mode, key)] || "";
   };
 
+  const isInputToken = (key) => COLOR_TOKENS.some((token) => token.key === key);
+  const isDerivedToken = (key) =>
+    DERIVED_COLOR_TOKENS.some((token) => token.key === key);
+
   const valuesForMode = (mode) =>
     Object.fromEntries(
-      COLOR_TOKENS.map(({ key }) => [key, valueFor(mode, key)]),
+      ALL_COLOR_TOKENS.map(({ key }) => [key, valueFor(mode, key)]),
     );
 
-  // Expand the 10 editable inputs into the full resolved token set (inputs +
-  // derived) via the shared engine. Returns null if the engine is not loaded
-  // yet or any input is blank, so callers fall back to the baked theme values.
-  const resolvedForMode = (mode) => {
+  const automaticForMode = (mode) => {
     if (typeof AuroraTokens === "undefined") return null;
     const inputs = {};
     for (const { key } of COLOR_TOKENS) {
@@ -365,7 +557,48 @@ const createColorEditor = (themeConfig, presetColors) => {
     }
   };
 
-  const isInputToken = (key) => COLOR_TOKENS.some((token) => token.key === key);
+  const isDerivedOverride = (mode, key) =>
+    Boolean(derivedOverrides[mode].get(key));
+
+  const setDerivedOverride = (mode, key, enabled) => {
+    if (!isDerivedToken(key)) return;
+    derivedOverrides[mode].set(key, Boolean(enabled));
+  };
+
+  const syncDerivedInitialState = (mode, automatic) => {
+    if (!automatic) return;
+    DERIVED_COLOR_TOKENS.forEach(({ key }) => {
+      const field = fields[mode].get(key);
+      if (!field || field.initialized) return;
+
+      const saved = field.input.value.trim();
+      const autoValue = automatic[key]?.trim() || "";
+      const override = Boolean(saved && !sameColorValue(saved, autoValue));
+      field.initialized = true;
+      setDerivedOverride(mode, key, override);
+      if (!override) field.input.value = "";
+    });
+  };
+
+  // Expand the 10 input colors into a full token snapshot. Derived tokens use
+  // automatic values unless the user explicitly supplied an override.
+  const resolvedForMode = (mode) => {
+    const automatic = automaticForMode(mode);
+    if (!automatic) return null;
+    syncDerivedInitialState(mode, automatic);
+
+    const resolved = { ...automatic };
+    for (const { key } of DERIVED_COLOR_TOKENS) {
+      const value = valueFor(mode, key).trim();
+      const state = stateFor(mode, key);
+      if (isDerivedOverride(mode, key) && value) {
+        if (!state.valid) return null;
+        resolved[key] = value;
+      }
+    }
+
+    return resolved;
+  };
 
   const rememberPreview = (property) => {
     if (previewOriginal.has(property)) return;
@@ -408,7 +641,7 @@ const createColorEditor = (themeConfig, presetColors) => {
       const value = valueFor(mode, key).trim();
       rememberPreview(property);
       if (value) {
-        document.documentElement.style.setProperty(property, value);
+        document.documentElement.style.setProperty(property, toRuntimeColor(value));
       } else {
         restorePreviewProperty(property);
       }
@@ -422,7 +655,10 @@ const createColorEditor = (themeConfig, presetColors) => {
         if (isInputToken(key)) return;
         const property = `--${cssTokenName(key)}`;
         rememberPreview(property);
-        document.documentElement.style.setProperty(property, resolved[key]);
+        document.documentElement.style.setProperty(
+          property,
+          toRuntimeColor(resolved[key]),
+        );
       });
     }
   };
@@ -455,13 +691,19 @@ const createColorEditor = (themeConfig, presetColors) => {
     }
 
     try {
-      const color = new Color(result.color);
-      if (color.alpha < 1) color.alpha = 1;
-      const hex = color.to("srgb").toString({ format: "hex" });
-      field.picker.value = hex;
-      field.swatch.style.backgroundColor = result.color;
-      field.swatch.title = `${_("Resolved color")}: ${result.color}`;
-      field.status.textContent = "";
+      const runtimeColor = toRuntimeColor(result.color);
+      field.picker.value = toPickerColor(result.color);
+      field.swatch.style.backgroundColor = runtimeColor;
+      field.swatch.title = `${_("Resolved color")}: ${runtimeColor}`;
+      if (field.token.derived) {
+        if (result.autoValue)
+          field.input.placeholder = _("Automatic: %s").format(
+            toRuntimeColor(result.autoValue),
+          );
+        field.status.textContent = "";
+      } else {
+        field.status.textContent = "";
+      }
     } catch (error) {
       state.valid = false;
       state.error = _("Resolved color cannot be shown by the picker.");
@@ -473,17 +715,48 @@ const createColorEditor = (themeConfig, presetColors) => {
   };
 
   const refresh = (mode) =>
-    resolver
-      .resolveMode(mode, valuesForMode(mode))
-      .then((results) => colorLibraryReady.then(() => results))
+    colorLibraryReady
+      .then(() => {
+        const automatic = automaticForMode(mode);
+        syncDerivedInitialState(mode, automatic);
+
+        const validationTokens = COLOR_TOKENS.concat(
+          DERIVED_COLOR_TOKENS.filter(
+            ({ key }) => isDerivedOverride(mode, key) && valueFor(mode, key).trim(),
+          ),
+        );
+
+        return resolver
+          .resolveMode(mode, valuesForMode(mode), validationTokens)
+          .then((results) => ({ automatic, results }));
+      })
       .then((results) => {
         COLOR_TOKENS.forEach(({ key }) => {
-          updateField(mode, key, results.get(key));
+          updateField(mode, key, results.results.get(key));
+        });
+
+        DERIVED_COLOR_TOKENS.forEach(({ key }) => {
+          if (isDerivedOverride(mode, key) && valueFor(mode, key).trim()) {
+            const result = results.results.get(key);
+            updateField(mode, key, {
+              ...result,
+              autoValue: results.automatic?.[key] || "",
+            });
+            return;
+          }
+
+          const autoValue = results.automatic?.[key];
+          updateField(mode, key, autoValue
+            ? { valid: true, color: autoValue, autoValue }
+            : {
+                valid: false,
+                error: _("Unable to generate the automatic derived value."),
+              });
         });
         applyPreview(mode);
       })
       .catch((error) => {
-        COLOR_TOKENS.forEach(({ key }) => {
+        ALL_COLOR_TOKENS.forEach(({ key }) => {
           updateField(mode, key, {
             valid: false,
             error: error?.message || _("Unable to resolve color expressions."),
@@ -494,7 +767,7 @@ const createColorEditor = (themeConfig, presetColors) => {
 
   const schedule = (mode) => {
     window.clearTimeout(timers[mode]);
-    COLOR_TOKENS.forEach(({ key }) => {
+    ALL_COLOR_TOKENS.forEach(({ key }) => {
       const state = stateFor(mode, key);
       state.pending = true;
     });
@@ -520,6 +793,7 @@ const createColorEditor = (themeConfig, presetColors) => {
     });
     input.addEventListener("input", () => {
       themeConfig[colorOptionName(mode, token.key)] = input.value;
+      if (token.derived) setDerivedOverride(mode, token.key, Boolean(input.value.trim()));
       schedule(mode);
     });
     schedule(mode);
@@ -587,7 +861,12 @@ const renderColorField = function (optionIndex, sectionId, inTable) {
     const editor = this.colorEditor;
     const optionKey = colorOptionName(mode, token.key);
     const presetValue = editor.presetColors?.[optionKey] || "";
-    input.placeholder = presetValue || _("Follow theme stylesheet");
+    element.dataset.auroraColorMode = mode;
+    element.dataset.auroraColorKind = token.derived ? "derived" : "base";
+    element.dataset.auroraColorGroup = token.group || "";
+    input.placeholder = token.derived
+      ? _("Automatic from base colors")
+      : presetValue || _("Follow theme stylesheet");
 
     const picker = E("input", {
       type: "color",
@@ -615,9 +894,7 @@ const renderColorField = function (optionIndex, sectionId, inTable) {
 
     picker.addEventListener("change", () => {
       try {
-        input.value = new Color(picker.value)
-          .to("oklch")
-          .toString({ precision: 5 });
+        input.value = picker.value;
         input.dispatchEvent(new Event("input", { bubbles: true }));
         input.dispatchEvent(new Event("change", { bubbles: true }));
       } catch (error) {
@@ -656,32 +933,182 @@ const addColorInputs = (section, mode, tokens, editor) => {
       editor.validate(mode, token.key, value);
     option.write = (sectionId, value) => {
       const trimmed = value?.trim();
+      if (token.derived) {
+        if (trimmed)
+          uci.set("aurora", sectionId, optionKey, toRuntimeColor(trimmed));
+        return;
+      }
       if (trimmed) {
-        uci.set("aurora", sectionId, optionKey, trimmed);
+        uci.set("aurora", sectionId, optionKey, toRuntimeColor(trimmed));
       } else {
         uci.unset("aurora", sectionId, optionKey);
       }
     };
     option.remove = (sectionId) => {
+      if (token.derived) return;
       uci.unset("aurora", sectionId, optionKey);
     };
   });
 };
 
 const createColorSections = (section, mode, editor) => {
-  COLOR_GROUPS.forEach((group) => {
-    const tokens = COLOR_TOKENS.filter((token) => token.group === group.key);
-    const sectionValue = section.taboption(
-      mode,
-      form.SectionValue,
-      `_${mode}_${group.key}`,
-      form.NamedSection,
-      "theme",
-      "aurora",
-      group.title,
-      group.description,
+  const baseSection = section.taboption(
+    mode,
+    form.SectionValue,
+    `_${mode}_base_colors`,
+    form.NamedSection,
+    "theme",
+    "aurora",
+    _("Base Colors"),
+    _(
+      "These are the main input colors. Derived variables are generated from these values.",
+    ) + ` ${COLOR_FORMAT_HELP}`,
+  );
+  addColorInputs(baseSection.subsection, mode, COLOR_TOKENS, editor);
+
+  const derivedSection = section.taboption(
+    mode,
+    form.SectionValue,
+    `_${mode}_derived_colors`,
+    form.NamedSection,
+    "theme",
+    "aurora",
+    _("Derived Variables"),
+    _(
+      "Detail colors generated from base colors. Leave a field empty to follow its source; enter a value to override it. Clear an override to restore automatic updates.",
+    ) + ` ${COLOR_FORMAT_HELP}`,
+  );
+  addColorInputs(
+    derivedSection.subsection,
+    mode,
+    DERIVED_COLOR_GROUPS.flatMap((group) =>
+      DERIVED_COLOR_TOKENS.filter((token) => token.group === group.key),
+    ),
+    editor,
+  );
+};
+
+const colorGroupFor = (kind, key) =>
+  (kind === "derived" ? DERIVED_COLOR_GROUPS : COLOR_GROUPS).find(
+    (group) => group.key === key,
+  );
+
+const ensureColorGroupStyles = () => {
+  if (document.getElementById("aurora-color-group-styles")) return;
+  document.head.appendChild(
+    E(
+      "style",
+      { id: "aurora-color-group-styles" },
+      `
+.aurora-token-group {
+  border: 1px solid var(--hairline);
+  border-radius: calc(var(--radius-base) * 1.5);
+  margin: 0 0 1rem;
+  overflow: hidden;
+}
+.aurora-token-group[open] {
+  background: var(--surface);
+}
+.aurora-token-group > summary {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  list-style: none;
+  padding: 1rem 1.25rem;
+}
+.aurora-token-group > summary::-webkit-details-marker {
+  display: none;
+}
+.aurora-token-group-title {
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+}
+.aurora-token-group-description {
+  color: var(--text-muted);
+  display: block;
+  font-size: .875rem;
+  line-height: 1.45;
+  margin-top: .25rem;
+}
+.aurora-token-group-count {
+  background: var(--surface-sunken);
+  border-radius: 999px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  font-size: .75rem;
+  font-weight: 700;
+  padding: .25rem .625rem;
+}
+.aurora-token-group-body {
+  border-top: 1px solid var(--hairline);
+  padding: 1rem 1.25rem;
+}
+`,
+    ),
+  );
+};
+
+const enhanceColorTokenGroups = (root) => {
+  ensureColorGroupStyles();
+  const rows = Array.from(root.querySelectorAll("[data-aurora-color-group]"));
+  const containers = new Set(rows.map((row) => row.parentElement).filter(Boolean));
+
+  containers.forEach((container) => {
+    if (container.dataset.auroraTokenGroupsEnhanced === "true") return;
+    const children = Array.from(container.children).filter(
+      (child) => child.dataset?.auroraColorGroup,
     );
-    addColorInputs(sectionValue.subsection, mode, tokens, editor);
+    if (children.length === 0) return;
+
+    container.dataset.auroraTokenGroupsEnhanced = "true";
+    let index = 0;
+    while (index < children.length) {
+      const first = children[index];
+      const groupKey = first.dataset.auroraColorGroup;
+      const kind = first.dataset.auroraColorKind;
+      const groupRows = [];
+
+      while (
+        index < children.length &&
+        children[index].dataset.auroraColorGroup === groupKey
+      ) {
+        groupRows.push(children[index]);
+        index += 1;
+      }
+
+      const group = colorGroupFor(kind, groupKey);
+      if (!group) continue;
+
+      const body = E("div", { class: "aurora-token-group-body" });
+      const details = E(
+        "details",
+        { class: "aurora-token-group", open: "" },
+        [
+          E("summary", {}, [
+            E("span", {}, [
+              E("span", { class: "aurora-token-group-title" }, group.title),
+              E(
+                "span",
+                { class: "aurora-token-group-description" },
+                group.description,
+              ),
+            ]),
+            E(
+              "span",
+              { class: "aurora-token-group-count" },
+              _("%d variables").format(groupRows.length),
+            ),
+          ]),
+          body,
+        ],
+      );
+
+      container.insertBefore(details, first);
+      groupRows.forEach((row) => body.appendChild(row));
+    }
   });
 };
 
@@ -875,7 +1302,7 @@ const persistDerivedTokens = (editor) => {
     const resolved = editor.resolvedForMode(mode);
     if (!resolved) return;
     Object.keys(resolved).forEach((key) => {
-      uci.set("aurora", "theme", `${mode}_${key}`, resolved[key]);
+      uci.set("aurora", "theme", `${mode}_${key}`, toRuntimeColor(resolved[key]));
     });
   });
 };
@@ -2141,6 +2568,7 @@ return view.extend({
 
     return m.render().then((mapNode) => {
       colorEditor.attach();
+      enhanceColorTokenGroups(mapNode);
 
       const updateVersionLabel = (label, hasUpdate) => {
         if (!label || !hasUpdate) return;

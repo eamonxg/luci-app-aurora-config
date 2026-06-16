@@ -1,7 +1,9 @@
 // Regenerate the preset templates under root/usr/share/aurora/ from the 10
 // editable inputs per preset. Every derived colour token is computed by the
 // SAME engine the browser uses (utils/tokens.global.js), so the shipped UCI
-// snapshot already overrides the baked _tokens.css defaults of the theme.
+// snapshot already overrides the baked _tokens.css defaults of the theme. The
+// emitted UCI values are hex/hex8 so runtime template injection keeps the same
+// browser compatibility profile as the compiled CSS fallbacks.
 //
 // Zero dependencies / no build step: the config app ships raw JS, so this just
 // loads the vendored colorjs.io bundle + the token engine into a vm sandbox.
@@ -24,6 +26,9 @@ vm.createContext(sandbox);
 vm.runInContext(readFileSync(resolve(RES, "color.global.js"), "utf8"), sandbox);
 vm.runInContext(readFileSync(resolve(RES, "tokens.global.js"), "utf8"), sandbox);
 const { resolve: resolveTokens, INPUTS } = sandbox.AuroraTokens;
+
+const toRuntimeColor = (value) =>
+  new sandbox.Color(value).to("srgb").toString({ format: "hex" }).toLowerCase();
 
 // Shared status accents + on_brand (theme defaults); only surface/identity
 // inputs vary per preset. The theme refresh moved status inputs to "content"
@@ -156,7 +161,7 @@ const colorLines = (preset) => {
   for (const mode of ["light", "dark"]) {
     const resolved = resolveTokens(mode, PRESETS[preset][mode]);
     for (const key of KEY_ORDER) {
-      lines.push(`\toption ${mode}_${key} '${resolved[key]}'`);
+      lines.push(`\toption ${mode}_${key} '${toRuntimeColor(resolved[key])}'`);
     }
   }
   return lines;

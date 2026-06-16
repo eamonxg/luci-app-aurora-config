@@ -19,7 +19,7 @@ readonly FONT_PRESETS_FILE="/usr/share/aurora/font-presets.conf"
 readonly IMPORT_CONFIG_TMP="/tmp/aurora_config_import.tmp"
 readonly EXPORT_CONFIG_TMP="/tmp/aurora_config_export.conf"
 readonly PRESET_UCI_PACKAGE="aurora_preset"
-# 10 editable inputs + 19 engine-derived tokens (see utils/tokens.global.js and
+# 10 editable inputs + 20 engine-derived tokens (see utils/tokens.global.js and
 # the theme's tokens/spec.js). Must match the keys emitted into the preset
 # templates by scripts/gen-presets.mjs. expected_count below derives from this
 # list (count * 2 for light_/dark_).
