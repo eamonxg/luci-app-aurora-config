@@ -1917,21 +1917,21 @@ return view.extend({
       "aurora",
       _("Layout"),
       _(
-        "Tune the structure of the interface: submenu behavior, density, corner roundness, and page width.",
+        "Tune the structure of the interface: navigation style, density, corner roundness, and page width.",
       ),
     );
     const structureSubsection = structureSection.subsection;
 
     so = structureSubsection.option(
       form.ListValue,
-      "nav_submenu_type",
-      _("Submenu Style"),
+      "nav_type",
+      _("Navigation Style"),
     );
     so.description = _(
       "Choose how top navigation expands: a wide mega menu, a compact dropdown, or a sidebar-style panel.",
     );
     so.value("mega-menu", _("Mega Menu"));
-    so.value("boxed-dropdown", _("Boxed Dropdown"));
+    so.value("dropdown", _("Dropdown"));
     so.value("sidebar", _("Sidebar"));
     so.default = "mega-menu";
     so.rmempty = false;

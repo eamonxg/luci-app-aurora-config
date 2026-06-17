@@ -17,7 +17,7 @@
 ## Features
 
 - **Professional Color System**: Built-in theme presets (Classic, Monochrome, Sage Green, Amber Sand, Sky Blue) and an easy color editor to tune the look and feel.
-- **Layout & Density Control**: Adjust navigation submenu styles and global element spacing to fit your screen perfectly.
+- **Layout & Density Control**: Adjust the navigation style and global element spacing to fit your screen perfectly.
 - **Brand Identity**: Customize the theme logo (favicon) and configure floating toolbar shortcuts for frequently used pages.
 - **Seamless Updates**: Update the theme and config app directly from the interface—no CLI or SSH required.
 
