@@ -84,7 +84,7 @@ msgid ""
 "Apply the '%s' preset now? It is saved immediately and the page reloads. "
 "Presets set the light and dark colors only — layout, typography, branding, "
 "navigation, and toolbar are left unchanged."
-msgstr "¿Aplicar el preset '%s' ahora? Se guardará inmediatamente y la página se recargará. Los presets solo configuran los colores claro y oscuro; el diseño, la tipografía, la identidad de marca (branding), la navegación y la barra de herramientas permanecen sin cambios."
+msgstr "¿Aplicar el preset '%s' ahora? Se guardará inmediatamente y la página se recargará. Los presets solo configuran los colores claro y oscuro; el diseño, la tipografía, la identidad de marca, la navegación y la barra de herramientas permanecen sin cambios."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1635
 msgid "Applying preset..."
@@ -157,7 +157,7 @@ msgstr "Biblioteca de recursos de marca"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:234
 msgid "Brand Hover"
-msgstr "Marca (Hover)"
+msgstr "Marca"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:369
 msgid "Brand Interaction Details"
@@ -261,7 +261,7 @@ msgstr "Superficie de peligro"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:316
 msgid "Danger Surface Hover"
-msgstr "Superficie de peligro (Hover)"
+msgstr "Superficie de peligro"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1987
 msgid "Dark Mode"
@@ -306,21 +306,21 @@ msgstr "Tokens de color derivados"
 msgid ""
 "Derived from the brand color: hover states, subtle fills, focus rings, and "
 "progress meters."
-msgstr "Derivado del color de la marca: estados de hover, rellenos sutiles, anillos de enfoque (focus rings) e indicadores de progreso."
+msgstr "Derivado del color de la marca: estados de hover, rellenos sutiles, anillos de enfoque e indicadores de progreso."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:378
 msgid ""
 "Derived from the canvas, surface, and text colors: muted and subtle text, "
 "borders, overlays, and menu layers."
-msgstr "Derivado del canvas, la superficie y los colores del texto: texto atenuado y sutil, bordes, capas superpuestas (overlays) y capas de menú."
+msgstr "Derivado del canvas, la superficie y los colores del texto: texto atenuado y sutil, bordes, capas superpuestas y capas de menú."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:385
 msgid "Derived from the status accents: alert, label, and badge backgrounds."
-msgstr "Derivados de los acentos de estado: fondos de alertas, etiquetas y distintivos (badges)."
+msgstr "Derivados de los acentos de estado: fondos de alertas, etiquetas y distintivos."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:324
 msgid "Dimming backdrop behind modal dialogs."
-msgstr "Fondo de oscurecimiento (backdrop) detrás de los diálogos modales."
+msgstr "Fondo de oscurecimiento detrás de los diálogos modales."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/version.js:67
 msgid "Downloading update files..."
@@ -402,7 +402,7 @@ msgstr "Lanzador flotante de accesos directos que se muestra en el borde derecho
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:261
 msgid "Focus Ring"
-msgstr "Anillo de enfoque (Focus Ring)"
+msgstr "Anillo de enfoque"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:263
 msgid "Focus outline for inputs, selects, and keyboard-operated controls."
@@ -434,7 +434,7 @@ msgstr "Radio de esquina base aplicado a botones, campos de entrada, tarjetas y 
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2023
 msgid "Base spacing unit that scales padding and gaps across the interface."
-msgstr "Unidad de espaciado base que escala los márgenes internos (padding) y los espacios (gaps) en toda la interfaz."
+msgstr "Unidad de espaciado base que escala los márgenes internos y los espacios en toda la interfaz."
 
 #: applications/luci-app-aurora-config/root/usr/share/rpcd/acl.d/luci-app-aurora.json:3
 msgid "Grant access to Aurora theme configuration"
@@ -442,7 +442,7 @@ msgstr "Conceder acceso a la configuración del tema Aurora"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:218
 msgid "Hairline"
-msgstr "Línea fina (Hairline)"
+msgstr "Línea fina"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2588
 msgid "Home Screen icon for iOS and iPadOS."
@@ -510,7 +510,7 @@ msgstr "Superficie de información"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:204
 msgid "Inset layer for inputs, code blocks, table headers, and badges."
-msgstr "Capa interna (inset) para campos de entrada, bloques de código, encabezados de tablas y distintivos."
+msgstr "Capa interna para campos de entrada, bloques de código, encabezados de tablas y distintivos."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/version.js:111
 msgid "Installation Details"
@@ -608,7 +608,7 @@ msgstr "Fondo del mega menú"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:337
 msgid "Mega Menu Scrim"
-msgstr "Máscara de atenuación (scrim) del mega menú"
+msgstr "Máscara de atenuación del mega menú"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1535
 msgid "Monochrome"
@@ -670,7 +670,7 @@ msgstr "Acentuaciones de estado operativo"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:211
 msgid "Overlay Surface"
-msgstr "Superficie superpuesta (Overlay)"
+msgstr "Superficie superpuesta"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2567
 msgid "PNG fallback when SVG favicons are unsupported."
@@ -789,7 +789,7 @@ msgstr "Valor guardado o preajustado"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:323
 msgid "Scrim"
-msgstr "Atenuador (Scrim)"
+msgstr "Atenuador"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:219
 msgid "Separators, dividers, and input or card borders."
@@ -853,7 +853,7 @@ msgstr "Marca sutil"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:252
 msgid "Subtle Brand Hover"
-msgstr "Marca sutil (Hover)"
+msgstr "Marca sutil"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:193
 msgid "Subtle Text"
