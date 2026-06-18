@@ -159,7 +159,18 @@ const KEY_ORDER = Object.keys(resolveTokens("light", PRESETS.default.light));
 const colorLines = (preset) => {
   const lines = [];
   for (const mode of ["light", "dark"]) {
-    const resolved = resolveTokens(mode, PRESETS[preset][mode]);
+    // Round the 10 editable inputs to hex FIRST, then derive from those rounded
+    // inputs. The config UI loads inputs as hex and recomputes the derived
+    // tokens from them to decide "automatic vs user-override" (see
+    // syncDerivedInitialState in view/aurora/theme.js). Seeding derived values
+    // from full-precision oklch makes ~30 tokens (e.g. brand_hover) disagree
+    // with that recompute by a single 8-bit step, so a clean preset misreads
+    // them as manual overrides and shows a value in the input box. Deriving
+    // from the same hex the browser sees keeps stored == recomputed.
+    const hexInputs = {};
+    for (const key of INPUTS)
+      hexInputs[key] = toRuntimeColor(PRESETS[preset][mode][key]);
+    const resolved = resolveTokens(mode, hexInputs);
     for (const key of KEY_ORDER) {
       lines.push(`\toption ${mode}_${key} '${toRuntimeColor(resolved[key])}'`);
     }
