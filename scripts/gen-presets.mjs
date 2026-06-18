@@ -35,7 +35,7 @@ const toRuntimeColor = (value) =>
 // semantics, so these are the accent colours, not surfaces.
 const STATUS = {
   light: {
-    info: "oklch(0.43 0.2 255)",
+    info: "oklch(0.45 0.12 255)",
     warning: "oklch(0.35 0.08 60)",
     success: "oklch(0.32 0.09 165)",
     danger: "oklch(0.35 0.12 25)",
