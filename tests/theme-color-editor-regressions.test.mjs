@@ -96,6 +96,35 @@ test("saving waits for pending color resolution before writing UCI", async () =>
   assert.match(saveBlock, /persistDerivedTokens\(this\.colorEditor\)/);
 });
 
+test("token groups only collapse via the chevron, not stray header clicks", async () => {
+  const source = await themeSource();
+  const enhanceBlock = sourceBlock(
+    source,
+    "const enhanceColorTokenGroups =",
+    "const createRangeControlRenderer =",
+  );
+
+  // A dedicated chevron button drives the open state explicitly, reusing the
+  // theme's navigation chevron glyph.
+  assert.match(enhanceBlock, /class: "aurora-token-group-toggle navigation-group-toggle"/);
+  assert.match(enhanceBlock, /const setGroupOpen = \(open\) =>/);
+  assert.match(
+    enhanceBlock,
+    /toggle\.addEventListener\("click", \(ev\) => \{[\s\S]*ev\.preventDefault\(\)[\s\S]*ev\.stopPropagation\(\)[\s\S]*setGroupOpen\(!expectedOpen\)/,
+  );
+  // Any non-chevron summary click is cancelled so the native picker dismiss
+  // cannot collapse the group.
+  assert.match(
+    enhanceBlock,
+    /summary\.addEventListener\("click", \(ev\) => \{[\s\S]*aurora-token-group-toggle[\s\S]*ev\.preventDefault\(\)/,
+  );
+  // A backstop reverts any collapse that still slips through.
+  assert.match(
+    enhanceBlock,
+    /details\.addEventListener\("toggle", \(\) => \{[\s\S]*details\.open = expectedOpen/,
+  );
+});
+
 test("preset selector stays compact without helper prompt text", async () => {
   const source = await themeSource();
   const optionsBlock = sourceBlock(

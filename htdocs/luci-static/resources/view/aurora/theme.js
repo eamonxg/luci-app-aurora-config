@@ -1033,7 +1033,7 @@ const ensureColorGroupStyles = () => {
 }
 .aurora-token-group > summary {
   align-items: center;
-  cursor: pointer;
+  cursor: default;
   display: flex;
   gap: 1rem;
   justify-content: space-between;
@@ -1042,6 +1042,36 @@ const ensureColorGroupStyles = () => {
 }
 .aurora-token-group > summary::-webkit-details-marker {
   display: none;
+}
+/* Box + interaction reset; the chevron glyph itself is reused from the Aurora
+   theme's .navigation-group-toggle::after, so no SVG is duplicated here. */
+.aurora-token-group-toggle {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  flex-shrink: 0;
+  height: 1.75rem;
+  justify-content: center;
+  padding: 0;
+  width: 1.75rem;
+}
+.aurora-token-group-toggle:hover {
+  color: var(--text);
+}
+.aurora-token-group-toggle:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.aurora-token-group-toggle::after {
+  transition: rotate .25s ease;
+}
+.aurora-token-group[open] .aurora-token-group-toggle::after {
+  rotate: 90deg;
 }
 .aurora-token-group-title {
   display: block;
@@ -1054,15 +1084,6 @@ const ensureColorGroupStyles = () => {
   font-size: .875rem;
   line-height: 1.45;
   margin-top: .25rem;
-}
-.aurora-token-group-count {
-  background: var(--surface-sunken);
-  border-radius: 999px;
-  color: var(--text-muted);
-  flex-shrink: 0;
-  font-size: .75rem;
-  font-weight: 700;
-  padding: .25rem .625rem;
 }
 .aurora-token-group-body {
   border-top: 1px solid var(--hairline);
@@ -1105,28 +1126,55 @@ const enhanceColorTokenGroups = (root) => {
       if (!group) continue;
 
       const body = E("div", { class: "aurora-token-group-body" });
+      const toggle = E("button", {
+        type: "button",
+        // Reuse the Aurora theme's navigation chevron glyph; the local class
+        // only adds the button box reset and the open-state rotation.
+        class: "aurora-token-group-toggle navigation-group-toggle",
+        "aria-label": _("Expand or collapse this group"),
+        "aria-expanded": "true",
+      });
+      const summary = E("summary", {}, [
+        E("span", {}, [
+          E("span", { class: "aurora-token-group-title" }, group.title),
+          E(
+            "span",
+            { class: "aurora-token-group-description" },
+            group.description,
+          ),
+        ]),
+        toggle,
+      ]);
+
       const details = E(
         "details",
         { class: "aurora-token-group", open: "" },
-        [
-          E("summary", {}, [
-            E("span", {}, [
-              E("span", { class: "aurora-token-group-title" }, group.title),
-              E(
-                "span",
-                { class: "aurora-token-group-description" },
-                group.description,
-              ),
-            ]),
-            E(
-              "span",
-              { class: "aurora-token-group-count" },
-              _("%d variables").format(groupRows.length),
-            ),
-          ]),
-          body,
-        ],
+        [summary, body],
       );
+
+      // A bare <summary> toggles on ANY click anywhere on the header strip, so a
+      // stray click -- notably the click that dismisses the native color picker
+      // landing on this large header -- would collapse the group. Restrict
+      // toggling to the chevron button: it drives the open state explicitly,
+      // every other summary click is cancelled, and the toggle listener reverts
+      // any collapse that still slips through to the expected state.
+      let expectedOpen = true;
+      const setGroupOpen = (open) => {
+        expectedOpen = open;
+        if (details.open !== open) details.open = open;
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      };
+      toggle.addEventListener("click", (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        setGroupOpen(!expectedOpen);
+      });
+      summary.addEventListener("click", (ev) => {
+        if (!ev.target.closest(".aurora-token-group-toggle")) ev.preventDefault();
+      });
+      details.addEventListener("toggle", () => {
+        if (details.open !== expectedOpen) details.open = expectedOpen;
+      });
 
       container.insertBefore(details, first);
       groupRows.forEach((row) => body.appendChild(row));
