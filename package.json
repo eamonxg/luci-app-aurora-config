@@ -1,0 +1,13 @@
+{
+  "name": "luci-app-aurora-config",
+  "private": true,
+  "description": "This package is never installed or built -- it ships raw source. package.json exists only to pin the @eamonxg/aurora-tokens version that scripts/sync-tokens.mjs vendors (and to let Renovate/Dependabot propose bumps).",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "sync-tokens": "node scripts/sync-tokens.mjs",
+    "gen-presets": "node scripts/gen-presets.mjs"
+  },
+  "devDependencies": {
+    "@eamonxg/aurora-tokens": "1.0.0"
+  }
+}

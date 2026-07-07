@@ -38,14 +38,17 @@ htdocs/luci-static/resources/
 │   └── version.js        # Version & update UI
 └── utils/
     ├── color.global.js   # Vendored colorjs.io (color conversion; global `Color`)
-    ├── tokens.global.js  # ★ Color derivation engine (global `AuroraTokens`) — single source of truth
+    ├── tokens.global.js  # ★ Color derivation engine (global `AuroraTokens`) — GENERATED, do not edit
     └── version-api.js    # Version-check helpers
 
 root/
 ├── etc/uci-defaults/80_aurora          # First-install setup + schema migration
 ├── usr/libexec/rpcd/luci.aurora        # Backend RPC (shell)
-└── usr/share/aurora/*.template         # Five built-in color presets (UCI fragments)
+└── usr/share/aurora/
+    ├── *.template                      # Five built-in color presets (UCI fragments) — GENERATED
+    └── color-tokens.conf               # Ordered token key list for the backend — GENERATED
 
+scripts/sync-tokens.mjs                  # Regenerates tokens.global.js + color-tokens.conf from the aurora-tokens repo's spec, then runs gen-presets
 scripts/gen-presets.mjs                  # Regenerates *.template
 Makefile                                 # OpenWrt package metadata (version lives here)
 ```
@@ -66,10 +69,10 @@ The entire palette is driven by **10 editable inputs**; every other color is
 | Inputs (user-editable) | 10 | `bg`, `surface`, `text`, `brand`, `on_brand`, `link`, `info`, `warning`, `success`, `danger` |
 | Derived (computed) | 20 | `text_muted`, `surface_sunken`, `brand_hover`, `brand_subtle`, `focus_ring`, `*_surface`, `scrim`, `mega_menu_bg`, … |
 
-The derivation rules (`mix` / `shade` / `set` / `alpha` / `const`) live in
-`utils/tokens.global.js` under `DERIVATIONS`. **This file is a browser mirror of
-the theme's `luci-theme-aurora/.dev/tokens/spec.js`** — the two must stay in
-sync.
+The derivation rules (`mix` / `shade` / `set` / `alpha` / `const`) live in the
+theme's token spec. **`utils/tokens.global.js` is the prebuilt browser bundle
+from the `@eamonxg/aurora-tokens` npm package**, vendored by
+`scripts/sync-tokens.mjs` — never edit it by hand (see §3.4).
 
 ### 3.2 Why the config app computes derived tokens itself
 
@@ -114,13 +117,47 @@ Overrides the baked defaults in _tokens.css → user's palette renders
 
 ### 3.4 Single source of truth
 
-`utils/tokens.global.js` is consumed in two places so the frontend and the
-presets can never drift apart:
+The token model is layered across two npm packages (mechanism vs. policy):
 
-1. **Frontend runtime** — `theme.js` loads it for live preview and the on-save
-   computation.
+- **`@eamonxg/token-engine`** ([repo](https://github.com/eamonxg/token-engine))
+  — the five operators + spec-driven resolver, shared by luci-theme-aurora,
+  luci-theme-shadcn, and the aurora-tokens package.
+- **`@eamonxg/aurora-tokens`** ([repo](https://github.com/eamonxg/aurora-tokens))
+  — an independent repo with its own semver, published from its own root. It
+  owns the aurora spec (`spec.js`/`defaults.js`) and ships the prebuilt
+  browser global `dist/tokens.global.js` (engine + spec, with colorjs.io
+  aliased to the page's global `Color`). `luci-theme-aurora` and this repo are
+  both just consumers of it.
+
+This repo **vendors** that package by the exact version pinned in
+`package.json` — `scripts/sync-tokens.mjs` refreshes:
+
+- `utils/tokens.global.js` — the package's `dist/tokens.global.js`, verbatim.
+- `root/usr/share/aurora/color-tokens.conf` — the ordered key list the backend
+  (`luci.aurora`) reads at runtime, derived from the vendored engine.
+- `root/usr/share/aurora/*.template` — regenerated via `gen-presets.mjs`, which
+  loads `tokens.global.js` in a `node:vm` sandbox.
+
+All vendored artifacts are committed, so nothing downstream (CI, SDK build,
+device) needs npm or the aurora-tokens repo. The pinned version doubles as the
+compatibility statement: it names the aurora-tokens release this app targets.
+
+Drift is caught in three layers:
+
+1. `theme.js` joins its UI metadata with the registry at load time and throws
+   on missing/stale entries (`buildColorTokenTables`).
+2. `tests/theme-token-sync.test.mjs` re-runs `sync-tokens.mjs --check` against
+   the registry.
+3. `.github/workflows/token-sync-check.yml` runs the same check in CI (push/PR
+   and weekly); Renovate/Dependabot can bump the pin when aurora-tokens
+   releases.
+
+Consumers of `tokens.global.js` at runtime:
+
+1. **Frontend** — `theme.js` loads it for live preview, on-save computation,
+   and the ordered token tables (`COLOR_TOKENS` et al.).
 2. **Generator** — `scripts/gen-presets.mjs` loads it via `node:vm` to produce
-   the `*.template` files.
+   the `*.template` files (the default preset comes from its `DEFAULTS`).
 
 ---
 
@@ -144,18 +181,23 @@ presets can never drift apart:
 
 ### B. Add or change a color token
 
-> The token spec's source of truth is the theme repo's `tokens/spec.js`; this
-> repo mirrors it, so change **both**.
+> The token spec's single source of truth is the standalone `aurora-tokens`
+> repo's `spec.js`/`defaults.js`, released as `@eamonxg/aurora-tokens`;
+> everything here is vendored from that package.
 
-1. Theme repo: edit `.dev/tokens/spec.js` (rules) / `defaults.js` (defaults) and
-   run the theme's `pnpm gen:tokens`.
-2. Mirror here:
-   - `utils/tokens.global.js` → `INPUTS` / `DERIVATIONS`
-   - `luci.aurora` → `COLOR_TOKEN_KEYS` (drives preset validation;
-     `expected_count = count × 2`)
-   - For a new **input**, also add an editable entry in `theme.js` →
-     `COLOR_TOKENS` / `COLOR_GROUPS`
-3. Regenerate templates: `node scripts/gen-presets.mjs`.
+1. `aurora-tokens` repo: edit `spec.js`/`defaults.js`, `npm test`.
+2. Tag `vX.Y.Z`, push — CI auto-publishes.
+3. `theme`: bump `.dev/package.json` → `npm install` → `npm run build`.
+4. `config` (here): bump the pin in `package.json` → `npm run sync-tokens` —
+   refreshes `tokens.global.js`, `color-tokens.conf`, and the preset templates
+   in one go (if there's a new token, follow the test prompts to fill in
+   `theme.js` copy) → commit.
+   To iterate on an unreleased spec: `node scripts/sync-tokens.mjs --local
+   ../aurora-tokens`.
+3. For a new token, add its UI copy in `theme.js` →
+   `COLOR_TOKEN_METADATA` / `DERIVED_COLOR_TOKEN_METADATA` (and a group entry if
+   needed). The tests and `buildColorTokenTables()` fail loudly until every
+   registry token has metadata.
 4. **Bump `SCHEMA_VERSION` in `80_aurora`** (see §5).
 
 ### C. Verify without a device
@@ -169,9 +211,12 @@ node --check htdocs/luci-static/resources/utils/tokens.global.js
 sh -n root/usr/libexec/rpcd/luci.aurora
 sh -n root/etc/uci-defaults/80_aurora
 
-# Sanity checks:
-#  - backend key count × 2 == number of `option (light|dark)_` lines per template
-#  - mirror engine output matches the theme engine (compare resolveTokens in .dev/)
+# Full test suite (includes a generated-artifact check against the
+# pinned aurora-tokens package)
+node --test tests/*.test.mjs
+
+# Generated artifacts in sync with the pinned aurora-tokens package?
+node scripts/sync-tokens.mjs --check
 ```
 
 ---
@@ -218,8 +263,9 @@ ACLs live in `root/usr/share/rpcd/acl.d/luci-app-aurora.json`; the menu entry in
 `root/usr/share/luci/menu.d/luci-app-aurora.json`.
 
 > `load_preset_snapshot()` validates that a template's `option (light|dark)_`
-> line count equals `COLOR_TOKEN_KEYS count × 2`. Change the key list without
-> syncing it and applying a preset will fail.
+> line count equals `COLOR_TOKEN_KEYS count × 2`. The key list ships as
+> `/usr/share/aurora/color-tokens.conf`, generated by `sync-tokens.mjs` from
+> the same registry as the templates, so the two cannot drift apart.
 
 ---
 

@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
-import { access, readdir, readFile } from "node:fs/promises";
+import { execFile } from "node:child_process";
+import { readdir, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import test from "node:test";
+import { promisify } from "node:util";
 import vm from "node:vm";
 
 const RES = "htdocs/luci-static/resources/utils";
@@ -67,46 +69,45 @@ test("preset templates seed derived tokens consistent with the engine recompute"
   }
 });
 
-// The config engine is a hand-maintained vendored copy of the theme's token
-// engine (luci-theme-aurora/.dev/tokens). The two MUST agree token-for-token or
-// the config UI's live preview diverges from what the theme bakes into CSS.
-// This is a behavioral parity check: feed identical inputs through both engines
-// and assert identical output. Skips when the sibling theme repo is absent
-// (config is an independent repo; standalone CI won't have it checked out).
-test("config token engine matches the theme engine token-for-token", async (t) => {
-  const themeTokens = "../luci-theme-aurora/.dev/tokens";
-  try {
-    await access(resolve(themeTokens, "resolve.js"));
-    await access(resolve(themeTokens, "defaults.js"));
-  } catch {
-    t.skip("luci-theme-aurora sibling repo not present");
-    return;
-  }
+// The rpcd script validates presets/imports against the key list shipped in
+// color-tokens.conf. That file is generated from the same registry the browser
+// engine embeds, but nothing at runtime rechecks it -- this does. Runs in
+// standalone CI (no sibling repo needed).
+test("color-tokens.conf lists exactly the engine's tokens, inputs first", async () => {
+  const { AuroraTokens } = await loadConfigEngine();
+  const conf = await readFile(
+    resolve("root/usr/share/aurora/color-tokens.conf"),
+    "utf8",
+  );
+  const keys = conf
+    .split("\n")
+    .filter((line) => line && !line.startsWith("#"));
 
-  const [{ AuroraTokens, Color }, themeResolve, themeDefaults] = await Promise.all([
-    loadConfigEngine(),
-    import(resolve(themeTokens, "resolve.js")),
-    import(resolve(themeTokens, "defaults.js")),
-  ]);
-
-  for (const mode of ["light", "dark"]) {
-    const inputs = themeDefaults.DEFAULTS[mode];
-    const configOut = AuroraTokens.resolve(mode, { ...inputs });
-    const themeOut = themeResolve.resolveTokens(mode, { ...inputs });
-
-    // Array.from normalizes DERIVED_KEYS out of the vm sandbox realm so
-    // deepStrictEqual compares contents, not the cross-realm Array prototype.
-    assert.deepEqual(
+  assert.deepEqual(
+    keys,
+    Array.from(AuroraTokens.INPUTS).concat(
       Array.from(AuroraTokens.DERIVED_KEYS),
-      Object.keys(themeOut).filter((k) => !AuroraTokens.INPUTS.includes(k)),
-      `${mode}: derived key set matches between engines`,
-    );
-    for (const key of AuroraTokens.DERIVED_KEYS) {
-      assert.equal(
-        hexOf(Color, configOut[key]),
-        hexOf(Color, themeOut[key]),
-        `${mode}: ${key} must resolve identically in both engines`,
-      );
+    ),
+  );
+});
+
+// tokens.global.js and color-tokens.conf are vendored from the
+// @eamonxg/aurora-tokens package at the version pinned in package.json.
+// Rerun sync-tokens in --check mode and fail on drift, so neither a stale
+// vendor nor a hand-edit can land unnoticed. Falls back to building from the
+// sibling aurora-tokens checkout when the registry is unreachable (sync-tokens
+// does this internally); skips only when neither source is available.
+test("vendored token artifacts are in sync with the pinned package", async (t) => {
+  try {
+    await promisify(execFile)(process.execPath, [
+      resolve("scripts/sync-tokens.mjs"),
+      "--check",
+    ]);
+  } catch (error) {
+    if (/HTTP |fetch failed|ENOTFOUND/.test(String(error?.stderr ?? error))) {
+      t.skip("registry unreachable and no sibling theme checkout");
+      return;
     }
+    throw error;
   }
 });

@@ -1,0 +1,42 @@
+# Drift guard for the vendored color-token artifacts: tokens.global.js,
+# color-tokens.conf, and the preset templates are vendored from the
+# @eamonxg/aurora-tokens npm package (published from the aurora-tokens repo) at
+# the version pinned in package.json. This fails when the committed artifacts
+# no longer match the pinned package — run `node scripts/sync-tokens.mjs`
+# locally and commit to fix.
+name: Token sync check
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 3 * * 1"
+  push:
+    paths:
+      - "htdocs/luci-static/resources/utils/*.js"
+      - "root/usr/share/aurora/**"
+      - "scripts/**"
+      - "tests/**"
+      - "package.json"
+  pull_request:
+    paths:
+      - "htdocs/luci-static/resources/utils/*.js"
+      - "root/usr/share/aurora/**"
+      - "scripts/**"
+      - "tests/**"
+      - "package.json"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check vendored artifacts against the pinned package
+        run: node scripts/sync-tokens.mjs --check
+
+      - name: Run tests
+        run: node --test tests/*.test.mjs

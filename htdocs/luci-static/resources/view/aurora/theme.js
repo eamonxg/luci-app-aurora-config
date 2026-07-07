@@ -32,7 +32,7 @@ const colorLibraryReady = (async () => {
     await loadGlobalScript("utils/color.global.js");
   if (typeof AuroraTokens === "undefined")
     await loadGlobalScript("utils/tokens.global.js");
-})();
+})().then(() => buildColorTokenTables());
 
 const callUploadIcon = rpc.declare({
   object: "luci.aurora",
@@ -105,241 +105,196 @@ const callWritePwaManifest = rpc.declare({
   method: "write_pwa_manifest",
 });
 
-const COLOR_TOKENS = [
-  {
-    key: "bg",
+// UI copy for each token, keyed by token name. Which tokens exist, their
+// order, and the input/derived split all come from the AuroraTokens registry
+// (generated from the theme's token spec); buildColorTokenTables() below joins
+// the two and throws on any mismatch, so a spec change that adds or removes a
+// token fails loudly here until this map is updated.
+const COLOR_TOKEN_METADATA = {
+  bg: {
     label: _("Background"),
     description: _(
       "Page canvas behind the header, navigation, content, and login screen.",
     ),
     group: "foundation",
   },
-  {
-    key: "surface",
+  surface: {
     label: _("Surface"),
     description: _(
       "Base surface for panels, cards, forms, tables, and neutral controls.",
     ),
     group: "foundation",
   },
-  {
-    key: "text",
+  text: {
     label: _("Text"),
     description: _(
       "Default foreground for headings, body text, icons, and form values.",
     ),
     group: "identity",
   },
-  {
-    key: "brand",
+  brand: {
     label: _("Brand"),
     description: _(
       "Accent for primary buttons, active navigation, and selected states.",
     ),
     group: "identity",
   },
-  {
-    key: "on_brand",
+  on_brand: {
     label: _("On-Brand Text"),
     description: _("Text and icons shown on filled brand backgrounds."),
     group: "identity",
   },
-  {
-    key: "link",
+  link: {
     label: _("Link"),
     description: _("Hyperlinks in page content, help text, and status output."),
     group: "identity",
   },
-  {
-    key: "info",
+  info: {
     label: _("Info"),
     description: _("Accent for informational alerts, labels, and tooltips."),
     group: "status",
   },
-  {
-    key: "warning",
+  warning: {
     label: _("Warning"),
     description: _("Accent for warnings, notices, and validation messages."),
     group: "status",
   },
-  {
-    key: "success",
+  success: {
     label: _("Success"),
     description: _("Accent for successful operations and healthy status."),
     group: "status",
   },
-  {
-    key: "danger",
+  danger: {
     label: _("Danger"),
     description: _(
       "Accent for errors, destructive controls, and critical states.",
     ),
     group: "status",
   },
-];
+};
 
-const DERIVED_COLOR_TOKENS = [
-  {
-    key: "text_muted",
+const DERIVED_COLOR_TOKEN_METADATA = {
+  text_muted: {
     label: _("Muted Text"),
     description: _(
       "Medium-emphasis text for helper copy, metadata, and summaries.",
     ),
     group: "hierarchy",
-    derived: true,
   },
-  {
-    key: "text_subtle",
+  text_subtle: {
     label: _("Subtle Text"),
     description: _(
       "Low-emphasis text for small labels, placeholders, and disabled hints.",
     ),
     group: "hierarchy",
-    derived: true,
   },
-  {
-    key: "surface_sunken",
+  surface_sunken: {
     label: _("Sunken Surface"),
     description: _(
       "Inset layer for inputs, code blocks, table headers, and badges.",
     ),
     group: "hierarchy",
-    derived: true,
   },
-  {
-    key: "surface_overlay",
+  surface_overlay: {
     label: _("Overlay Surface"),
     description: _("Raised layer for dropdowns, modals, and tooltips."),
     group: "hierarchy",
-    derived: true,
   },
-  {
-    key: "hairline",
+  hairline: {
     label: _("Hairline"),
     description: _("Separators, dividers, and input or card borders."),
     group: "hierarchy",
-    derived: true,
   },
-  {
-    key: "hover_faint",
+  hover_faint: {
     label: _("Faint Hover"),
     description: _(
       "Hover fill for menu items, table rows, and neutral controls.",
     ),
     group: "hierarchy",
-    derived: true,
   },
-  {
-    key: "brand_hover",
+  brand_hover: {
     label: _("Brand Hover"),
     description: _(
       "Hover state for filled primary buttons and high-emphasis controls.",
     ),
     group: "brand_interaction",
-    derived: true,
   },
-  {
-    key: "brand_subtle",
+  brand_subtle: {
     label: _("Subtle Brand"),
     description: _(
       "Brand-tinted surface for active navigation and selected states.",
     ),
     group: "brand_interaction",
-    derived: true,
   },
-  {
-    key: "brand_subtle_hover",
+  brand_subtle_hover: {
     label: _("Subtle Brand Hover"),
     description: _(
       "Hover fill for subtle primary buttons and selected surfaces.",
     ),
     group: "brand_interaction",
-    derived: true,
   },
-  {
-    key: "focus_ring",
+  focus_ring: {
     label: _("Focus Ring"),
     description: _(
       "Focus outline for inputs, selects, and keyboard-operated controls.",
     ),
     group: "brand_interaction",
-    derived: true,
   },
-  {
-    key: "progress_start",
+  progress_start: {
     label: _("Progress Start"),
     description: _("Leading color for progress meters."),
     group: "brand_interaction",
-    derived: true,
   },
-  {
-    key: "progress_end",
+  progress_end: {
     label: _("Progress End"),
     description: _("Trailing color for progress meters."),
     group: "brand_interaction",
-    derived: true,
   },
-  {
-    key: "info_surface",
+  info_surface: {
     label: _("Info Surface"),
     description: _(
       "Background for informational alerts, labels, and tooltips.",
     ),
     group: "status_surfaces",
-    derived: true,
   },
-  {
-    key: "warning_surface",
+  warning_surface: {
     label: _("Warning Surface"),
     description: _("Background for warning alerts, notices, and labels."),
     group: "status_surfaces",
-    derived: true,
   },
-  {
-    key: "success_surface",
+  success_surface: {
     label: _("Success Surface"),
     description: _("Background for success alerts and healthy-state labels."),
     group: "status_surfaces",
-    derived: true,
   },
-  {
-    key: "danger_surface",
+  danger_surface: {
     label: _("Danger Surface"),
     description: _(
       "Background for error alerts and destructive-action messages.",
     ),
     group: "status_surfaces",
-    derived: true,
   },
-  {
-    key: "danger_surface_hover",
+  danger_surface_hover: {
     label: _("Danger Surface Hover"),
     description: _("Hover fill for quiet destructive and delete controls."),
     group: "status_surfaces",
-    derived: true,
   },
-  {
-    key: "scrim",
+  scrim: {
     label: _("Scrim"),
     description: _("Dimming backdrop behind modal dialogs."),
     group: "hierarchy",
-    derived: true,
   },
-  {
-    key: "mega_menu_bg",
+  mega_menu_bg: {
     label: _("Mega Menu Background"),
     description: _("Opaque surface for the expanded mega menu and its header."),
     group: "hierarchy",
-    derived: true,
   },
-  {
-    key: "mega_menu_scrim",
+  mega_menu_scrim: {
     label: _("Mega Menu Scrim"),
     description: _("Light backdrop behind the expanded mega menu."),
     group: "hierarchy",
-    derived: true,
   },
-];
+};
 
 const COLOR_GROUPS = [
   {
@@ -387,7 +342,35 @@ const DERIVED_COLOR_GROUPS = [
   },
 ];
 
-const ALL_COLOR_TOKENS = COLOR_TOKENS.concat(DERIVED_COLOR_TOKENS);
+// Ordered token tables, joined from the AuroraTokens registry and the UI
+// metadata above once the engine scripts have loaded (colorLibraryReady).
+// Empty until then; load() awaits colorLibraryReady before building the form.
+let COLOR_TOKENS = [];
+let DERIVED_COLOR_TOKENS = [];
+let ALL_COLOR_TOKENS = [];
+
+const buildColorTokenTables = () => {
+  const fromMetadata = (keys, metadata, extra) =>
+    keys.map((key) => {
+      const meta = metadata[key];
+      if (!meta)
+        throw new Error(`missing color token metadata for "${key}"`);
+      return Object.assign({ key: key }, meta, extra);
+    });
+  const known = new Set(AuroraTokens.INPUTS.concat(AuroraTokens.DERIVED_KEYS));
+  const stale = Object.keys(COLOR_TOKEN_METADATA)
+    .concat(Object.keys(DERIVED_COLOR_TOKEN_METADATA))
+    .filter((key) => !known.has(key));
+  if (stale.length)
+    throw new Error(`stale color token metadata: ${stale.join(", ")}`);
+  COLOR_TOKENS = fromMetadata(AuroraTokens.INPUTS, COLOR_TOKEN_METADATA, {});
+  DERIVED_COLOR_TOKENS = fromMetadata(
+    AuroraTokens.DERIVED_KEYS,
+    DERIVED_COLOR_TOKEN_METADATA,
+    { derived: true },
+  );
+  ALL_COLOR_TOKENS = COLOR_TOKENS.concat(DERIVED_COLOR_TOKENS);
+};
 const COLOR_FORMAT_HELP = _(
   "Fields accept #hex, rgb(), hsl(), lab(), and oklch(). The picker fills hex; other formats can be typed.",
 );
@@ -1483,9 +1466,14 @@ return view.extend({
   },
 
   load: function () {
+    // colorLibraryReady must settle before the form builds: the token tables
+    // (COLOR_TOKENS et al.) are joined from the AuroraTokens registry once the
+    // engine scripts load. A load failure rejects here instead of silently
+    // rendering a page with no derived-token preview.
     return Promise.all([
       uci.load("aurora"),
       L.resolveDefault(callGetInitData(), {}),
+      colorLibraryReady,
     ]).then(([uciData, initData]) => {
       // Theme config comes from the uci cache populated by uci.load("aurora")
       // above, so no separate theme-config RPC is needed.

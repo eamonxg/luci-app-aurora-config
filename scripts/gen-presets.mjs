@@ -25,51 +25,27 @@ const sandbox = { console };
 vm.createContext(sandbox);
 vm.runInContext(readFileSync(resolve(RES, "color.global.js"), "utf8"), sandbox);
 vm.runInContext(readFileSync(resolve(RES, "tokens.global.js"), "utf8"), sandbox);
-const { resolve: resolveTokens, INPUTS } = sandbox.AuroraTokens;
+const { resolve: resolveTokens, INPUTS, DEFAULTS } = sandbox.AuroraTokens;
 
 const toRuntimeColor = (value) =>
   new sandbox.Color(value).to("srgb").toString({ format: "hex" }).toLowerCase();
 
-// Shared status accents + on_brand (theme defaults); only surface/identity
-// inputs vary per preset. The theme refresh moved status inputs to "content"
-// semantics, so these are the accent colours, not surfaces.
+// Shared status accents (theme defaults); only surface/identity inputs vary
+// per preset. The theme refresh moved status inputs to "content" semantics,
+// so these are the accent colours, not surfaces.
+const statusKeys = ["info", "warning", "success", "danger"];
 const STATUS = {
-  light: {
-    info: "oklch(0.45 0.12 255)",
-    warning: "oklch(0.35 0.08 60)",
-    success: "oklch(0.32 0.09 165)",
-    danger: "oklch(0.35 0.12 25)",
-  },
-  dark: {
-    info: "oklch(0.8 0.11 255)",
-    warning: "oklch(0.82 0.13 80)",
-    success: "oklch(0.72 0.13 158)",
-    danger: "oklch(0.7 0.16 22)",
-  },
+  light: Object.fromEntries(statusKeys.map((k) => [k, DEFAULTS.light[k]])),
+  dark: Object.fromEntries(statusKeys.map((k) => [k, DEFAULTS.dark[k]])),
 };
 
 // canvas -> bg, content -> text; the old surface_raised (panel colour) becomes
-// the new single `surface`. on_brand is per-preset.
+// the new single `surface`. on_brand is per-preset. The default preset IS the
+// theme's baked defaults, so it comes straight from the registry.
 const PRESETS = {
   default: {
-    light: {
-      bg: "oklch(0.967 0.003 264)",
-      surface: "oklch(1 0 0)",
-      text: "oklch(0.21 0.02 264)",
-      brand: "oklch(0.58 0.14 233)",
-      on_brand: "oklch(1 0 0)",
-      link: "oklch(0.74 0.238 322.16)",
-      ...STATUS.light,
-    },
-    dark: {
-      bg: "oklch(0.13 0.018 264)",
-      surface: "oklch(0.21 0.02 264)",
-      text: "oklch(0.985 0.002 264)",
-      brand: "oklch(0.6 0.13 188.745)",
-      on_brand: "oklch(1 0 0)",
-      link: "oklch(0.77 0.14 168)",
-      ...STATUS.dark,
-    },
+    light: { ...DEFAULTS.light },
+    dark: { ...DEFAULTS.dark },
   },
   "sage-green": {
     light: {

@@ -18,23 +18,30 @@ async function loadAuroraTokens() {
   return sandbox.AuroraTokens;
 }
 
-function extractTokenArrayKeys(source, arrayName) {
-  const match = source.match(new RegExp(`const ${arrayName} = \\[([\\s\\S]*?)\\];`));
-  assert.ok(match, `${arrayName} is declared`);
-  return Array.from(match[1].matchAll(/key:\s*"([^"]+)"/g)).map(
-    ([, key]) => key,
+function extractMetadataKeys(source, mapName) {
+  const match = source.match(
+    new RegExp(`const ${mapName} = \\{([\\s\\S]*?)\\n\\};`),
   );
+  assert.ok(match, `${mapName} is declared`);
+  return Array.from(match[1].matchAll(/^  (\w+): \{/gm)).map(([, key]) => key);
 }
 
-test("theme metadata exposes every derived token from the shared token engine", async () => {
+// The token tables are joined at runtime from the AuroraTokens registry and
+// the metadata maps (buildColorTokenTables throws on mismatch); this catches
+// the drift at test time instead of page-load time.
+test("theme metadata covers exactly the tokens in the shared token engine", async () => {
   const [auroraTokens, themeSource] = await Promise.all([
     loadAuroraTokens(),
     readFile(resolve("htdocs/luci-static/resources/view/aurora/theme.js"), "utf8"),
   ]);
 
   assert.deepEqual(
-    extractTokenArrayKeys(themeSource, "DERIVED_COLOR_TOKENS"),
-    Array.from(auroraTokens.DERIVED_KEYS),
+    extractMetadataKeys(themeSource, "COLOR_TOKEN_METADATA").sort(),
+    Array.from(auroraTokens.INPUTS).sort(),
+  );
+  assert.deepEqual(
+    extractMetadataKeys(themeSource, "DERIVED_COLOR_TOKEN_METADATA").sort(),
+    Array.from(auroraTokens.DERIVED_KEYS).sort(),
   );
 });
 
@@ -56,12 +63,12 @@ test("theme editor writes runtime colors in browser-compatible hex form", async 
   );
   assert.match(
     source,
-    /document\.documentElement\.style\.setProperty\(property, toRuntimeColor\(/,
+    /document\.documentElement\.style\.setProperty\(\s*property,\s*toRuntimeColor\(/,
     "live preview serializes custom properties before setting them",
   );
   assert.match(
     source,
-    /uci\.set\("aurora", "theme", `\$\{mode\}_\$\{key\}`, toRuntimeColor\(/,
+    /uci\.set\(\s*"aurora",\s*"theme",\s*`\$\{mode\}_\$\{key\}`,\s*toRuntimeColor\(/,
     "derived token snapshots are serialized before writing UCI",
   );
 });
