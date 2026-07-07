@@ -96,7 +96,9 @@ test("color-tokens.conf lists exactly the engine's tokens, inputs first", async 
 // Rerun sync-tokens in --check mode and fail on drift, so neither a stale
 // vendor nor a hand-edit can land unnoticed. Falls back to building from the
 // sibling aurora-tokens checkout when the registry is unreachable (sync-tokens
-// does this internally); skips only when neither source is available.
+// does this internally); skips only on transient network/server failures --
+// a 4xx (e.g. 404 for an unpublished pin) means the pin itself is broken and
+// must FAIL, not skip.
 test("vendored token artifacts are in sync with the pinned package", async (t) => {
   try {
     await promisify(execFile)(process.execPath, [
@@ -104,8 +106,9 @@ test("vendored token artifacts are in sync with the pinned package", async (t) =
       "--check",
     ]);
   } catch (error) {
-    if (/HTTP |fetch failed|ENOTFOUND/.test(String(error?.stderr ?? error))) {
-      t.skip("registry unreachable and no sibling theme checkout");
+    const message = String(error?.stderr ?? error);
+    if (/HTTP 5\d\d|fetch failed|ENOTFOUND|ECONNREFUSED|ETIMEDOUT/.test(message)) {
+      t.skip("registry unreachable and no sibling aurora-tokens checkout");
       return;
     }
     throw error;

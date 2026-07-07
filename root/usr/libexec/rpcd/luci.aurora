@@ -29,6 +29,14 @@ readonly COLOR_TOKEN_KEYS="$(grep -v '^#' "$COLOR_TOKENS_FILE" 2>/dev/null)"
 # both light_ and dark_ variants). Derived once from COLOR_TOKEN_KEYS.
 PRESET_EXPECTED_COUNT=$(( $(printf '%s\n' $COLOR_TOKEN_KEYS | grep -c .) * 2 ))
 
+# Fail fast when the shipped key list is missing or empty: with zero keys the
+# expected-count check degrades to 0==0, so preset/import validation would
+# vacuously succeed while writing no color keys at all. Called by every method
+# that consumes COLOR_TOKEN_KEYS before it validates anything.
+require_color_token_keys() {
+	[ "$PRESET_EXPECTED_COUNT" -gt 0 ]
+}
+
 # Populated by load_preset_snapshot() with newline-separated "key=value" pairs
 # for the requested preset; reused for both validation and emission so the
 # template is parsed a single time.
@@ -669,6 +677,12 @@ json_add_icons() {
 json_add_theme_preset_snapshot() {
 	local name="$1" template key value
 
+	require_color_token_keys || {
+		json_add_int "result" 1
+		json_add_string "error" "Missing or empty $COLOR_TOKENS_FILE"
+		return
+	}
+
 	name=$(normalize_preset_name "$name")
 	template=$(resolve_preset_path "$name") || {
 		json_add_int "result" 1
@@ -832,6 +846,11 @@ case "$1" in
 		read -r input; json_load "$input"; json_get_var name "name"; json_cleanup
 		name=$(normalize_preset_name "$name")
 
+		require_color_token_keys || {
+			echo '{ "result": 1, "error": "Missing or empty /usr/share/aurora/color-tokens.conf" }'
+			exit 0
+		}
+
 		template=$(resolve_preset_path "$name") || {
 			echo '{ "result": 1, "error": "Unknown preset" }'
 			exit 0
@@ -891,7 +910,9 @@ case "$1" in
 		;;
 
 	"import_config")
-		if [ ! -f "$IMPORT_CONFIG_TMP" ]; then
+		if ! require_color_token_keys; then
+			echo '{ "result": 1, "error": "Missing or empty /usr/share/aurora/color-tokens.conf" }'
+		elif [ ! -f "$IMPORT_CONFIG_TMP" ]; then
 			echo '{ "result": 1, "error": "Upload file not found" }'
 		else
 			if grep -Eq "^config[[:space:]]+aurora" "$IMPORT_CONFIG_TMP" 2>/dev/null \
