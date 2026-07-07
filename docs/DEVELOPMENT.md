@@ -117,17 +117,16 @@ Overrides the baked defaults in _tokens.css → user's palette renders
 
 ### 3.4 Single source of truth
 
-The token model is layered across two npm packages (mechanism vs. policy):
+The token model lives in one npm package:
 
-- **`@eamonxg/token-engine`** ([repo](https://github.com/eamonxg/token-engine))
-  — the five operators + spec-driven resolver, shared by luci-theme-aurora,
-  luci-theme-shadcn, and the aurora-tokens package.
 - **`@eamonxg/aurora-tokens`** ([repo](https://github.com/eamonxg/aurora-tokens))
   — an independent repo with its own semver, published from its own root. It
-  owns the aurora spec (`spec.js`/`defaults.js`) and ships the prebuilt
-  browser global `dist/tokens.global.js` (engine + spec, with colorjs.io
-  aliased to the page's global `Color`). `luci-theme-aurora` and this repo are
-  both just consumers of it.
+  owns the engine (the five operators + spec-driven resolver, also exported
+  standalone as `@eamonxg/aurora-tokens/engine`) and the aurora spec
+  (`spec.js`/`defaults.js`), and ships the prebuilt browser global
+  `dist/tokens.global.js` (engine + spec, with colorjs.io aliased to the
+  page's global `Color`). `luci-theme-aurora` and this repo are both just
+  consumers of it.
 
 This repo **vendors** that package by the exact version pinned in
 `package.json` — `scripts/sync-tokens.mjs` refreshes:
