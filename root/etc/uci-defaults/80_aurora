@@ -29,7 +29,11 @@ readonly LOG_TAG="aurora"
 #     wholesale with the active template. ALL prior customisation (colours,
 #     fonts, toolbar items, nav mode, icon, logo/favicon) is discarded so every
 #     upgraded device lands on the new defaults.
-readonly SCHEMA_VERSION="5"
+# v6: link now defaults to the brand colour in both modes (aurora-tokens
+#     1.0.1). Seeded v5 snapshots still carry the legacy magenta/teal link,
+#     which header.ut would keep injecting over the new CSS defaults; per the
+#     v5 policy the mismatch triggers a full reset to the active template.
+readonly SCHEMA_VERSION="6"
 
 log() {
     logger -t "$LOG_TAG" "$1"
