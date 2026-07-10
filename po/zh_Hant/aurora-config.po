@@ -47,7 +47,7 @@ msgstr "動作"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2708
 msgid "Add shortcuts, assign icons, and drag rows to reorder them."
-msgstr "新增捷徑、指定圖示，並拖曳行以重新排序。"
+msgstr "新增捷徑、指定圖示，並拖曳各列以重新排序。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1537
 msgid "Amber Sand"
@@ -73,7 +73,7 @@ msgstr "套用"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1614
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1618
 msgid "Apply Preset"
-msgstr "套用預設"
+msgstr "套用預設組"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1655
 msgid "Apply failed: %s"
@@ -85,12 +85,12 @@ msgid ""
 "Presets set the light and dark colors only — layout, typography, branding, "
 "navigation, and toolbar are left unchanged."
 msgstr ""
-"立即套用「%s」預設嗎？這會立即儲存並重新載入網頁。預設僅設定亮色和暗色——版面"
-"配置、字體排版、品牌識別、導覽和工具列保持不變。"
+"立即套用「%s」預設組嗎？系統會立即儲存並重新載入頁面。預設組僅會設定亮色與暗"
+"色——版面配置、字體排版、品牌識別、導覽與工具列則維持不變。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1635
 msgid "Applying preset..."
-msgstr "正在套用預設..."
+msgstr "正在套用預設組..."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1634
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1785
@@ -105,14 +105,14 @@ msgstr "確定要將 <strong>%h</strong> 更新至版本 <strong>%h</strong> 嗎
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2527
 msgid "Asset Filename"
-msgstr "資源檔案名稱"
+msgstr "素材檔案名稱"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2551
 msgid ""
 "Assign uploaded images to icons, favicons, PWA metadata, and the login "
 "background. Saved on Save or Save & Apply."
 msgstr ""
-"將上傳的圖片指派給圖示、網站圖示、PWA 中介資料和登入背景。於儲存或儲存並套用"
+"將上傳的圖片指派給圖示、網站圖示、PWA 中繼資料和登入背景。於儲存或儲存並套用"
 "時生效。"
 
 #: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:3
@@ -157,7 +157,7 @@ msgstr "品牌"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2238
 msgid "Brand Asset Library"
-msgstr "品牌資源庫"
+msgstr "品牌素材庫"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:234
 msgid "Brand Hover"
@@ -189,7 +189,7 @@ msgstr "取消"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:348
 msgid "Canvas and panel surfaces that frame the interface."
-msgstr "構築介面框架的網頁畫布和面板表面。"
+msgstr "構成介面框架的頁面畫布與面板表面。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/version.js:388
 msgid "Check for Updates"
@@ -199,7 +199,7 @@ msgstr "檢查更新"
 msgid ""
 "Check for and install updates to the Aurora theme and configuration "
 "packages, pulled from their latest GitHub releases."
-msgstr "從最新的 GitHub Release 中獲取並安裝 Aurora 主題及設定套件的更新。"
+msgstr "從最新的 GitHub Release 中取得並安裝 Aurora 主題及設定套件的更新。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1750
 msgid "Checking file…"
@@ -217,7 +217,7 @@ msgstr "正在檢查..."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:965
 msgid "Choose a literal color for this token"
-msgstr "為此權杖選擇具體顏色"
+msgstr "為此變數選擇一個實際色彩"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2740
 msgid "Choose an uploaded icon for this shortcut"
@@ -293,12 +293,12 @@ msgid ""
 "Delete '%s' from /www/luci-static/aurora/images/? Theme settings that "
 "reference it may need updating."
 msgstr ""
-"確定要從 /www/luci-static/aurora/images/ 中刪除「%s」嗎？參照此資源的某些主題"
+"確定要從 /www/luci-static/aurora/images/ 中刪除「%s」嗎？參照此素材的某些主題"
 "設定可能需要更新。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2455
 msgid "Delete Brand Asset"
-msgstr "刪除品牌資源"
+msgstr "刪除品牌素材"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2484
 msgid "Deleted: %s"
@@ -310,20 +310,19 @@ msgstr "正在刪除…"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1050
 msgid "Derived Color Tokens"
-msgstr "衍生顏色權杖"
+msgstr "衍生色彩變數"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:371
 msgid ""
 "Derived from the brand color: hover states, subtle fills, focus rings, and "
 "progress meters."
-msgstr "衍生自品牌色：懸停狀態、微淡填滿、聚焦環和進度指示器。"
+msgstr "衍生自品牌色：懸停狀態、微淡填滿、聚焦環和進度列。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:378
 msgid ""
 "Derived from the canvas, surface, and text colors: muted and subtle text, "
 "borders, overlays, and menu layers."
-msgstr ""
-"衍生自網頁畫布、表面和文字顏色：低調與柔和文字、邊框、重疊層和功能表層。"
+msgstr "衍生自頁面畫布、表面和文字顏色：低調與柔和文字、邊框、覆蓋層和選單層。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:385
 msgid "Derived from the status accents: alert, label, and badge backgrounds."
@@ -331,7 +330,7 @@ msgstr "衍生自狀態強調色：提示、標籤和徽章背景色。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:324
 msgid "Dimming backdrop behind modal dialogs."
-msgstr "強制回應對話方塊背後的暗化背景 (遮罩)。"
+msgstr "彈出式對話方塊背後的暗化背景 (遮罩)。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/version.js:67
 msgid "Downloading update files..."
@@ -339,7 +338,7 @@ msgstr "正在下載更新檔案..."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2336
 msgid "Drop image asset here, or click to browse"
-msgstr "將圖片資源拖曳至此處，或點擊進行瀏覽"
+msgstr "將圖片素材拖曳至此處，或點擊進行瀏覽"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2013
 msgid "Dropdown"
@@ -467,7 +466,7 @@ msgstr "用於 iOS 和 iPadOS 的主畫面圖示。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:227
 msgid "Hover fill for menu items, table rows, and neutral controls."
-msgstr "用於功能表項目、表格列和中性控制項的懸停填滿色。"
+msgstr "用於選單項目、表格列和中性控制項的懸停填滿色。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:317
 msgid "Hover fill for quiet destructive and delete controls."
@@ -479,7 +478,7 @@ msgstr "用於柔和主按鈕和選取表面的懸停填滿色。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:236
 msgid "Hover state for filled primary buttons and high-emphasis controls."
-msgstr "用於實色填滿主按鈕和高強調度控制項的懸停狀態。"
+msgstr "用於實色填滿主按鈕和高強調控制項的懸停狀態。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:150
 msgid "Hyperlinks in page content, help text, and status output."
@@ -529,7 +528,7 @@ msgstr "資訊表面"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:204
 msgid "Inset layer for inputs, code blocks, table headers, and badges."
-msgstr "用於輸入框、程式碼區塊、表頭和徽章的內嵌層 (凹陷層)。"
+msgstr "用於輸入框、程式碼區塊、表頭與徽章的嵌入層。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/version.js:111
 msgid "Installation Details"
@@ -581,11 +580,11 @@ msgstr "版面配置與排版"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:271
 msgid "Leading color for progress meters."
-msgstr "進度指示器的前導色。"
+msgstr "進度列的起始顏色。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2578
 msgid "Legacy ICO favicon fallback."
-msgstr "傳統 ICO 網站圖示後備方案。"
+msgstr "傳統 ICO 網站圖示備用方案。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1986
 msgid "Light Mode"
@@ -593,7 +592,7 @@ msgstr "亮色模式"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:338
 msgid "Light backdrop behind the expanded mega menu."
-msgstr "展開的大型功能表背後的淺色背景。"
+msgstr "展開的大型選單背後的淺色背景。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:149
 msgid "Link"
@@ -609,7 +608,7 @@ msgstr "標誌 (SVG)"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:195
 msgid "Low-emphasis text for small labels, placeholders, and disabled hints."
-msgstr "用於小標籤、占位符和停用提示的低強調度文字。"
+msgstr "用於小標籤、預留位置和停用提示的低強調文字。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2045
 msgid "Maximum width of the centered content area."
@@ -617,19 +616,19 @@ msgstr "置中內容區域的最大寬度。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:186
 msgid "Medium-emphasis text for helper copy, metadata, and summaries."
-msgstr "用於說明文字、中介資料和摘要的中強調度文字。"
+msgstr "用於說明文字、中繼資料和摘要的中強調文字。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2012
 msgid "Mega Menu"
-msgstr "大型功能表"
+msgstr "大型選單"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:330
 msgid "Mega Menu Background"
-msgstr "大型功能表背景"
+msgstr "大型選單背景"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:337
 msgid "Mega Menu Scrim"
-msgstr "大型功能表遮罩"
+msgstr "大型選單遮罩"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1535
 msgid "Monochrome"
@@ -659,7 +658,7 @@ msgstr "導覽、間距、圓角半徑和內容寬度。於點擊「儲存並套
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2522
 msgid "No brand assets uploaded yet."
-msgstr "尚未上傳品牌資源。"
+msgstr "尚未上傳品牌素材。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1748
 msgid "No file selected or upload failed"
@@ -683,19 +682,19 @@ msgstr "品牌背景上的文字"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:331
 msgid "Opaque surface for the expanded mega menu and its header."
-msgstr "用於展開的大型功能表及其頁首的不透明表面。"
+msgstr "用於展開的大型選單及其頁首的不透明表面。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:359
 msgid "Operational Status Accents"
-msgstr "運行狀態強調色"
+msgstr "運作狀態強調色"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:211
 msgid "Overlay Surface"
-msgstr "重疊層表面"
+msgstr "覆蓋層表面"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2567
 msgid "PNG fallback when SVG favicons are unsupported."
-msgstr "當不支援 SVG 網站圖示時的 PNG 後備方案。"
+msgstr "當不支援 SVG 網站圖示時的 PNG 備用方案。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/version.js:394
 msgid "Package Name"
@@ -703,7 +702,7 @@ msgstr "套件名稱"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:113
 msgid "Page canvas behind the header, navigation, content, and login screen."
-msgstr "位於頁首、導覽、內容和登入畫面背後的網頁畫布。"
+msgstr "位於頁首、導覽、內容和登入畫面背後的頁面畫布。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2476
 msgid "Please wait…"
@@ -719,11 +718,11 @@ msgstr "正在準備所選字型..."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1906
 msgid "Preset"
-msgstr "預設"
+msgstr "預設組"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1645
 msgid "Preset applied successfully."
-msgstr "預設套用成功。"
+msgstr "預設組套用成功。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2526
 msgid "Preview"
@@ -733,7 +732,7 @@ msgstr "預覽"
 msgid ""
 "Primary font for all interface text — headings, body, menus, forms, and "
 "tables."
-msgstr "用於所有介面文字的主字型——標題、正文、功能表、表單和表格。"
+msgstr "用於所有介面文字的主字型——標題、正文、選單、表單和表格。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:277
 msgid "Progress End"
@@ -745,7 +744,7 @@ msgstr "進度起始點"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:212
 msgid "Raised layer for dropdowns, modals, and tooltips."
-msgstr "用於下拉選單、強制回應方塊和工具提示的懸浮層 (抬高層)。"
+msgstr "用於下拉選單、彈出式對話方塊和工具提示的懸浮層 (抬高層)。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/version.js:355
 msgid "Releases:"
@@ -758,7 +757,7 @@ msgstr "重新載入"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1888
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1894
 msgid "Reset"
-msgstr "重置"
+msgstr "重設"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1850
 msgid ""
@@ -766,18 +765,18 @@ msgid ""
 "typography, branding, navigation, and toolbar. Uploaded images stay on disk; "
 "custom selections not in the Default preset are cleared."
 msgstr ""
-"將 /etc/config/aurora 重置為內建的「預設」預設——包含顏色、版面配置、字體排"
-"版、品牌識別、導覽和工具列。已上傳的圖片將保留在磁碟上，不在預設預設中的自訂"
-"選擇將被清除。"
+"將 /etc/config/aurora 還原為套件內建的預設組「預設」——包含色彩、版面配置、字"
+"體排版、品牌識別、導覽與工具列。已上傳的圖片會保留在磁碟上；不在此預設組中的"
+"自訂項目將會清除。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1843
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1845
 msgid "Reset All Aurora Settings"
-msgstr "重置所有 Aurora 設定"
+msgstr "重設所有 Aurora 設定"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1861
 msgid "Resetting..."
-msgstr "正在重置..."
+msgstr "正在重設..."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:744
 msgid "Resolved color"
@@ -797,7 +796,7 @@ msgstr "正在恢復..."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2557
 msgid "SVG mark for the browser tab and login page."
-msgstr "用於瀏覽器標籤頁 and 登入頁面的 SVG 標誌。"
+msgstr "用於瀏覽器分頁與登入頁面的 SVG 標誌。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1536
 msgid "Sage Green"
@@ -809,7 +808,7 @@ msgstr "無襯線字型"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:958
 msgid "Saved or preset value"
-msgstr "已儲存值或預設值"
+msgstr "已儲存或來自預設組的值"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:323
 msgid "Scrim"
@@ -821,7 +820,7 @@ msgstr "分隔線、分隔符號以及輸入框或卡片的邊框。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1871
 msgid "Settings reset successfully."
-msgstr "設定重置成功。"
+msgstr "設定重設成功。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2722
 msgid "Shortcut Label"
@@ -849,7 +848,7 @@ msgstr "側邊欄"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2549
 msgid "Site Branding"
-msgstr "站點品牌識別"
+msgstr "網站品牌識別"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1538
 msgid "Sky Blue"
@@ -857,7 +856,7 @@ msgstr "天藍色"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1036
 msgid "Source Color Tokens"
-msgstr "源顏色權杖"
+msgstr "來源色彩變數"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2021
 msgid "Spacing Scale"
@@ -924,8 +923,8 @@ msgid ""
 "The 10 source tokens that drive the theme. Changes preview here instantly; "
 "Save or Save & Apply persists them."
 msgstr ""
-"驅動整個主題的 10 個源權杖。變更會在此處即時預覽，點擊「儲存」或「儲存並套"
-"用」後持久化。"
+"驅動整個主題的 10 個來源變數。變更會在此即時預覽，按「儲存」或「儲存並套用」"
+"後永久保存。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/version.js:363
 msgid "Theme"
@@ -949,8 +948,8 @@ msgid ""
 "automatic value; enter a color only to override it. Changes preview here "
 "instantly; Save or Save & Apply persists them."
 msgstr ""
-"根據源顏色計算出的權杖。將欄位留空將保持其自動計算值，輸入顏色則會進行覆蓋。"
-"變更會在此處即時預覽，點擊「儲存」或「儲存並套用」後持久化。"
+"根據來源色彩計算而來的變數。欄位留空即保留其自動計算的數值，輸入色彩則予以覆"
+"寫。變更會在此即時預覽，按「儲存」或「儲存並套用」後永久保存。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2707
 msgid "Toolbar Shortcuts"
@@ -958,7 +957,7 @@ msgstr "工具列快捷方式"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:278
 msgid "Trailing color for progress meters."
-msgstr "進度指示器的後隨色。"
+msgstr "進度列的結尾顏色。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2058
 msgid "Typography"
@@ -1038,7 +1037,7 @@ msgid ""
 "Upload and manage images for icons, favicons, PWA assets, and the login "
 "background. Files are stored in <code>/www/luci-static/aurora/images/</code>."
 msgstr ""
-"上傳並管理圖示、網站圖示、PWA 資源和登入背景的圖片。檔案將儲存在 <code>/www/"
+"上傳並管理圖示、網站圖示、PWA 素材和登入背景的圖片。檔案將儲存在 <code>/www/"
 "luci-static/aurora/images/</code> 中。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2399
