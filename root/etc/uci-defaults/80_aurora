@@ -33,7 +33,14 @@ readonly LOG_TAG="aurora"
 #     1.0.1). Seeded v5 snapshots still carry the legacy magenta/teal link,
 #     which header.ut would keep injecting over the new CSS defaults; per the
 #     v5 policy the mismatch triggers a full reset to the active template.
-readonly SCHEMA_VERSION="6"
+# v7: light-mode relight to the "snow x blue hour" palette (aurora-tokens
+#     1.1.0, refined in 1.2.x: icy recessed fills, snow panel, control_bg
+#     + app_opacity_disabled): cool 235deg neutrals, purified status hues
+#     and a cool blue-black menu scrim. Seeded v6 snapshots carry the old
+#     264deg purple-grey light tokens, which header.ut would keep injecting
+#     over the new CSS defaults; per the v5 policy the mismatch triggers a
+#     full reset to the active template.
+readonly SCHEMA_VERSION="7"
 
 log() {
     logger -t "$LOG_TAG" "$1"

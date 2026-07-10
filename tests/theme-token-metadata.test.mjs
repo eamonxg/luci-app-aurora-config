@@ -98,7 +98,7 @@ test("preset templates store runtime-compatible hex colors", async () => {
       .split("\n")
       .filter((line) => /^\s*option\s+(light|dark)_/.test(line));
 
-    assert.equal(colorLines.length, 60, `${file} has 30 light + 30 dark colors`);
+    assert.equal(colorLines.length, 62, `${file} has 31 light + 31 dark colors`);
     for (const line of colorLines) {
       assert.match(
         line,

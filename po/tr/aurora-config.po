@@ -1,5 +1,5 @@
 msgid ""
-msgstr "Content-Type: text/plain; charset=UTF-8"
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2737
 msgid "(No icons uploaded)"
@@ -27,7 +27,8 @@ msgstr "Bilgilendirme uyarıları, etiketler ve araç ipuçları için vurgu ren
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:137
 msgid "Accent for primary buttons, active navigation, and selected states."
-msgstr "Birincil düğmeler, aktif navigasyon ve seçili durumlar için vurgu rengi."
+msgstr ""
+"Birincil düğmeler, aktif navigasyon ve seçili durumlar için vurgu rengi."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:168
 msgid "Accent for successful operations and healthy status."
@@ -47,7 +48,9 @@ msgstr "Eylemler"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2708
 msgid "Add shortcuts, assign icons, and drag rows to reorder them."
-msgstr "Kısayollar ekleyin, simgeler atayın ve satırları yeniden sıralamak için sürükleyin."
+msgstr ""
+"Kısayollar ekleyin, simgeler atayın ve satırları yeniden sıralamak için "
+"sürükleyin."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1537
 msgid "Amber Sand"
@@ -84,7 +87,10 @@ msgid ""
 "Apply the '%s' preset now? It is saved immediately and the page reloads. "
 "Presets set the light and dark colors only — layout, typography, branding, "
 "navigation, and toolbar are left unchanged."
-msgstr "'%s' hazır ayarı şimdi uygulansın mı? Hemen kaydedilir ve sayfa yeniden yüklenir. Hazır ayarlar yalnızca açık ve koyu renkleri ayarlar — düzen, tipografi, markalama, navigasyon ve araç çubuğu değişmeden kalır."
+msgstr ""
+"'%s' hazır ayarı şimdi uygulansın mı? Hemen kaydedilir ve sayfa yeniden "
+"yüklenir. Hazır ayarlar yalnızca açık ve koyu renkleri ayarlar — düzen, "
+"tipografi, markalama, navigasyon ve araç çubuğu değişmeden kalır."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1635
 msgid "Applying preset..."
@@ -97,8 +103,11 @@ msgstr "Uygulanıyor..."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/version.js:38
 msgid ""
-"Are you sure you want to update <strong>%h</strong> to version <strong>%h</strong>?"
-msgstr "<strong>%h</strong> sürümünü <strong>%h</strong> sürümüne güncellemek istediğinizden emin misiniz?"
+"Are you sure you want to update <strong>%h</strong> to version <strong>%h</"
+"strong>?"
+msgstr ""
+"<strong>%h</strong> sürümünü <strong>%h</strong> sürümüne güncellemek "
+"istediğinizden emin misiniz?"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2527
 msgid "Asset Filename"
@@ -108,7 +117,9 @@ msgstr "Varlık Dosya Adı"
 msgid ""
 "Assign uploaded images to icons, favicons, PWA metadata, and the login "
 "background. Saved on Save or Save & Apply."
-msgstr "Yüklenen görselleri simgelere, favicon'lara, PWA meta verilerine ve giriş arka planına atayın. Kaydet veya Kaydet ve Uygula tıklandığında kaydedilir."
+msgstr ""
+"Yüklenen görselleri simgelere, favicon'lara, PWA meta verilerine ve giriş "
+"arka planına atayın. Kaydet veya Kaydet ve Uygula tıklandığında kaydedilir."
 
 #: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:3
 msgid "Aurora Settings"
@@ -144,7 +155,8 @@ msgstr "Uyarılar, bildirimler ve etiketler için arka plan."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:121
 msgid "Base surface for panels, cards, forms, tables, and neutral controls."
-msgstr "Paneller, kartlar, formlar, tablolar ve nötr kontroller için temel yüzey."
+msgstr ""
+"Paneller, kartlar, formlar, tablolar ve nötr kontroller için temel yüzey."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:135
 msgid "Brand"
@@ -194,7 +206,9 @@ msgstr "Güncellemeleri Denetle"
 msgid ""
 "Check for and install updates to the Aurora theme and configuration "
 "packages, pulled from their latest GitHub releases."
-msgstr "En son GitHub sürümlerinden çekilen Aurora teması ve yapılandırma paketleri için güncellemeleri denetleyin ve yükleyin."
+msgstr ""
+"En son GitHub sürümlerinden çekilen Aurora teması ve yapılandırma paketleri "
+"için güncellemeleri denetleyin ve yükleyin."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1750
 msgid "Checking file…"
@@ -246,6 +260,10 @@ msgstr "Yapılandırma başarıyla içe aktarıldı."
 msgid "Content Max Width"
 msgstr "Maksimum İçerik Genişliği"
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:204
+msgid "Control Fill"
+msgstr "Denetim dolgusu"
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2032
 msgid "Corner Radius"
 msgstr "Köşe Yarıçapı"
@@ -272,7 +290,8 @@ msgstr "Varsayılan"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:129
 msgid "Default foreground for headings, body text, icons, and form values."
-msgstr "Başlıklar, gövde metni, simgeler ve form değerleri için varsayılan ön plan."
+msgstr ""
+"Başlıklar, gövde metni, simgeler ve form değerleri için varsayılan ön plan."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2503
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2509
@@ -283,7 +302,9 @@ msgstr "Sil"
 msgid ""
 "Delete '%s' from /www/luci-static/aurora/images/? Theme settings that "
 "reference it may need updating."
-msgstr "'%s' dosyası /www/luci-static/aurora/images/? dizininden silinsin mi? Buna atıfta bulunan tema ayarlarının güncellenmesi gerekebilir."
+msgstr ""
+"'%s' dosyası /www/luci-static/aurora/images/? dizininden silinsin mi? Buna "
+"atıfta bulunan tema ayarlarının güncellenmesi gerekebilir."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2455
 msgid "Delete Brand Asset"
@@ -305,17 +326,22 @@ msgstr "Türetilmiş Renk Tokenları"
 msgid ""
 "Derived from the brand color: hover states, subtle fills, focus rings, and "
 "progress meters."
-msgstr "Marka renginden türetilenler: üzerine gelme durumları, ince dolgular, odak halkaları ve ilerleme ölçerler."
+msgstr ""
+"Marka renginden türetilenler: üzerine gelme durumları, ince dolgular, odak "
+"halkaları ve ilerleme ölçerler."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:378
 msgid ""
 "Derived from the canvas, surface, and text colors: muted and subtle text, "
 "borders, overlays, and menu layers."
-msgstr "Tuval, yüzey ve metin renklerinden türetilenler: mat ve hafif metinler, kenarlıklar, katmanlar ve menü katmanları."
+msgstr ""
+"Tuval, yüzey ve metin renklerinden türetilenler: mat ve hafif metinler, "
+"kenarlıklar, katmanlar ve menü katmanları."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:385
 msgid "Derived from the status accents: alert, label, and badge backgrounds."
-msgstr "Durum vurgularından türetilenler: alarm, etiket ve rozet arka planları."
+msgstr ""
+"Durum vurgularından türetilenler: alarm, etiket ve rozet arka planları."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:324
 msgid "Dimming backdrop behind modal dialogs."
@@ -393,7 +419,13 @@ msgstr "Favicon (PNG)"
 msgid ""
 "Fields accept #hex, rgb(), hsl(), lab(), and oklch(). The picker fills hex; "
 "other formats can be typed."
-msgstr "Alanlar #hex, rgb(), hsl(), lab() ve oklch() formatlarını kabul eder. Seçici hex formatını doldurur; diğer formatlar manuel yazılabilir."
+msgstr ""
+"Alanlar #hex, rgb(), hsl(), lab() ve oklch() formatlarını kabul eder. Seçici "
+"hex formatını doldurur; diğer formatlar manuel yazılabilir."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:206
+msgid "Fill for form controls: inputs, selects, textareas, and checkboxes."
+msgstr "Form denetimlerinin dolgusu: girişler, seçimler, metin alanları ve onay kutuları."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2688
 msgid "Floating shortcut launcher shown along the right edge of the interface."
@@ -405,7 +437,9 @@ msgstr "Odak Halkası"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:263
 msgid "Focus outline for inputs, selects, and keyboard-operated controls."
-msgstr "Girdiler, seçim alanları ve klavye ile kontrol edilen öğeler için odak çerçevesi."
+msgstr ""
+"Girdiler, seçim alanları ve klavye ile kontrol edilen öğeler için odak "
+"çerçevesi."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2146
 msgid "Font CSS file is empty"
@@ -429,11 +463,13 @@ msgstr "Tam ekran giriş sayfası arka planı; geniş bir görsel kullanın."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2034
 msgid "Base corner radius applied to buttons, inputs, cards, and surfaces."
-msgstr "Düğmelere, girdilere, kartlara ve yüzeylere uygulanan temel köşe yarıçapı."
+msgstr ""
+"Düğmelere, girdilere, kartlara ve yüzeylere uygulanan temel köşe yarıçapı."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2023
 msgid "Base spacing unit that scales padding and gaps across the interface."
-msgstr "Arayüz genelinde iç boşluk ve aralıkları ölçekleyen temel boşluk birimi."
+msgstr ""
+"Arayüz genelinde iç boşluk ve aralıkları ölçekleyen temel boşluk birimi."
 
 #: applications/luci-app-aurora-config/root/usr/share/rpcd/acl.d/luci-app-aurora.json:3
 msgid "Grant access to Aurora theme configuration"
@@ -449,7 +485,8 @@ msgstr "iOS ve iPadOS için Ana Ekran simgesi."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:227
 msgid "Hover fill for menu items, table rows, and neutral controls."
-msgstr "Menü öğeleri, tablo satırları ve nötr kontroller için üzerine gelme dolgusu."
+msgstr ""
+"Menü öğeleri, tablo satırları ve nötr kontroller için üzerine gelme dolgusu."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:317
 msgid "Hover fill for quiet destructive and delete controls."
@@ -461,7 +498,9 @@ msgstr "Hafif birincil düğmeler ve seçili yüzeyler için üzerine gelme dolg
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:236
 msgid "Hover state for filled primary buttons and high-emphasis controls."
-msgstr "Dolu birincil düğmeler ve yüksek vurgulu kontroller için üzerine gelme durumu."
+msgstr ""
+"Dolu birincil düğmeler ve yüksek vurgulu kontroller için üzerine gelme "
+"durumu."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:150
 msgid "Hyperlinks in page content, help text, and status output."
@@ -493,7 +532,9 @@ msgstr "İçe aktarma başarısız oldu: %s"
 msgid ""
 "Importing replaces /etc/config/aurora, applies all settings, and reloads the "
 "page. Uploaded images stay on disk."
-msgstr "İçe aktarma işlemi /etc/config/aurora dosyasını değiştirir, tüm ayarları uygular ve sayfayı yeniden yükler. Yüklenen görseller diskte kalır."
+msgstr ""
+"İçe aktarma işlemi /etc/config/aurora dosyasını değiştirir, tüm ayarları "
+"uygular ve sayfayı yeniden yükler. Yüklenen görseller diskte kalır."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1784
 msgid "Importing..."
@@ -531,7 +572,9 @@ msgstr "Arayüz Hiyerarşisi"
 msgid ""
 "Sans-serif and monospace typefaces used across the theme. Save or Save & "
 "Apply downloads and caches the selected fonts."
-msgstr "Tema genelinde kullanılan sans-serif and monospace yazı tipleri. Kaydet veya Kaydet ve Uygula seçeneği seçilen yazı tiplerini indirir ve önbelleğe alır."
+msgstr ""
+"Tema genelinde kullanılan sans-serif and monospace yazı tipleri. Kaydet veya "
+"Kaydet ve Uygula seçeneği seçilen yazı tiplerini indirir ve önbelleğe alır."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:888
 msgid "Invalid color expression."
@@ -587,7 +630,9 @@ msgstr "Logo (SVG)"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:195
 msgid "Low-emphasis text for small labels, placeholders, and disabled hints."
-msgstr "Küçük etiketler, yer tutucular ve devre dışı bırakılmış ipuçları için düşük vurgulu metin."
+msgstr ""
+"Küçük etiketler, yer tutucular ve devre dışı bırakılmış ipuçları için düşük "
+"vurgulu metin."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2045
 msgid "Maximum width of the centered content area."
@@ -633,7 +678,9 @@ msgstr "Birincil navigasyon menüsü için düzen şablonu."
 msgid ""
 "Navigation, spacing, corner radius, and content width. Takes effect after "
 "Save & Apply."
-msgstr "Navigasyon, boşluklar, köşe yarıçapı ve içerik genişliği. Kaydet ve Uygula yapıldıktan sonra geçerli olur."
+msgstr ""
+"Navigasyon, boşluklar, köşe yarıçapı ve içerik genişliği. Kaydet ve Uygula "
+"yapıldıktan sonra geçerli olur."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2522
 msgid "No brand assets uploaded yet."
@@ -681,7 +728,8 @@ msgstr "Paket Adı"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:113
 msgid "Page canvas behind the header, navigation, content, and login screen."
-msgstr "Üstbilgi, navigasyon, içerik ve giriş ekranının arkasındaki sayfa tuvali."
+msgstr ""
+"Üstbilgi, navigasyon, içerik ve giriş ekranının arkasındaki sayfa tuvali."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2476
 msgid "Please wait…"
@@ -711,7 +759,9 @@ msgstr "Önizleme"
 msgid ""
 "Primary font for all interface text — headings, body, menus, forms, and "
 "tables."
-msgstr "Tüm arayüz metinleri için birincil yazı tipi — başlıklar, gövde, menüler, formlar ve tablolar."
+msgstr ""
+"Tüm arayüz metinleri için birincil yazı tipi — başlıklar, gövde, menüler, "
+"formlar ve tablolar."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:277
 msgid "Progress End"
@@ -743,7 +793,11 @@ msgid ""
 "Reset /etc/config/aurora to the packaged Default preset — colors, layout, "
 "typography, branding, navigation, and toolbar. Uploaded images stay on disk; "
 "custom selections not in the Default preset are cleared."
-msgstr "Anakart üzerindeki /etc/config/aurora dosyasını paket içeriğindeki Varsayılan hazır ayara sıfırlayın — renkler, düzen, tipografi, markalama, navigasyon ve araç çubuğu. Yüklenen görseller diskte kalır; Varsayılan hazır ayarda bulunmayan özel seçimler temizlenir."
+msgstr ""
+"Anakart üzerindeki /etc/config/aurora dosyasını paket içeriğindeki "
+"Varsayılan hazır ayara sıfırlayın — renkler, düzen, tipografi, markalama, "
+"navigasyon ve araç çubuğu. Yüklenen görseller diskte kalır; Varsayılan hazır "
+"ayarda bulunmayan özel seçimler temizlenir."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1843
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1845
@@ -898,7 +952,9 @@ msgstr "Metin, Bağlantılar ve Marka"
 msgid ""
 "The 10 source tokens that drive the theme. Changes preview here instantly; "
 "Save or Save & Apply persists them."
-msgstr "Temayı yönlendiren 10 kaynak token. Değişiklikler burada anında önizlenir; Kaydet veya Kaydet ve Uygula bunları kalıcı hale getirir."
+msgstr ""
+"Temayı yönlendiren 10 kaynak token. Değişiklikler burada anında önizlenir; "
+"Kaydet veya Kaydet ve Uygula bunları kalıcı hale getirir."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/version.js:363
 msgid "Theme"
@@ -921,7 +977,11 @@ msgid ""
 "Tokens computed from the source colors. Leave a field empty to keep its "
 "automatic value; enter a color only to override it. Changes preview here "
 "instantly; Save or Save & Apply persists them."
-msgstr "Kaynak renklerden hesaplanan tokenlar. Otomatik değerini korumak için bir alanı boş bırakın; geçersiz kılmak için yalnızca bir renk girin. Değişiklikler burada anında önizlenir; Kaydet veya Kaydet ve Uygula bunları kalıcı hale getirir."
+msgstr ""
+"Kaynak renklerden hesaplanan tokenlar. Otomatik değerini korumak için bir "
+"alanı boş bırakın; geçersiz kılmak için yalnızca bir renk girin. "
+"Değişiklikler burada anında önizlenir; Kaydet veya Kaydet ve Uygula bunları "
+"kalıcı hale getirir."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2707
 msgid "Toolbar Shortcuts"
@@ -992,7 +1052,10 @@ msgstr "Paketi Güncelle"
 msgid ""
 "Update complete. Reload to apply the changes. If the old version persists, "
 "clear your browser cache or use a private window."
-msgstr "Güncelleme tamamlandı. Değişiklikleri uygulamak için yeniden yükleyin. Eski sürüm görünmeye devam ederse, tarayıcı önbelleğinizi temizleyin veya gizli bir pencere kullanın."
+msgstr ""
+"Güncelleme tamamlandı. Değişiklikleri uygulamak için yeniden yükleyin. Eski "
+"sürüm görünmeye devam ederse, tarayıcı önbelleğinizi temizleyin veya gizli "
+"bir pencere kullanın."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/version.js:151
 msgid "Update failed: %s"
@@ -1006,7 +1069,10 @@ msgstr "Paket Güncelleniyor"
 msgid ""
 "Upload and manage images for icons, favicons, PWA assets, and the login "
 "background. Files are stored in <code>/www/luci-static/aurora/images/</code>."
-msgstr "Simgeler, favicon'lar, PWA varlıkları ve giriş arka planı için görseller yükleyin ve yönetin. Dosyalar <code>/www/luci-static/aurora/images/</code> dizininde saklanır."
+msgstr ""
+"Simgeler, favicon'lar, PWA varlıkları ve giriş arka planı için görseller "
+"yükleyin ve yönetin. Dosyalar <code>/www/luci-static/aurora/images/</code> "
+"dizininde saklanır."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2399
 msgid "Upload failed"

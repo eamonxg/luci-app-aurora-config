@@ -1,5 +1,5 @@
 msgid ""
-msgstr "Content-Type: text/plain; charset=UTF-8"
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2737
 msgid "(No icons uploaded)"
@@ -84,7 +84,9 @@ msgid ""
 "Apply the '%s' preset now? It is saved immediately and the page reloads. "
 "Presets set the light and dark colors only — layout, typography, branding, "
 "navigation, and toolbar are left unchanged."
-msgstr "立即应用“%s”预设吗？这将立即保存并重新加载页面。预设仅设置亮色和暗色——布局、排版、品牌标识、导航和工具栏保持不变。"
+msgstr ""
+"立即应用“%s”预设吗？这将立即保存并重新加载页面。预设仅设置亮色和暗色——布局、"
+"排版、品牌标识、导航和工具栏保持不变。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1635
 msgid "Applying preset..."
@@ -109,7 +111,9 @@ msgstr "资源文件名"
 msgid ""
 "Assign uploaded images to icons, favicons, PWA metadata, and the login "
 "background. Saved on Save or Save & Apply."
-msgstr "将上传的图片分配给图标、网站图标（Favicon）、PWA 元数据和登录背景。在点击“保存”或“保存并应用”时生效。"
+msgstr ""
+"将上传的图片分配给图标、网站图标（Favicon）、PWA 元数据和登录背景。在点击“保"
+"存”或“保存并应用”时生效。"
 
 #: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:3
 msgid "Aurora Settings"
@@ -247,6 +251,10 @@ msgstr "配置导入成功。"
 msgid "Content Max Width"
 msgstr "内容最大宽度"
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:204
+msgid "Control Fill"
+msgstr "控件填充"
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2032
 msgid "Corner Radius"
 msgstr "圆角半径"
@@ -284,7 +292,9 @@ msgstr "删除"
 msgid ""
 "Delete '%s' from /www/luci-static/aurora/images/? Theme settings that "
 "reference it may need updating."
-msgstr "确定要从 /www/luci-static/aurora/images/ 中删除“%s”吗？引用该资源的某些主题设置可能需要更新。"
+msgstr ""
+"确定要从 /www/luci-static/aurora/images/ 中删除“%s”吗？引用该资源的某些主题设"
+"置可能需要更新。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2455
 msgid "Delete Brand Asset"
@@ -394,7 +404,13 @@ msgstr "网站图标 (PNG)"
 msgid ""
 "Fields accept #hex, rgb(), hsl(), lab(), and oklch(). The picker fills hex; "
 "other formats can be typed."
-msgstr "字段支持输入 #hex、rgb()、hsl()、lab() 以及 oklch()。拾色器将填充十六进制格式，其他格式可手动输入。"
+msgstr ""
+"字段支持输入 #hex、rgb()、hsl()、lab() 以及 oklch()。拾色器将填充十六进制格"
+"式，其他格式可手动输入。"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:206
+msgid "Fill for form controls: inputs, selects, textareas, and checkboxes."
+msgstr "表单控件的填充色:输入框、下拉框、文本域和复选框。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2688
 msgid "Floating shortcut launcher shown along the right edge of the interface."
@@ -494,7 +510,9 @@ msgstr "导入失败：%s"
 msgid ""
 "Importing replaces /etc/config/aurora, applies all settings, and reloads the "
 "page. Uploaded images stay on disk."
-msgstr "导入将替换 /etc/config/aurora，应用所有设置并重新加载页面。已上传的图片将保留在磁盘上。"
+msgstr ""
+"导入将替换 /etc/config/aurora，应用所有设置并重新加载页面。已上传的图片将保留"
+"在磁盘上。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1784
 msgid "Importing..."
@@ -532,7 +550,9 @@ msgstr "界面层级"
 msgid ""
 "Sans-serif and monospace typefaces used across the theme. Save or Save & "
 "Apply downloads and caches the selected fonts."
-msgstr "整个主题中使用的无衬线和等宽字体。点击“保存”或“保存并应用”会下载并缓存所选字体。"
+msgstr ""
+"整个主题中使用的无衬线和等宽字体。点击“保存”或“保存并应用”会下载并缓存所选字"
+"体。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:888
 msgid "Invalid color expression."
@@ -744,7 +764,10 @@ msgid ""
 "Reset /etc/config/aurora to the packaged Default preset — colors, layout, "
 "typography, branding, navigation, and toolbar. Uploaded images stay on disk; "
 "custom selections not in the Default preset are cleared."
-msgstr "将 /etc/config/aurora 重置为自带的“默认”预设——包含颜色、布局、排版、品牌标识、导航和工具栏。已上传的图片将保留在磁盘上，不在默认预设中的自定义选择将被清除。"
+msgstr ""
+"将 /etc/config/aurora 重置为自带的“默认”预设——包含颜色、布局、排版、品牌标"
+"识、导航和工具栏。已上传的图片将保留在磁盘上，不在默认预设中的自定义选择将被"
+"清除。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1843
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1845
@@ -899,7 +922,9 @@ msgstr "文本、链接与品牌"
 msgid ""
 "The 10 source tokens that drive the theme. Changes preview here instantly; "
 "Save or Save & Apply persists them."
-msgstr "驱动整个主题的 10 个源令牌（Source Tokens）。更改会在此处实时预览，点击“保存”或“保存并应用”后持久化。"
+msgstr ""
+"驱动整个主题的 10 个源令牌（Source Tokens）。更改会在此处实时预览，点击“保存”"
+"或“保存并应用”后持久化。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/version.js:363
 msgid "Theme"
@@ -922,7 +947,9 @@ msgid ""
 "Tokens computed from the source colors. Leave a field empty to keep its "
 "automatic value; enter a color only to override it. Changes preview here "
 "instantly; Save or Save & Apply persists them."
-msgstr "根据源颜色计算出的令牌（Tokens）。将字段留空将保持其自动计算值，输入颜色则会对其进行覆盖。更改会在此处实时预览，点击“保存”或“保存并应用”后持久化。"
+msgstr ""
+"根据源颜色计算出的令牌（Tokens）。将字段留空将保持其自动计算值，输入颜色则会"
+"对其进行覆盖。更改会在此处实时预览，点击“保存”或“保存并应用”后持久化。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2707
 msgid "Toolbar Shortcuts"
@@ -993,7 +1020,9 @@ msgstr "更新软件包"
 msgid ""
 "Update complete. Reload to apply the changes. If the old version persists, "
 "clear your browser cache or use a private window."
-msgstr "更新完成。重新加载页面以应用更改。如果仍显示旧版本，请清除浏览器缓存或使用无痕窗口。"
+msgstr ""
+"更新完成。重新加载页面以应用更改。如果仍显示旧版本，请清除浏览器缓存或使用无"
+"痕窗口。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/version.js:151
 msgid "Update failed: %s"
@@ -1007,7 +1036,9 @@ msgstr "正在更新软件包"
 msgid ""
 "Upload and manage images for icons, favicons, PWA assets, and the login "
 "background. Files are stored in <code>/www/luci-static/aurora/images/</code>."
-msgstr "上传并管理图标、网站图标、PWA 资源和登录背景的图片。文件将保存在 <code>/www/luci-static/aurora/images/</code> 中。"
+msgstr ""
+"上传并管理图标、网站图标、PWA 资源和登录背景的图片。文件将保存在 <code>/www/"
+"luci-static/aurora/images/</code> 中。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2399
 msgid "Upload failed"

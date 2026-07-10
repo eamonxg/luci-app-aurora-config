@@ -200,6 +200,13 @@ const DERIVED_COLOR_TOKEN_METADATA = {
     description: _("Raised layer for dropdowns, modals, and tooltips."),
     group: "hierarchy",
   },
+  control_bg: {
+    label: _("Control Fill"),
+    description: _(
+      "Fill for form controls: inputs, selects, textareas, and checkboxes.",
+    ),
+    group: "hierarchy",
+  },
   hairline: {
     label: _("Hairline"),
     description: _("Separators, dividers, and input or card borders."),

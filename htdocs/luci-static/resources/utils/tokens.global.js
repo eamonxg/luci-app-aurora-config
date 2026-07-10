@@ -1,5 +1,5 @@
 /**
- * @eamonxg/aurora-tokens v1.0.1 -- GENERATED, DO NOT EDIT.
+ * @eamonxg/aurora-tokens v1.2.1 -- GENERATED, DO NOT EDIT.
  * Aurora design-token engine (browser global). Built from spec.js/defaults.js
  * + engine.js by build-global.mjs. Depends on the global `Color`
  * (utils/color.global.js in luci-app-aurora-config); load that first.
@@ -38,35 +38,45 @@ var AuroraTokens = (() => {
     light: {
       text_muted: ["mix", "text", "bg", 0.62],
       text_subtle: ["mix", "text", "bg", 0.48],
-      surface_sunken: ["shade", "bg", -0.012],
+      // Recessed fills need chroma ABOVE bg's (set, not shade): at these sizes a
+      // bg-inherited tint reads as dirty grey against the pure-white cards.
+      surface_sunken: ["set", "bg", 0.975, 5e-3],
       surface_overlay: ["shade", "bg", 0.016],
       hairline: ["alpha", "text", 0.13],
-      hover_faint: ["shade", "bg", -0.04],
+      hover_faint: ["set", "bg", 0.95, 6e-3],
       brand_hover: ["shade", "brand", -0.06],
       brand_subtle: ["mix", "brand", "bg", 0.12],
       brand_subtle_hover: ["shade", "brand_subtle", -0.04],
       focus_ring: ["alpha", "brand", 0.6],
       progress_start: ["mix", "brand", "surface_sunken", 0.65],
       progress_end: ["const", "var:brand"],
-      info_surface: ["set", "info", 0.94, 0.05],
-      warning_surface: ["set", "warning", 0.95, 0.05],
-      success_surface: ["set", "success", 0.94, 0.05],
-      danger_surface: ["set", "danger", 0.94, 0.05],
+      info_surface: ["set", "info", 0.945, 0.042],
+      warning_surface: ["set", "warning", 0.955, 0.042],
+      success_surface: ["set", "success", 0.95, 0.042],
+      danger_surface: ["set", "danger", 0.95, 0.036],
       danger_surface_hover: ["shade", "danger_surface", -0.04],
+      // Form-control fill (inputs/selects/textareas/checkboxes, login field).
+      // One semantic token so components never fork per mode: light rests a
+      // near-white overlay on the page; dark recesses below the card.
+      control_bg: ["const", "var:surface_overlay"],
       scrim: ["const", "oklch(0 0 0 / 0.6)"],
       // Fully opaque: a clean solid panel (Apple's #fafafc). Any translucency let
       // the dimmed curtain bleed through, greying the panel off the header tone
       // and leaking faint blurred page content into the empty columns. The header
       // lifts to this same colour when the menu opens (see _layout.css) so bar and
       // panel read as one continuous surface.
-      mega_menu_bg: ["alpha", "surface_overlay", 1],
+      // Relight 2026-07: a cool snow step BELOW bg — anything brighter read as
+      // paper-white against the dimmed page; extra chroma keeps it icy.
+      mega_menu_bg: ["set", "bg", 0.972, 8e-3],
       // Mega-menu curtain: a real dimming layer. A near-page-light grey (the
       // earlier #e8e8ed attempt) only blurred without darkening, so the mask read
       // as absent. Black at a modest alpha actually dims the page; the now-opaque
       // panel + its shadow give a clean edge, so this no longer bands the way the
       // old translucent panel over a heavy scrim did. Lighter than the 0.6 modal
       // scrim — it's a menu backdrop, not a dialog.
-      mega_menu_scrim: ["const", "oklch(0 0 0 / 0.32)"]
+      // Relight 2026-07: pure black over the snow-white page greyed it dirty;
+      // a cool blue-black dim is the "blue hour" of the light theme.
+      mega_menu_scrim: ["const", "oklch(0.22 0.035 250 / 0.38)"]
     },
     dark: {
       text_muted: ["mix", "text", "bg", 0.62],
@@ -88,6 +98,8 @@ var AuroraTokens = (() => {
       success_surface: ["set", "success", 0.3, 0.05],
       danger_surface: ["set", "danger", 0.32, 0.08],
       danger_surface_hover: ["shade", "danger_surface", 0.04],
+      // See light: same semantic token, recessed below the card in dark.
+      control_bg: ["const", "var:surface_sunken"],
       scrim: ["const", "oklch(0 0 0 / 0.6)"],
       // Deeper than surface_overlay (23%): surface_sunken (16.5%) tracks Apple's
       // opened-panel #161617 (~18.5%). Fully opaque — a clean solid panel with no
@@ -103,17 +115,17 @@ var AuroraTokens = (() => {
   // defaults.js
   var DEFAULTS = {
     light: {
-      bg: "oklch(0.967 0.003 264)",
+      bg: "oklch(0.984 0.004 235)",
       surface: "oklch(1 0 0)",
-      text: "oklch(0.21 0.02 264)",
+      text: "oklch(0.215 0.02 250)",
       brand: "oklch(0.58 0.14 233)",
       on_brand: "oklch(1 0 0)",
       link: "oklch(0.58 0.14 233)",
       // intentionally equals brand
-      info: "oklch(0.45 0.12 255)",
-      warning: "oklch(0.35 0.08 60)",
-      success: "oklch(0.32 0.09 165)",
-      danger: "oklch(0.35 0.12 25)"
+      info: "oklch(0.45 0.12 250)",
+      warning: "oklch(0.4 0.09 72)",
+      success: "oklch(0.38 0.1 172)",
+      danger: "oklch(0.42 0.15 22)"
     },
     dark: {
       bg: "oklch(0.13 0.018 264)",
@@ -144,7 +156,8 @@ var AuroraTokens = (() => {
   var set = (a, L, Ch) => {
     const c = C(a).to("oklch");
     c.coords[0] = L;
-    c.coords[1] = Ch;
+    const achromatic = c.coords[1] < 1e-3 || Number.isNaN(c.coords[2]);
+    c.coords[1] = achromatic ? 0 : Ch;
     return c;
   };
   var alpha = (a, p) => {
