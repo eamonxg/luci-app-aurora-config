@@ -16,9 +16,9 @@ const MONO_TAIL = 'ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace';
 const MANIFEST = [
   ["sans", "default", "Lato", "Built-in", "Lato", `"Lato", ui-sans-serif, system-ui, sans-serif`],
   ["sans", "system", "System UI", "System", "", `system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif`],
-  ["sans", "inter", "Inter", "Fontsource", "Inter", `"Inter", ${SANS_TAIL}`, "inter", "5.2.8", [400, 500, 600, 700]],
   ["sans", "geist-sans", "Geist Sans", "Fontsource", "Geist Sans", `"Geist Sans", ${SANS_TAIL}`, "geist-sans", "5.2.5", [400, 500, 600, 700]],
-  ["sans", "ibm-plex-sans", "IBM Plex Sans", "Fontsource", "IBM Plex Sans", `"IBM Plex Sans", ${SANS_TAIL}`, "ibm-plex-sans", "5.2.8", [400, 500, 600, 700]],
+  ["sans", "nunito", "Nunito", "Fontsource", "Nunito", `"Nunito", ${SANS_TAIL}`, "nunito", "5.2.7", [400, 500, 600, 700]],
+  ["sans", "space-grotesk", "Space Grotesk", "Fontsource", "Space Grotesk", `"Space Grotesk", ${SANS_TAIL}`, "space-grotesk", "5.2.10", [400, 500, 600, 700]],
   ["mono", "default", "System Mono", "Built-in", "", MONO_TAIL],
   ["mono", "jetbrains-mono", "JetBrains Mono", "Fontsource", "JetBrains Mono", `"JetBrains Mono", ${MONO_TAIL}`, "jetbrains-mono", "5.2.8", [400, 700]],
   ["mono", "maple-mono", "Maple Mono", "Fontsource", "Maple Mono", `"Maple Mono", ${MONO_TAIL}`, "maple-mono", "5.2.6", [400, 700]],
