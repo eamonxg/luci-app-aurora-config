@@ -467,6 +467,7 @@ EOF
 
 	if [ "$ok" != "1" ] || [ ! -s "$face_tmp" ]; then
 		rm -f "$face_tmp"
+		rm -f "$FONT_PATH/aurora-font-${slot}-${preset}"-*.woff2
 		return 1
 	fi
 
