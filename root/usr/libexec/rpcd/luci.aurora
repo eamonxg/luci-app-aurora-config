@@ -360,14 +360,44 @@ write_combined_font_css() {
 }
 
 # Single-line marker consumed by the theme's header.ut: the woff2 to
-# <link rel="preload">. Points at the active sans 400 weight; falls back to
-# the built-in Lato face when no cached webfont is active.
+# <link rel="preload">. Points at the active sans 400 weight, whether that
+# weight comes from a cached preset or a user-uploaded custom font; falls
+# back to the built-in Lato face when no cached webfont is active.
 write_font_preload() {
 	local sans_preset="${1:-default}"
 	local target="" candidate
 	local sans_family
+	local uci_stack meta_file base cfamily cstack face_url
 	sans_family=$(get_font_meta "sans" "$sans_preset" 2>/dev/null | cut -d'|' -f3)
-	if [ "$sans_preset" != "default" ] && [ -z "$sans_family" ]; then
+
+	if [ "$sans_preset" != "default" ]; then
+		candidate="$FONT_PATH/aurora-font-sans-${sans_preset}-400.woff2"
+		[ -f "$candidate" ] && [ -s "$FONT_PATH/aurora-font-sans.face" ] && \
+			target="/luci-static/aurora/fonts/aurora-font-sans-${sans_preset}-400.woff2"
+	fi
+
+	if [ -z "$target" ]; then
+		# Custom sans fonts don't resolve to a named preset (they always
+		# collapse to "default" downstream), so match the active stack
+		# against the custom fonts' .meta stacks the same way remove_font
+		# detects "in use", then reuse the exact URL baked into its .face
+		# (including the cache-busting query) instead of reconstructing it.
+		uci_stack=$(uci -q get aurora.theme.struct_font_sans)
+		if [ -n "$uci_stack" ]; then
+			for meta_file in "$FONT_CUSTOM_PATH"/sans-*.meta; do
+				[ -f "$meta_file" ] || continue
+				IFS='|' read -r cfamily cstack < "$meta_file"
+				[ "$cstack" = "$uci_stack" ] || continue
+				base="${meta_file##*/}"; base="${base%.meta}"
+				[ -s "$FONT_CUSTOM_PATH/${base}.face" ] || continue
+				face_url=$(sed -n 's/.*url("\([^"]*\)").*/\1/p' "$FONT_CUSTOM_PATH/${base}.face" | head -1)
+				[ -n "$face_url" ] && target="$face_url"
+				break
+			done
+		fi
+	fi
+
+	if [ -z "$target" ] && [ "$sans_preset" != "default" ] && [ -z "$sans_family" ]; then
 		# Pure-stack preset (e.g. "system"): nothing to preload.
 		printf '%s\n' "" > "$FONT_PATH/preload.txt.tmp"
 		chmod 644 "$FONT_PATH/preload.txt.tmp"
@@ -375,11 +405,6 @@ write_font_preload() {
 		return 0
 	fi
 
-	if [ "$sans_preset" != "default" ]; then
-		candidate="$FONT_PATH/aurora-font-sans-${sans_preset}-400.woff2"
-		[ -f "$candidate" ] && [ -s "$FONT_PATH/aurora-font-sans.face" ] && \
-			target="/luci-static/aurora/fonts/aurora-font-sans-${sans_preset}-400.woff2"
-	fi
 	[ -z "$target" ] && target="/luci-static/aurora/fonts/lato-v24-latin-regular.woff2"
 
 	printf '%s\n' "$target" > "$FONT_PATH/preload.txt.tmp"
