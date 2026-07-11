@@ -467,16 +467,20 @@ cache_font_slot() {
 	local preset_file="$FONT_PATH/aurora-font-${slot}.preset"
 	local face_file="$FONT_PATH/aurora-font-${slot}.face"
 	local face_tmp="$FONT_PATH/aurora-font-${slot}.face.tmp"
-	local files family weight sha256 url1 url2 local_file ok=1
+	local files meta family weight sha256 url1 url2 local_file ok=1
 
 	[ "${preset:-default}" = "default" ] && return 0
 	if [ -s "$face_file" ] && [ "$(cat "$preset_file" 2>/dev/null)" = "$preset" ]; then
 		return 0
 	fi
 
+	meta=$(get_font_meta "$slot" "$preset") || return 1
+	family=$(printf '%s' "$meta" | cut -d'|' -f3)
 	files=$(list_font_files "$slot" "$preset")
+	# Pure-stack preset (e.g. "system"): no webfont files to download,
+	# so there is nothing to cache and the slot is already in effect.
+	[ -z "$files" ] && [ -z "$family" ] && return 0
 	[ -n "$files" ] || return 1
-	family=$(get_font_meta "$slot" "$preset" | cut -d'|' -f3)
 	[ -n "$family" ] || return 1
 
 	mkdir -p "$FONT_PATH"
