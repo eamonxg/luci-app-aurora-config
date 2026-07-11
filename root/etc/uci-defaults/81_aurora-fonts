@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Font system v2 migration: the font cache under /www is runtime state the
+# package never ships, so upgrades from the v1 pipeline must regenerate the
+# combined CSS (dropping the old remote @import fallback) and clear cache
+# files for presets that no longer exist. Idempotent no-op on fresh installs
+# and on already-migrated systems.
+
+readonly RPCD_SCRIPT="/usr/libexec/rpcd/luci.aurora"
+
+if [ -x "$RPCD_SCRIPT" ]; then
+    logger -t aurora "Running font cache migration"
+    "$RPCD_SCRIPT" migrate-fonts || logger -t aurora "Font cache migration failed"
+fi
+
+exit 0

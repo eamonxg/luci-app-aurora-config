@@ -611,6 +611,62 @@ sync_font_css_from_uci() {
 	write_combined_font_css "$sans_preset" "$mono_preset"
 }
 
+# One-shot repair after a package upgrade (invoked from uci-defaults, not
+# exposed over ubus). The font cache under /www is runtime state the package
+# never touches, so a v1 install would otherwise keep serving its old
+# aurora-font.css — possibly carrying the remote @import fallback that v2
+# removed — until the user re-saves. Idempotent: safe to run on every boot.
+migrate_font_cache() {
+	local slot stack base preset f meta_file cfamily cstack matched changed=""
+
+	mkdir -p "$FONT_PATH"
+
+	# v1 pipeline leftovers: per-slot css and remote @import fallback files.
+	rm -f "$FONT_PATH"/aurora-font-sans.remote.* \
+	      "$FONT_PATH"/aurora-font-mono.remote.* \
+	      "$FONT_PATH/aurora-font-sans.css" \
+	      "$FONT_PATH/aurora-font-mono.css" \
+	      "$FONT_PATH"/aurora-font-*.tmp 2>/dev/null
+
+	for slot in sans mono; do
+		# Cached woff2 sets whose preset no longer exists in the roster.
+		for f in "$FONT_PATH/aurora-font-${slot}-"*.woff2; do
+			[ -f "$f" ] || continue
+			base="${f##*/aurora-font-${slot}-}"
+			preset="${base%.woff2}"
+			preset="${preset%-*}"
+			get_font_meta "$slot" "$preset" >/dev/null 2>&1 || rm -f "$f"
+		done
+
+		# Face/preset markers pointing at a removed preset.
+		preset=$(cat "$FONT_PATH/aurora-font-${slot}.preset" 2>/dev/null)
+		if [ -n "$preset" ] && ! get_font_meta "$slot" "$preset" >/dev/null 2>&1; then
+			rm -f "$FONT_PATH/aurora-font-${slot}.preset" \
+			      "$FONT_PATH/aurora-font-${slot}.face"
+		fi
+
+		# A stored stack that resolves to neither a v2 preset nor an
+		# uploaded custom font would silently degrade to Lato while the
+		# settings UI keeps showing a font that no longer exists; reset
+		# it so UCI, UI and rendering agree on the default.
+		stack=$(uci -q get "aurora.theme.struct_font_${slot}")
+		[ -n "$stack" ] || continue
+		get_font_preset_by_stack "$slot" "$stack" >/dev/null 2>&1 && continue
+		matched=""
+		for meta_file in "$FONT_CUSTOM_PATH/${slot}-"*.meta; do
+			[ -f "$meta_file" ] || continue
+			IFS='|' read -r cfamily cstack < "$meta_file"
+			[ "$cstack" = "$stack" ] && { matched=1; break; }
+		done
+		[ -n "$matched" ] && continue
+		uci -q delete "aurora.theme.struct_font_${slot}"
+		changed=1
+		logger -t aurora "font migration: struct_font_${slot} pointed at a removed preset, reset to default"
+	done
+	[ -n "$changed" ] && uci -q commit aurora
+
+	sync_font_css_from_uci
+}
 
 json_add_font() {
 	local name="$1" label="$2" source="$3" family="$4" stack="$5"
@@ -818,6 +874,11 @@ json_add_theme_preset_snapshot() {
 }
 
 case "$1" in
+# Maintenance verb for uci-defaults; rpcd itself only ever passes list/call.
+"migrate-fonts")
+	migrate_font_cache
+	exit 0
+	;;
 "list")
 	json_init
 	json_add_object "list_icons"; json_close_object
