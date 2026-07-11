@@ -2290,7 +2290,7 @@ return view.extend({
         getDefaultFont(slot) || { name: "default" };
 
       return {
-        preset: font.name || "default",
+        preset: font.custom ? "default" : font.name || "default",
         stack: font.stack || value,
       };
     };
