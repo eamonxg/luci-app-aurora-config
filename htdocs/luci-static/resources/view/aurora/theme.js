@@ -9,11 +9,11 @@
 
 const CONFIG_IMPORT_PATH = "/tmp/aurora_config_import.tmp";
 
-const loadGlobalScript = (src) =>
+const loadGlobalScript = (src, cacheBust) =>
   new Promise((resolve, reject) => {
     const script = E("script", {
       type: "text/javascript",
-      src: L.resource(src),
+      src: L.resource(src) + (cacheBust ? "?v=" + cacheBust : ""),
     });
     script.addEventListener("load", resolve, { once: true });
     script.addEventListener(
@@ -32,7 +32,17 @@ const colorLibraryReady = (async () => {
     await loadGlobalScript("utils/color.global.js");
   if (typeof AuroraTokens === "undefined")
     await loadGlobalScript("utils/tokens.global.js");
-})().then(() => buildColorTokenTables());
+})().then(async () => {
+  try {
+    buildColorTokenTables();
+  } catch (_error) {
+    // After a package upgrade the browser may pair this file with an HTTP-cached
+    // tokens.global.js from the previous release; refetch the engine once with a
+    // cache-busting query before surfacing the mismatch.
+    await loadGlobalScript("utils/tokens.global.js", Date.now());
+    buildColorTokenTables();
+  }
+});
 
 const callUploadIcon = rpc.declare({
   object: "luci.aurora",

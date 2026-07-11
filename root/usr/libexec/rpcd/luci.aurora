@@ -928,6 +928,7 @@ case "$1" in
 		json_cleanup
 
 		case "$slot" in sans|mono) ;; *)
+			rm -f "$FONT_TMP_UPLOAD"
 			echo '{ "result": 1, "error": "Invalid slot" }'; exit 0 ;;
 		esac
 		case "$family" in
