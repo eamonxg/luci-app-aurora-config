@@ -46,10 +46,12 @@ root/
 ├── usr/libexec/rpcd/luci.aurora        # Backend RPC (shell)
 └── usr/share/aurora/
     ├── *.template                      # Five built-in color presets (UCI fragments) — GENERATED
-    └── color-tokens.conf               # Ordered token key list for the backend — GENERATED
+    ├── color-tokens.conf               # Ordered token key list for the backend — GENERATED
+    └── font-presets.conf               # Font preset manifest (Fontsource packages + pinned versions) — GENERATED
 
 scripts/sync-tokens.mjs                  # Regenerates tokens.global.js + color-tokens.conf from the aurora-tokens repo's spec, then runs gen-presets
 scripts/gen-presets.mjs                  # Regenerates *.template
+scripts/gen-font-presets.mjs             # Regenerates font-presets.conf (curated manifest lives in this file)
 Makefile                                 # OpenWrt package metadata (version lives here)
 ```
 
@@ -256,6 +258,7 @@ the `case "$1" in "list")` block at the end of the script. Common methods:
 | `export_config` / `import_config` | Configuration import/export |
 | `list_icons` / `upload_icon` / `remove_icon` | Icon management |
 | `prepare_font` / `get_font_presets` / `get_font_status` | Font handling |
+| `upload_font` / `remove_font` | Custom (user-uploaded) font management |
 | `get_installed_versions` / `check_updates` / `download_package` / `install_package` | Versioning & one-click updates |
 
 ACLs live in `root/usr/share/rpcd/acl.d/luci-app-aurora.json`; the menu entry in
@@ -268,7 +271,70 @@ ACLs live in `root/usr/share/rpcd/acl.d/luci-app-aurora.json`; the menu entry in
 
 ---
 
-## 7. Releasing
+## 7. Font system (v2)
+
+Like the color templates, `root/usr/share/aurora/font-presets.conf` is a
+**generated file — never hand-edit it**. Regenerate it with:
+
+```bash
+npm run gen-font-presets
+```
+
+`scripts/gen-font-presets.mjs` holds the curated manifest (Fontsource npm
+package id, pinned version, and weights per preset). Running it re-downloads
+every woff2 from jsDelivr, recomputes its sha256, and rewrites the conf —
+commit the result.
+
+### 7.1 `font-presets.conf` format
+
+```
+v2|generated-by-gen-font-presets|do-not-edit
+font|<slot>|<name>|<label>|<source>|<family>|<stack>
+file|<slot>|<name>|<weight>|<sha256>|<url_jsdelivr>|<url_npmmirror>
+```
+
+- One `font` line per preset (`slot` is `sans` or `mono`); built-in presets
+  (`Lato`, `System UI`/`System Mono`) have no matching `file` lines.
+- One `file` line per weight for Fontsource-backed presets, carrying the
+  sha256 and both a jsDelivr and an npmmirror URL for the same file.
+- `tests/font-presets.test.mjs` guards this format (field counts, slot/weight
+  enums, sha256 shape, URL patterns) and runs as part of `npm test`.
+
+### 7.2 Download pipeline (`luci.aurora`)
+
+`prepare_font` downloads each required file **primary (jsDelivr) → fallback
+(npmmirror)**, verifying the sha256 from `font-presets.conf` after each
+attempt; a hash mismatch counts as a failure and triggers the fallback too.
+The `@font-face` rule is always generated locally on the router — no remote
+CSS is ever fetched or served to the browser. Job status per slot is one of
+two values: `cached` (a verified file is in place) or `fallback` (download/
+verification failed and the built-in face is used instead).
+
+`fonts/preload.txt` is a single-line marker file consumed by the theme's
+`header.ut` to emit `<link rel="preload">` for the active webfont:
+
+- **Empty** — deliberately no preload (e.g. the built-in/system face is
+  active, nothing to preload).
+- **Absent** — an older layout that predates this marker; the theme falls
+  back to preloading Lato.
+
+### 7.3 Custom fonts
+
+Users can upload their own woff2 via the `upload_font` RPC method (and remove
+it via `remove_font`):
+
+- Upload goes through cgi-io to `/tmp/aurora_font.tmp`.
+- Server-side validation: woff2 magic bytes (`wOF2`), size ≤ 4MB.
+- Stored under `/www/luci-static/aurora/fonts/custom/<slot>-<slug>.{woff2,meta,face}`
+  (`.face` is the pre-rendered `@font-face` block, `.meta` carries the
+  display family + font stack).
+- Custom faces are always included in the combined `aurora-font.css`, and
+  selection flows through the `struct_font_*` UCI stacks exactly like preset
+  fonts.
+
+---
+
+## 8. Releasing
 
 OpenWrt package metadata lives in the `Makefile`:
 
@@ -282,7 +348,7 @@ the OpenWrt SDK.
 
 ---
 
-## 8. Troubleshooting cheat sheet
+## 9. Troubleshooting cheat sheet
 
 - **Changed `brand` but hover/status colors don't follow?** Derived tokens
   weren't written to UCI — check that `tokens.global.js` loaded and that
