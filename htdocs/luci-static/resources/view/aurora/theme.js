@@ -9,11 +9,17 @@
 
 const CONFIG_IMPORT_PATH = "/tmp/aurora_config_import.tmp";
 
-const loadGlobalScript = (src) =>
+// Version of the vendored @eamonxg/aurora-tokens engine -- stamped by
+// scripts/sync-tokens.mjs, verified by tests/theme-token-sync.test.mjs.
+// Appended as ?v= when loading utils/tokens.global.js so the browser never
+// pairs this file with an HTTP-cached engine from a previous release.
+const TOKENS_ENGINE_VERSION = "1.2.1";
+
+const loadGlobalScript = (src, version) =>
   new Promise((resolve, reject) => {
     const script = E("script", {
       type: "text/javascript",
-      src: L.resource(src),
+      src: L.resource(src) + (version ? "?v=" + version : ""),
     });
     script.addEventListener("load", resolve, { once: true });
     script.addEventListener(
@@ -31,7 +37,7 @@ const colorLibraryReady = (async () => {
   if (typeof Color !== "function")
     await loadGlobalScript("utils/color.global.js");
   if (typeof AuroraTokens === "undefined")
-    await loadGlobalScript("utils/tokens.global.js");
+    await loadGlobalScript("utils/tokens.global.js", TOKENS_ENGINE_VERSION);
 })().then(() => buildColorTokenTables());
 
 const callUploadIcon = rpc.declare({

@@ -91,6 +91,24 @@ test("color-tokens.conf lists exactly the engine's tokens, inputs first", async 
   );
 });
 
+// theme.js loads tokens.global.js with ?v=TOKENS_ENGINE_VERSION so browsers
+// refetch the engine whenever it changes, instead of pairing a fresh theme.js
+// with an HTTP-cached engine from a previous release ("stale color token
+// metadata" errors). The stamp is written by sync-tokens.mjs; verify it
+// matches the version baked into the vendored engine's header.
+test("theme.js cache-busts the token engine with the vendored version", async () => {
+  const theme = await readFile(
+    resolve("htdocs/luci-static/resources/view/aurora/theme.js"),
+    "utf8",
+  );
+  const engine = await readFile(resolve(RES, "tokens.global.js"), "utf8");
+  const stamped = theme.match(/const TOKENS_ENGINE_VERSION = "([^"]+)";/)?.[1];
+  const vendored = engine.match(/@eamonxg\/aurora-tokens v(\S+)/)?.[1];
+  assert.ok(stamped, "theme.js declares TOKENS_ENGINE_VERSION");
+  assert.ok(vendored, "tokens.global.js header carries its version");
+  assert.equal(stamped, vendored);
+});
+
 // tokens.global.js and color-tokens.conf are vendored from the
 // @eamonxg/aurora-tokens package at the version pinned in package.json.
 // Rerun sync-tokens in --check mode and fail on drift, so neither a stale
