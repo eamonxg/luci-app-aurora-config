@@ -48,7 +48,7 @@ root/
     ├── *.template                      # Five built-in color presets (UCI fragments) — GENERATED
     └── color-tokens.conf               # Ordered token key list for the backend — GENERATED
 
-scripts/sync-tokens.mjs                  # Regenerates tokens.global.js + color-tokens.conf from the aurora-tokens repo's spec, then runs gen-presets
+scripts/sync-tokens.mjs                  # Regenerates tokens.global.js + color-tokens.conf from the aurora-tokens repo's spec, stamps TOKENS_ENGINE_VERSION into theme.js, then runs gen-presets
 scripts/gen-presets.mjs                  # Regenerates *.template
 Makefile                                 # OpenWrt package metadata (version lives here)
 ```
@@ -136,6 +136,9 @@ This repo **vendors** that package by the exact version pinned in
   (`luci.aurora`) reads at runtime, derived from the vendored engine.
 - `root/usr/share/aurora/*.template` — regenerated via `gen-presets.mjs`, which
   loads `tokens.global.js` in a `node:vm` sandbox.
+- `view/aurora/theme.js` — only the `TOKENS_ENGINE_VERSION` constant, stamped
+  from the vendored engine's dist header. `theme.js` appends it as `?v=` when
+  loading `tokens.global.js`, so a version bump busts the browser's HTTP cache.
 
 All vendored artifacts are committed, so nothing downstream (CI, SDK build,
 device) needs npm or the aurora-tokens repo. The pinned version doubles as the
@@ -146,7 +149,8 @@ Drift is caught in three layers:
 1. `theme.js` joins its UI metadata with the registry at load time and throws
    on missing/stale entries (`buildColorTokenTables`).
 2. `tests/theme-token-sync.test.mjs` re-runs `sync-tokens.mjs --check` against
-   the registry.
+   the registry (the check also covers the `TOKENS_ENGINE_VERSION` stamp in
+   `theme.js`, and a dedicated test asserts it matches the engine header).
 3. `.github/workflows/token-sync-check.yml` runs the same check in CI (push/PR
    and weekly); Renovate/Dependabot can bump the pin when aurora-tokens
    releases.
