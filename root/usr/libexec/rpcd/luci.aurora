@@ -315,7 +315,7 @@ get_font_preset_from_uci() {
 }
 
 write_combined_font_css() {
-	local sans_preset="${1:-default}" mono_preset="${2:-default}"
+	local sans_preset="${1:-default}" mono_preset="${2:-default}" sans_stack="$3"
 	local tmp_file="$FONT_CSS_FILE.tmp"
 	local slot preset preset_file face_file f
 
@@ -355,7 +355,7 @@ write_combined_font_css() {
 
 	chmod 644 "$tmp_file"
 	mv "$tmp_file" "$FONT_CSS_FILE"
-	write_font_preload "$sans_preset"
+	write_font_preload "$sans_preset" "$sans_stack"
 	return 0
 }
 
@@ -364,11 +364,22 @@ write_combined_font_css() {
 # weight comes from a cached preset or a user-uploaded custom font; falls
 # back to the built-in Lato face when no cached webfont is active.
 write_font_preload() {
-	local sans_preset="${1:-default}"
+	local sans_preset="${1:-default}" sans_stack_override="$2"
 	local target="" candidate
 	local sans_family
 	local uci_stack meta_file base cfamily cstack face_url
 	sans_family=$(get_font_meta "sans" "$sans_preset" 2>/dev/null | cut -d'|' -f3)
+
+	# Reject unsafe overrides (only ever compared for equality against .meta
+	# stacks, but keep the same injection posture as other RPC inputs): a
+	# newline or shell/markup metacharacter means "not a real stack", so fall
+	# back to the current UCI value instead of trusting it.
+	case "$sans_stack_override" in
+	*[\;\{\}\<\>]*) sans_stack_override="" ;;
+	esac
+	if printf '%s' "$sans_stack_override" | LC_ALL=C grep -q '[[:cntrl:]]'; then
+		sans_stack_override=""
+	fi
 
 	if [ "$sans_preset" != "default" ]; then
 		candidate="$FONT_PATH/aurora-font-sans-${sans_preset}-400.woff2"
@@ -382,7 +393,7 @@ write_font_preload() {
 		# against the custom fonts' .meta stacks the same way remove_font
 		# detects "in use", then reuse the exact URL baked into its .face
 		# (including the cache-busting query) instead of reconstructing it.
-		uci_stack=$(uci -q get aurora.theme.struct_font_sans)
+		uci_stack="${sans_stack_override:-$(uci -q get aurora.theme.struct_font_sans)}"
 		if [ -n "$uci_stack" ]; then
 			for meta_file in "$FONT_CUSTOM_PATH"/sans-*.meta; do
 				[ -f "$meta_file" ] || continue
@@ -511,7 +522,7 @@ EOF
 }
 
 font_job_worker() {
-	local job_id="$1" sans_preset="$2" mono_preset="$3"
+	local job_id="$1" sans_preset="$2" mono_preset="$3" sans_stack="$4"
 	local sans_status="ready" mono_status="ready" sans_error="" mono_error=""
 
 	write_font_job_status "$job_id" "running" "$sans_status" "$mono_status" "$sans_error" "$mono_error"
@@ -523,7 +534,7 @@ font_job_worker() {
 			sans_status="fallback"
 			sans_error="local_cache_failed"
 		fi
-		write_combined_font_css "$sans_preset" "$mono_preset"
+		write_combined_font_css "$sans_preset" "$mono_preset" "$sans_stack"
 		write_font_job_status "$job_id" "running" "$sans_status" "$mono_status" "$sans_error" "$mono_error"
 	fi
 
@@ -534,7 +545,7 @@ font_job_worker() {
 			mono_status="fallback"
 			mono_error="local_cache_failed"
 		fi
-		write_combined_font_css "$sans_preset" "$mono_preset"
+		write_combined_font_css "$sans_preset" "$mono_preset" "$sans_stack"
 	fi
 
 	update_icon_cache_timestamp
@@ -542,7 +553,7 @@ font_job_worker() {
 }
 
 start_font_job() {
-	local sans_preset="$1" mono_preset="$2"
+	local sans_preset="$1" mono_preset="$2" sans_stack="$3"
 	local job_id
 
 	[ -z "$sans_preset" ] && sans_preset=$(get_font_preset_from_uci "sans")
@@ -566,7 +577,7 @@ start_font_job() {
 		return 0
 	fi
 
-	if ! write_combined_font_css "$sans_preset" "$mono_preset"; then
+	if ! write_combined_font_css "$sans_preset" "$mono_preset" "$sans_stack"; then
 		json_init
 		json_add_int "result" 1
 		json_add_string "error" "Failed to write font CSS"
@@ -577,7 +588,7 @@ start_font_job() {
 	update_icon_cache_timestamp
 	job_id="$(date +%s)-$$"
 	write_font_job_status "$job_id" "queued" "ready" "ready" "" ""
-	(font_job_worker "$job_id" "$sans_preset" "$mono_preset") </dev/null >/dev/null 2>&1 &
+	(font_job_worker "$job_id" "$sans_preset" "$mono_preset" "$sans_stack") </dev/null >/dev/null 2>&1 &
 
 	json_init
 	json_add_int "result" 0
@@ -824,6 +835,7 @@ case "$1" in
 	json_add_object "prepare_font"
 		json_add_string "sans" "sans"
 		json_add_string "mono" "mono"
+		json_add_string "sans_stack" "sans_stack"
 	json_close_object
 	json_add_object "upload_font"
 		json_add_string "slot" "slot"
@@ -941,9 +953,10 @@ case "$1" in
 		read -r input; json_load "$input" 2>/dev/null
 		json_get_var sans_preset "sans"
 		json_get_var mono_preset "mono"
+		json_get_var sans_stack "sans_stack"
 		json_cleanup
 
-		start_font_job "$sans_preset" "$mono_preset"
+		start_font_job "$sans_preset" "$mono_preset" "$sans_stack"
 		;;
 
 	"upload_font")

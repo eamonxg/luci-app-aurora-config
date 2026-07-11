@@ -72,7 +72,7 @@ const callApplyThemePreset = rpc.declare({
 const callPrepareFont = rpc.declare({
   object: "luci.aurora",
   method: "prepare_font",
-  params: ["sans", "mono"],
+  params: ["sans", "mono", "sans_stack"],
   expect: {
     "": { result: -1, error: "RPC call failed (timeout or transport error)" },
   },
@@ -2387,7 +2387,7 @@ return view.extend({
 
       ui.showModal(_("Preparing Typography"), [statusNode]);
 
-      return callPrepareFont(selected.sans, selected.mono)
+      return callPrepareFont(selected.sans, selected.mono, selected.sansStack)
         .then((res) => {
           if (!res || res.result !== 0) {
             throw new Error(res?.error || _("unknown error"));
