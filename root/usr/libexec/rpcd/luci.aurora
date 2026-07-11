@@ -957,7 +957,9 @@ case "$1" in
 			cp "$DEFAULT_TEMPLATE" "$CONFIG_FILE"
 			chmod 644 "$CONFIG_FILE"
 			cleanup_custom_fonts
-			rm -rf "$FONT_CUSTOM_PATH"
+			# Uploaded custom fonts survive a settings reset, matching the
+			# promise the confirm dialog makes for uploaded images; only
+			# the selection is cleared. remove_font deletes the files.
 			sync_font_css_from_uci
 			update_icon_cache_timestamp
 			echo '{ "result": 0 }'
