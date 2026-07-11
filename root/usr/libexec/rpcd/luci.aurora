@@ -157,19 +157,29 @@ validate_import_color_options() {
 
 list_font_entries() {
 	local slot_filter="$1"
-	local file="$FONT_PRESETS_FILE"
 
-	[ -r "$file" ] || return 1
+	[ -r "$FONT_PRESETS_FILE" ] || return 1
 
-	while IFS='|' read -r slot name label source family stack css_url; do
-		case "$slot" in
-		""|"#"*) continue ;;
-		esac
-		[ -z "$name" ] && continue
+	while IFS='|' read -r kind slot name label source family stack; do
+		[ "$kind" = "font" ] || continue
+		[ -n "$name" ] || continue
 		[ -n "$slot_filter" ] && [ "$slot" != "$slot_filter" ] && continue
-		printf '%s|%s|%s|%s|%s|%s|%s\n' \
-			"$slot" "$name" "$label" "$source" "$family" "$stack" "$css_url"
-	done < "$file"
+		printf '%s|%s|%s|%s|%s|%s\n' \
+			"$slot" "$name" "$label" "$source" "$family" "$stack"
+	done < "$FONT_PRESETS_FILE"
+}
+
+# Emit "weight|sha256|url_primary|url_fallback" lines for one preset.
+list_font_files() {
+	local slot="$1" name="$2" kind fslot fname weight sha256 url1 url2
+
+	[ -r "$FONT_PRESETS_FILE" ] || return 1
+
+	while IFS='|' read -r kind fslot fname weight sha256 url1 url2; do
+		[ "$kind" = "file" ] || continue
+		[ "$fslot" = "$slot" ] && [ "$fname" = "$name" ] || continue
+		printf '%s|%s|%s|%s\n' "$weight" "$sha256" "$url1" "$url2"
+	done < "$FONT_PRESETS_FILE"
 }
 
 
@@ -223,6 +233,7 @@ cleanup_custom_fonts() {
 		      "$FONT_PATH"/aurora-font-mono.face.tmp \
 		      "$FONT_PATH"/aurora-font-sans.preset \
 		      "$FONT_PATH"/aurora-font-mono.preset 2>/dev/null
+		rm -f "$FONT_PATH/preload.txt" 2>/dev/null
 	fi
 }
 
@@ -303,30 +314,13 @@ get_font_preset_from_uci() {
 write_combined_font_css() {
 	local sans_preset="${1:-default}" mono_preset="${2:-default}"
 	local tmp_file="$FONT_CSS_FILE.tmp"
-	local slot preset meta css_url preset_file face_file
+	local slot preset preset_file face_file f
 
 	get_font_meta "sans" "$sans_preset" >/dev/null 2>&1 || return 1
 	get_font_meta "mono" "$mono_preset" >/dev/null 2>&1 || return 1
 
 	mkdir -p "$FONT_PATH"
 	{
-		for slot in sans mono; do
-			case "$slot" in
-			sans) preset="$sans_preset" ;;
-			mono) preset="$mono_preset" ;;
-			esac
-
-			[ "${preset:-default}" = "default" ] && continue
-
-			preset_file="$FONT_PATH/aurora-font-${slot}.preset"
-			face_file="$FONT_PATH/aurora-font-${slot}.face"
-			if [ ! -s "$face_file" ] || [ "$(cat "$preset_file" 2>/dev/null)" != "$preset" ]; then
-				meta=$(get_font_meta "$slot" "$preset") || continue
-				css_url=$(echo "$meta" | cut -d'|' -f5-)
-				[ -n "$css_url" ] && printf '@import url("%s");\n' "$css_url"
-			fi
-		done
-
 		write_default_font_face
 
 		for slot in sans mono; do
@@ -345,11 +339,49 @@ write_combined_font_css() {
 				printf '\n'
 			fi
 		done
+
+		# Custom uploaded fonts are always declared; browsers only fetch a
+		# face when its family is actually referenced by the active stack.
+		for f in "$FONT_PATH"/custom/*.face; do
+			[ -s "$f" ] || continue
+			printf '\n'
+			cat "$f"
+			printf '\n'
+		done
 	} > "$tmp_file" || return 1
 
 	chmod 644 "$tmp_file"
 	mv "$tmp_file" "$FONT_CSS_FILE"
+	write_font_preload "$sans_preset"
 	return 0
+}
+
+# Single-line marker consumed by the theme's header.ut: the woff2 to
+# <link rel="preload">. Points at the active sans 400 weight; falls back to
+# the built-in Lato face when no cached webfont is active.
+write_font_preload() {
+	local sans_preset="${1:-default}"
+	local target="" candidate
+	local sans_family
+	sans_family=$(get_font_meta "sans" "$sans_preset" 2>/dev/null | cut -d'|' -f3)
+	if [ "$sans_preset" != "default" ] && [ -z "$sans_family" ]; then
+		# Pure-stack preset (e.g. "system"): nothing to preload.
+		printf '%s\n' "" > "$FONT_PATH/preload.txt.tmp"
+		chmod 644 "$FONT_PATH/preload.txt.tmp"
+		mv "$FONT_PATH/preload.txt.tmp" "$FONT_PATH/preload.txt"
+		return 0
+	fi
+
+	if [ "$sans_preset" != "default" ]; then
+		candidate="$FONT_PATH/aurora-font-sans-${sans_preset}-400.woff2"
+		[ -f "$candidate" ] && [ -s "$FONT_PATH/aurora-font-sans.face" ] && \
+			target="/luci-static/aurora/fonts/aurora-font-sans-${sans_preset}-400.woff2"
+	fi
+	[ -z "$target" ] && target="/luci-static/aurora/fonts/lato-v24-latin-regular.woff2"
+
+	printf '%s\n' "$target" > "$FONT_PATH/preload.txt.tmp"
+	chmod 644 "$FONT_PATH/preload.txt.tmp"
+	mv "$FONT_PATH/preload.txt.tmp" "$FONT_PATH/preload.txt"
 }
 
 prepare_font_slot() {
@@ -375,57 +407,77 @@ prepare_font_slot() {
 	return 0
 }
 
+# Download one woff2 with checksum verification: primary source first, then
+# fallback; a hash mismatch counts as failure and triggers the fallback too.
+fetch_verified() {
+	local dest="$1" sha256="$2" url1="$3" url2="$4" url actual
+
+	for url in "$url1" "$url2"; do
+		[ -n "$url" ] || continue
+		if fetch_url "$dest" "$url" 2>/dev/null; then
+			actual=$(sha256sum "$dest" | cut -d' ' -f1)
+			[ "$actual" = "$sha256" ] && return 0
+		fi
+		rm -f "$dest"
+	done
+	return 1
+}
+
 cache_font_slot() {
 	local slot="$1" preset="$2"
-	local meta css_url font_css url local_file idx ok_count css_tmp face_tmp
 	local preset_file="$FONT_PATH/aurora-font-${slot}.preset"
 	local face_file="$FONT_PATH/aurora-font-${slot}.face"
+	local face_tmp="$FONT_PATH/aurora-font-${slot}.face.tmp"
+	local files family weight sha256 url1 url2 local_file ok=1
 
 	[ "${preset:-default}" = "default" ] && return 0
 	if [ -s "$face_file" ] && [ "$(cat "$preset_file" 2>/dev/null)" = "$preset" ]; then
 		return 0
 	fi
 
-	meta=$(get_font_meta "$slot" "$preset") || return 1
-	css_url=$(echo "$meta" | cut -d'|' -f5-)
-	[ -n "$css_url" ] || return 1
+	files=$(list_font_files "$slot" "$preset")
+	[ -n "$files" ] || return 1
+	family=$(get_font_meta "$slot" "$preset" | cut -d'|' -f3)
+	[ -n "$family" ] || return 1
 
-	css_tmp="$FONT_PATH/aurora-font-${slot}.remote.$$"
-	fetch_url "$css_tmp" \
-		--header "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
-		"$css_url" 2>/dev/null || {
-		rm -f "$css_tmp"
+	mkdir -p "$FONT_PATH"
+	: > "$face_tmp"
+
+	while IFS='|' read -r weight sha256 url1 url2; do
+		[ -n "$weight" ] || continue
+		local_file="aurora-font-${slot}-${preset}-${weight}.woff2"
+		if ! fetch_verified "$FONT_PATH/$local_file.tmp" "$sha256" "$url1" "$url2"; then
+			ok=0
+			break
+		fi
+		mv "$FONT_PATH/$local_file.tmp" "$FONT_PATH/$local_file"
+		chmod 644 "$FONT_PATH/$local_file"
+		cat >> "$face_tmp" <<FACE
+@font-face {
+  font-display: swap;
+  font-family: "$family";
+  font-style: normal;
+  font-weight: $weight;
+  src: url("/luci-static/aurora/fonts/$local_file") format("woff2");
+}
+FACE
+	done <<EOF
+$files
+EOF
+
+	if [ "$ok" != "1" ] || [ ! -s "$face_tmp" ]; then
+		rm -f "$face_tmp"
+		return 1
+	fi
+
+	# Bail out if the user switched presets while we were downloading.
+	[ "$(cat "$preset_file" 2>/dev/null)" = "$preset" ] || {
+		rm -f "$face_tmp"
 		return 1
 	}
 
-	font_css=$(cat "$css_tmp" 2>/dev/null)
-	rm -f "$css_tmp"
-	[ -n "$font_css" ] || return 1
-
-	idx=1
-	ok_count=0
-	for url in $(printf '%s\n' "$font_css" | grep -o 'https://[^ )]*\.woff2'); do
-		local_file="aurora-font-${slot}-$(printf '%03d' "$idx").woff2"
-		if fetch_url "$FONT_PATH/$local_file.tmp" "$url" 2>/dev/null; then
-			mv "$FONT_PATH/$local_file.tmp" "$FONT_PATH/$local_file"
-			chmod 644 "$FONT_PATH/$local_file"
-			font_css=$(printf '%s' "$font_css" | sed "s|${url}|/luci-static/aurora/fonts/${local_file}|g")
-			ok_count=$((ok_count + 1))
-		else
-			rm -f "$FONT_PATH/$local_file.tmp"
-		fi
-		idx=$((idx + 1))
-	done
-
-	[ -f "$preset_file" ] && [ "$(cat "$preset_file" 2>/dev/null)" = "$preset" ] || return 1
-
-	if [ "$ok_count" -gt 0 ]; then
-		face_tmp="$FONT_PATH/aurora-font-${slot}.face.tmp"
-		printf '%s' "$font_css" > "$face_tmp"
-		chmod 644 "$face_tmp"
-		mv "$face_tmp" "$FONT_PATH/aurora-font-${slot}.face"
-	fi
-
+	chmod 644 "$face_tmp"
+	mv "$face_tmp" "$face_file"
 	return 0
 }
 
@@ -439,7 +491,7 @@ font_job_worker() {
 		if cache_font_slot "sans" "$sans_preset"; then
 			sans_status="cached"
 		else
-			sans_status="remote"
+			sans_status="fallback"
 			sans_error="local_cache_failed"
 		fi
 		write_combined_font_css "$sans_preset" "$mono_preset"
@@ -450,7 +502,7 @@ font_job_worker() {
 		if cache_font_slot "mono" "$mono_preset"; then
 			mono_status="cached"
 		else
-			mono_status="remote"
+			mono_status="fallback"
 			mono_error="local_cache_failed"
 		fi
 		write_combined_font_css "$sans_preset" "$mono_preset"
@@ -517,7 +569,7 @@ sync_font_css_from_uci() {
 
 
 json_add_font() {
-	local name="$1" label="$2" source="$3" family="$4" stack="$5" css_url="$6"
+	local name="$1" label="$2" source="$3" family="$4" stack="$5"
 
 	json_add_object ""
 		json_add_string "name" "$name"
@@ -525,7 +577,6 @@ json_add_font() {
 		json_add_string "source" "$source"
 		json_add_string "family" "$family"
 		json_add_string "stack" "$stack"
-		json_add_string "css_url" "$css_url"
 	json_close_object
 }
 
@@ -650,10 +701,10 @@ json_add_font_presets() {
 	json_add_object "fonts"
 	for slot_name in sans mono; do
 		json_add_array "$slot_name"
-		while IFS='|' read -r _slot _name _label _source _family _stack _css_url; do
-			case "$_slot" in ""|"#"*) continue ;; esac
+		while IFS='|' read -r _kind _slot _name _label _source _family _stack; do
+			[ "$_kind" = "font" ] || continue
 			[ "$_slot" = "$slot_name" ] || continue
-			json_add_font "$_name" "$_label" "$_source" "$_family" "$_stack" "$_css_url"
+			json_add_font "$_name" "$_label" "$_source" "$_family" "$_stack"
 		done <<-EOF
 		$presets
 		EOF
