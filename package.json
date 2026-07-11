@@ -5,7 +5,8 @@
   "scripts": {
     "test": "node --test tests/*.test.mjs",
     "sync-tokens": "node scripts/sync-tokens.mjs",
-    "gen-presets": "node scripts/gen-presets.mjs"
+    "gen-presets": "node scripts/gen-presets.mjs",
+    "gen-font-presets": "node scripts/gen-font-presets.mjs"
   },
   "devDependencies": {
     "@eamonxg/aurora-tokens": "1.2.1"
