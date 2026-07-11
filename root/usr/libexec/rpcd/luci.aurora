@@ -931,9 +931,13 @@ case "$1" in
 			echo '{ "result": 1, "error": "Invalid slot" }'; exit 0 ;;
 		esac
 		case "$family" in
-		""|*[\;\|{}\<\>\"]*)
+		""|*[!A-Za-z0-9\ \'-]*)
+			rm -f "$FONT_TMP_UPLOAD"
 			echo '{ "result": 1, "error": "Invalid family name" }'; exit 0 ;;
 		esac
+		[ ${#family} -le 64 ] || {
+			rm -f "$FONT_TMP_UPLOAD"
+			echo '{ "result": 1, "error": "Family name too long" }'; exit 0; }
 		[ -f "$FONT_TMP_UPLOAD" ] || {
 			echo '{ "result": 1, "error": "No uploaded file" }'; exit 0; }
 		size=$(wc -c < "$FONT_TMP_UPLOAD")
@@ -948,6 +952,14 @@ case "$1" in
 		[ -n "$slug" ] || {
 			rm -f "$FONT_TMP_UPLOAD"
 			echo '{ "result": 1, "error": "Invalid family name" }'; exit 0; }
+
+		meta_path="$FONT_CUSTOM_PATH/${slot}-${slug}.meta"
+		if [ -f "$meta_path" ]; then
+			existing_family=$(cut -d'|' -f1 "$meta_path")
+			[ "$existing_family" = "$family" ] || {
+				rm -f "$FONT_TMP_UPLOAD"
+				echo '{ "result": 1, "error": "A custom font with a conflicting name already exists" }'; exit 0; }
+		fi
 
 		if [ "$slot" = "sans" ]; then
 			stack="\"$family\", \"Lato\", ui-sans-serif, system-ui, sans-serif"
