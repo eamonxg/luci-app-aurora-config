@@ -6,6 +6,9 @@ readonly ICON_PATH="/www/luci-static/aurora/images"
 readonly FONT_PATH="/www/luci-static/aurora/fonts"
 readonly FONT_CSS_FILE="$FONT_PATH/aurora-font.css"
 readonly FONT_JOB_PATH="/tmp/aurora_font_jobs"
+readonly FONT_TMP_UPLOAD="/tmp/aurora_font.tmp"
+readonly FONT_CUSTOM_PATH="$FONT_PATH/custom"
+readonly FONT_MAX_UPLOAD=4194304
 readonly TMP_UPLOAD_PATH="/tmp/aurora_icon.tmp"
 readonly DOWNLOAD_PATH="/tmp/aurora_downloads"
 readonly CONFIG_FILE="/etc/config/aurora"
@@ -696,6 +699,7 @@ json_add_installed_versions() {
 
 json_add_font_presets() {
 	local slot_name presets
+	local meta_file base cslot cname cfamily cstack
 
 	presets=$(cat "$FONT_PRESETS_FILE" 2>/dev/null)
 
@@ -711,6 +715,20 @@ json_add_font_presets() {
 		EOF
 		json_close_array
 	done
+	json_add_array "custom"
+	for meta_file in "$FONT_CUSTOM_PATH"/*.meta; do
+		[ -f "$meta_file" ] || continue
+		base="${meta_file##*/}"; base="${base%.meta}"
+		cslot="${base%%-*}"; cname="${base#*-}"
+		IFS='|' read -r cfamily cstack < "$meta_file"
+		json_add_object ""
+			json_add_string "slot" "$cslot"
+			json_add_string "name" "$cname"
+			json_add_string "family" "$cfamily"
+			json_add_string "stack" "$cstack"
+		json_close_object
+	done
+	json_close_array
 	json_close_object
 }
 
@@ -782,6 +800,14 @@ case "$1" in
 		json_add_string "sans" "sans"
 		json_add_string "mono" "mono"
 	json_close_object
+	json_add_object "upload_font"
+		json_add_string "slot" "slot"
+		json_add_string "family" "family"
+	json_close_object
+	json_add_object "remove_font"
+		json_add_string "slot" "slot"
+		json_add_string "name" "name"
+	json_close_object
 	json_add_object "apply_theme_preset"
 		json_add_string "name" "name"
 	json_close_object
@@ -828,6 +854,7 @@ case "$1" in
 			cp "$DEFAULT_TEMPLATE" "$CONFIG_FILE"
 			chmod 644 "$CONFIG_FILE"
 			cleanup_custom_fonts
+			rm -rf "$FONT_CUSTOM_PATH"
 			sync_font_css_from_uci
 			update_icon_cache_timestamp
 			echo '{ "result": 0 }'
@@ -892,6 +919,98 @@ case "$1" in
 		json_cleanup
 
 		start_font_job "$sans_preset" "$mono_preset"
+		;;
+
+	"upload_font")
+		read -r input; json_load "$input" 2>/dev/null
+		json_get_var slot "slot"
+		json_get_var family "family"
+		json_cleanup
+
+		case "$slot" in sans|mono) ;; *)
+			echo '{ "result": 1, "error": "Invalid slot" }'; exit 0 ;;
+		esac
+		case "$family" in
+		""|*[\;\|{}\<\>\"]*)
+			echo '{ "result": 1, "error": "Invalid family name" }'; exit 0 ;;
+		esac
+		[ -f "$FONT_TMP_UPLOAD" ] || {
+			echo '{ "result": 1, "error": "No uploaded file" }'; exit 0; }
+		size=$(wc -c < "$FONT_TMP_UPLOAD")
+		[ "$size" -le "$FONT_MAX_UPLOAD" ] || {
+			rm -f "$FONT_TMP_UPLOAD"
+			echo '{ "result": 1, "error": "File exceeds 4MB limit" }'; exit 0; }
+		[ "$(head -c 4 "$FONT_TMP_UPLOAD")" = "wOF2" ] || {
+			rm -f "$FONT_TMP_UPLOAD"
+			echo '{ "result": 1, "error": "Not a woff2 file" }'; exit 0; }
+
+		slug=$(printf '%s' "$family" | tr 'A-Z' 'a-z' | sed 's/[^a-z0-9]\{1,\}/-/g;s/^-//;s/-$//')
+		[ -n "$slug" ] || {
+			rm -f "$FONT_TMP_UPLOAD"
+			echo '{ "result": 1, "error": "Invalid family name" }'; exit 0; }
+
+		if [ "$slot" = "sans" ]; then
+			stack="\"$family\", \"Lato\", ui-sans-serif, system-ui, sans-serif"
+		else
+			stack="\"$family\", ui-monospace, \"SF Mono\", Menlo, Monaco, Consolas, monospace"
+		fi
+
+		mkdir -p "$FONT_CUSTOM_PATH"
+		mv "$FONT_TMP_UPLOAD" "$FONT_CUSTOM_PATH/${slot}-${slug}.woff2"
+		chmod 644 "$FONT_CUSTOM_PATH/${slot}-${slug}.woff2"
+		printf '%s|%s\n' "$family" "$stack" > "$FONT_CUSTOM_PATH/${slot}-${slug}.meta"
+		chmod 644 "$FONT_CUSTOM_PATH/${slot}-${slug}.meta"
+		cat > "$FONT_CUSTOM_PATH/${slot}-${slug}.face" <<FACE
+@font-face {
+  font-display: swap;
+  font-family: "$family";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/luci-static/aurora/fonts/custom/${slot}-${slug}.woff2?v=$(date +%s)") format("woff2");
+}
+FACE
+		chmod 644 "$FONT_CUSTOM_PATH/${slot}-${slug}.face"
+
+		sync_font_css_from_uci
+		update_icon_cache_timestamp
+
+		json_init
+		json_add_int "result" 0
+		json_add_string "name" "$slug"
+		json_add_string "stack" "$stack"
+		json_dump; json_cleanup
+		;;
+
+	"remove_font")
+		read -r input; json_load "$input" 2>/dev/null
+		json_get_var slot "slot"
+		json_get_var name "name"
+		json_cleanup
+
+		case "$slot" in sans|mono) ;; *)
+			echo '{ "result": 1, "error": "Invalid slot" }'; exit 0 ;;
+		esac
+		case "$name" in
+		""|*[!a-z0-9-]*)
+			echo '{ "result": 1, "error": "Invalid font name" }'; exit 0 ;;
+		esac
+
+		meta_file="$FONT_CUSTOM_PATH/${slot}-${name}.meta"
+		if [ -f "$meta_file" ]; then
+			IFS='|' read -r _cfamily cstack < "$meta_file"
+			current=$(uci -q get "aurora.theme.struct_font_$slot")
+			if [ -n "$current" ] && [ "$current" = "$cstack" ]; then
+				uci -q delete "aurora.theme.struct_font_$slot"
+				uci -q commit aurora
+			fi
+		fi
+		rm -f "$FONT_CUSTOM_PATH/${slot}-${name}.woff2" \
+		      "$FONT_CUSTOM_PATH/${slot}-${name}.meta" \
+		      "$FONT_CUSTOM_PATH/${slot}-${name}.face"
+
+		sync_font_css_from_uci
+		update_icon_cache_timestamp
+		echo '{ "result": 0 }'
 		;;
 
 	"apply_theme_preset")
