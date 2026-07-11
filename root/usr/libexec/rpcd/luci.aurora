@@ -517,6 +517,7 @@ EOF
 	# Bail out if the user switched presets while we were downloading.
 	[ "$(cat "$preset_file" 2>/dev/null)" = "$preset" ] || {
 		rm -f "$face_tmp"
+		rm -f "$FONT_PATH/aurora-font-${slot}-${preset}"-*.woff2
 		return 1
 	}
 
