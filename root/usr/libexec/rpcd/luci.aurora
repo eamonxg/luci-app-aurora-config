@@ -1068,11 +1068,15 @@ case "$1" in
 				echo '{ "result": 1, "error": "A custom font with a conflicting name already exists" }'; exit 0; }
 		fi
 
-		if [ "$slot" = "sans" ]; then
-			stack="\"$family\", \"Lato\", ui-sans-serif, system-ui, sans-serif"
-		else
-			stack="\"$family\", ui-monospace, \"SF Mono\", Menlo, Monaco, Consolas, monospace"
-		fi
+		# Compose the stack from the roster's default entry so the tail
+		# has a single source of truth (the generated font-presets.conf).
+		# write_font_preload/remove_font match stacks by string equality,
+		# so a drifting duplicate here would silently break them.
+		default_stack=$(get_font_meta "$slot" "default" | cut -d'|' -f4)
+		[ -n "$default_stack" ] || {
+			rm -f "$FONT_TMP_UPLOAD"
+			echo '{ "result": 1, "error": "Font preset roster unavailable" }'; exit 0; }
+		stack="\"$family\", $default_stack"
 
 		mkdir -p "$FONT_CUSTOM_PATH"
 		mv "$FONT_TMP_UPLOAD" "$FONT_CUSTOM_PATH/${slot}-${slug}.woff2"
