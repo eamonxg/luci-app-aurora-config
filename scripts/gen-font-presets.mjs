@@ -37,6 +37,8 @@ let total = 0;
 for (const [slot, name, label, source, family, stack, id, ver, weights] of MANIFEST) {
   lines.push(`font|${slot}|${name}|${label}|${source}|${family}|${stack}`);
   if (!id) continue;
+  if (weights.length > 4)
+    throw new Error(`${slot}/${name} exceeds 4-file budget: ${weights.length} weights`);
   let presetBytes = 0;
   for (const w of weights) {
     const url = jsdelivr(id, ver, w);

@@ -1584,8 +1584,10 @@ return view.extend({
           .concat(custom);
         if (options.length > 0) return options;
       }
+      // Preset list unavailable (e.g. font-presets.conf unreadable):
+      // uploaded custom fonts still exist on disk, keep them selectable.
       const fallbackStack = FONT_DEFAULT_STACKS[slot] || "";
-      if (!fallbackStack) return [];
+      if (!fallbackStack) return custom;
       return [
         {
           name: "default",
@@ -1593,7 +1595,7 @@ return view.extend({
           source: _("Built-in"),
           stack: fallbackStack,
         },
-      ];
+      ].concat(custom);
     };
 
     const buildPresetToolbarNode = () => {
@@ -2239,7 +2241,7 @@ return view.extend({
             else
               ui.addNotification(
                 null,
-                E("p", _("Delete failed: %s").format(ret?.error || "Unknown")),
+                E("p", _("Delete failed: %s").format(ret?.error || _("Unknown"))),
                 "error",
               );
           },

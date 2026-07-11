@@ -306,9 +306,11 @@ file|<slot>|<name>|<weight>|<sha256>|<url_jsdelivr>|<url_npmmirror>
 (npmmirror)**, verifying the sha256 from `font-presets.conf` after each
 attempt; a hash mismatch counts as a failure and triggers the fallback too.
 The `@font-face` rule is always generated locally on the router — no remote
-CSS is ever fetched or served to the browser. Job status per slot is one of
-two values: `cached` (a verified file is in place) or `fallback` (download/
-verification failed and the built-in face is used instead).
+CSS is ever fetched or served to the browser. A slot's job status starts at
+`ready` (queued/in progress) and settles on one of two final values:
+`cached` (a verified file is in place — pure-stack presets with nothing to
+download report this too) or `fallback` (download/verification failed and
+the built-in face is used instead).
 
 `fonts/preload.txt` is a single-line marker file consumed by the theme's
 `header.ut` to emit `<link rel="preload">` for the active webfont:

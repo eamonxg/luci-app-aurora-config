@@ -345,7 +345,7 @@ write_combined_font_css() {
 
 		# Custom uploaded fonts are always declared; browsers only fetch a
 		# face when its family is actually referenced by the active stack.
-		for f in "$FONT_PATH"/custom/*.face; do
+		for f in "$FONT_CUSTOM_PATH"/*.face; do
 			[ -s "$f" ] || continue
 			printf '\n'
 			cat "$f"

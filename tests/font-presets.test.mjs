@@ -39,13 +39,13 @@ test("file lines carry valid sha256 and pinned dual-source urls", () => {
   }
 });
 
-test("every webfont preset stays within 8 files, non-webfont has none", () => {
+test("every webfont preset stays within 4 files, non-webfont has none", () => {
   for (const f of fonts) {
     const [, slot, name, , , family] = f;
     const n = files.filter((x) => x[1] === slot && x[2] === name).length;
     if (name === "default" || name === "system") assert.equal(n, 0);
     else {
-      assert.ok(n >= 2 && n <= 8, `${slot}/${name} has ${n} files`);
+      assert.ok(n >= 2 && n <= 4, `${slot}/${name} has ${n} files`);
       assert.ok(files.some((x) => x[1] === slot && x[2] === name && x[3] === "400"), `${slot}/${name} missing weight 400`);
       assert.ok(family.length > 0);
     }
