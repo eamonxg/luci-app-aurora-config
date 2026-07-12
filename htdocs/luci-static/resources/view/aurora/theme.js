@@ -2094,7 +2094,7 @@ return view.extend({
       "aurora",
       _("Typography"),
       _(
-        "Sans-serif and monospace typefaces used across the theme. Webfonts are downloaded once from pinned, checksum-verified sources and served locally; pages never load fonts from the internet.",
+        "Sans-serif and monospace typefaces used across the theme. Pick a curated webfont — downloaded once after saving, from pinned, checksum-verified sources, then served locally — or upload your own .woff2 files.",
       ),
     );
     const fontSubsection = fontSection.subsection;

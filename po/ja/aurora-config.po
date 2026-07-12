@@ -929,15 +929,8 @@ msgid "Sans-Serif Typeface"
 msgstr "サンセリフ書体"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2084
-msgid ""
-"Sans-serif and monospace typefaces used across the theme. Webfonts are "
-"downloaded once from pinned, checksum-verified sources and served locally; "
-"pages never load fonts from the internet."
-msgstr ""
-"テーマ全体で使用するサンセリフおよび等幅フォントです。Web フォントはバージョ"
-"ン固定・チェックサム検証済みのソースから一度だけダウンロードされ、ローカルか"
-"ら配信されます。ページがインターネットからフォントを読み込むことはありませ"
-"ん。"
+msgid "Sans-serif and monospace typefaces used across the theme. Pick a curated webfont — downloaded once after saving, from pinned, checksum-verified sources, then served locally — or upload your own .woff2 files."
+msgstr "テーマ全体で使用するサンセリフおよび等幅フォントです。厳選された Web フォント(保存後に、バージョン固定・チェックサム検証済みのソースから一度だけダウンロードされ、以後ローカルから配信)を選ぶか、独自の .woff2 ファイルをアップロードできます。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:960
 msgid "Saved or preset value"

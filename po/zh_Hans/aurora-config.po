@@ -879,13 +879,8 @@ msgid "Sans-Serif Typeface"
 msgstr "无衬线字体"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2084
-msgid ""
-"Sans-serif and monospace typefaces used across the theme. Webfonts are "
-"downloaded once from pinned, checksum-verified sources and served locally; "
-"pages never load fonts from the internet."
-msgstr ""
-"主题全局使用的无衬线与等宽字体。网络字体仅从固定版本、经校验和验证的来源下载"
-"一次并由本机提供；页面不会从互联网加载字体。"
+msgid "Sans-serif and monospace typefaces used across the theme. Pick a curated webfont — downloaded once after saving, from pinned, checksum-verified sources, then served locally — or upload your own .woff2 files."
+msgstr "主题全局使用的无衬线与等宽字体。可选用精选网络字体——保存后才从固定版本、经校验和验证的来源下载一次,此后由本机提供——也可上传自己的 .woff2 字体文件。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:960
 msgid "Saved or preset value"

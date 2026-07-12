@@ -894,14 +894,8 @@ msgid "Sans-Serif Typeface"
 msgstr "고딕체 서체"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2084
-msgid ""
-"Sans-serif and monospace typefaces used across the theme. Webfonts are "
-"downloaded once from pinned, checksum-verified sources and served locally; "
-"pages never load fonts from the internet."
-msgstr ""
-"테마 전체에서 사용하는 산세리프 및 고정폭 글꼴입니다. 웹 글꼴은 버전이 고정되"
-"고 체크섬이 검증된 소스에서 한 번만 내려받아 로컬에서 제공되며, 페이지가 인터"
-"넷에서 글꼴을 불러오는 일은 없습니다."
+msgid "Sans-serif and monospace typefaces used across the theme. Pick a curated webfont — downloaded once after saving, from pinned, checksum-verified sources, then served locally — or upload your own .woff2 files."
+msgstr "테마 전체에서 사용하는 산세리프 및 고정폭 글꼴입니다. 엄선된 웹 글꼴(저장 후 버전이 고정되고 체크섬이 검증된 소스에서 한 번만 내려받아 이후 로컬에서 제공)을 선택하거나 자신의 .woff2 파일을 업로드할 수 있습니다."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:960
 msgid "Saved or preset value"
