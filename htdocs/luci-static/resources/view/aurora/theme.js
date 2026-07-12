@@ -2102,11 +2102,11 @@ return view.extend({
     const fontTableSo = fontSubsection.option(
       form.DummyValue,
       "_font_table",
-      " ",
+      _("Custom Fonts"),
     );
     fontTableSo.rawhtml = false;
     fontTableSo.cfgvalue = () => "";
-    fontTableSo.render = () => {
+    fontTableSo.renderWidget = () => {
       const FONT_TMP_PATH = "/tmp/aurora_font.tmp";
       const customs = fontPresetsBySlot?.custom || [];
 
