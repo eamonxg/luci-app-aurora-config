@@ -13,14 +13,16 @@ test("asset-upload module exposes the shared surface", async () => {
   for (const name of [
     "MAX_UPLOAD",
     "formatSize",
+    "extOf",
     "checkFile",
     "uploadToRouter",
-    "createDropzone",
-    "createProgressRow",
     "createAssetManager",
     "confirmDelete",
   ])
     assert.ok(src.includes(name), `missing export: ${name}`);
+
+  assert.ok(!src.includes("createDropzone"), "dead export must stay deleted");
+  assert.ok(!src.includes("createProgressRow"), "dead export must stay deleted");
 });
 
 test("module owns the only cgi-upload pipeline", async () => {

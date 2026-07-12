@@ -2449,8 +2449,6 @@ return view.extend({
     assetTableSo.load = () => getIconsOnce();
     assetTableSo.cfgvalue = (section_id, data) => data?.icons || [];
     const ICON_EXTS = ["jpg", "jpeg", "png", "webp", "avif", "svg", "gif", "ico"];
-    const iconExtOf = (name) =>
-      (name.match(/\.([a-z0-9]+)$/i)?.[1] || "").toLowerCase();
 
     assetTableSo.render = function (option_index, section_id, in_table) {
       return this.load(section_id).then((data) => {
@@ -2527,7 +2525,7 @@ return view.extend({
           rows: icons.map((icon) => ({
             preview: makePreview(icon),
             name: icon,
-            badge: { label: iconExtOf(icon).toUpperCase(), tone: "neutral" },
+            badge: { label: assetUpload.extOf(icon).toUpperCase(), tone: "neutral" },
             size: sizes[icon] || 0,
             onDelete: ui.createHandlerFn(this, () => removeIcon(icon)),
           })),
@@ -2562,7 +2560,7 @@ return view.extend({
                 valid: () => {
                   const v = nameInput.value.trim();
                   return (
-                    !!v && !v.includes("/") && ICON_EXTS.includes(iconExtOf(v))
+                    !!v && !v.includes("/") && ICON_EXTS.includes(assetUpload.extOf(v))
                   );
                 },
               };
