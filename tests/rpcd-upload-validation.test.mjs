@@ -30,3 +30,11 @@ test("list endpoints expose byte sizes", async () => {
   assert.match(src, /json_add_int "size" "\$csize"/);
   assert.match(src, /json_add_object "icon_sizes"/);
 });
+
+test("both upload mv sites are guarded and clean tmp on failure", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(src, /if ! mv "\$FONT_TMP_UPLOAD"/);
+  assert.match(src, /if mv "\$TMP_UPLOAD_PATH"/);
+  const storeErrors = src.match(/Failed to store file/g) || [];
+  assert.equal(storeErrors.length, 2, "font and icon mv failure paths");
+});

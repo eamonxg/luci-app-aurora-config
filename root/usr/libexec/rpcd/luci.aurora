@@ -1120,7 +1120,10 @@ case "$1" in
 		stack="\"$family\", $default_stack"
 
 		mkdir -p "$FONT_CUSTOM_PATH"
-		mv "$FONT_TMP_UPLOAD" "$FONT_CUSTOM_PATH/${slot}-${slug}.woff2"
+		if ! mv "$FONT_TMP_UPLOAD" "$FONT_CUSTOM_PATH/${slot}-${slug}.woff2" 2>"/dev/null"; then
+			rm -f "$FONT_TMP_UPLOAD"
+			echo '{ "result": 1, "error": "Failed to store file" }'; exit 0
+		fi
 		chmod 644 "$FONT_CUSTOM_PATH/${slot}-${slug}.woff2"
 		printf '%s|%s\n' "$family" "$stack" > "$FONT_CUSTOM_PATH/${slot}-${slug}.meta"
 		chmod 644 "$FONT_CUSTOM_PATH/${slot}-${slug}.meta"
