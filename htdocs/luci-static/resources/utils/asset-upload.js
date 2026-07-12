@@ -77,18 +77,20 @@ return baseclass.extend({
     });
   },
 
-  // Composite "asset manager": a table (preview | name | badge | size | ✕)
-  // sitting on a dock that shows either the slim upload bar, the in-place
-  // confirm form, or a progress row -- never more than one at a time. Both
-  // custom-fonts and the brand asset library render through this; the only
-  // per-kind knowledge lives in the caller's row/bar/form/checkFile/upload
-  // callbacks. See prototype v3 variant A (font-upload-proto.html) for the
-  // interaction blueprint this replicates.
+  // Composite "asset manager": a native LuCI `.table` (preview | name |
+  // badge | size | delete) sitting on a dock that shows either the slim
+  // upload bar, the in-place confirm form, or a progress row -- never more
+  // than one at a time. Both custom-fonts and the brand asset library
+  // render through this; the only per-kind knowledge lives in the caller's
+  // row/bar/form/checkFile/upload callbacks. Table markup deliberately
+  // mirrors the theme's other cbi tables (`table` / `tr table-titles` /
+  // `th` / `tr` / `td`) so it inherits the Aurora theme's colors, dark
+  // mode, and row hover instead of fighting it with bespoke inline chrome.
   //
   // cfg = {
   //   badgeHeader,                 // _("Slot") or _("Type")
   //   emptyText,
-  //   rows: [{ preview, name, badge: { label, tone }, size, onDelete() }],
+  //   rows: [{ preview, name, badge, size, onDelete() }],  // badge: plain text or falsy
   //   bar: { hint, sub, accept },
   //   checkFile(file) -> { ok, err },
   //   form: { fields(file) -> { el, value(), valid() }, note },
@@ -97,108 +99,65 @@ return baseclass.extend({
   // }
   createAssetManager(cfg) {
     const rows = cfg.rows || [];
-    const th = (width) =>
-      "text-align:left;font-size:0.72em;color:var(--text-muted);" +
-      "font-weight:600;letter-spacing:0.03em;padding:0.4em 0.75em;" +
-      "background:var(--surface-sunken);border-bottom:1px solid var(--hairline);" +
-      (width ? "width:" + width + "px;" : "");
-    const td =
-      "padding:0.45em 0.75em;border-bottom:1px solid var(--hairline);" +
-      "vertical-align:middle;";
-    const badgeStyle = (tone) =>
-      "display:inline-block;font-size:0.68em;font-weight:700;" +
-      "letter-spacing:0.03em;padding:0.08em 0.55em;border-radius:999px;" +
-      "white-space:nowrap;" +
-      (tone === "brand"
-        ? "background:var(--brand-subtle);color:var(--brand);"
-        : "background:var(--surface-sunken);color:var(--text-muted);" +
-          "border:1px solid var(--hairline);");
 
-    const shell = E("div", {
-      style:
-        "border:1px solid var(--hairline);border-radius:var(--radius-base);" +
-        "overflow:hidden;",
-    });
+    const shell = E("div", {});
 
     if (rows.length) {
       shell.appendChild(
-        E(
-          "table",
-          { style: "width:100%;border-collapse:collapse;font-size:0.9em;" },
-          [
-            E("thead", {}, [
-              E("tr", {}, [
-                E("th", { style: th(40) }, ""),
-                E("th", { style: th() }, _("Name")),
-                E("th", { style: th(76) }, cfg.badgeHeader),
-                E("th", { style: th(84) }, _("Size")),
-                E("th", { style: th(40) }, ""),
-              ]),
-            ]),
-            E(
-              "tbody",
-              {},
-              rows.map((row) =>
-                E("tr", {}, [
-                  E("td", { style: td }, row.preview),
-                  E(
-                    "td",
-                    { style: td + "font-weight:600;word-break:break-all;" },
-                    row.name,
-                  ),
-                  E(
-                    "td",
-                    { style: td },
-                    row.badge
-                      ? E(
-                          "span",
-                          { style: badgeStyle(row.badge.tone) },
-                          row.badge.label,
-                        )
-                      : "",
-                  ),
-                  E(
-                    "td",
-                    {
-                      style:
-                        td +
-                        "color:var(--text-muted);font-variant-numeric:tabular-nums;" +
-                        "white-space:nowrap;",
-                    },
-                    formatSize(row.size || 0),
-                  ),
-                  E(
-                    "td",
-                    { style: td },
-                    E(
-                      "button",
-                      {
-                        type: "button",
-                        class: "cbi-button",
-                        title: _("Delete"),
-                        style: "padding:0.15em 0.5em;line-height:1;",
-                        click: row.onDelete,
-                      },
-                      "✕",
-                    ),
-                  ),
-                ]),
+        E("table", { class: "table" }, [
+          E("tr", { class: "tr table-titles" }, [
+            E("th", { class: "th", style: "width:56px;" }, ""),
+            E("th", { class: "th" }, _("Name")),
+            E("th", { class: "th" }, cfg.badgeHeader),
+            E("th", { class: "th" }, _("Size")),
+            E("th", { class: "th center" }, ""),
+          ]),
+          ...rows.map((row) =>
+            E("tr", { class: "tr" }, [
+              E("td", { class: "td" }, row.preview),
+              E(
+                "td",
+                { class: "td", style: "word-break:break-all;" },
+                row.name,
               ),
-            ),
-          ],
-        ),
+              E(
+                "td",
+                {
+                  class: "td",
+                  style: "color:var(--text-muted);font-size:0.9em;",
+                },
+                row.badge || "",
+              ),
+              E(
+                "td",
+                {
+                  class: "td",
+                  style:
+                    "color:var(--text-muted);font-variant-numeric:tabular-nums;" +
+                    "white-space:nowrap;",
+                },
+                formatSize(row.size || 0),
+              ),
+              E(
+                "td",
+                { class: "td center" },
+                E(
+                  "button",
+                  {
+                    type: "button",
+                    class: "cbi-button cbi-button-remove",
+                    click: row.onDelete,
+                  },
+                  _("Delete"),
+                ),
+              ),
+            ]),
+          ),
+        ]),
       );
     } else {
       shell.appendChild(
-        E(
-          "div",
-          {
-            style:
-              "padding:0.75em 0.9em;color:var(--text-muted);font-size:0.9em;" +
-              "border-bottom:1px solid var(--hairline);",
-          },
-          cfg.emptyText,
-        ),
+        E("div", { style: "padding:0.5em 0;" }, [E("em", {}, cfg.emptyText)]),
       );
     }
 
@@ -228,36 +187,26 @@ return baseclass.extend({
           type: "button",
           style:
             "display:flex;align-items:center;gap:0.6em;width:100%;" +
-            "padding:0.6em 0.9em;background:var(--surface-sunken);" +
-            "border:0;border-top:1px solid var(--hairline);text-align:left;" +
-            "cursor:pointer;color:var(--text);font:inherit;",
+            "margin-top:0.5em;padding:0.6em 0.9em;background:transparent;" +
+            "border:1px dashed var(--hairline);border-radius:var(--radius-base);" +
+            "text-align:left;cursor:pointer;color:var(--text);font:inherit;",
           click: () => input.click(),
           dragover: (e) => {
             e.preventDefault();
-            bar.style.background = "var(--brand-subtle)";
+            bar.style.background = "var(--surface-sunken)";
           },
           dragleave: () => {
-            bar.style.background = "var(--surface-sunken)";
+            bar.style.background = "transparent";
           },
           drop: (e) => {
             e.preventDefault();
-            bar.style.background = "var(--surface-sunken)";
+            bar.style.background = "transparent";
             const file = e.dataTransfer && e.dataTransfer.files[0];
             if (file) onFile(file);
           },
         },
         [
-          E(
-            "span",
-            {
-              style:
-                "width:26px;height:26px;border-radius:0.4em;flex:0 0 auto;" +
-                "background:var(--brand-subtle);color:var(--brand);" +
-                "display:flex;align-items:center;justify-content:center;" +
-                "font-weight:800;",
-            },
-            "⬆",
-          ),
+          E("span", { style: "font-weight:700;" }, "⬆"),
           E("strong", { style: "font-size:0.93em;" }, cfg.bar.hint),
           E("span", { style: "flex:1;" }, ""),
           E(
@@ -407,7 +356,7 @@ return baseclass.extend({
         "div",
         {
           style:
-            "padding:0.75em 0.9em;background:var(--surface-sunken);" +
+            "margin-top:0.5em;padding-top:0.6em;" +
             "border-top:1px solid var(--hairline);display:flex;" +
             "flex-direction:column;gap:0.6em;",
         },

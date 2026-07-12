@@ -2217,10 +2217,7 @@ return view.extend({
             "Aa",
           ),
           name: font.family,
-          badge: {
-            label: font.slot === "sans" ? _("Sans-Serif") : _("Monospace"),
-            tone: font.slot === "sans" ? "brand" : "neutral",
-          },
+          badge: font.slot === "sans" ? _("Sans-Serif") : _("Monospace"),
           size: font.size || 0,
           onDelete: ui.createHandlerFn(viewCtx, () => removeFont(font)),
         })),
@@ -2525,7 +2522,7 @@ return view.extend({
           rows: icons.map((icon) => ({
             preview: makePreview(icon),
             name: icon,
-            badge: { label: assetUpload.extOf(icon).toUpperCase(), tone: "neutral" },
+            badge: assetUpload.extOf(icon).toUpperCase(),
             size: sizes[icon] || 0,
             onDelete: ui.createHandlerFn(this, () => removeIcon(icon)),
           })),
