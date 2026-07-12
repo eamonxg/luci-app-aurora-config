@@ -8,7 +8,7 @@ readonly FONT_CSS_FILE="$FONT_PATH/aurora-font.css"
 readonly FONT_JOB_PATH="/tmp/aurora_font_jobs"
 readonly FONT_TMP_UPLOAD="/tmp/aurora_font.tmp"
 readonly FONT_CUSTOM_PATH="$FONT_PATH/custom"
-readonly FONT_MAX_UPLOAD=8388608
+readonly MAX_UPLOAD=8388608
 readonly TMP_UPLOAD_PATH="/tmp/aurora_icon.tmp"
 readonly DOWNLOAD_PATH="/tmp/aurora_downloads"
 readonly CONFIG_FILE="/etc/config/aurora"
@@ -31,6 +31,42 @@ readonly COLOR_TOKEN_KEYS="$(grep -v '^#' "$COLOR_TOKENS_FILE" 2>/dev/null)"
 # Number of color options a valid preset template must contain (every token in
 # both light_ and dark_ variants). Derived once from COLOR_TOKEN_KEYS.
 PRESET_EXPECTED_COUNT=$(( $(printf '%s\n' $COLOR_TOKEN_KEYS | grep -c .) * 2 ))
+
+# Shared gate for uploaded tmp files: size cap, per-kind content checks,
+# and tmp cleanup on every rejection. Callers get return 0 only when the
+# tmp file is safe to move into place; on failure the JSON error has
+# already been emitted, so call sites just `|| exit 0`.
+receive_upload() {
+	ru_tmp="$1"; ru_kind="$2"; ru_name="$3"
+	[ -f "$ru_tmp" ] || {
+		echo '{ "result": 1, "error": "No uploaded file" }'; return 1; }
+	ru_size=$(wc -c < "$ru_tmp")
+	[ "$ru_size" -le "$MAX_UPLOAD" ] || {
+		rm -f "$ru_tmp"
+		echo '{ "result": 1, "error": "File exceeds 8MB limit" }'; return 1; }
+	case "$ru_kind" in
+	font)
+		[ "$(head -c 4 "$ru_tmp")" = "wOF2" ] || {
+			rm -f "$ru_tmp"
+			echo '{ "result": 1, "error": "Not a woff2 file" }'; return 1; }
+		;;
+	image)
+		case "$ru_name" in
+		""|*/*|*..*)
+			rm -f "$ru_tmp"
+			echo '{ "result": 255 }'; return 1 ;;
+		esac
+		ru_ext=$(printf '%s' "$ru_name" | sed 's/.*\.//' | tr 'A-Z' 'a-z')
+		case "$ru_ext" in
+		jpg|jpeg|png|webp|avif|svg|gif|ico) ;;
+		*)
+			rm -f "$ru_tmp"
+			echo '{ "result": 1, "error": "Unsupported image type" }'; return 1 ;;
+		esac
+		;;
+	esac
+	return 0
+}
 
 # Fail fast when the shipped key list is missing or empty: with zero keys the
 # expected-count check degrades to 0==0, so preset/import validation would
@@ -1045,15 +1081,7 @@ case "$1" in
 		[ ${#family} -le 64 ] || {
 			rm -f "$FONT_TMP_UPLOAD"
 			echo '{ "result": 1, "error": "Family name too long" }'; exit 0; }
-		[ -f "$FONT_TMP_UPLOAD" ] || {
-			echo '{ "result": 1, "error": "No uploaded file" }'; exit 0; }
-		size=$(wc -c < "$FONT_TMP_UPLOAD")
-		[ "$size" -le "$FONT_MAX_UPLOAD" ] || {
-			rm -f "$FONT_TMP_UPLOAD"
-			echo '{ "result": 1, "error": "File exceeds 8MB limit" }'; exit 0; }
-		[ "$(head -c 4 "$FONT_TMP_UPLOAD")" = "wOF2" ] || {
-			rm -f "$FONT_TMP_UPLOAD"
-			echo '{ "result": 1, "error": "Not a woff2 file" }'; exit 0; }
+		receive_upload "$FONT_TMP_UPLOAD" font || exit 0
 
 		slug=$(printf '%s' "$family" | tr 'A-Z' 'a-z' | sed 's/[^a-z0-9]\{1,\}/-/g;s/^-//;s/-$//')
 		[ -n "$slug" ] || {
@@ -1232,15 +1260,16 @@ FACE
 
 	"upload_icon")
 		read -r input; json_load "$input"; json_get_var filename "filename"; json_cleanup
-		if dirname "$filename" | grep -q "\.\."; then echo '{ "result": 255 }'; exit 255; fi
-		
+		receive_upload "$TMP_UPLOAD_PATH" image "$filename" || exit 0
+
 		mkdir -p "$ICON_PATH"
 		if mv "$TMP_UPLOAD_PATH" "$ICON_PATH/$filename" 2>"/dev/null"; then
 			chmod 0644 "$ICON_PATH/$filename"
 			update_icon_cache_timestamp
 			echo '{ "result": 0 }'
 		else
-			echo '{ "result": 1 }'
+			rm -f "$TMP_UPLOAD_PATH"
+			echo '{ "result": 1, "error": "Failed to store file" }'
 		fi
 		;;
 
