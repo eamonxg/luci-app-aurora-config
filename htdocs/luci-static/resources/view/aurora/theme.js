@@ -6,6 +6,7 @@
 "require ui";
 "require fs";
 "require utils.version-api";
+"require utils.asset-upload as assetUpload";
 
 const CONFIG_IMPORT_PATH = "/tmp/aurora_config_import.tmp";
 
@@ -2150,120 +2151,187 @@ return view.extend({
       const FONT_TMP_PATH = "/tmp/aurora_font.tmp";
       const customs = fontPresetsBySlot?.custom || [];
 
-      const uploadFont = (slot, family, file) =>
-        new Promise((resolve, reject) => {
-          const xhr = new XMLHttpRequest();
-          xhr.addEventListener("load", () => {
-            if (xhr.status !== 200)
-              return reject(new Error("HTTP " + xhr.status));
-            L.resolveDefault(callUploadFont(slot, family), {}).then((ret) =>
-              ret?.result === 0
-                ? resolve(ret)
-                : reject(new Error(ret?.error || _("Unknown"))),
-            );
-          });
-          xhr.addEventListener("error", () =>
-            reject(new Error(_("Upload failed"))),
+      const familyFromFilename = (name) => {
+        const stem = name.replace(/\.woff2$/i, "");
+        const parts = stem
+          .split(/[-_]+/)
+          .filter(
+            (p) =>
+              !/^(regular|bold|light|medium|semibold|thin|italic|normal|latin|\d+)$/i.test(
+                p,
+              ),
           );
-          const formData = new FormData();
-          formData.append("sessionid", rpc.getSessionID());
-          formData.append("filename", FONT_TMP_PATH);
-          formData.append("filemode", "0600");
-          formData.append("filedata", file, file.name);
-          xhr.open("POST", "/cgi-bin/cgi-upload");
-          xhr.withCredentials = true;
-          xhr.send(formData);
-        });
+        const words = parts.length ? parts : [stem];
+        return words
+          .map((w) =>
+            /^[a-z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w,
+          )
+          .join(" ");
+      };
 
-      const openUploadModal = () => {
-        const slotSelect = E("select", { class: "cbi-input-select" }, [
-          E("option", { value: "sans" }, _("Sans-Serif")),
-          E("option", { value: "mono" }, _("Monospace")),
-        ]);
+      const confirmWrap = E("div", {});
+
+      const buildConfirmCard = (file) => {
+        while (confirmWrap.firstChild) confirmWrap.firstChild.remove();
+
+        const check = assetUpload.checkFile(file, { exts: ["woff2"] });
+
         const familyInput = E("input", {
           type: "text",
           class: "cbi-input-text",
           placeholder: _("Font family name, e.g. MiSans"),
+          value: familyFromFilename(file.name),
         });
-        const fileInput = E("input", { type: "file", accept: ".woff2" });
-
-        ui.showModal(_("Upload Custom Font"), [
-          E("p", {}, _("Only .woff2 files up to 8MB are accepted.")),
-          E(
-            "p",
-            { style: "opacity:0.6; font-size:0.9em; margin-top:-0.3em;" },
-            _(
-              "Custom fonts are stored in the router's limited flash storage and downloaded by every browser on first load. For CJK typefaces, prefer a subsetted .woff2 with only the glyphs you need to save space and load faster.",
-            ),
-          ),
-          E("div", { class: "cbi-value" }, [
-            E("label", { class: "cbi-value-title" }, _("Slot")),
-            E("div", { class: "cbi-value-field" }, slotSelect),
-          ]),
-          E("div", { class: "cbi-value" }, [
-            E("label", { class: "cbi-value-title" }, _("Family")),
-            E("div", { class: "cbi-value-field" }, familyInput),
-          ]),
-          E("div", { class: "cbi-value" }, [
-            E("label", { class: "cbi-value-title" }, _("File")),
-            E("div", { class: "cbi-value-field" }, fileInput),
-          ]),
-          E("div", { class: "right" }, [
-            E(
-              "button",
-              { class: "cbi-button", click: ui.hideModal },
-              _("Cancel"),
-            ),
-            " ",
-            E(
-              "button",
-              {
-                class: "cbi-button cbi-button-positive",
-                click: ui.createHandlerFn(viewCtx, () => {
-                  const file = fileInput.files?.[0];
-                  const family = familyInput.value.trim();
-                  if (!file || !family) {
-                    ui.addNotification(
-                      null,
-                      E("p", _("Choose a .woff2 file and a family name")),
-                      "warning",
-                    );
-                    return Promise.resolve();
-                  }
-                  return uploadFont(slotSelect.value, family, file)
-                    .then(() => window.location.reload())
-                    .catch((err) =>
-                      ui.addNotification(
-                        null,
-                        E("p", _("Upload failed: %s").format(err.message)),
-                        "error",
-                      ),
-                    );
-                }),
-              },
-              _("Upload"),
-            ),
-          ]),
+        const slotSelect = E("select", { class: "cbi-input-select" }, [
+          E("option", { value: "sans" }, _("Sans-Serif")),
+          E("option", { value: "mono" }, _("Monospace")),
         ]);
+        const progress = assetUpload.createProgressRow();
+
+        const goBtn = E(
+          "button",
+          {
+            class: "cbi-button cbi-button-positive",
+            disabled: check.ok ? null : "",
+            click: ui.createHandlerFn(viewCtx, () => {
+              const family = familyInput.value.trim();
+              if (!family) {
+                ui.addNotification(
+                  null,
+                  E("p", _("Font family name, e.g. MiSans")),
+                  "warning",
+                );
+                return Promise.resolve();
+              }
+              dropzone.setBusy(true);
+              progress.show();
+              progress.set(0, file.name);
+              return assetUpload
+                .uploadToRouter({
+                  tmpPath: FONT_TMP_PATH,
+                  file,
+                  onProgress: (p) => progress.set(p),
+                })
+                .then(() =>
+                  L.resolveDefault(
+                    callUploadFont(slotSelect.value, family),
+                    {},
+                  ),
+                )
+                .then((ret) => {
+                  if (ret?.result === 0) window.location.reload();
+                  else throw new Error(ret?.error || _("Unknown"));
+                })
+                .catch((err) => {
+                  dropzone.setBusy(false);
+                  progress.hide();
+                  ui.addNotification(
+                    null,
+                    E("p", _("Upload failed: %s").format(err.message)),
+                    "error",
+                  );
+                });
+            }),
+          },
+          _("Confirm Upload"),
+        );
+
+        confirmWrap.appendChild(
+          E(
+            "div",
+            {
+              style:
+                "border:1px solid var(--hairline);border-left:3px solid var(--brand);border-radius:0.5em;padding:0.75em 0.875em;margin-top:0.6em;",
+            },
+            [
+              E(
+                "div",
+                {
+                  style:
+                    "display:flex;justify-content:space-between;align-items:center;gap:0.6em;margin-bottom:0.6em;",
+                },
+                [
+                  E("strong", { style: "word-break:break-all;" }, file.name),
+                  E(
+                    "span",
+                    { style: "opacity:0.6;white-space:nowrap;" },
+                    assetUpload.formatSize(file.size),
+                  ),
+                  E(
+                    "button",
+                    {
+                      class: "cbi-button",
+                      title: _("Remove file"),
+                      click: () => {
+                        while (confirmWrap.firstChild)
+                          confirmWrap.firstChild.remove();
+                      },
+                    },
+                    "✕",
+                  ),
+                ],
+              ),
+              check.ok
+                ? ""
+                : E(
+                    "p",
+                    { style: "color:var(--danger);font-weight:600;" },
+                    check.err,
+                  ),
+              E("div", { class: "cbi-value" }, [
+                E("label", { class: "cbi-value-title" }, _("Family")),
+                E("div", { class: "cbi-value-field" }, familyInput),
+              ]),
+              E("div", { class: "cbi-value" }, [
+                E("label", { class: "cbi-value-title" }, _("Slot")),
+                E("div", { class: "cbi-value-field" }, slotSelect),
+              ]),
+              progress.el,
+              E("div", { class: "right" }, goBtn),
+            ],
+          ),
+        );
       };
 
+      const dropzone = assetUpload.createDropzone({
+        hint: _("Drop a .woff2 font here, or click to browse"),
+        sub: _("Only .woff2 files up to 8MB are accepted."),
+        accept: ".woff2",
+        compact: true,
+        onFile: buildConfirmCard,
+      });
+
       const removeRow = (font) =>
-        L.resolveDefault(callRemoveFont(font.slot, font.name), {}).then(
-          (ret) => {
+        assetUpload.confirmDelete({
+          title: _("Delete Custom Font"),
+          message: _(
+            "Delete '%s'? The interface will fall back to the default typeface.",
+          ).format(font.family),
+        }).then((confirmed) => {
+          if (!confirmed) return;
+          return L.resolveDefault(
+            callRemoveFont(font.slot, font.name),
+            {},
+          ).then((ret) => {
             if (ret?.result === 0) window.location.reload();
             else
               ui.addNotification(
                 null,
-                E("p", _("Delete failed: %s").format(ret?.error || _("Unknown"))),
+                E(
+                  "p",
+                  _("Delete failed: %s").format(ret?.error || _("Unknown")),
+                ),
                 "error",
               );
-          },
-        );
+          });
+        });
 
       const rows = customs.map((font) =>
         E("li", {}, [
           E("code", {}, font.family),
-          " — " + (font.slot === "sans" ? _("Sans-Serif") : _("Monospace")) + " ",
+          " — " +
+            (font.slot === "sans" ? _("Sans-Serif") : _("Monospace")) +
+            " ",
           E(
             "button",
             {
@@ -2281,17 +2349,15 @@ return view.extend({
           rows.length
             ? E("ul", { style: "margin:0 0 0.5em 0;" }, rows)
             : E("p", { style: "opacity:0.6;" }, _("No custom fonts uploaded.")),
+          dropzone,
           E(
-            "button",
-            {
-              class: "cbi-button cbi-button-action",
-              click: ui.createHandlerFn(viewCtx, () => {
-                openUploadModal();
-                return Promise.resolve();
-              }),
-            },
-            _("Upload Custom Font"),
+            "p",
+            { style: "opacity:0.6;font-size:0.9em;margin:0.35em 0 0;" },
+            _(
+              "Custom fonts are stored in the router's limited flash storage and downloaded by every browser on first load. For CJK typefaces, prefer a subsetted .woff2 with only the glyphs you need to save space and load faster.",
+            ),
           ),
+          confirmWrap,
         ]),
       ]);
     };
