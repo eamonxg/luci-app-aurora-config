@@ -224,11 +224,11 @@ return baseclass.extend({
             },
             cfg.bar.sub || "",
           ),
-          input,
         ],
       );
 
       dock.appendChild(bar);
+      dock.appendChild(input);
     };
 
     const buildForm = (file, check) => {
