@@ -47,10 +47,6 @@ msgstr ""
 "通知、バリデーション、およびステータスフィードバックのためのアクセントカ"
 "ラー。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2717
-msgid "Actions"
-msgstr "アクション"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2897
 msgid "Add shortcuts, assign icons, and drag rows to reorder them."
 msgstr ""
@@ -114,10 +110,6 @@ msgid ""
 msgstr ""
 "本当に <strong>%h</strong> をバージョン <strong>%h</strong> にアップデートし"
 "ますか？"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2716
-msgid "Asset Filename"
-msgstr "アセットファイル名"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2740
 msgid ""
@@ -296,6 +288,26 @@ msgstr "カスタム"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2264
 msgid "Custom Fonts"
 msgstr "カスタムフォント"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Name"
+msgstr "名前"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Size"
+msgstr "サイズ"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Type"
+msgstr "種類"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Filename (with extension)"
+msgstr "ファイル名(拡張子を含む)"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Name it login-bg.* to use it as the login page background."
+msgstr "login-bg.* という名前にすると、ログインページの背景として使用されます。"
+
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
 msgid "Drop a .woff2 font here, or click to browse"
@@ -473,10 +485,6 @@ msgstr "削除に失敗しました: %s"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:228
 msgid "Faint Hover"
 msgstr "かすかなホバー"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2189
-msgid "Family"
-msgstr "フォント名"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2765
 msgid "Favicon (ICO / Legacy)"
@@ -828,10 +836,6 @@ msgstr "プリセット"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1665
 msgid "Preset applied successfully."
 msgstr "プリセットが正常に適用されました。"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2715
-msgid "Preview"
-msgstr "プレビュー"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2113
 msgid ""

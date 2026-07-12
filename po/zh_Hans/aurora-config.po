@@ -41,10 +41,6 @@ msgstr "用于警告、通知和校验信息的强调色。"
 msgid "Accents for notifications, validation, and status feedback."
 msgstr "用于通知、校验和状态反馈的强调色。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2717
-msgid "Actions"
-msgstr "操作"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2897
 msgid "Add shortcuts, assign icons, and drag rows to reorder them."
 msgstr "添加快捷方式、指定图标，并拖动行进行排序。"
@@ -102,10 +98,6 @@ msgid ""
 "Are you sure you want to update <strong>%h</strong> to version <strong>%h</"
 "strong>?"
 msgstr "确定要将 <strong>%h</strong> 更新到版本 <strong>%h</strong> 吗？"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2716
-msgid "Asset Filename"
-msgstr "资源文件名"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2740
 msgid ""
@@ -276,6 +268,26 @@ msgstr "自定义"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2264
 msgid "Custom Fonts"
 msgstr "自定义字体"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Name"
+msgstr "名称"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Size"
+msgstr "大小"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Type"
+msgstr "类型"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Filename (with extension)"
+msgstr "文件名(含扩展名)"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Name it login-bg.* to use it as the login page background."
+msgstr "命名为 login-bg.* 可用作登录页背景。"
+
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
 msgid "Drop a .woff2 font here, or click to browse"
@@ -446,10 +458,6 @@ msgstr "删除失败：%s"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:228
 msgid "Faint Hover"
 msgstr "微淡悬停态"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2189
-msgid "Family"
-msgstr "字体名称"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2765
 msgid "Favicon (ICO / Legacy)"
@@ -783,10 +791,6 @@ msgstr "预设"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1665
 msgid "Preset applied successfully."
 msgstr "预设应用成功。"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2715
-msgid "Preview"
-msgstr "预览"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2113
 msgid ""

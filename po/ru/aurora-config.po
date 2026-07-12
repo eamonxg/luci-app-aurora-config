@@ -43,10 +43,6 @@ msgstr "Акцент для предупреждений, уведомлений
 msgid "Accents for notifications, validation, and status feedback."
 msgstr "Акценты для уведомлений, валидации и обратной связи о состоянии."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2717
-msgid "Actions"
-msgstr "Действия"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2897
 msgid "Add shortcuts, assign icons, and drag rows to reorder them."
 msgstr ""
@@ -111,10 +107,6 @@ msgid ""
 msgstr ""
 "Вы уверены, что хотите обновить <strong>%h</strong> до версии <strong>%h</"
 "strong>?"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2716
-msgid "Asset Filename"
-msgstr "Имя файла ресурса"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2740
 msgid ""
@@ -294,6 +286,26 @@ msgstr "Пользовательский"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2264
 msgid "Custom Fonts"
 msgstr "Пользовательские шрифты"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Name"
+msgstr "Название"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Size"
+msgstr "Размер"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Type"
+msgstr "Тип"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Filename (with extension)"
+msgstr "Имя файла (с расширением)"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Name it login-bg.* to use it as the login page background."
+msgstr "Назовите файл login-bg.*, чтобы использовать его как фон страницы входа."
+
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
 msgid "Drop a .woff2 font here, or click to browse"
@@ -471,10 +483,6 @@ msgstr "Не удалось удалить: %s"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:228
 msgid "Faint Hover"
 msgstr "Слабое наведение"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2189
-msgid "Family"
-msgstr "Название шрифта"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2765
 msgid "Favicon (ICO / Legacy)"
@@ -825,10 +833,6 @@ msgstr "Пресет"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1665
 msgid "Preset applied successfully."
 msgstr "Пресет успешно применен."
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2715
-msgid "Preview"
-msgstr "Предпросмотр"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2113
 msgid ""

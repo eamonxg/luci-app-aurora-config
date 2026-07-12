@@ -41,10 +41,6 @@ msgstr "경고, 주의 사항 및 유효성 검사 메시지를 위한 강조색
 msgid "Accents for notifications, validation, and status feedback."
 msgstr "알림, 유효성 검사 및 상태 피드백을 위한 강조색."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2717
-msgid "Actions"
-msgstr "작업"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2897
 msgid "Add shortcuts, assign icons, and drag rows to reorder them."
 msgstr ""
@@ -106,10 +102,6 @@ msgid ""
 msgstr ""
 "정말로 <strong>%h</strong>을(를) 버전 <strong>%h</strong>(으)로 업데이트하시"
 "겠습니까?"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2716
-msgid "Asset Filename"
-msgstr "자산 파일명"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2740
 msgid ""
@@ -282,6 +274,26 @@ msgstr "사용자 지정"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2264
 msgid "Custom Fonts"
 msgstr "사용자 지정 글꼴"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Name"
+msgstr "이름"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Size"
+msgstr "크기"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Type"
+msgstr "유형"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Filename (with extension)"
+msgstr "파일 이름(확장자 포함)"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Name it login-bg.* to use it as the login page background."
+msgstr "login-bg.*로 이름을 지정하면 로그인 페이지 배경으로 사용됩니다."
+
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
 msgid "Drop a .woff2 font here, or click to browse"
@@ -455,10 +467,6 @@ msgstr "삭제 실패: %s"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:228
 msgid "Faint Hover"
 msgstr "흐릿한 호버"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2189
-msgid "Family"
-msgstr "글꼴 이름"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2765
 msgid "Favicon (ICO / Legacy)"
@@ -796,10 +804,6 @@ msgstr "프리셋"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1665
 msgid "Preset applied successfully."
 msgstr "프리셋이 성공적으로 적용되었습니다."
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2715
-msgid "Preview"
-msgstr "미리보기"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2113
 msgid ""
