@@ -41,10 +41,6 @@ msgstr "用於警告、通知和驗證訊息的強調色。"
 msgid "Accents for notifications, validation, and status feedback."
 msgstr "用於通知、驗證和狀態回饋的強調色。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2717
-msgid "Actions"
-msgstr "動作"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2897
 msgid "Add shortcuts, assign icons, and drag rows to reorder them."
 msgstr "新增捷徑、指定圖示，並拖曳各列以重新排序。"
@@ -102,10 +98,6 @@ msgid ""
 "Are you sure you want to update <strong>%h</strong> to version <strong>%h</"
 "strong>?"
 msgstr "確定要將 <strong>%h</strong> 更新至版本 <strong>%h</strong> 嗎？"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2716
-msgid "Asset Filename"
-msgstr "素材檔案名稱"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2740
 msgid ""
@@ -224,10 +216,6 @@ msgstr "正在檢查更新..."
 msgid "Checking..."
 msgstr "正在檢查..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2213
-msgid "Choose a .woff2 file and a family name"
-msgstr "請選擇 .woff2 檔案並填寫字型名稱"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:967
 msgid "Choose a literal color for this token"
 msgstr "為此變數選擇一個實際色彩"
@@ -276,10 +264,61 @@ msgstr "圓角半徑"
 msgid "Custom"
 msgstr "自訂"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2137
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2264
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Name"
+msgstr "名稱"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
+msgid "Size"
+msgstr "大小"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Type"
+msgstr "類型"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Filename (with extension)"
+msgstr "檔案名稱(含副檔名)"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Name it login-bg.* to use it as the login page background."
+msgstr "命名為 login-bg.* 可用作登入頁背景。"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Will replace the existing '%s'."
+msgstr "將取代既有的「%s」。"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Drop a .woff2 font here, or click to browse"
+msgstr "將 .woff2 字型拖曳到這裡,或點擊選擇檔案"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
+msgid "Confirm Upload"
+msgstr "確認上傳"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
 msgid "Custom Fonts"
 msgstr "自訂字型"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
+msgid "Unsupported file type. Allowed: %s"
+msgstr "不支援的檔案類型,僅支援:%s"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
+msgid "File is %s, exceeding the 8MB limit."
+msgstr "檔案大小為 %s,超出 8MB 限制。"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Delete Custom Font"
+msgstr "刪除自訂字型"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Delete '%s'? The interface will fall back to the default typeface."
+msgstr "確定刪除「%s」?介面將回退為預設字型。"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2196
+msgid "Keep custom font files as small as possible, as they are stored in the router's limited flash storage."
+msgstr "自訂字型檔案應盡可能小,因為它們儲存在路由器有限的快閃記憶體中。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:180
 msgid "Danger"
@@ -305,9 +344,7 @@ msgstr "預設"
 msgid "Default foreground for headings, body text, icons, and form values."
 msgstr "用於標題、正文、圖示和表單值的預設前景。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2258
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2692
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2698
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Delete"
 msgstr "刪除"
 
@@ -419,10 +456,6 @@ msgstr "刪除失敗：%s"
 msgid "Faint Hover"
 msgstr "微淡懸停態"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2189
-msgid "Family"
-msgstr "字型名稱"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2765
 msgid "Favicon (ICO / Legacy)"
 msgstr "網站圖示 (ICO / 傳統)"
@@ -438,10 +471,6 @@ msgid ""
 msgstr ""
 "欄位支援輸入 #hex、rgb()、hsl()、lab() 以及 oklch()。挑色器將填入十六進位格"
 "式，其他格式可手動輸入。"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2193
-msgid "File"
-msgstr "檔案"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:218
 msgid "Fill for form controls: inputs, selects, textareas, and checkboxes."
@@ -586,8 +615,8 @@ msgid "Invalid, missing, or cyclic color expression."
 msgstr "顏色運算式無效、缺失或存在循環參照。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2533
-msgid "JPG · PNG · WebP · AVIF · SVG · GIF"
-msgstr "JPG · PNG · WebP · AVIF · SVG · GIF"
+msgid "JPG · PNG · WebP · AVIF · SVG · GIF · ICO"
+msgstr "JPG · PNG · WebP · AVIF · SVG · GIF · ICO"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/version.js:396
 msgid "Latest Version"
@@ -713,8 +742,8 @@ msgid "On-Brand Text"
 msgstr "品牌背景上的文字"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2183
-msgid "Only .woff2 files up to 4MB are accepted."
-msgstr "僅支援不超過 4MB 的 .woff2 檔案。"
+msgid "Only .woff2 files up to 8MB are accepted."
+msgstr "僅支援不超過 8MB 的 .woff2 檔案。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:308
 msgid "Opaque surface for the expanded mega menu and its header."
@@ -759,10 +788,6 @@ msgstr "預設組"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1665
 msgid "Preset applied successfully."
 msgstr "預設組套用成功。"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2715
-msgid "Preview"
-msgstr "預覽"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2113
 msgid ""
@@ -848,13 +873,8 @@ msgid "Sans-Serif Typeface"
 msgstr "無襯線字型"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2084
-msgid ""
-"Sans-serif and monospace typefaces used across the theme. Webfonts are "
-"downloaded once from pinned, checksum-verified sources and served locally; "
-"pages never load fonts from the internet."
-msgstr ""
-"主題全域使用的無襯線與等寬字型。網路字型僅從固定版本、經檢查碼驗證的來源下載"
-"一次並由本機提供；頁面不會從網際網路載入字型。"
+msgid "Sans-serif and monospace typefaces used across the theme. Pick a curated webfont — downloaded once after saving, from pinned, checksum-verified sources, then served locally — or upload your own .woff2 files."
+msgstr "主題全域使用的無襯線與等寬字型。可選用精選網路字型——儲存後才從固定版本、經檢查碼驗證的來源下載一次,之後由本機提供——也可上傳自己的 .woff2 字型檔案。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:960
 msgid "Saved or preset value"
@@ -1093,15 +1113,6 @@ msgstr "更新失敗：%s"
 msgid "Updating Package"
 msgstr "正在更新套件"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2229
-msgid "Upload"
-msgstr "上傳"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2182
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2278
-msgid "Upload Custom Font"
-msgstr "上傳自訂字型"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2429
 msgid ""
 "Upload and manage images for icons, favicons, PWA assets, and the login "
@@ -1110,12 +1121,11 @@ msgstr ""
 "上傳並管理圖示、網站圖示、PWA 素材和登入背景的圖片。檔案將儲存在 <code>/www/"
 "luci-static/aurora/images/</code> 中。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2158
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2588
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed"
 msgstr "上傳失敗"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2560
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed (HTTP %s)"
 msgstr "上傳失敗 (HTTP %s)"
 

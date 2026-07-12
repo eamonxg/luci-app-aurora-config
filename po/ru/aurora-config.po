@@ -43,10 +43,6 @@ msgstr "Акцент для предупреждений, уведомлений
 msgid "Accents for notifications, validation, and status feedback."
 msgstr "Акценты для уведомлений, валидации и обратной связи о состоянии."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2717
-msgid "Actions"
-msgstr "Действия"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2897
 msgid "Add shortcuts, assign icons, and drag rows to reorder them."
 msgstr ""
@@ -111,10 +107,6 @@ msgid ""
 msgstr ""
 "Вы уверены, что хотите обновить <strong>%h</strong> до версии <strong>%h</"
 "strong>?"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2716
-msgid "Asset Filename"
-msgstr "Имя файла ресурса"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2740
 msgid ""
@@ -242,10 +234,6 @@ msgstr "Проверка обновлений..."
 msgid "Checking..."
 msgstr "Проверка..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2213
-msgid "Choose a .woff2 file and a family name"
-msgstr "Выберите файл .woff2 и укажите название шрифта"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:967
 msgid "Choose a literal color for this token"
 msgstr "Выберите точный цвет для этого токена"
@@ -294,10 +282,61 @@ msgstr "Радиус скругления углов"
 msgid "Custom"
 msgstr "Пользовательский"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2137
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2264
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Name"
+msgstr "Название"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
+msgid "Size"
+msgstr "Размер"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Type"
+msgstr "Тип"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Filename (with extension)"
+msgstr "Имя файла (с расширением)"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Name it login-bg.* to use it as the login page background."
+msgstr "Назовите файл login-bg.*, чтобы использовать его как фон страницы входа."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Will replace the existing '%s'."
+msgstr "Заменит существующий файл «%s»."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Drop a .woff2 font here, or click to browse"
+msgstr "Перетащите шрифт .woff2 сюда или нажмите, чтобы выбрать"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
+msgid "Confirm Upload"
+msgstr "Подтвердить загрузку"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
 msgid "Custom Fonts"
 msgstr "Пользовательские шрифты"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
+msgid "Unsupported file type. Allowed: %s"
+msgstr "Неподдерживаемый тип файла. Допустимые: %s"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
+msgid "File is %s, exceeding the 8MB limit."
+msgstr "Размер файла %s, что превышает лимит 8 МБ."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Delete Custom Font"
+msgstr "Удалить пользовательский шрифт"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Delete '%s'? The interface will fall back to the default typeface."
+msgstr "Удалить «%s»? Интерфейс вернётся к шрифту по умолчанию."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2196
+msgid "Keep custom font files as small as possible, as they are stored in the router's limited flash storage."
+msgstr "Файлы пользовательских шрифтов должны быть как можно меньше, так как они хранятся в ограниченной флеш-памяти роутера."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:180
 msgid "Danger"
@@ -325,9 +364,7 @@ msgstr ""
 "Основной цвет переднего плана для заголовков, основного текста, иконок и "
 "значений форм."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2258
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2692
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2698
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Delete"
 msgstr "Удалить"
 
@@ -444,10 +481,6 @@ msgstr "Не удалось удалить: %s"
 msgid "Faint Hover"
 msgstr "Слабое наведение"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2189
-msgid "Family"
-msgstr "Название шрифта"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2765
 msgid "Favicon (ICO / Legacy)"
 msgstr "Favicon (ICO / устаревший)"
@@ -463,10 +496,6 @@ msgid ""
 msgstr ""
 "Поля принимают #hex, rgb(), hsl(), lab() и oklch(). Пипетка подставляет hex; "
 "остальные форматы можно ввести вручную."
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2193
-msgid "File"
-msgstr "Файл"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:218
 msgid "Fill for form controls: inputs, selects, textareas, and checkboxes."
@@ -623,8 +652,8 @@ msgid "Invalid, missing, or cyclic color expression."
 msgstr "Неверное, отсутствующее или циклическое цветовое выражение."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2533
-msgid "JPG · PNG · WebP · AVIF · SVG · GIF"
-msgstr "JPG · PNG · WebP · AVIF · SVG · GIF"
+msgid "JPG · PNG · WebP · AVIF · SVG · GIF · ICO"
+msgstr "JPG · PNG · WebP · AVIF · SVG · GIF · ICO"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/version.js:396
 msgid "Latest Version"
@@ -755,8 +784,8 @@ msgid "On-Brand Text"
 msgstr "Текст на фоне бренда"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2183
-msgid "Only .woff2 files up to 4MB are accepted."
-msgstr "Принимаются только файлы .woff2 размером до 4 МБ."
+msgid "Only .woff2 files up to 8MB are accepted."
+msgstr "Принимаются только файлы .woff2 размером до 8 МБ."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:308
 msgid "Opaque surface for the expanded mega menu and its header."
@@ -801,10 +830,6 @@ msgstr "Пресет"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1665
 msgid "Preset applied successfully."
 msgstr "Пресет успешно применен."
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2715
-msgid "Preview"
-msgstr "Предпросмотр"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2113
 msgid ""
@@ -893,15 +918,8 @@ msgid "Sans-Serif Typeface"
 msgstr "Шрифт без засечек"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2084
-msgid ""
-"Sans-serif and monospace typefaces used across the theme. Webfonts are "
-"downloaded once from pinned, checksum-verified sources and served locally; "
-"pages never load fonts from the internet."
-msgstr ""
-"Шрифты без засечек и моноширинные, используемые во всей теме. Веб-шрифты "
-"скачиваются один раз из источников с фиксированной версией и проверкой "
-"контрольной суммы и раздаются локально; страницы никогда не загружают шрифты "
-"из интернета."
+msgid "Sans-serif and monospace typefaces used across the theme. Pick a curated webfont — downloaded once after saving, from pinned, checksum-verified sources, then served locally — or upload your own .woff2 files."
+msgstr "Шрифты без засечек и моноширинные, используемые во всей теме. Выберите подобранный веб-шрифт — он скачивается один раз после сохранения из источников с фиксированной версией и проверкой контрольной суммы, а затем раздаётся локально — или загрузите собственные файлы .woff2."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:960
 msgid "Saved or preset value"
@@ -1145,15 +1163,6 @@ msgstr "Ошибка обновления: %s"
 msgid "Updating Package"
 msgstr "Обновление пакета"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2229
-msgid "Upload"
-msgstr "Загрузить"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2182
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2278
-msgid "Upload Custom Font"
-msgstr "Загрузить пользовательский шрифт"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2429
 msgid ""
 "Upload and manage images for icons, favicons, PWA assets, and the login "
@@ -1163,12 +1172,11 @@ msgstr ""
 "входа и управляйте ими. Файлы хранятся в <code>/www/luci-static/aurora/"
 "images/</code>."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2158
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2588
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed"
 msgstr "Ошибка загрузки"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2560
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed (HTTP %s)"
 msgstr "Ошибка загрузки (HTTP %s)"
 

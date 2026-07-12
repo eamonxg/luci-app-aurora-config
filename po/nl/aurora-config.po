@@ -42,10 +42,6 @@ msgstr "Accent voor waarschuwingen, opmerkingen en validatieberichten."
 msgid "Accents for notifications, validation, and status feedback."
 msgstr "Accenten voor meldingen, validatie en statusfeedback."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2717
-msgid "Actions"
-msgstr "Acties"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2897
 msgid "Add shortcuts, assign icons, and drag rows to reorder them."
 msgstr ""
@@ -107,10 +103,6 @@ msgid ""
 msgstr ""
 "Weet u zeker dat u <strong>%h</strong> wilt bijwerken naar versie "
 "<strong>%h</strong>?"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2716
-msgid "Asset Filename"
-msgstr "Bestandsnaam van asset"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2740
 msgid ""
@@ -236,10 +228,6 @@ msgstr "Controleren op updates..."
 msgid "Checking..."
 msgstr "Controleren..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2213
-msgid "Choose a .woff2 file and a family name"
-msgstr "Kies een .woff2-bestand en vul een lettertypenaam in"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:967
 msgid "Choose a literal color for this token"
 msgstr "Kies een exacte kleur voor dit token"
@@ -288,10 +276,61 @@ msgstr "Hoekstraal"
 msgid "Custom"
 msgstr "Aangepast"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2137
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2264
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Name"
+msgstr "Naam"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
+msgid "Size"
+msgstr "Grootte"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Type"
+msgstr "Type"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Filename (with extension)"
+msgstr "Bestandsnaam (met extensie)"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Name it login-bg.* to use it as the login page background."
+msgstr "Geef het de naam login-bg.* om het als achtergrond van de inlogpagina te gebruiken."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Will replace the existing '%s'."
+msgstr "Vervangt het bestaande bestand '%s'."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Drop a .woff2 font here, or click to browse"
+msgstr "Sleep een .woff2-lettertype hierheen of klik om te bladeren"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
+msgid "Confirm Upload"
+msgstr "Upload bevestigen"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
 msgid "Custom Fonts"
 msgstr "Aangepaste lettertypen"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
+msgid "Unsupported file type. Allowed: %s"
+msgstr "Niet-ondersteund bestandstype. Toegestaan: %s"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
+msgid "File is %s, exceeding the 8MB limit."
+msgstr "Het bestand is %s en overschrijdt de limiet van 8 MB."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Delete Custom Font"
+msgstr "Aangepast lettertype verwijderen"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Delete '%s'? The interface will fall back to the default typeface."
+msgstr "'%s' verwijderen? De interface valt terug op het standaardlettertype."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2196
+msgid "Keep custom font files as small as possible, as they are stored in the router's limited flash storage."
+msgstr "Houd aangepaste lettertypebestanden zo klein mogelijk, omdat ze worden opgeslagen in de beperkte flash-opslag van de router."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:180
 msgid "Danger"
@@ -319,9 +358,7 @@ msgstr ""
 "Domyślny kolor pierwszego planu dla nagłówków, tekstu głównego, ikon i "
 "wartości formularzy."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2258
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2692
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2698
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Delete"
 msgstr "Verwijderen"
 
@@ -439,10 +476,6 @@ msgstr "Verwijderen mislukt: %s"
 msgid "Faint Hover"
 msgstr "Lichte hover"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2189
-msgid "Family"
-msgstr "Lettertypenaam"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2765
 msgid "Favicon (ICO / Legacy)"
 msgstr "Favicon (ICO / Legacy)"
@@ -458,10 +491,6 @@ msgid ""
 msgstr ""
 "Velden accepteren #hex, rgb(), hsl(), lab() en oklch(). De kiezer vult hex "
 "in; andere formaten kunnen worden getypt."
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2193
-msgid "File"
-msgstr "Bestand"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:218
 msgid "Fill for form controls: inputs, selects, textareas, and checkboxes."
@@ -616,8 +645,8 @@ msgid "Invalid, missing, or cyclic color expression."
 msgstr "Ongeldige, ontbrekende of cyclische kleuruitdrukking."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2533
-msgid "JPG · PNG · WebP · AVIF · SVG · GIF"
-msgstr "JPG · PNG · WebP · AVIF · SVG · GIF"
+msgid "JPG · PNG · WebP · AVIF · SVG · GIF · ICO"
+msgstr "JPG · PNG · WebP · AVIF · SVG · GIF · ICO"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/version.js:396
 msgid "Latest Version"
@@ -748,8 +777,8 @@ msgid "On-Brand Text"
 msgstr "Tekst in merk-kleur"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2183
-msgid "Only .woff2 files up to 4MB are accepted."
-msgstr "Alleen .woff2-bestanden tot 4 MB worden geaccepteerd."
+msgid "Only .woff2 files up to 8MB are accepted."
+msgstr "Alleen .woff2-bestanden tot 8 MB worden geaccepteerd."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:308
 msgid "Opaque surface for the expanded mega menu and its header."
@@ -797,10 +826,6 @@ msgstr "Preset"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1665
 msgid "Preset applied successfully."
 msgstr "Preset succesvol toegepast."
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2715
-msgid "Preview"
-msgstr "Voorbeeld"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2113
 msgid ""
@@ -889,14 +914,8 @@ msgid "Sans-Serif Typeface"
 msgstr "Sans-serif lettertype"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2084
-msgid ""
-"Sans-serif and monospace typefaces used across the theme. Webfonts are "
-"downloaded once from pinned, checksum-verified sources and served locally; "
-"pages never load fonts from the internet."
-msgstr ""
-"Schreefloze en monospace-lettertypen voor het hele thema. Webfonts worden "
-"eenmalig gedownload van bronnen met vaste versie en checksumverificatie en "
-"lokaal geserveerd; pagina's laden nooit lettertypen van internet."
+msgid "Sans-serif and monospace typefaces used across the theme. Pick a curated webfont — downloaded once after saving, from pinned, checksum-verified sources, then served locally — or upload your own .woff2 files."
+msgstr "Schreefloze en monospace-lettertypen voor het hele thema. Kies een geselecteerd webfont — na het opslaan eenmalig gedownload van bronnen met vaste versie en checksumverificatie, daarna lokaal geserveerd — of upload uw eigen .woff2-bestanden."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:960
 msgid "Saved or preset value"
@@ -1139,15 +1158,6 @@ msgstr "Bijwerken mislukt: %s"
 msgid "Updating Package"
 msgstr "Pakket bijwerken..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2229
-msgid "Upload"
-msgstr "Uploaden"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2182
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2278
-msgid "Upload Custom Font"
-msgstr "Aangepast lettertype uploaden"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2429
 msgid ""
 "Upload and manage images for icons, favicons, PWA assets, and the login "
@@ -1157,12 +1167,11 @@ msgstr ""
 "achtergrond. Bestanden worden opgeslagen in <code>/www/luci-static/aurora/"
 "images/</code>."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2158
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2588
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed"
 msgstr "Uploaden mislukt"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2560
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed (HTTP %s)"
 msgstr "Uploaden mislukt (HTTP %s)"
 

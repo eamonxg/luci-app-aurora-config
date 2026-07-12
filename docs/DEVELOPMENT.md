@@ -329,8 +329,18 @@ the built-in face is used instead).
 Users can upload their own woff2 via the `upload_font` RPC method (and remove
 it via `remove_font`):
 
-- Upload goes through cgi-io to `/tmp/aurora_font.tmp`.
-- Server-side validation: woff2 magic bytes (`wOF2`), size ≤ 4MB.
+- Upload goes through cgi-io to `/tmp/aurora_font.tmp` (fonts) or
+  `/tmp/aurora_icon.tmp` (brand assets), then a `receive_upload` gate in
+  the rpcd script validates before anything touches flash:
+  - shared size cap: 8MB (`MAX_UPLOAD`);
+  - fonts: woff2 magic bytes (`wOF2`);
+  - images: extension allowlist `jpg jpeg png webp avif svg gif ico`,
+    path components rejected;
+  - the gate deletes the tmp file on every rejection (front-end callers
+    never clean up).
+- Front-end plumbing lives in `utils/asset-upload.js` (dropzone, progress
+  row, delete confirm, cgi-upload XHR); `view/aurora/theme.js` composes it
+  for both the Custom Fonts and Brand Asset Library sections.
 - Stored under `/www/luci-static/aurora/fonts/custom/<slot>-<slug>.{woff2,meta,face}`
   (`.face` is the pre-rendered `@font-face` block, `.meta` carries the
   display family + font stack).

@@ -41,10 +41,6 @@ msgstr "경고, 주의 사항 및 유효성 검사 메시지를 위한 강조색
 msgid "Accents for notifications, validation, and status feedback."
 msgstr "알림, 유효성 검사 및 상태 피드백을 위한 강조색."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2717
-msgid "Actions"
-msgstr "작업"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2897
 msgid "Add shortcuts, assign icons, and drag rows to reorder them."
 msgstr ""
@@ -106,10 +102,6 @@ msgid ""
 msgstr ""
 "정말로 <strong>%h</strong>을(를) 버전 <strong>%h</strong>(으)로 업데이트하시"
 "겠습니까?"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2716
-msgid "Asset Filename"
-msgstr "자산 파일명"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2740
 msgid ""
@@ -230,10 +222,6 @@ msgstr "업데이트 확인 중..."
 msgid "Checking..."
 msgstr "확인 중..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2213
-msgid "Choose a .woff2 file and a family name"
-msgstr ".woff2 파일을 선택하고 글꼴 이름을 입력하세요"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:967
 msgid "Choose a literal color for this token"
 msgstr "이 토큰에 사용할 정확한 색상을 선택하세요"
@@ -282,10 +270,61 @@ msgstr "모서리 둥글기"
 msgid "Custom"
 msgstr "사용자 지정"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2137
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2264
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Name"
+msgstr "이름"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
+msgid "Size"
+msgstr "크기"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Type"
+msgstr "유형"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Filename (with extension)"
+msgstr "파일 이름(확장자 포함)"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Name it login-bg.* to use it as the login page background."
+msgstr "login-bg.*로 이름을 지정하면 로그인 페이지 배경으로 사용됩니다."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Will replace the existing '%s'."
+msgstr "기존 '%s'을(를) 대체합니다."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Drop a .woff2 font here, or click to browse"
+msgstr ".woff2 글꼴을 여기에 끌어다 놓거나 클릭하여 선택하세요"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
+msgid "Confirm Upload"
+msgstr "업로드 확인"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
 msgid "Custom Fonts"
 msgstr "사용자 지정 글꼴"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
+msgid "Unsupported file type. Allowed: %s"
+msgstr "지원하지 않는 파일 형식입니다. 허용: %s"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
+msgid "File is %s, exceeding the 8MB limit."
+msgstr "파일 크기가 %s로 8MB 제한을 초과합니다."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Delete Custom Font"
+msgstr "사용자 지정 글꼴 삭제"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Delete '%s'? The interface will fall back to the default typeface."
+msgstr "'%s'을(를) 삭제할까요? 인터페이스는 기본 글꼴로 되돌아갑니다."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2196
+msgid "Keep custom font files as small as possible, as they are stored in the router's limited flash storage."
+msgstr "사용자 지정 글꼴 파일은 라우터의 제한된 플래시 저장소에 저장되므로 가능한 한 작게 유지하세요."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:180
 msgid "Danger"
@@ -311,9 +350,7 @@ msgstr "기본값"
 msgid "Default foreground for headings, body text, icons, and form values."
 msgstr "제목, 본문 텍스트, 아이콘 및 폼 값에 대한 기본 전경색."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2258
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2692
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2698
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Delete"
 msgstr "삭제"
 
@@ -428,10 +465,6 @@ msgstr "삭제 실패: %s"
 msgid "Faint Hover"
 msgstr "흐릿한 호버"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2189
-msgid "Family"
-msgstr "글꼴 이름"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2765
 msgid "Favicon (ICO / Legacy)"
 msgstr "Favicon (ICO / 레거시)"
@@ -447,10 +480,6 @@ msgid ""
 msgstr ""
 "필드는 #hex, rgb(), hsl(), lab(), oklch()를 지원합니다. 선택기는 hex를 채우"
 "며, 다른 형식은 직접 입력할 수 있습니다."
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2193
-msgid "File"
-msgstr "파일"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:218
 msgid "Fill for form controls: inputs, selects, textareas, and checkboxes."
@@ -596,8 +625,8 @@ msgid "Invalid, missing, or cyclic color expression."
 msgstr "유효하지 않거나, 누락되었거나, 순환 참조되는 색상 표현식입니다."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2533
-msgid "JPG · PNG · WebP · AVIF · SVG · GIF"
-msgstr "JPG · PNG · WebP · AVIF · SVG · GIF"
+msgid "JPG · PNG · WebP · AVIF · SVG · GIF · ICO"
+msgstr "JPG · PNG · WebP · AVIF · SVG · GIF · ICO"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/version.js:396
 msgid "Latest Version"
@@ -726,8 +755,8 @@ msgid "On-Brand Text"
 msgstr "브랜드 배경 위 텍스트"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2183
-msgid "Only .woff2 files up to 4MB are accepted."
-msgstr "4MB 이하의 .woff2 파일만 사용할 수 있습니다."
+msgid "Only .woff2 files up to 8MB are accepted."
+msgstr "8MB 이하의 .woff2 파일만 사용할 수 있습니다."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:308
 msgid "Opaque surface for the expanded mega menu and its header."
@@ -772,10 +801,6 @@ msgstr "프리셋"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1665
 msgid "Preset applied successfully."
 msgstr "프리셋이 성공적으로 적용되었습니다."
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2715
-msgid "Preview"
-msgstr "미리보기"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2113
 msgid ""
@@ -863,14 +888,8 @@ msgid "Sans-Serif Typeface"
 msgstr "고딕체 서체"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2084
-msgid ""
-"Sans-serif and monospace typefaces used across the theme. Webfonts are "
-"downloaded once from pinned, checksum-verified sources and served locally; "
-"pages never load fonts from the internet."
-msgstr ""
-"테마 전체에서 사용하는 산세리프 및 고정폭 글꼴입니다. 웹 글꼴은 버전이 고정되"
-"고 체크섬이 검증된 소스에서 한 번만 내려받아 로컬에서 제공되며, 페이지가 인터"
-"넷에서 글꼴을 불러오는 일은 없습니다."
+msgid "Sans-serif and monospace typefaces used across the theme. Pick a curated webfont — downloaded once after saving, from pinned, checksum-verified sources, then served locally — or upload your own .woff2 files."
+msgstr "테마 전체에서 사용하는 산세리프 및 고정폭 글꼴입니다. 엄선된 웹 글꼴(저장 후 버전이 고정되고 체크섬이 검증된 소스에서 한 번만 내려받아 이후 로컬에서 제공)을 선택하거나 자신의 .woff2 파일을 업로드할 수 있습니다."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:960
 msgid "Saved or preset value"
@@ -1113,15 +1132,6 @@ msgstr "업데이트 실패: %s"
 msgid "Updating Package"
 msgstr "패키지 업데이트 중"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2229
-msgid "Upload"
-msgstr "업로드"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2182
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2278
-msgid "Upload Custom Font"
-msgstr "사용자 지정 글꼴 업로드"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2429
 msgid ""
 "Upload and manage images for icons, favicons, PWA assets, and the login "
@@ -1130,12 +1140,11 @@ msgstr ""
 "아이콘, 파비콘, PWA 자산 및 로그인 배경용 이미지를 업로드하고 관리합니다. 파"
 "일은 <code>/www/luci-static/aurora/images/</code>에 저장됩니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2158
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2588
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed"
 msgstr "업로드 실패"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2560
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed (HTTP %s)"
 msgstr "업로드 실패 (HTTP %s)"
 
