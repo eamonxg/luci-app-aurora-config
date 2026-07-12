@@ -2523,167 +2523,53 @@ return view.extend({
       return this.load(section_id).then((data) => {
         const icons = this.cfgvalue(section_id, data);
         const tmpPath = "/tmp/aurora_icon.tmp";
-
-        const fileInput = E("input", {
-          type: "file",
-          style: "display:none",
-          accept: "image/*,.svg",
-        });
-
-        const progressBar = E("div", {
-          style:
-            "height:100%;width:0%;transition:width 0.15s;border-radius:2px;background:var(--brand);",
-        });
-        const progressFilename = E("span", {}, "");
-        const progressPct = E("span", {}, "0%");
-        const progressRow = E(
-          "div",
-          {
-            style:
-              "display:none;margin-bottom:0.75em;padding:0.6em 0.875em;border-radius:0.375em;border:1px solid var(--hairline);",
-          },
-          [
-            E(
-              "div",
-              {
-                style:
-                  "display:flex;justify-content:space-between;align-items:center;font-size:0.85em;margin-bottom:0.4em;",
-              },
-              [progressFilename, progressPct],
-            ),
-            E(
-              "div",
-              {
-                style:
-                  "height:4px;border-radius:2px;overflow:hidden;background:var(--surface-sunken);",
-              },
-              [progressBar],
-            ),
-          ],
-        );
-
-        const setUploading = (busy) => {
-          dropzone.style.opacity = busy ? "0.5" : "";
-          dropzone.style.pointerEvents = busy ? "none" : "";
-          progressRow.style.display = busy ? "block" : "none";
-        };
-
-        const dropzone = E(
-          "div",
-          {
-            style:
-              "border:2px dashed var(--hairline);border-radius:0.5em;padding:1.25em 1em;text-align:center;cursor:pointer;margin-bottom:0.75em;transition:border-color 0.15s,background 0.15s;",
-            click: () => fileInput.click(),
-            dragover: (e) => {
-              e.preventDefault();
-              dropzone.style.borderColor = "var(--brand)";
-              dropzone.style.background = "var(--brand-subtle)";
-            },
-            dragleave: () => {
-              dropzone.style.borderColor = "";
-              dropzone.style.background = "";
-            },
-            drop: (e) => {
-              e.preventDefault();
-              dropzone.style.borderColor = "";
-              dropzone.style.background = "";
-              const file = e.dataTransfer.files[0];
-              if (file) uploadFile(file);
-            },
-          },
-          [
-            E(
-              "div",
-              {
-                style:
-                  "font-size:1.5em;margin-bottom:0.25em;pointer-events:none;",
-              },
-              "⬆",
-            ),
-            E(
-              "strong",
-              { style: "pointer-events:none;" },
-              _("Drop image asset here, or click to browse"),
-            ),
-            E(
-              "div",
-              {
-                style:
-                  "font-size:0.8em;opacity:0.6;margin-top:0.25em;pointer-events:none;",
-              },
-              _("JPG · PNG · WebP · AVIF · SVG · GIF"),
-            ),
-          ],
-        );
+        const progress = assetUpload.createProgressRow();
 
         const uploadFile = (file) => {
-          fileInput.value = "";
-          progressFilename.textContent = file.name;
-          progressPct.textContent = "0%";
-          progressBar.style.width = "0%";
-          setUploading(true);
-
-          const xhr = new XMLHttpRequest();
-
-          xhr.upload.addEventListener("progress", (e) => {
-            if (e.lengthComputable) {
-              const pct = Math.round((e.loaded / e.total) * 100);
-              progressBar.style.width = pct + "%";
-              progressPct.textContent = pct + "%";
-            }
+          const check = assetUpload.checkFile(file, {
+            exts: ["jpg", "jpeg", "png", "webp", "avif", "svg", "gif", "ico"],
           });
+          if (!check.ok) {
+            ui.addNotification(null, E("p", check.err), "error");
+            return;
+          }
+          dropzone.setBusy(true);
+          progress.show();
+          progress.set(0, file.name);
 
-          xhr.addEventListener("load", () => {
-            if (xhr.status !== 200) {
-              setUploading(false);
-              ui.addNotification(
-                null,
-                E("p", _("Upload failed (HTTP %s)").format(xhr.status)),
-                "error",
-              );
-              return;
-            }
-            L.resolveDefault(callUploadIcon(file.name), {}).then((ret) => {
+          assetUpload
+            .uploadToRouter({
+              tmpPath,
+              file,
+              onProgress: (p) => progress.set(p),
+            })
+            .then(() => L.resolveDefault(callUploadIcon(file.name), {}))
+            .then((ret) => {
               if (ret?.result === 0) {
                 if (/^login-bg\./i.test(file.name)) {
                   localStorage.setItem("aurora.pending_bg", file.name);
                 }
                 window.location.reload();
               } else {
-                setUploading(false);
-                ui.addNotification(
-                  null,
-                  E(
-                    "p",
-                    _("Upload failed: %s").format(ret?.error || "Unknown"),
-                  ),
-                  "error",
-                );
-                L.resolveDefault(fs.remove(tmpPath), {});
+                throw new Error(ret?.error || "Unknown");
               }
+            })
+            .catch((err) => {
+              dropzone.setBusy(false);
+              progress.hide();
+              ui.addNotification(
+                null,
+                E("p", _("Upload failed: %s").format(err.message)),
+                "error",
+              );
             });
-          });
-
-          xhr.addEventListener("error", () => {
-            setUploading(false);
-            ui.addNotification(null, E("p", _("Upload failed")), "error");
-          });
-
-          const formData = new FormData();
-          formData.append("sessionid", rpc.getSessionID());
-          formData.append("filename", tmpPath);
-          formData.append("filemode", "0600");
-          formData.append("filedata", file, file.name);
-
-          xhr.open("POST", "/cgi-bin/cgi-upload");
-          xhr.withCredentials = true;
-          xhr.send(formData);
         };
 
-        fileInput.addEventListener("change", () => {
-          const file = fileInput.files[0];
-          fileInput.value = "";
-          if (file) uploadFile(file);
+        const dropzone = assetUpload.createDropzone({
+          hint: _("Drop image asset here, or click to browse"),
+          sub: _("JPG · PNG · WebP · AVIF · SVG · GIF · ICO"),
+          accept: "image/*,.svg,.ico",
+          onFile: uploadFile,
         });
 
         const idleCallback = window.requestIdleCallback
@@ -2721,60 +2607,39 @@ return view.extend({
             "button",
             {
               class: "cbi-button cbi-button-remove",
-              click: ui.createHandlerFn(this, () => {
-                return ui.showModal(_("Delete Brand Asset"), [
-                  E(
-                    "p",
-                    {},
-                    _(
+              click: ui.createHandlerFn(this, () =>
+                assetUpload
+                  .confirmDelete({
+                    title: _("Delete Brand Asset"),
+                    message: _(
                       "Delete '%s' from /www/luci-static/aurora/images/? Theme settings that reference it may need updating.",
                     ).format(icon),
-                  ),
-                  E("div", { class: "right" }, [
-                    E(
-                      "button",
-                      { class: "btn", click: ui.hideModal },
-                      _("Cancel"),
-                    ),
-                    " ",
-                    E(
-                      "button",
-                      {
-                        class: "btn cbi-button-negative",
-                        click: () => {
-                          ui.showModal(_("Deleting…"), [
-                            E("p", { class: "spinning" }, _("Please wait…")),
-                          ]);
-                          L.resolveDefault(callRemoveIcon(icon), {}).then(
-                            (ret) => {
-                              ui.hideModal();
-                              if (ret?.result === 0) {
-                                ui.addNotification(
-                                  null,
-                                  E("p", _("Deleted: %s").format(icon)),
-                                );
-                                window.location.reload();
-                              } else {
-                                ui.addNotification(
-                                  null,
-                                  E(
-                                    "p",
-                                    _("Failed to delete: %s").format(
-                                      ret?.error || "Unknown",
-                                    ),
-                                  ),
-                                  "error",
-                                );
-                              }
-                            },
+                  })
+                  .then((confirmed) => {
+                    if (!confirmed) return;
+                    ui.showModal(_("Deleting…"), [
+                      E("p", { class: "spinning" }, _("Please wait…")),
+                    ]);
+                    return L.resolveDefault(callRemoveIcon(icon), {}).then(
+                      (ret) => {
+                        ui.hideModal();
+                        if (ret?.result === 0) {
+                          ui.addNotification(
+                            null,
+                            E("p", _("Deleted: %s").format(icon)),
                           );
-                        },
+                          window.location.reload();
+                        } else {
+                          ui.addNotification(
+                            null,
+                            E("p", _("Delete failed")),
+                            "error",
+                          );
+                        }
                       },
-                      _("Delete"),
-                    ),
-                  ]),
-                ]);
-              }),
+                    );
+                  }),
+              ),
             },
             _("Delete"),
           );
@@ -2801,9 +2666,8 @@ return view.extend({
               ]);
 
         return E("div", { "data-name": this.option }, [
-          fileInput,
           dropzone,
-          progressRow,
+          progress.el,
           tableOrEmpty,
         ]);
       });
