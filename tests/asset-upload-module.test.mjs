@@ -17,6 +17,7 @@ test("asset-upload module exposes the shared surface", async () => {
     "uploadToRouter",
     "createDropzone",
     "createProgressRow",
+    "createAssetManager",
     "confirmDelete",
   ])
     assert.ok(src.includes(name), `missing export: ${name}`);

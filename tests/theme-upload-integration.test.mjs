@@ -9,15 +9,29 @@ test("theme.js requires the shared asset-upload module", async () => {
   assert.match(src, /^"require utils\.asset-upload as assetUpload";/m);
 });
 
-test("font upload modal is gone, replaced by dropzone flow", async () => {
+test("font upload modal is gone, replaced by the shared asset manager", async () => {
   const src = await readFile(SRC, "utf8");
   assert.ok(!src.includes("openUploadModal"), "modal flow must be removed");
   assert.ok(
     !src.includes("Upload Custom Font"),
     "modal title/button string must be removed",
   );
-  assert.match(src, /assetUpload\.createDropzone\(/);
+  assert.match(src, /assetUpload\.createAssetManager\(/);
   assert.match(src, /assetUpload\.confirmDelete\(/);
+});
+
+test("both asset sections adopt createAssetManager; no direct createDropzone calls remain", async () => {
+  const src = await readFile(SRC, "utf8");
+  const managerCalls = src.match(/assetUpload\.createAssetManager\(/g) || [];
+  assert.equal(
+    managerCalls.length,
+    2,
+    "expected exactly two createAssetManager( calls (custom fonts + brand assets)",
+  );
+  assert.ok(
+    !/assetUpload\.createDropzone\(/.test(src),
+    "createDropzone must only be called from inside the shared module now",
+  );
 });
 
 test("theme.js owns zero raw upload plumbing after icon adoption", async () => {

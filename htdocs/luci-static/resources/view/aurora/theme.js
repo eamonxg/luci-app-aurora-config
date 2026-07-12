@@ -1506,6 +1506,10 @@ return view.extend({
       const themeConfig = readThemeConfigFromUci();
       const iconsData = {
         icons: Array.isArray(initData?.icons) ? initData.icons : [],
+        icon_sizes:
+          initData?.icon_sizes && typeof initData.icon_sizes === "object"
+            ? initData.icon_sizes
+            : {},
       };
       if (Array.isArray(initData?.icons))
         _iconsPromise = Promise.resolve(iconsData);
@@ -2169,139 +2173,7 @@ return view.extend({
           .join(" ");
       };
 
-      const confirmWrap = E("div", {});
-
-      const buildConfirmCard = (file) => {
-        while (confirmWrap.firstChild) confirmWrap.firstChild.remove();
-
-        const check = assetUpload.checkFile(file, { exts: ["woff2"] });
-
-        const familyInput = E("input", {
-          type: "text",
-          class: "cbi-input-text",
-          placeholder: _("Font family name, e.g. MiSans"),
-          value: familyFromFilename(file.name),
-        });
-        const slotSelect = E("select", { class: "cbi-input-select" }, [
-          E("option", { value: "sans" }, _("Sans-Serif")),
-          E("option", { value: "mono" }, _("Monospace")),
-        ]);
-        const progress = assetUpload.createProgressRow();
-
-        const goBtn = E(
-          "button",
-          {
-            class: "cbi-button cbi-button-positive",
-            disabled: check.ok ? null : "",
-            click: ui.createHandlerFn(viewCtx, () => {
-              const family = familyInput.value.trim();
-              if (!family) {
-                ui.addNotification(
-                  null,
-                  E("p", _("Font family name, e.g. MiSans")),
-                  "warning",
-                );
-                return Promise.resolve();
-              }
-              dropzone.setBusy(true);
-              progress.show();
-              progress.set(0, file.name);
-              return assetUpload
-                .uploadToRouter({
-                  tmpPath: FONT_TMP_PATH,
-                  file,
-                  onProgress: (p) => progress.set(p),
-                })
-                .then(() =>
-                  L.resolveDefault(
-                    callUploadFont(slotSelect.value, family),
-                    {},
-                  ),
-                )
-                .then((ret) => {
-                  if (ret?.result === 0) window.location.reload();
-                  else throw new Error(ret?.error || _("Unknown"));
-                })
-                .catch((err) => {
-                  dropzone.setBusy(false);
-                  progress.hide();
-                  ui.addNotification(
-                    null,
-                    E("p", _("Upload failed: %s").format(err.message)),
-                    "error",
-                  );
-                });
-            }),
-          },
-          _("Confirm Upload"),
-        );
-
-        confirmWrap.appendChild(
-          E(
-            "div",
-            {
-              style:
-                "border:1px solid var(--hairline);border-left:3px solid var(--brand);border-radius:0.5em;padding:0.75em 0.875em;margin-top:0.6em;",
-            },
-            [
-              E(
-                "div",
-                {
-                  style:
-                    "display:flex;justify-content:space-between;align-items:center;gap:0.6em;margin-bottom:0.6em;",
-                },
-                [
-                  E("strong", { style: "word-break:break-all;" }, file.name),
-                  E(
-                    "span",
-                    { style: "opacity:0.6;white-space:nowrap;" },
-                    assetUpload.formatSize(file.size),
-                  ),
-                  E(
-                    "button",
-                    {
-                      class: "cbi-button",
-                      title: _("Remove file"),
-                      click: () => {
-                        while (confirmWrap.firstChild)
-                          confirmWrap.firstChild.remove();
-                      },
-                    },
-                    "✕",
-                  ),
-                ],
-              ),
-              check.ok
-                ? ""
-                : E(
-                    "p",
-                    { style: "color:var(--danger);font-weight:600;" },
-                    check.err,
-                  ),
-              E("div", { class: "cbi-value" }, [
-                E("label", { class: "cbi-value-title" }, _("Family")),
-                E("div", { class: "cbi-value-field" }, familyInput),
-              ]),
-              E("div", { class: "cbi-value" }, [
-                E("label", { class: "cbi-value-title" }, _("Slot")),
-                E("div", { class: "cbi-value-field" }, slotSelect),
-              ]),
-              progress.el,
-              E("div", { class: "right" }, goBtn),
-            ],
-          ),
-        );
-      };
-
-      const dropzone = assetUpload.createDropzone({
-        hint: _("Drop a .woff2 font here, or click to browse"),
-        sub: _("Only .woff2 files up to 8MB are accepted."),
-        accept: ".woff2",
-        compact: true,
-        onFile: buildConfirmCard,
-      });
-
-      const removeRow = (font) =>
+      const removeFont = (font) =>
         assetUpload.confirmDelete({
           title: _("Delete Custom Font"),
           message: _(
@@ -2326,30 +2198,88 @@ return view.extend({
           });
         });
 
-      const rows = customs.map((font) =>
-        E("li", {}, [
-          E("code", {}, font.family),
-          " — " +
-            (font.slot === "sans" ? _("Sans-Serif") : _("Monospace")) +
-            " ",
-          E(
-            "button",
+      const fontManager = assetUpload.createAssetManager({
+        badgeHeader: _("Slot"),
+        emptyText: _("No custom fonts uploaded."),
+        rows: customs.map((font) => ({
+          preview: E(
+            "div",
             {
-              class: "cbi-button cbi-button-remove",
-              click: ui.createHandlerFn(viewCtx, () => removeRow(font)),
+              style:
+                "width:34px;height:34px;border-radius:0.4em;" +
+                "background:var(--surface-sunken);border:1px solid var(--hairline);" +
+                "display:flex;align-items:center;justify-content:center;" +
+                "font-weight:700;font-size:0.95em;" +
+                "font-family:" +
+                (font.slot === "mono" ? "var(--font-mono)" : "var(--font-sans)") +
+                ";",
             },
-            _("Delete"),
+            "Aa",
           ),
-        ]),
-      );
+          name: font.family,
+          badge: {
+            label: font.slot === "sans" ? _("Sans-Serif") : _("Monospace"),
+            tone: font.slot === "sans" ? "brand" : "neutral",
+          },
+          size: font.size || 0,
+          onDelete: ui.createHandlerFn(viewCtx, () => removeFont(font)),
+        })),
+        bar: {
+          hint: _("Drop a .woff2 font here, or click to browse"),
+          sub: _("Only .woff2 files up to 8MB are accepted."),
+          accept: ".woff2",
+        },
+        checkFile: (file) => assetUpload.checkFile(file, { exts: ["woff2"] }),
+        form: {
+          fields: (file) => {
+            const nameInput = E("input", {
+              type: "text",
+              class: "cbi-input-text",
+              style: "flex:1;min-width:11em;",
+              placeholder: _("Font family name, e.g. MiSans"),
+              value: familyFromFilename(file.name),
+            });
+            const slotSelect = E(
+              "select",
+              { class: "cbi-input-select", style: "max-width:10em;" },
+              [
+                E("option", { value: "sans" }, _("Sans-Serif")),
+                E("option", { value: "mono" }, _("Monospace")),
+              ],
+            );
+            return {
+              el: E(
+                "div",
+                {
+                  style:
+                    "display:flex;gap:0.6em;flex-wrap:wrap;align-items:center;",
+                },
+                [nameInput, slotSelect],
+              ),
+              value: () => ({
+                name: nameInput.value.trim(),
+                slot: slotSelect.value,
+              }),
+              valid: () => !!nameInput.value.trim(),
+            };
+          },
+        },
+        upload: (file, meta, onProgress) =>
+          assetUpload
+            .uploadToRouter({ tmpPath: FONT_TMP_PATH, file, onProgress })
+            .then(() =>
+              L.resolveDefault(callUploadFont(meta.slot, meta.name), {}),
+            )
+            .then((ret) => {
+              if (ret?.result === 0) window.location.reload();
+              else throw new Error(ret?.error || _("Unknown"));
+            }),
+      });
 
       return E("div", { class: "cbi-value" }, [
         E("label", { class: "cbi-value-title" }, _("Custom Fonts")),
         E("div", { class: "cbi-value-field" }, [
-          rows.length
-            ? E("ul", { style: "margin:0 0 0.5em 0;" }, rows)
-            : E("p", { style: "opacity:0.6;" }, _("No custom fonts uploaded.")),
-          dropzone,
+          fontManager,
           E(
             "p",
             { style: "opacity:0.6;font-size:0.9em;margin:0.35em 0 0;" },
@@ -2357,7 +2287,6 @@ return view.extend({
               "Keep custom font files as small as possible, as they are stored in the router's limited flash storage.",
             ),
           ),
-          confirmWrap,
         ]),
       ]);
     };
@@ -2519,74 +2448,26 @@ return view.extend({
     );
     assetTableSo.load = () => getIconsOnce();
     assetTableSo.cfgvalue = (section_id, data) => data?.icons || [];
+    const ICON_EXTS = ["jpg", "jpeg", "png", "webp", "avif", "svg", "gif", "ico"];
+    const iconExtOf = (name) =>
+      (name.match(/\.([a-z0-9]+)$/i)?.[1] || "").toLowerCase();
+
     assetTableSo.render = function (option_index, section_id, in_table) {
       return this.load(section_id).then((data) => {
         const icons = this.cfgvalue(section_id, data);
+        const sizes = data?.icon_sizes || {};
         const tmpPath = "/tmp/aurora_icon.tmp";
-        const progress = assetUpload.createProgressRow();
-
-        const uploadFile = (file) => {
-          const check = assetUpload.checkFile(file, {
-            exts: ["jpg", "jpeg", "png", "webp", "avif", "svg", "gif", "ico"],
-          });
-          if (!check.ok) {
-            ui.addNotification(null, E("p", check.err), "error");
-            return;
-          }
-          dropzone.setBusy(true);
-          progress.show();
-          progress.set(0, file.name);
-
-          assetUpload
-            .uploadToRouter({
-              tmpPath,
-              file,
-              onProgress: (p) => progress.set(p),
-            })
-            .then(() => L.resolveDefault(callUploadIcon(file.name), {}))
-            .then((ret) => {
-              if (ret?.result === 0) {
-                if (/^login-bg\./i.test(file.name)) {
-                  localStorage.setItem("aurora.pending_bg", file.name);
-                }
-                window.location.reload();
-              } else {
-                throw new Error(ret?.error || _("Unknown"));
-              }
-            })
-            .catch((err) => {
-              dropzone.setBusy(false);
-              progress.hide();
-              ui.addNotification(
-                null,
-                E("p", _("Upload failed: %s").format(err.message)),
-                "error",
-              );
-            });
-        };
-
-        const dropzone = assetUpload.createDropzone({
-          hint: _("Drop image asset here, or click to browse"),
-          sub: _("JPG · PNG · WebP · AVIF · SVG · GIF · ICO"),
-          accept: "image/*,.svg,.ico",
-          onFile: uploadFile,
-        });
 
         const idleCallback = window.requestIdleCallback
           ? (fn) => window.requestIdleCallback(fn, { timeout: 2000 })
           : (fn) => setTimeout(fn, 100);
 
-        const makeRow = (icon) => {
+        const makePreview = (icon) => {
           const placeholder = E("div", {
             style:
-              "width:40px;height:40px;border-radius:4px;background:var(--surface-sunken);",
+              "width:34px;height:34px;border-radius:0.4em;" +
+              "background:var(--surface-sunken);border:1px solid var(--hairline);",
           });
-          const previewCell = E(
-            "td",
-            { class: "td", style: "width:56px;" },
-            placeholder,
-          );
-
           idleCallback(() => {
             generateLqip("/luci-static/aurora/images/" + icon).then(
               (dataUrl) => {
@@ -2595,86 +2476,118 @@ return view.extend({
                   E("img", {
                     src: dataUrl,
                     style:
-                      "width:40px;height:40px;object-fit:contain;border-radius:4px;display:block;",
+                      "width:34px;height:34px;object-fit:cover;" +
+                      "border-radius:0.4em;display:block;",
                     alt: "",
                   }),
                 );
               },
             );
           });
-
-          const deleteBtn = E(
-            "button",
-            {
-              class: "cbi-button cbi-button-remove",
-              click: ui.createHandlerFn(this, () =>
-                assetUpload
-                  .confirmDelete({
-                    title: _("Delete Brand Asset"),
-                    message: _(
-                      "Delete '%s' from /www/luci-static/aurora/images/? Theme settings that reference it may need updating.",
-                    ).format(icon),
-                  })
-                  .then((confirmed) => {
-                    if (!confirmed) return;
-                    ui.showModal(_("Deleting…"), [
-                      E("p", { class: "spinning" }, _("Please wait…")),
-                    ]);
-                    return L.resolveDefault(callRemoveIcon(icon), {}).then(
-                      (ret) => {
-                        ui.hideModal();
-                        if (ret?.result === 0) {
-                          ui.addNotification(
-                            null,
-                            E("p", _("Deleted: %s").format(icon)),
-                          );
-                          window.location.reload();
-                        } else {
-                          ui.addNotification(
-                            null,
-                            E(
-                              "p",
-                              _("Failed to delete: %s").format(
-                                ret?.error || "Unknown",
-                              ),
-                            ),
-                            "error",
-                          );
-                        }
-                      },
-                    );
-                  }),
-              ),
-            },
-            _("Delete"),
-          );
-
-          return E("tr", { class: "tr" }, [
-            previewCell,
-            E("td", { class: "td", style: "font-family:monospace;" }, icon),
-            E("td", { class: "td center" }, deleteBtn),
-          ]);
+          return placeholder;
         };
 
-        const tableOrEmpty =
-          icons.length === 0
-            ? E("div", { style: "padding:0.5em 0;" }, [
-                E("em", {}, _("No brand assets uploaded yet.")),
-              ])
-            : E("table", { class: "table" }, [
-                E("tr", { class: "tr table-titles" }, [
-                  E("th", { class: "th", style: "width:56px;" }, _("Preview")),
-                  E("th", { class: "th" }, _("Asset Filename")),
-                  E("th", { class: "th center" }, _("Actions")),
-                ]),
-                ...icons.map(makeRow),
-              ]);
+        const removeIcon = (icon) =>
+          assetUpload.confirmDelete({
+            title: _("Delete Brand Asset"),
+            message: _(
+              "Delete '%s' from /www/luci-static/aurora/images/? Theme settings that reference it may need updating.",
+            ).format(icon),
+          }).then((confirmed) => {
+            if (!confirmed) return;
+            ui.showModal(_("Deleting…"), [
+              E("p", { class: "spinning" }, _("Please wait…")),
+            ]);
+            return L.resolveDefault(callRemoveIcon(icon), {}).then((ret) => {
+              ui.hideModal();
+              if (ret?.result === 0) {
+                ui.addNotification(
+                  null,
+                  E("p", _("Deleted: %s").format(icon)),
+                );
+                window.location.reload();
+              } else {
+                ui.addNotification(
+                  null,
+                  E(
+                    "p",
+                    _("Failed to delete: %s").format(
+                      ret?.error || "Unknown",
+                    ),
+                  ),
+                  "error",
+                );
+              }
+            });
+          });
 
-        return E("div", { "data-name": this.option }, [
-          E("div", { style: "margin-bottom:0.75em;" }, dropzone),
-          progress.el,
-          tableOrEmpty,
-        ]);
+        const iconManager = assetUpload.createAssetManager({
+          badgeHeader: _("Type"),
+          emptyText: _("No brand assets uploaded yet."),
+          rows: icons.map((icon) => ({
+            preview: makePreview(icon),
+            name: icon,
+            badge: { label: iconExtOf(icon).toUpperCase(), tone: "neutral" },
+            size: sizes[icon] || 0,
+            onDelete: ui.createHandlerFn(this, () => removeIcon(icon)),
+          })),
+          bar: {
+            hint: _("Drop image asset here, or click to browse"),
+            sub: _("JPG · PNG · WebP · AVIF · SVG · GIF · ICO"),
+            accept: "image/*,.svg,.ico",
+          },
+          checkFile: (file) =>
+            assetUpload.checkFile(file, {
+              exts: ["jpg", "jpeg", "png", "webp", "avif", "svg", "gif", "ico"],
+            }),
+          form: {
+            fields: (file) => {
+              const nameInput = E("input", {
+                type: "text",
+                class: "cbi-input-text",
+                style: "flex:1;min-width:11em;",
+                placeholder: _("Filename (with extension)"),
+                value: file.name,
+              });
+              return {
+                el: E(
+                  "div",
+                  {
+                    style:
+                      "display:flex;gap:0.6em;flex-wrap:wrap;align-items:center;",
+                  },
+                  [nameInput],
+                ),
+                value: () => ({ name: nameInput.value.trim() }),
+                valid: () => {
+                  const v = nameInput.value.trim();
+                  return (
+                    !!v && !v.includes("/") && ICON_EXTS.includes(iconExtOf(v))
+                  );
+                },
+              };
+            },
+            note: _(
+              "Name it login-bg.* to use it as the login page background.",
+            ),
+          },
+          upload: (file, meta, onProgress) =>
+            assetUpload
+              .uploadToRouter({ tmpPath, file, onProgress })
+              .then(() => L.resolveDefault(callUploadIcon(meta.name), {}))
+              .then((ret) => {
+                if (ret?.result === 0) {
+                  if (/^login-bg\./i.test(meta.name)) {
+                    localStorage.setItem("aurora.pending_bg", meta.name);
+                  }
+                  window.location.reload();
+                } else {
+                  throw new Error(ret?.error || _("Unknown"));
+                }
+              }),
+        });
+
+        return E("div", { "data-name": this.option }, [iconManager]);
       });
     };
 
