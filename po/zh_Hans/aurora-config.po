@@ -268,7 +268,7 @@ msgstr "自定义"
 msgid "Name"
 msgstr "名称"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Size"
 msgstr "大小"
 
@@ -292,7 +292,7 @@ msgstr "将替换已存在的“%s”。"
 msgid "Drop a .woff2 font here, or click to browse"
 msgstr "将 .woff2 字体拖到这里,或点击选择文件"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Confirm Upload"
 msgstr "确认上传"
 
@@ -300,11 +300,11 @@ msgstr "确认上传"
 msgid "Custom Fonts"
 msgstr "自定义字体"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Unsupported file type. Allowed: %s"
 msgstr "不支持的文件类型,仅支持:%s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "File is %s, exceeding the 8MB limit."
 msgstr "文件大小为 %s,超出 8MB 限制。"
 
@@ -344,9 +344,7 @@ msgstr "默认"
 msgid "Default foreground for headings, body text, icons, and form values."
 msgstr "用于标题、正文、图标和表单值的默认前景色。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2258
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2692
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2698
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Delete"
 msgstr "删除"
 
@@ -1123,12 +1121,11 @@ msgstr ""
 "上传并管理图标、网站图标、PWA 资源和登录背景的图片。文件将保存在 <code>/www/"
 "luci-static/aurora/images/</code> 中。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2158
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2588
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed"
 msgstr "上传失败"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2560
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed (HTTP %s)"
 msgstr "上传失败 (HTTP %s)"
 

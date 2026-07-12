@@ -286,7 +286,7 @@ msgstr "Benutzerdefiniert"
 msgid "Name"
 msgstr "Name"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Size"
 msgstr "Größe"
 
@@ -310,7 +310,7 @@ msgstr "Ersetzt die vorhandene Datei „%s“."
 msgid "Drop a .woff2 font here, or click to browse"
 msgstr "Eine .woff2-Schriftart hierher ziehen oder klicken zum Auswählen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Confirm Upload"
 msgstr "Hochladen bestätigen"
 
@@ -318,11 +318,11 @@ msgstr "Hochladen bestätigen"
 msgid "Custom Fonts"
 msgstr "Eigene Schriftarten"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Unsupported file type. Allowed: %s"
 msgstr "Nicht unterstützter Dateityp. Erlaubt: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "File is %s, exceeding the 8MB limit."
 msgstr "Die Datei ist %s groß und überschreitet das 8-MB-Limit."
 
@@ -363,9 +363,7 @@ msgid "Default foreground for headings, body text, icons, and form values."
 msgstr ""
 "Standard-Vordergrund für Überschriften, Fließtext, Icons und Formularwerte."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2258
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2692
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2698
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Delete"
 msgstr "Löschen"
 
@@ -1182,12 +1180,11 @@ msgstr ""
 "und verwalten. Dateien werden in <code>/www/luci-static/aurora/images/</"
 "code> gespeichert."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2158
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2588
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed"
 msgstr "Upload fehlgeschlagen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2560
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed (HTTP %s)"
 msgstr "Upload fehlgeschlagen (HTTP %s)"
 

@@ -286,7 +286,7 @@ msgstr "Пользовательский"
 msgid "Name"
 msgstr "Название"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Size"
 msgstr "Размер"
 
@@ -310,7 +310,7 @@ msgstr "Заменит существующий файл «%s»."
 msgid "Drop a .woff2 font here, or click to browse"
 msgstr "Перетащите шрифт .woff2 сюда или нажмите, чтобы выбрать"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Confirm Upload"
 msgstr "Подтвердить загрузку"
 
@@ -318,11 +318,11 @@ msgstr "Подтвердить загрузку"
 msgid "Custom Fonts"
 msgstr "Пользовательские шрифты"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Unsupported file type. Allowed: %s"
 msgstr "Неподдерживаемый тип файла. Допустимые: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "File is %s, exceeding the 8MB limit."
 msgstr "Размер файла %s, что превышает лимит 8 МБ."
 
@@ -364,9 +364,7 @@ msgstr ""
 "Основной цвет переднего плана для заголовков, основного текста, иконок и "
 "значений форм."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2258
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2692
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2698
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Delete"
 msgstr "Удалить"
 
@@ -1174,12 +1172,11 @@ msgstr ""
 "входа и управляйте ими. Файлы хранятся в <code>/www/luci-static/aurora/"
 "images/</code>."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2158
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2588
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed"
 msgstr "Ошибка загрузки"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2560
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed (HTTP %s)"
 msgstr "Ошибка загрузки (HTTP %s)"
 

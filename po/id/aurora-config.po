@@ -279,7 +279,7 @@ msgstr "Kustom"
 msgid "Name"
 msgstr "Nama"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Size"
 msgstr "Ukuran"
 
@@ -303,7 +303,7 @@ msgstr "Akan menggantikan berkas '%s' yang sudah ada."
 msgid "Drop a .woff2 font here, or click to browse"
 msgstr "Seret fon .woff2 ke sini, atau klik untuk memilih"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Confirm Upload"
 msgstr "Konfirmasi Unggah"
 
@@ -311,11 +311,11 @@ msgstr "Konfirmasi Unggah"
 msgid "Custom Fonts"
 msgstr "Fon Kustom"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Unsupported file type. Allowed: %s"
 msgstr "Jenis berkas tidak didukung. Diizinkan: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "File is %s, exceeding the 8MB limit."
 msgstr "Ukuran berkas %s, melebihi batas 8MB."
 
@@ -355,9 +355,7 @@ msgstr "Bawaan"
 msgid "Default foreground for headings, body text, icons, and form values."
 msgstr "Latar depan bawaan untuk tajuk, teks isi, ikon, dan nilai formulir."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2258
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2692
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2698
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Delete"
 msgstr "Hapus"
 
@@ -1158,12 +1156,11 @@ msgstr ""
 "Unggah dan kelola gambar untuk ikon, favicon, aset PWA, dan latar belakang "
 "login. File disimpan di <code>/www/luci-static/aurora/images/</code>."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2158
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2588
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed"
 msgstr "Unggahan gagal"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2560
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed (HTTP %s)"
 msgstr "Unggahan gagal (HTTP %s)"
 

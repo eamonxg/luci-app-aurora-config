@@ -274,7 +274,7 @@ msgstr "사용자 지정"
 msgid "Name"
 msgstr "이름"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Size"
 msgstr "크기"
 
@@ -298,7 +298,7 @@ msgstr "기존 '%s'을(를) 대체합니다."
 msgid "Drop a .woff2 font here, or click to browse"
 msgstr ".woff2 글꼴을 여기에 끌어다 놓거나 클릭하여 선택하세요"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Confirm Upload"
 msgstr "업로드 확인"
 
@@ -306,11 +306,11 @@ msgstr "업로드 확인"
 msgid "Custom Fonts"
 msgstr "사용자 지정 글꼴"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Unsupported file type. Allowed: %s"
 msgstr "지원하지 않는 파일 형식입니다. 허용: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "File is %s, exceeding the 8MB limit."
 msgstr "파일 크기가 %s로 8MB 제한을 초과합니다."
 
@@ -350,9 +350,7 @@ msgstr "기본값"
 msgid "Default foreground for headings, body text, icons, and form values."
 msgstr "제목, 본문 텍스트, 아이콘 및 폼 값에 대한 기본 전경색."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2258
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2692
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2698
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Delete"
 msgstr "삭제"
 
@@ -1142,12 +1140,11 @@ msgstr ""
 "아이콘, 파비콘, PWA 자산 및 로그인 배경용 이미지를 업로드하고 관리합니다. 파"
 "일은 <code>/www/luci-static/aurora/images/</code>에 저장됩니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2158
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2588
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed"
 msgstr "업로드 실패"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2560
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed (HTTP %s)"
 msgstr "업로드 실패 (HTTP %s)"
 

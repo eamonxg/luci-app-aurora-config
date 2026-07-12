@@ -279,7 +279,7 @@ msgstr "Özel"
 msgid "Name"
 msgstr "Ad"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Size"
 msgstr "Boyut"
 
@@ -303,7 +303,7 @@ msgstr "Mevcut “%s” dosyasının yerini alacak."
 msgid "Drop a .woff2 font here, or click to browse"
 msgstr ".woff2 yazı tipini buraya sürükleyin veya seçmek için tıklayın"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Confirm Upload"
 msgstr "Yüklemeyi Onayla"
 
@@ -311,11 +311,11 @@ msgstr "Yüklemeyi Onayla"
 msgid "Custom Fonts"
 msgstr "Özel Yazı Tipleri"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Unsupported file type. Allowed: %s"
 msgstr "Desteklenmeyen dosya türü. İzin verilenler: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "File is %s, exceeding the 8MB limit."
 msgstr "Dosya %s boyutunda ve 8 MB sınırını aşıyor."
 
@@ -356,9 +356,7 @@ msgid "Default foreground for headings, body text, icons, and form values."
 msgstr ""
 "Başlıklar, gövde metni, simgeler ve form değerleri için varsayılan ön plan."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2258
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2692
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2698
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Delete"
 msgstr "Sil"
 
@@ -1161,12 +1159,11 @@ msgstr ""
 "yükleyin ve yönetin. Dosyalar <code>/www/luci-static/aurora/images/</code> "
 "dizininde saklanır."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2158
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2588
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed"
 msgstr "Yükleme başarısız oldu"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2560
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed (HTTP %s)"
 msgstr "Yükleme başarısız oldu (HTTP %s)"
 

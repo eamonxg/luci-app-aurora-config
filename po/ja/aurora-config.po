@@ -288,7 +288,7 @@ msgstr "カスタム"
 msgid "Name"
 msgstr "名前"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Size"
 msgstr "サイズ"
 
@@ -312,7 +312,7 @@ msgstr "既存の「%s」を置き換えます。"
 msgid "Drop a .woff2 font here, or click to browse"
 msgstr ".woff2 フォントをここにドラッグするか、クリックして選択してください"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Confirm Upload"
 msgstr "アップロードを確定"
 
@@ -320,11 +320,11 @@ msgstr "アップロードを確定"
 msgid "Custom Fonts"
 msgstr "カスタムフォント"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Unsupported file type. Allowed: %s"
 msgstr "対応していないファイル形式です。対応形式: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "File is %s, exceeding the 8MB limit."
 msgstr "ファイルサイズが %s で、8MB の上限を超えています。"
 
@@ -366,9 +366,7 @@ msgstr ""
 "見出し、本文テキスト、アイコン、およびフォーム値のデフォルトのフォアグラウン"
 "ド（前景）色。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2258
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2692
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2698
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Delete"
 msgstr "削除"
 
@@ -1178,12 +1176,11 @@ msgstr ""
 "て管理します。ファイルは <code>/www/luci-static/aurora/images/</code> に保存"
 "されます。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2158
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2588
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed"
 msgstr "アップロードに失敗しました"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2560
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:1
 msgid "Upload failed (HTTP %s)"
 msgstr "アップロードに失敗しました (HTTP %s)"
 
