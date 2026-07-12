@@ -2085,21 +2085,21 @@ return view.extend({
     so.rmempty = false;
     so.render = renderContainerMaxWidthControl;
 
-    const fontLibrarySection = s.taboption(
+    const fontSection = s.taboption(
       "layout_typography",
       form.SectionValue,
-      "_font_library",
+      "_font_settings",
       form.NamedSection,
       "theme",
       "aurora",
-      _("Font Library"),
+      _("Typography"),
       _(
-        "Keep custom font files as small as possible, as they are stored in the router's limited flash storage.",
+        "Sans-serif and monospace typefaces used across the theme. Webfonts are downloaded once from pinned, checksum-verified sources and served locally; pages never load fonts from the internet.",
       ),
     );
-    const fontLibrarySubsection = fontLibrarySection.subsection;
+    const fontSubsection = fontSection.subsection;
 
-    const fontTableSo = fontLibrarySubsection.option(
+    const fontTableSo = fontSubsection.option(
       form.DummyValue,
       "_font_table",
       " ",
@@ -2228,22 +2228,17 @@ return view.extend({
             }),
       });
 
-      return fontManager;
+      return E("div", {}, [
+        fontManager,
+        E(
+          "p",
+          { style: "opacity:0.6;font-size:0.9em;margin:0.35em 0 0;" },
+          _(
+            "Keep custom font files as small as possible, as they are stored in the router's limited flash storage.",
+          ),
+        ),
+      ]);
     };
-
-    const fontSection = s.taboption(
-      "layout_typography",
-      form.SectionValue,
-      "_font_settings",
-      form.NamedSection,
-      "theme",
-      "aurora",
-      _("Typography"),
-      _(
-        "Sans-serif and monospace typefaces used across the theme. Webfonts are downloaded once from pinned, checksum-verified sources and served locally; pages never load fonts from the internet.",
-      ),
-    );
-    const fontSubsection = fontSection.subsection;
 
     const fontSlotOpts = {};
 
