@@ -2191,32 +2191,31 @@ return view.extend({
             const nameInput = E("input", {
               type: "text",
               class: "cbi-input-text",
-              style: "flex:1;min-width:11em;",
               placeholder: _("Font family name, e.g. MiSans"),
               value: familyFromFilename(file.name),
             });
             const slotSelect = E(
               "select",
-              { class: "cbi-input-select", style: "max-width:10em;" },
+              { class: "cbi-input-select" },
               [
                 E("option", { value: "sans" }, _("Sans-Serif")),
                 E("option", { value: "mono" }, _("Monospace")),
               ],
             );
             return {
-              el: E(
-                "div",
-                {
-                  style:
-                    "display:flex;gap:0.6em;flex-wrap:wrap;align-items:center;",
-                },
-                [nameInput, slotSelect],
-              ),
+              rows: [
+                { label: _("Name"), control: nameInput },
+                { label: _("Slot"), control: slotSelect },
+              ],
               value: () => ({
                 name: nameInput.value.trim(),
                 slot: slotSelect.value,
               }),
               valid: () => !!nameInput.value.trim(),
+              setDisabled: (disabled) => {
+                nameInput.disabled = disabled;
+                slotSelect.disabled = disabled;
+              },
             };
           },
         },
@@ -2544,16 +2543,14 @@ return view.extend({
               const nameInput = E("input", {
                 type: "text",
                 class: "cbi-input-text",
-                style: "flex:1;min-width:11em;",
-                placeholder: _("Filename (with extension)"),
                 value: file.name,
               });
               const collisionWarning = E(
                 "p",
                 {
                   style:
-                    "color:var(--warning);font-size:0.9em;margin:0;" +
-                    "width:100%;display:none;",
+                    "color:var(--warning);font-size:0.9em;" +
+                    "margin:0.35em 0 0;display:none;",
                 },
                 "",
               );
@@ -2570,15 +2567,28 @@ return view.extend({
               };
               nameInput.addEventListener("input", updateCollisionWarning);
               updateCollisionWarning();
-              return {
-                el: E(
-                  "div",
-                  {
-                    style:
-                      "display:flex;gap:0.6em;flex-wrap:wrap;align-items:center;",
-                  },
-                  [nameInput, collisionWarning],
+              const noteEl = E(
+                "div",
+                {
+                  style:
+                    "font-size:0.82em;color:var(--text-muted);" +
+                    "opacity:0.8;margin-top:0.35em;",
+                },
+                _(
+                  "Name it login-bg.* to use it as the login page background.",
                 ),
+              );
+              return {
+                rows: [
+                  {
+                    label: _("Filename (with extension)"),
+                    control: E("div", {}, [
+                      nameInput,
+                      collisionWarning,
+                      noteEl,
+                    ]),
+                  },
+                ],
                 value: () => ({ name: nameInput.value.trim() }),
                 valid: () => {
                   const v = nameInput.value.trim();
@@ -2589,11 +2599,11 @@ return view.extend({
                     ICON_EXTS.includes(assetUpload.extOf(v))
                   );
                 },
+                setDisabled: (disabled) => {
+                  nameInput.disabled = disabled;
+                },
               };
             },
-            note: _(
-              "Name it login-bg.* to use it as the login page background.",
-            ),
           },
           upload: (file, meta, onProgress) =>
             assetUpload

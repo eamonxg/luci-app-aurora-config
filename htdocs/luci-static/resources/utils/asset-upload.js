@@ -93,7 +93,12 @@ return baseclass.extend({
   //   rows: [{ preview, name, badge, size, onDelete() }],  // badge: plain text or falsy
   //   bar: { hint, sub, accept },
   //   checkFile(file) -> { ok, err },
-  //   form: { fields(file) -> { el, value(), valid() }, note },
+  //   form: {
+  //     fields(file) -> {
+  //       rows: [{label, control}],   // rendered as cbi-value label/field rows
+  //       value(), valid(), setDisabled(bool),   // bool reaches every control
+  //     },
+  //   },
   //   upload(file, meta, onProgress) -> Promise,   // caller composes
   //                                                // uploadToRouter + RPC
   // }
@@ -244,7 +249,7 @@ return baseclass.extend({
         {
           style:
             "display:none;height:5px;border-radius:999px;" +
-            "background:var(--hairline);overflow:hidden;",
+            "background:var(--hairline);overflow:hidden;margin-top:0.6em;",
         },
         [progressBar],
       );
@@ -260,71 +265,40 @@ return baseclass.extend({
       };
 
       let busy = false;
-      const setFieldsDisabled = (disabled) => {
-        fields.el
-          .querySelectorAll("input, select, textarea")
-          .forEach((el) => {
-            el.disabled = disabled;
-          });
-      };
 
-      const removeBtn = E(
+      const cancelBtn = E(
         "button",
-        {
-          type: "button",
-          class: "cbi-button",
-          title: _("Remove file"),
-          style: "padding:0.15em 0.5em;line-height:1;",
-          click: renderBar,
-        },
-        "✕",
+        { type: "button", class: "cbi-button", click: renderBar },
+        _("Cancel"),
       );
 
-      const fileLine = E(
-        "div",
-        { style: "display:flex;align-items:center;gap:0.55em;" },
-        [
-          E(
-            "span",
-            {
-              style:
-                "width:26px;height:26px;border-radius:0.4em;flex:0 0 auto;" +
-                "background:var(--brand);color:var(--on-brand);" +
-                "display:flex;align-items:center;justify-content:center;" +
-                "font-size:0.68em;font-weight:800;",
-            },
-            extOf(file.name).toUpperCase().slice(0, 4),
-          ),
-          E(
-            "span",
-            {
-              style:
-                "font-weight:700;font-size:0.93em;word-break:break-all;",
-            },
-            file.name,
-          ),
-          E(
-            "span",
-            {
-              style:
-                "color:var(--text-muted);font-size:0.85em;white-space:nowrap;",
-            },
-            formatSize(file.size),
-          ),
-          E("span", { style: "flex:1;" }, ""),
-          removeBtn,
-        ],
-      );
+      const fileSummary = E("div", { style: "margin-bottom:0.6em;" }, [
+        E("strong", { style: "word-break:break-all;" }, file.name),
+        " · " + formatSize(file.size),
+      ]);
 
       const errEl = check.ok
         ? null
         : E(
             "p",
             {
-              style: "color:var(--danger);font-weight:600;font-size:0.9em;margin:0;",
+              style:
+                "color:var(--danger);font-weight:600;font-size:0.9em;" +
+                "margin:0 0 0.6em;",
             },
             check.err,
           );
+
+      const rowsEl = E(
+        "div",
+        { style: "margin-bottom:0.6em;" },
+        fields.rows.map((row) =>
+          E("div", { class: "cbi-value" }, [
+            E("label", { class: "cbi-value-title" }, row.label),
+            E("div", { class: "cbi-value-field" }, row.control),
+          ]),
+        ),
+      );
 
       const goBtn = E(
         "button",
@@ -336,23 +310,20 @@ return baseclass.extend({
         goBtn.disabled = !check.ok || !fields.valid();
       };
       updateGoState();
-      fields.el.addEventListener("input", updateGoState);
-      fields.el.addEventListener("change", updateGoState);
+      rowsEl.addEventListener("input", updateGoState);
+      rowsEl.addEventListener("change", updateGoState);
 
-      const fieldsRow = E(
-        "div",
-        {
-          style:
-            "display:flex;gap:0.6em;flex-wrap:wrap;align-items:center;",
-        },
-        [fields.el, E("span", { style: "flex:1;" }, ""), goBtn],
-      );
+      const actionsRow = E("div", { class: "right" }, [
+        cancelBtn,
+        " ",
+        goBtn,
+      ]);
 
       goBtn.addEventListener("click", () => {
         busy = true;
         goBtn.disabled = true;
-        removeBtn.disabled = true;
-        setFieldsDisabled(true);
+        cancelBtn.disabled = true;
+        fields.setDisabled(true);
         showProgress();
         setProgress(0);
         const meta = fields.value();
@@ -360,8 +331,8 @@ return baseclass.extend({
           .upload(file, meta, setProgress)
           .catch((err) => {
             busy = false;
-            removeBtn.disabled = false;
-            setFieldsDisabled(false);
+            cancelBtn.disabled = false;
+            fields.setDisabled(false);
             hideProgress();
             updateGoState();
             ui.addNotification(
@@ -372,23 +343,14 @@ return baseclass.extend({
           });
       });
 
-      const noteEl = cfg.form.note
-        ? E(
-            "div",
-            { style: "font-size:0.82em;color:var(--text-muted);opacity:0.8;" },
-            cfg.form.note,
-          )
-        : null;
-
       return E(
         "div",
         {
           style:
             "margin-bottom:0.5em;padding-bottom:0.6em;" +
-            "border-bottom:1px solid var(--hairline);display:flex;" +
-            "flex-direction:column;gap:0.6em;",
+            "border-bottom:1px solid var(--hairline);",
         },
-        [fileLine, errEl, fieldsRow, noteEl, progressWrap].filter(Boolean),
+        [fileSummary, errEl, rowsEl, actionsRow, progressWrap].filter(Boolean),
       );
     };
 
