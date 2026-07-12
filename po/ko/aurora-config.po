@@ -230,10 +230,6 @@ msgstr "업데이트 확인 중..."
 msgid "Checking..."
 msgstr "확인 중..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2213
-msgid "Choose a .woff2 file and a family name"
-msgstr ".woff2 파일을 선택하고 글꼴 이름을 입력하세요"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:967
 msgid "Choose a literal color for this token"
 msgstr "이 토큰에 사용할 정확한 색상을 선택하세요"
@@ -286,6 +282,34 @@ msgstr "사용자 지정"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2264
 msgid "Custom Fonts"
 msgstr "사용자 지정 글꼴"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Drop a .woff2 font here, or click to browse"
+msgstr ".woff2 글꼴을 여기에 끌어다 놓거나 클릭하여 선택하세요"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Confirm Upload"
+msgstr "업로드 확인"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Remove file"
+msgstr "파일 제거"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Unsupported file type. Allowed: %s"
+msgstr "지원하지 않는 파일 형식입니다. 허용: %s"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "File is %s, exceeding the 8MB limit."
+msgstr "파일 크기가 %s로 8MB 제한을 초과합니다."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Delete Custom Font"
+msgstr "사용자 지정 글꼴 삭제"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Delete '%s'? The interface will fall back to the default typeface."
+msgstr "'%s'을(를) 삭제할까요? 인터페이스는 기본 글꼴로 되돌아갑니다."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2196
 msgid "Custom fonts are stored in the router's limited flash storage and downloaded by every browser on first load. For CJK typefaces, prefer a subsetted .woff2 with only the glyphs you need to save space and load faster."
@@ -600,8 +624,8 @@ msgid "Invalid, missing, or cyclic color expression."
 msgstr "유효하지 않거나, 누락되었거나, 순환 참조되는 색상 표현식입니다."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2533
-msgid "JPG · PNG · WebP · AVIF · SVG · GIF"
-msgstr "JPG · PNG · WebP · AVIF · SVG · GIF"
+msgid "JPG · PNG · WebP · AVIF · SVG · GIF · ICO"
+msgstr "JPG · PNG · WebP · AVIF · SVG · GIF · ICO"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/version.js:396
 msgid "Latest Version"
@@ -1120,11 +1144,6 @@ msgstr "패키지 업데이트 중"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2229
 msgid "Upload"
 msgstr "업로드"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2182
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2278
-msgid "Upload Custom Font"
-msgstr "사용자 지정 글꼴 업로드"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2429
 msgid ""
