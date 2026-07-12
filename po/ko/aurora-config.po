@@ -312,8 +312,8 @@ msgid "Delete '%s'? The interface will fall back to the default typeface."
 msgstr "'%s'을(를) 삭제할까요? 인터페이스는 기본 글꼴로 되돌아갑니다."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2196
-msgid "Custom fonts are stored in the router's limited flash storage and downloaded by every browser on first load. For CJK typefaces, prefer a subsetted .woff2 with only the glyphs you need to save space and load faster."
-msgstr "사용자 지정 글꼴은 라우터의 제한된 플래시 저장소에 저장되며 각 브라우저에서 처음 불러올 때 다운로드됩니다. CJK 글꼴은 필요한 글리프만 포함한 서브셋 .woff2를 사용하면 공간을 절약하고 로딩 속도를 높일 수 있습니다."
+msgid "Keep custom font files as small as possible, as they are stored in the router's limited flash storage."
+msgstr "사용자 지정 글꼴 파일은 라우터의 제한된 플래시 저장소에 저장되므로 가능한 한 작게 유지하세요."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:180
 msgid "Danger"

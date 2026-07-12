@@ -317,8 +317,8 @@ msgid "Delete '%s'? The interface will fall back to the default typeface."
 msgstr "“%s” silinsin mi? Arayüz varsayılan yazı tipine döner."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2196
-msgid "Custom fonts are stored in the router's limited flash storage and downloaded by every browser on first load. For CJK typefaces, prefer a subsetted .woff2 with only the glyphs you need to save space and load faster."
-msgstr "Özel yazı tipleri yönlendiricinin sınırlı flash depolamasında saklanır ve her tarayıcı tarafından ilk yüklemede indirilir. CJK yazı tipleri için yalnızca gereken glifleri içeren alt küme bir .woff2 tercih edin; böylece yerden tasarruf eder ve daha hızlı yüklenir."
+msgid "Keep custom font files as small as possible, as they are stored in the router's limited flash storage."
+msgstr "Özel yazı tipi dosyalarını olabildiğince küçük tutun; yönlendiricinin sınırlı flash depolamasında saklanırlar."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:180
 msgid "Danger"

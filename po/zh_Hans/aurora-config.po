@@ -306,8 +306,8 @@ msgid "Delete '%s'? The interface will fall back to the default typeface."
 msgstr "确定删除“%s”?界面将回退到默认字体。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2196
-msgid "Custom fonts are stored in the router's limited flash storage and downloaded by every browser on first load. For CJK typefaces, prefer a subsetted .woff2 with only the glyphs you need to save space and load faster."
-msgstr "自定义字体会存放在路由器有限的闪存中,并在每个浏览器首次加载时下载。中日韩字体建议使用仅包含所需字形的子集化 .woff2,以节省空间并加快加载。"
+msgid "Keep custom font files as small as possible, as they are stored in the router's limited flash storage."
+msgstr "自定义字体文件应尽可能小,因为它们存放在路由器有限的闪存中。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:180
 msgid "Danger"

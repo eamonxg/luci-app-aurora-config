@@ -2354,7 +2354,7 @@ return view.extend({
             "p",
             { style: "opacity:0.6;font-size:0.9em;margin:0.35em 0 0;" },
             _(
-              "Custom fonts are stored in the router's limited flash storage and downloaded by every browser on first load. For CJK typefaces, prefer a subsetted .woff2 with only the glyphs you need to save space and load faster.",
+              "Keep custom font files as small as possible, as they are stored in the router's limited flash storage.",
             ),
           ),
           confirmWrap,
