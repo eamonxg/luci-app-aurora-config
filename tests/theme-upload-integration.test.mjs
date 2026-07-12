@@ -26,4 +26,5 @@ test("theme.js owns zero raw upload plumbing after icon adoption", async () => {
   assert.ok(!src.includes("cgi-bin/cgi-upload"), "upload URL must live in the module");
   assert.match(src, /GIF · ICO/);
   assert.match(src, /exts: \["jpg", "jpeg", "png", "webp", "avif", "svg", "gif", "ico"\]/);
+  assert.match(src, /Failed to delete: %s/); // msgid regressed once; lock it
 });
