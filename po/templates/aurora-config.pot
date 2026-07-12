@@ -277,6 +277,10 @@ msgstr ""
 msgid "Custom Fonts"
 msgstr ""
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2196
+msgid "Custom fonts are stored in the router's limited flash storage and downloaded by every browser on first load. For CJK typefaces, prefer a subsetted .woff2 with only the glyphs you need to save space and load faster."
+msgstr ""
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:180
 msgid "Danger"
 msgstr ""
@@ -703,7 +707,7 @@ msgid "On-Brand Text"
 msgstr ""
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2183
-msgid "Only .woff2 files up to 4MB are accepted."
+msgid "Only .woff2 files up to 8MB are accepted."
 msgstr ""
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:308

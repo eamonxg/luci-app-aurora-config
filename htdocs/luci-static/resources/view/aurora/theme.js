@@ -2188,7 +2188,14 @@ return view.extend({
         const fileInput = E("input", { type: "file", accept: ".woff2" });
 
         ui.showModal(_("Upload Custom Font"), [
-          E("p", {}, _("Only .woff2 files up to 4MB are accepted.")),
+          E("p", {}, _("Only .woff2 files up to 8MB are accepted.")),
+          E(
+            "p",
+            { style: "opacity:0.6; font-size:0.9em; margin-top:-0.3em;" },
+            _(
+              "Custom fonts are stored in the router's limited flash storage and downloaded by every browser on first load. For CJK typefaces, prefer a subsetted .woff2 with only the glyphs you need to save space and load faster.",
+            ),
+          ),
           E("div", { class: "cbi-value" }, [
             E("label", { class: "cbi-value-title" }, _("Slot")),
             E("div", { class: "cbi-value-field" }, slotSelect),

@@ -8,7 +8,7 @@ readonly FONT_CSS_FILE="$FONT_PATH/aurora-font.css"
 readonly FONT_JOB_PATH="/tmp/aurora_font_jobs"
 readonly FONT_TMP_UPLOAD="/tmp/aurora_font.tmp"
 readonly FONT_CUSTOM_PATH="$FONT_PATH/custom"
-readonly FONT_MAX_UPLOAD=4194304
+readonly FONT_MAX_UPLOAD=8388608
 readonly TMP_UPLOAD_PATH="/tmp/aurora_icon.tmp"
 readonly DOWNLOAD_PATH="/tmp/aurora_downloads"
 readonly CONFIG_FILE="/etc/config/aurora"
@@ -1050,7 +1050,7 @@ case "$1" in
 		size=$(wc -c < "$FONT_TMP_UPLOAD")
 		[ "$size" -le "$FONT_MAX_UPLOAD" ] || {
 			rm -f "$FONT_TMP_UPLOAD"
-			echo '{ "result": 1, "error": "File exceeds 4MB limit" }'; exit 0; }
+			echo '{ "result": 1, "error": "File exceeds 8MB limit" }'; exit 0; }
 		[ "$(head -c 4 "$FONT_TMP_UPLOAD")" = "wOF2" ] || {
 			rm -f "$FONT_TMP_UPLOAD"
 			echo '{ "result": 1, "error": "Not a woff2 file" }'; exit 0; }

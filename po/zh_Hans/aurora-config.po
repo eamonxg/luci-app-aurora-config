@@ -281,6 +281,10 @@ msgstr "自定义"
 msgid "Custom Fonts"
 msgstr "自定义字体"
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2196
+msgid "Custom fonts are stored in the router's limited flash storage and downloaded by every browser on first load. For CJK typefaces, prefer a subsetted .woff2 with only the glyphs you need to save space and load faster."
+msgstr "自定义字体会存放在路由器有限的闪存中,并在每个浏览器首次加载时下载。中日韩字体建议使用仅包含所需字形的子集化 .woff2,以节省空间并加快加载。"
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:180
 msgid "Danger"
 msgstr "危险"
@@ -713,8 +717,8 @@ msgid "On-Brand Text"
 msgstr "品牌背景上的文本"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2183
-msgid "Only .woff2 files up to 4MB are accepted."
-msgstr "仅支持不超过 4MB 的 .woff2 文件。"
+msgid "Only .woff2 files up to 8MB are accepted."
+msgstr "仅支持不超过 8MB 的 .woff2 文件。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:308
 msgid "Opaque surface for the expanded mega menu and its header."

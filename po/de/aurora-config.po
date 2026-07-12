@@ -299,6 +299,10 @@ msgstr "Benutzerdefiniert"
 msgid "Custom Fonts"
 msgstr "Eigene Schriftarten"
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2196
+msgid "Custom fonts are stored in the router's limited flash storage and downloaded by every browser on first load. For CJK typefaces, prefer a subsetted .woff2 with only the glyphs you need to save space and load faster."
+msgstr "Eigene Schriftarten werden im begrenzten Flash-Speicher des Routers gespeichert und von jedem Browser beim ersten Laden heruntergeladen. Für CJK-Schriftarten empfiehlt sich eine reduzierte .woff2 mit nur den benötigten Glyphen, um Speicherplatz zu sparen und das Laden zu beschleunigen."
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:180
 msgid "Danger"
 msgstr "Gefahr"
@@ -758,8 +762,8 @@ msgid "On-Brand Text"
 msgstr "Text auf Brand-Hintergrund"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2183
-msgid "Only .woff2 files up to 4MB are accepted."
-msgstr "Nur .woff2-Dateien bis 4 MB werden akzeptiert."
+msgid "Only .woff2 files up to 8MB are accepted."
+msgstr "Nur .woff2-Dateien bis 8 MB werden akzeptiert."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:308
 msgid "Opaque surface for the expanded mega menu and its header."

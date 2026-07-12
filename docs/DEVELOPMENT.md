@@ -330,7 +330,7 @@ Users can upload their own woff2 via the `upload_font` RPC method (and remove
 it via `remove_font`):
 
 - Upload goes through cgi-io to `/tmp/aurora_font.tmp`.
-- Server-side validation: woff2 magic bytes (`wOF2`), size ≤ 4MB.
+- Server-side validation: woff2 magic bytes (`wOF2`), size ≤ 8MB.
 - Stored under `/www/luci-static/aurora/fonts/custom/<slot>-<slug>.{woff2,meta,face}`
   (`.face` is the pre-rendered `@font-face` block, `.meta` carries the
   display family + font stack).
