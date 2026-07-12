@@ -2632,7 +2632,12 @@ return view.extend({
                         } else {
                           ui.addNotification(
                             null,
-                            E("p", _("Delete failed")),
+                            E(
+                              "p",
+                              _("Failed to delete: %s").format(
+                                ret?.error || "Unknown",
+                              ),
+                            ),
                             "error",
                           );
                         }
