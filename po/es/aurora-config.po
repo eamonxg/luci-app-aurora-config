@@ -280,11 +280,6 @@ msgstr "Radio de esquina"
 msgid "Custom"
 msgstr "Personalizada"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2137
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2264
-msgid "Custom Fonts"
-msgstr "Fuentes personalizadas"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
 msgid "Name"
 msgstr "Nombre"
@@ -340,6 +335,10 @@ msgstr "¿Eliminar «%s»? La interfaz volverá a la tipografía predeterminada.
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2196
 msgid "Keep custom font files as small as possible, as they are stored in the router's limited flash storage."
 msgstr "Mantén los archivos de fuentes personalizadas lo más pequeños posible, ya que se almacenan en el limitado almacenamiento flash del router."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Font Library"
+msgstr "Biblioteca de fuentes"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:180
 msgid "Danger"

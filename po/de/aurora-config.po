@@ -282,11 +282,6 @@ msgstr "Eckenradius"
 msgid "Custom"
 msgstr "Benutzerdefiniert"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2137
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2264
-msgid "Custom Fonts"
-msgstr "Eigene Schriftarten"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
 msgid "Name"
 msgstr "Name"
@@ -342,6 +337,10 @@ msgstr "„%s“ löschen? Die Oberfläche fällt auf die Standardschriftart zur
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2196
 msgid "Keep custom font files as small as possible, as they are stored in the router's limited flash storage."
 msgstr "Halten Sie eigene Schriftdateien möglichst klein, da sie im begrenzten Flash-Speicher des Routers gespeichert werden."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Font Library"
+msgstr "Schriftbibliothek"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:180
 msgid "Danger"

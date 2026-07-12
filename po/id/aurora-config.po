@@ -275,11 +275,6 @@ msgstr "Radius Sudut"
 msgid "Custom"
 msgstr "Kustom"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2137
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2264
-msgid "Custom Fonts"
-msgstr "Fon Kustom"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
 msgid "Name"
 msgstr "Nama"
@@ -335,6 +330,10 @@ msgstr "Hapus '%s'? Antarmuka akan kembali ke fon bawaan."
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2196
 msgid "Keep custom font files as small as possible, as they are stored in the router's limited flash storage."
 msgstr "Usahakan berkas fon kustom sekecil mungkin karena disimpan di penyimpanan flash router yang terbatas."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Font Library"
+msgstr "Pustaka Fon"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:180
 msgid "Danger"

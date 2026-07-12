@@ -294,11 +294,6 @@ msgstr "Rayon des coins"
 msgid "Custom"
 msgstr "Personnalisée"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2137
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2264
-msgid "Custom Fonts"
-msgstr "Polices personnalisées"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
 msgid "Name"
 msgstr "Nom"
@@ -354,6 +349,10 @@ msgstr "Supprimer « %s » ? L'interface reviendra à la police par défaut."
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2196
 msgid "Keep custom font files as small as possible, as they are stored in the router's limited flash storage."
 msgstr "Gardez les fichiers de polices personnalisées aussi petits que possible, car ils sont stockés dans la mémoire flash limitée du routeur."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Font Library"
+msgstr "Bibliothèque de polices"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:180
 msgid "Danger"

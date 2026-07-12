@@ -282,11 +282,6 @@ msgstr "Радиус скругления углов"
 msgid "Custom"
 msgstr "Пользовательский"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2137
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2264
-msgid "Custom Fonts"
-msgstr "Пользовательские шрифты"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
 msgid "Name"
 msgstr "Название"
@@ -342,6 +337,10 @@ msgstr "Удалить «%s»? Интерфейс вернётся к шрифт
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2196
 msgid "Keep custom font files as small as possible, as they are stored in the router's limited flash storage."
 msgstr "Файлы пользовательских шрифтов должны быть как можно меньше, так как они хранятся в ограниченной флеш-памяти роутера."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Font Library"
+msgstr "Библиотека шрифтов"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:180
 msgid "Danger"
