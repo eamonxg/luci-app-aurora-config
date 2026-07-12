@@ -281,6 +281,7 @@ msgstr "Користувацький"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2264
 msgid "Custom Fonts"
 msgstr "Користувацькі шрифти"
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
 msgid "Name"
 msgstr "Назва"
@@ -301,6 +302,9 @@ msgstr "Ім'я файлу (з розширенням)"
 msgid "Name it login-bg.* to use it as the login page background."
 msgstr "Назвіть файл login-bg.*, щоб використовувати його як тло сторінки входу."
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Will replace the existing '%s'."
+msgstr "Замінить наявний файл «%s»."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
 msgid "Drop a .woff2 font here, or click to browse"

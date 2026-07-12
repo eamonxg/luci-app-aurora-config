@@ -279,6 +279,7 @@ msgstr "Özel"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2264
 msgid "Custom Fonts"
 msgstr "Özel Yazı Tipleri"
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
 msgid "Name"
 msgstr "Ad"
@@ -299,6 +300,9 @@ msgstr "Dosya adı (uzantı dahil)"
 msgid "Name it login-bg.* to use it as the login page background."
 msgstr "Giriş sayfası arka planı olarak kullanmak için login-bg.* olarak adlandırın."
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Will replace the existing '%s'."
+msgstr "Mevcut “%s” dosyasının yerini alacak."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
 msgid "Drop a .woff2 font here, or click to browse"

@@ -274,6 +274,7 @@ msgstr "사용자 지정"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2264
 msgid "Custom Fonts"
 msgstr "사용자 지정 글꼴"
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
 msgid "Name"
 msgstr "이름"
@@ -294,6 +295,9 @@ msgstr "파일 이름(확장자 포함)"
 msgid "Name it login-bg.* to use it as the login page background."
 msgstr "login-bg.*로 이름을 지정하면 로그인 페이지 배경으로 사용됩니다."
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Will replace the existing '%s'."
+msgstr "기존 '%s'을(를) 대체합니다."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
 msgid "Drop a .woff2 font here, or click to browse"

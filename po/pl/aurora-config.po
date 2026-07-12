@@ -284,6 +284,7 @@ msgstr "Własne"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2264
 msgid "Custom Fonts"
 msgstr "Własne czcionki"
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
 msgid "Name"
 msgstr "Nazwa"
@@ -304,6 +305,9 @@ msgstr "Nazwa pliku (z rozszerzeniem)"
 msgid "Name it login-bg.* to use it as the login page background."
 msgstr "Nazwij go login-bg.*, aby użyć go jako tła strony logowania."
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
+msgid "Will replace the existing '%s'."
+msgstr "Zastąpi istniejący plik „%s”."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:1
 msgid "Drop a .woff2 font here, or click to browse"
