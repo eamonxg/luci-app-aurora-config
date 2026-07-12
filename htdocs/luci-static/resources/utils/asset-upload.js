@@ -186,32 +186,42 @@ return baseclass.extend({
         {
           type: "button",
           style:
-            "display:flex;align-items:center;gap:0.6em;width:100%;" +
-            "margin-bottom:0.5em;padding:0.6em 0.9em;background:transparent;" +
-            "border:1px dashed var(--hairline);border-radius:var(--radius-base);" +
-            "text-align:left;cursor:pointer;color:var(--text);font:inherit;",
+            "display:block;width:100%;" +
+            "border:2px dashed var(--hairline);border-radius:0.5em;" +
+            "padding:1.25em 1em;text-align:center;cursor:pointer;" +
+            "margin-bottom:0.75em;" +
+            "transition:border-color 0.15s,background 0.15s;",
           click: () => input.click(),
           dragover: (e) => {
             e.preventDefault();
-            bar.style.background = "var(--surface-sunken)";
+            bar.style.borderColor = "var(--brand)";
+            bar.style.background = "var(--brand-subtle)";
           },
           dragleave: () => {
-            bar.style.background = "transparent";
+            bar.style.borderColor = "";
+            bar.style.background = "";
           },
           drop: (e) => {
             e.preventDefault();
-            bar.style.background = "transparent";
+            bar.style.borderColor = "";
+            bar.style.background = "";
             const file = e.dataTransfer && e.dataTransfer.files[0];
             if (file) onFile(file);
           },
         },
         [
-          E("span", { style: "font-weight:700;" }, "⬆"),
-          E("strong", { style: "font-size:0.93em;" }, cfg.bar.hint),
-          E("span", { style: "flex:1;" }, ""),
           E(
-            "span",
-            { style: "color:var(--text-muted);font-size:0.89em;" },
+            "div",
+            { style: "font-size:1.5em;margin-bottom:0.25em;pointer-events:none;" },
+            "⬆",
+          ),
+          E("strong", { style: "pointer-events:none;" }, cfg.bar.hint),
+          E(
+            "div",
+            {
+              style:
+                "font-size:0.8em;opacity:0.6;margin-top:0.25em;pointer-events:none;",
+            },
             cfg.bar.sub || "",
           ),
           input,

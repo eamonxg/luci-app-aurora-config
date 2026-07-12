@@ -2085,73 +2085,28 @@ return view.extend({
     so.rmempty = false;
     so.render = renderContainerMaxWidthControl;
 
-    const fontSection = s.taboption(
+    const fontLibrarySection = s.taboption(
       "layout_typography",
       form.SectionValue,
-      "_font_settings",
+      "_font_library",
       form.NamedSection,
       "theme",
       "aurora",
-      _("Typography"),
+      _("Font Library"),
       _(
-        "Sans-serif and monospace typefaces used across the theme. Webfonts are downloaded once from pinned, checksum-verified sources and served locally; pages never load fonts from the internet.",
+        "Keep custom font files as small as possible, as they are stored in the router's limited flash storage.",
       ),
     );
-    const fontSubsection = fontSection.subsection;
+    const fontLibrarySubsection = fontLibrarySection.subsection;
 
-    const fontSlotOpts = {};
-
-    const findFontByPreset = (slot, preset) =>
-      buildFontOptions(slot).find((font) => font.name === preset);
-
-    const findFontByStack = (slot, stack) =>
-      buildFontOptions(slot).find((font) => font.stack === stack);
-
-    const getDefaultFont = (slot) =>
-      findFontByPreset(slot, "default") || buildFontOptions(slot)[0];
-
-    const addFontSlot = (ss, slot) => {
-      const options = buildFontOptions(slot);
-      const stackKey = "struct_font_" + slot;
-      const defaultFont = getDefaultFont(slot);
-
-      const presetOpt = ss.option(
-        form.ListValue,
-        stackKey,
-        slot === "sans" ? _("Sans-Serif Typeface") : _("Monospace Typeface"),
-      );
-      presetOpt.description =
-        slot === "sans"
-          ? _(
-              "Primary font for all interface text — headings, body, menus, forms, and tables.",
-            )
-          : _("Font for code, command output, and the system log viewer.");
-      presetOpt.default = themeConfig[stackKey] || defaultFont?.stack || "";
-      presetOpt.rmempty = false;
-      options.forEach((font) => {
-        if (font.stack) {
-          presetOpt.value(
-            font.stack,
-            font.source
-              ? "%s (%s)".format(font.label, font.source)
-              : font.label,
-          );
-        }
-      });
-      fontSlotOpts[slot] = presetOpt;
-    };
-
-    addFontSlot(fontSubsection, "sans");
-    addFontSlot(fontSubsection, "mono");
-
-    const customFontsOpt = fontSubsection.option(
+    const fontTableSo = fontLibrarySubsection.option(
       form.DummyValue,
-      "_custom_fonts",
-      _("Custom Fonts"),
+      "_font_table",
+      " ",
     );
-    customFontsOpt.rawhtml = false;
-    customFontsOpt.cfgvalue = () => "";
-    customFontsOpt.render = () => {
+    fontTableSo.rawhtml = false;
+    fontTableSo.cfgvalue = () => "";
+    fontTableSo.render = () => {
       const FONT_TMP_PATH = "/tmp/aurora_font.tmp";
       const customs = fontPresetsBySlot?.custom || [];
 
@@ -2273,20 +2228,67 @@ return view.extend({
             }),
       });
 
-      return E("div", { class: "cbi-value" }, [
-        E("label", { class: "cbi-value-title" }, _("Custom Fonts")),
-        E("div", { class: "cbi-value-field" }, [
-          fontManager,
-          E(
-            "p",
-            { style: "opacity:0.6;font-size:0.9em;margin:0.35em 0 0;" },
-            _(
-              "Keep custom font files as small as possible, as they are stored in the router's limited flash storage.",
-            ),
-          ),
-        ]),
-      ]);
+      return fontManager;
     };
+
+    const fontSection = s.taboption(
+      "layout_typography",
+      form.SectionValue,
+      "_font_settings",
+      form.NamedSection,
+      "theme",
+      "aurora",
+      _("Typography"),
+      _(
+        "Sans-serif and monospace typefaces used across the theme. Webfonts are downloaded once from pinned, checksum-verified sources and served locally; pages never load fonts from the internet.",
+      ),
+    );
+    const fontSubsection = fontSection.subsection;
+
+    const fontSlotOpts = {};
+
+    const findFontByPreset = (slot, preset) =>
+      buildFontOptions(slot).find((font) => font.name === preset);
+
+    const findFontByStack = (slot, stack) =>
+      buildFontOptions(slot).find((font) => font.stack === stack);
+
+    const getDefaultFont = (slot) =>
+      findFontByPreset(slot, "default") || buildFontOptions(slot)[0];
+
+    const addFontSlot = (ss, slot) => {
+      const options = buildFontOptions(slot);
+      const stackKey = "struct_font_" + slot;
+      const defaultFont = getDefaultFont(slot);
+
+      const presetOpt = ss.option(
+        form.ListValue,
+        stackKey,
+        slot === "sans" ? _("Sans-Serif Typeface") : _("Monospace Typeface"),
+      );
+      presetOpt.description =
+        slot === "sans"
+          ? _(
+              "Primary font for all interface text — headings, body, menus, forms, and tables.",
+            )
+          : _("Font for code, command output, and the system log viewer.");
+      presetOpt.default = themeConfig[stackKey] || defaultFont?.stack || "";
+      presetOpt.rmempty = false;
+      options.forEach((font) => {
+        if (font.stack) {
+          presetOpt.value(
+            font.stack,
+            font.source
+              ? "%s (%s)".format(font.label, font.source)
+              : font.label,
+          );
+        }
+      });
+      fontSlotOpts[slot] = presetOpt;
+    };
+
+    addFontSlot(fontSubsection, "sans");
+    addFontSlot(fontSubsection, "mono");
 
     const getFontSelection = (slot) => {
       const value =
