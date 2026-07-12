@@ -336,8 +336,8 @@ it via `remove_font`):
   - fonts: woff2 magic bytes (`wOF2`);
   - images: extension allowlist `jpg jpeg png webp avif svg gif ico`,
     path components rejected;
-  - the gate deletes the tmp file on every rejection (callers never
-    clean up).
+  - the gate deletes the tmp file on every rejection (front-end callers
+    never clean up).
 - Front-end plumbing lives in `utils/asset-upload.js` (dropzone, progress
   row, delete confirm, cgi-upload XHR); `view/aurora/theme.js` composes it
   for both the Custom Fonts and Brand Asset Library sections.

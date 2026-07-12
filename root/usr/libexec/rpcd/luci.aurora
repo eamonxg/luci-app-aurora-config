@@ -64,6 +64,9 @@ receive_upload() {
 			echo '{ "result": 1, "error": "Unsupported image type" }'; return 1 ;;
 		esac
 		;;
+	*)
+		rm -f "$ru_tmp"
+		echo '{ "result": 1, "error": "Unknown upload kind" }'; return 1 ;;
 	esac
 	return 0
 }

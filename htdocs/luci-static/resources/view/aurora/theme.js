@@ -2551,7 +2551,7 @@ return view.extend({
                 }
                 window.location.reload();
               } else {
-                throw new Error(ret?.error || "Unknown");
+                throw new Error(ret?.error || _("Unknown"));
               }
             })
             .catch((err) => {
@@ -2671,7 +2671,7 @@ return view.extend({
               ]);
 
         return E("div", { "data-name": this.option }, [
-          dropzone,
+          E("div", { style: "margin-bottom:0.75em;" }, dropzone),
           progress.el,
           tableOrEmpty,
         ]);
