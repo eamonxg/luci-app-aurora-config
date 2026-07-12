@@ -2106,6 +2106,10 @@ return view.extend({
     );
     fontTableSo.rawhtml = false;
     fontTableSo.cfgvalue = () => "";
+    // renderWidget (not render): LuCI's renderFrame() then wraps the manager
+    // in the standard cbi-value label/field row, matching the typeface
+    // selects below. The brand-asset manager overrides render() instead --
+    // its section holds only the table, so it stays full-width.
     fontTableSo.renderWidget = () => {
       const FONT_TMP_PATH = "/tmp/aurora_font.tmp";
       const customs = fontPresetsBySlot?.custom || [];
@@ -2444,6 +2448,9 @@ return view.extend({
     assetTableSo.cfgvalue = (section_id, data) => data?.icons || [];
     const ICON_EXTS = ["jpg", "jpeg", "png", "webp", "avif", "svg", "gif", "ico"];
 
+    // render (not renderWidget): full-width mount, no cbi-value label row --
+    // this section holds only the asset table. The font manager in the
+    // Typography section uses renderWidget for the labeled-row wrapper.
     assetTableSo.render = function (option_index, section_id, in_table) {
       return this.load(section_id).then((data) => {
         const icons = this.cfgvalue(section_id, data);
