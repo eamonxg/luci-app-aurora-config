@@ -13,7 +13,7 @@ const MAX_UPLOAD = 8 * 1024 * 1024;
 const formatSize = (bytes) =>
   bytes >= 1048576
     ? (bytes / 1048576).toFixed(1) + " MB"
-    : Math.round(bytes / 1024) + " KB";
+    : Math.max(1, Math.round(bytes / 1024)) + " KB";
 
 const extOf = (name) => (name.match(/\.([a-z0-9]+)$/i)?.[1] || "").toLowerCase();
 
@@ -28,7 +28,7 @@ return baseclass.extend({
   // authoritative. exts is a lowercase list without dots, e.g. ["woff2"].
   checkFile(file, opts) {
     const exts = opts?.exts || [];
-    const ext = (file.name.match(/\.([a-z0-9]+)$/i)?.[1] || "").toLowerCase();
+    const ext = extOf(file.name);
     if (exts.length && !exts.includes(ext))
       return {
         ok: false,
@@ -102,6 +102,9 @@ return baseclass.extend({
 
     const shell = E("div", {});
 
+    const dock = E("div", {});
+    shell.appendChild(dock);
+
     if (rows.length) {
       shell.appendChild(
         E("table", { class: "table" }, [
@@ -161,9 +164,6 @@ return baseclass.extend({
       );
     }
 
-    const dock = E("div", {});
-    shell.appendChild(dock);
-
     const clearDock = () => {
       while (dock.firstChild) dock.firstChild.remove();
     };
@@ -187,7 +187,7 @@ return baseclass.extend({
           type: "button",
           style:
             "display:flex;align-items:center;gap:0.6em;width:100%;" +
-            "margin-top:0.5em;padding:0.6em 0.9em;background:transparent;" +
+            "margin-bottom:0.5em;padding:0.6em 0.9em;background:transparent;" +
             "border:1px dashed var(--hairline);border-radius:var(--radius-base);" +
             "text-align:left;cursor:pointer;color:var(--text);font:inherit;",
           click: () => input.click(),
@@ -249,6 +249,27 @@ return baseclass.extend({
         setProgress(0);
       };
 
+      let busy = false;
+      const setFieldsDisabled = (disabled) => {
+        fields.el
+          .querySelectorAll("input, select, textarea")
+          .forEach((el) => {
+            el.disabled = disabled;
+          });
+      };
+
+      const removeBtn = E(
+        "button",
+        {
+          type: "button",
+          class: "cbi-button",
+          title: _("Remove file"),
+          style: "padding:0.15em 0.5em;line-height:1;",
+          click: renderBar,
+        },
+        "✕",
+      );
+
       const fileLine = E(
         "div",
         { style: "display:flex;align-items:center;gap:0.55em;" },
@@ -281,17 +302,7 @@ return baseclass.extend({
             formatSize(file.size),
           ),
           E("span", { style: "flex:1;" }, ""),
-          E(
-            "button",
-            {
-              type: "button",
-              class: "cbi-button",
-              title: _("Remove file"),
-              style: "padding:0.15em 0.5em;line-height:1;",
-              click: renderBar,
-            },
-            "✕",
-          ),
+          removeBtn,
         ],
       );
 
@@ -311,6 +322,7 @@ return baseclass.extend({
         _("Confirm Upload"),
       );
       const updateGoState = () => {
+        if (busy) return;
         goBtn.disabled = !check.ok || !fields.valid();
       };
       updateGoState();
@@ -327,13 +339,19 @@ return baseclass.extend({
       );
 
       goBtn.addEventListener("click", () => {
+        busy = true;
         goBtn.disabled = true;
+        removeBtn.disabled = true;
+        setFieldsDisabled(true);
         showProgress();
         setProgress(0);
         const meta = fields.value();
         cfg
           .upload(file, meta, setProgress)
           .catch((err) => {
+            busy = false;
+            removeBtn.disabled = false;
+            setFieldsDisabled(false);
             hideProgress();
             updateGoState();
             ui.addNotification(
@@ -356,8 +374,8 @@ return baseclass.extend({
         "div",
         {
           style:
-            "margin-top:0.5em;padding-top:0.6em;" +
-            "border-top:1px solid var(--hairline);display:flex;" +
+            "margin-bottom:0.5em;padding-bottom:0.6em;" +
+            "border-bottom:1px solid var(--hairline);display:flex;" +
             "flex-direction:column;gap:0.6em;",
         },
         [fileLine, errEl, fieldsRow, noteEl, progressWrap].filter(Boolean),

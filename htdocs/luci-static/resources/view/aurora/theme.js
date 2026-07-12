@@ -2533,7 +2533,7 @@ return view.extend({
           },
           checkFile: (file) =>
             assetUpload.checkFile(file, {
-              exts: ["jpg", "jpeg", "png", "webp", "avif", "svg", "gif", "ico"],
+              exts: ICON_EXTS,
             }),
           form: {
             fields: (file) => {
@@ -2544,6 +2544,28 @@ return view.extend({
                 placeholder: _("Filename (with extension)"),
                 value: file.name,
               });
+              const collisionWarning = E(
+                "p",
+                {
+                  style:
+                    "color:var(--warning);font-size:0.9em;margin:0;" +
+                    "width:100%;display:none;",
+                },
+                "",
+              );
+              const updateCollisionWarning = () => {
+                const v = nameInput.value.trim();
+                if (v && icons.includes(v)) {
+                  collisionWarning.textContent = _(
+                    "Will replace the existing '%s'.",
+                  ).format(v);
+                  collisionWarning.style.display = "";
+                } else {
+                  collisionWarning.style.display = "none";
+                }
+              };
+              nameInput.addEventListener("input", updateCollisionWarning);
+              updateCollisionWarning();
               return {
                 el: E(
                   "div",
@@ -2551,13 +2573,16 @@ return view.extend({
                     style:
                       "display:flex;gap:0.6em;flex-wrap:wrap;align-items:center;",
                   },
-                  [nameInput],
+                  [nameInput, collisionWarning],
                 ),
                 value: () => ({ name: nameInput.value.trim() }),
                 valid: () => {
                   const v = nameInput.value.trim();
                   return (
-                    !!v && !v.includes("/") && ICON_EXTS.includes(assetUpload.extOf(v))
+                    !!v &&
+                    !v.includes("/") &&
+                    !v.includes("..") &&
+                    ICON_EXTS.includes(assetUpload.extOf(v))
                   );
                 },
               };
