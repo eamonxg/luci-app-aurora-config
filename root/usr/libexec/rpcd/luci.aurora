@@ -862,6 +862,9 @@ json_add_font_presets() {
 			json_add_string "name" "$cname"
 			json_add_string "family" "$cfamily"
 			json_add_string "stack" "$cstack"
+			csize=0
+			[ -f "$FONT_CUSTOM_PATH/${base}.woff2" ] && csize=$(wc -c < "$FONT_CUSTOM_PATH/${base}.woff2")
+			json_add_int "size" "$csize"
 		json_close_object
 	done
 	json_close_array
@@ -878,6 +881,13 @@ json_add_icons() {
 		done
 	fi
 	json_close_array
+	json_add_object "icon_sizes"
+	if [ -d "$ICON_PATH" ]; then
+		for file in "$ICON_PATH"/*; do
+			[ -f "$file" ] && json_add_int "${file##*/}" "$(wc -c < "$file")"
+		done
+	fi
+	json_close_object
 }
 
 json_add_theme_preset_snapshot() {

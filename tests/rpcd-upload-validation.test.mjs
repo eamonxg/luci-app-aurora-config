@@ -24,3 +24,9 @@ test("image allowlist covers favicon .ico and every advertised format", async ()
   const src = await readFile(SRC, "utf8");
   assert.match(src, /jpg\|jpeg\|png\|webp\|avif\|svg\|gif\|ico/);
 });
+
+test("list endpoints expose byte sizes", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(src, /json_add_int "size" "\$csize"/);
+  assert.match(src, /json_add_object "icon_sizes"/);
+});
