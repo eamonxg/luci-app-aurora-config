@@ -46,6 +46,31 @@ log() {
     logger -t "$LOG_TAG" "$1"
 }
 
+# Rename struct_container_max_width -> struct_content_width_centered, in place.
+#
+# Deliberately NOT a SCHEMA_VERSION bump: that triggers a full reset to the
+# template (see the v5 policy above) and is reserved for incompatible *colour*
+# semantics. A rename changes no meaning, so discarding every other
+# customisation to accomplish it would be gratuitous.
+#
+# The width cap only ever applied to the centred (top-bar) layouts — the
+# sidebar shell runs full-width — so the key was renamed to say which shell it
+# governs. The old key must be deleted, not merely copied: header.ut re-emits
+# every stored struct_* key as a CSS custom property, so leaving it behind would
+# keep injecting a --container-max-width that nothing reads.
+migrate_structure_keys() {
+    local old
+
+    old=$(uci -q get aurora.theme.struct_container_max_width)
+    [ -n "$old" ] || return 0
+
+    [ -n "$(uci -q get aurora.theme.struct_content_width_centered)" ] ||
+        uci -q set aurora.theme.struct_content_width_centered="$old"
+    uci -q delete aurora.theme.struct_container_max_width
+    uci -q commit aurora
+    log "Renamed struct_container_max_width -> struct_content_width_centered (${old})"
+}
+
 # Reset the whole config to the active template. Used when the stored schema
 # version does not match: rather than migrating individual keys, the entire
 # config is overwritten so no stale options survive.
@@ -99,6 +124,9 @@ main() {
     else
         log "Configuration already exists, checking colour token schema"
         migrate_color_schema "$template"
+        # After a reset the config already matches the template, so this is a
+        # no-op; it only does work for configs that survived the check above.
+        migrate_structure_keys
     fi
 }
 

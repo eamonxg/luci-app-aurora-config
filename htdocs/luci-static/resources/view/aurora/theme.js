@@ -1257,49 +1257,58 @@ const createRangeControlRenderer = (config) => {
       const input = element.querySelector("input");
       if (input) {
         input.type = "hidden";
-        const numValue =
-          parseFloat(input.value || self.default) || config.default;
+
+        const viewportMax = () =>
+          typeof config.max === "function" ? config.max() : Number(config.max);
+
+        const storedNum = parseFloat(
+          String(input.value || self.default || "").trim(),
+        );
+        const numValue = storedNum || config.default;
+        const format = (value) => `${value.toFixed(config.precision)}rem`;
+
+        // The ceiling tracks the viewport — widening past it changes nothing on
+        // screen — but it must never fall below a value that is already stored.
+        // A config written on a wider display otherwise clamps the slider to
+        // its own maximum while the readout still shows the larger number, and
+        // the next drag silently rewrites the setting.
+        const ceiling = () =>
+          Number.isFinite(storedNum)
+            ? Math.max(viewportMax(), storedNum)
+            : viewportMax();
 
         const valueDisplay = E(
           "span",
           {
             style: `margin-left: 10px; min-width: ${config.displayWidth}px; display: inline-block;`,
           },
-          `${numValue.toFixed(config.precision)}rem`,
+          format(numValue),
         );
 
-        const getMaxValue = () => {
-          if (typeof config.max === "function") {
-            return config.max().toString();
-          }
-          return config.max.toString();
+        const commit = (value) => {
+          input.value = format(value);
+          valueDisplay.textContent = input.value;
         };
-
-        const maxValue = getMaxValue();
 
         const rangeInput = E("input", {
           type: "range",
           min: config.min.toString(),
-          max: maxValue,
+          max: ceiling().toString(),
           step: config.step.toString(),
           value: numValue,
           style: "width: 200px; vertical-align: middle;",
           input: function () {
-            const val = `${parseFloat(this.value).toFixed(config.precision)}rem`;
-            input.value = val;
-            valueDisplay.textContent = val;
+            commit(parseFloat(this.value));
           },
         });
 
         if (typeof config.max === "function") {
           const handleResize = () => {
-            const newMaxWidth = config.max();
-            rangeInput.max = newMaxWidth.toString();
-            if (parseFloat(rangeInput.value) > newMaxWidth) {
-              rangeInput.value = newMaxWidth;
-              const val = `${newMaxWidth.toFixed(config.precision)}rem`;
-              input.value = val;
-              valueDisplay.textContent = val;
+            const max = ceiling();
+            rangeInput.max = max.toString();
+            if (parseFloat(rangeInput.value) > max) {
+              rangeInput.value = max;
+              commit(max);
             }
           };
 
@@ -1323,21 +1332,19 @@ const renderSpacingControl = createRangeControlRenderer({
   displayWidth: 60,
 });
 
-const renderContainerMaxWidthControl = createRangeControlRenderer({
-  min: "72",
-  max: () => {
-    const getRootFontSize = () => {
-      return parseFloat(
-        window.getComputedStyle(document.documentElement).fontSize,
-      );
-    };
+// Widening past the viewport has no visible effect, so the ceiling tracks the
+// current window rather than being an arbitrary constant.
+const viewportWidthInRem = () => {
+  const rootFontSize = parseFloat(
+    window.getComputedStyle(document.documentElement).fontSize,
+  );
+  const usable = window.innerWidth * (23 / 24);
+  return Math.max(Math.floor((usable / rootFontSize) * 10) / 10, 80);
+};
 
-    const screenWidth = window.innerWidth;
-    const maxWidthPx = screenWidth * (23 / 24);
-    const rootFontSize = getRootFontSize();
-    const maxWidthRem = Math.floor((maxWidthPx / rootFontSize) * 10) / 10;
-    return Math.max(maxWidthRem, 80);
-  },
+const renderContentWidthControl = createRangeControlRenderer({
+  min: "72",
+  max: viewportWidthInRem,
   step: "1",
   default: 80,
   precision: 1,
@@ -2074,16 +2081,26 @@ return view.extend({
     so.rmempty = false;
     so.render = renderRadiusControl;
 
+    // Centred layouts only. The sidebar shell is asymmetric — its first column
+    // already acts as the margin — so the theme runs it full-width and reads no
+    // cap; offering this control there would be a dead knob.
     so = structureSubsection.option(
       form.Value,
-      "struct_container_max_width",
+      "struct_content_width_centered",
       _("Content Max Width"),
     );
     so.description = _("Maximum width of the centered content area.");
     so.default = "80rem";
     so.placeholder = "80rem";
     so.rmempty = false;
-    so.render = renderContainerMaxWidthControl;
+    so.render = renderContentWidthControl;
+    // Required alongside depends: LuCI's parse() deletes any option whose
+    // depends are unsatisfied at save time (form.js CBIAbstractValue.parse), so
+    // without retain, saving anything while the Sidebar layout is selected
+    // silently drops this width entirely.
+    so.retain = true;
+    so.depends("nav_type", "mega-menu");
+    so.depends("nav_type", "dropdown");
 
     const fontSection = s.taboption(
       "layout_typography",
