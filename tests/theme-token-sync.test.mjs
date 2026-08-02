@@ -103,20 +103,20 @@ test("theme.js cache-busts the token engine with the vendored version", async ()
   );
   const engine = await readFile(resolve(RES, "tokens.global.js"), "utf8");
   const stamped = theme.match(/const TOKENS_ENGINE_VERSION = "([^"]+)";/)?.[1];
-  const vendored = engine.match(/@eamonxg\/aurora-tokens v(\S+)/)?.[1];
+  const vendored = engine.match(/@eamonxg\/luci-theme-tokens v(\S+)/)?.[1];
   assert.ok(stamped, "theme.js declares TOKENS_ENGINE_VERSION");
   assert.ok(vendored, "tokens.global.js header carries its version");
   assert.equal(stamped, vendored);
 });
 
 // tokens.global.js and color-tokens.conf are vendored from the
-// @eamonxg/aurora-tokens package at the version pinned in package.json.
+// @eamonxg/luci-theme-tokens package at the version pinned in package.json.
 // Rerun sync-tokens in --check mode and fail on drift, so neither a stale
 // vendor nor a hand-edit can land unnoticed. Falls back to building from the
-// sibling aurora-tokens checkout when the registry is unreachable (sync-tokens
-// does this internally); skips only on transient network/server failures --
-// a 4xx (e.g. 404 for an unpublished pin) means the pin itself is broken and
-// must FAIL, not skip.
+// sibling luci-theme-tokens checkout when the registry is unreachable
+// (sync-tokens does this internally); skips only on transient network/server
+// failures -- a 4xx (e.g. 404 for an unpublished pin) means the pin itself is
+// broken and must FAIL, not skip.
 test("vendored token artifacts are in sync with the pinned package", async (t) => {
   try {
     await promisify(execFile)(process.execPath, [
@@ -126,7 +126,7 @@ test("vendored token artifacts are in sync with the pinned package", async (t) =
   } catch (error) {
     const message = String(error?.stderr ?? error);
     if (/HTTP 5\d\d|fetch failed|ENOTFOUND|ECONNREFUSED|ETIMEDOUT/.test(message)) {
-      t.skip("registry unreachable and no sibling aurora-tokens checkout");
+      t.skip("registry unreachable and no sibling luci-theme-tokens checkout");
       return;
     }
     throw error;

@@ -10,11 +10,11 @@
 
 const CONFIG_IMPORT_PATH = "/tmp/aurora_config_import.tmp";
 
-// Version of the vendored @eamonxg/aurora-tokens engine -- stamped by
+// Version of the vendored @eamonxg/luci-theme-tokens engine -- stamped by
 // scripts/sync-tokens.mjs, verified by tests/theme-token-sync.test.mjs.
 // Appended as ?v= when loading utils/tokens.global.js so the browser never
 // pairs this file with an HTTP-cached engine from a previous release.
-const TOKENS_ENGINE_VERSION = "1.2.1";
+const TOKENS_ENGINE_VERSION = "2.0.0";
 
 const loadGlobalScript = (src, version) =>
   new Promise((resolve, reject) => {

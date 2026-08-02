@@ -1,9 +1,9 @@
 # Drift guard for the vendored color-token artifacts: tokens.global.js,
 # color-tokens.conf, and the preset templates are vendored from the
-# @eamonxg/aurora-tokens npm package (published from the aurora-tokens repo) at
-# the version pinned in package.json. This fails when the committed artifacts
-# no longer match the pinned package — run `node scripts/sync-tokens.mjs`
-# locally and commit to fix.
+# @eamonxg/luci-theme-tokens npm package (published from the luci-theme-tokens
+# repo) at the version pinned in package.json. This fails when the committed
+# artifacts no longer match the pinned package — run
+# `node scripts/sync-tokens.mjs` locally and commit to fix.
 name: Token sync check
 
 on:

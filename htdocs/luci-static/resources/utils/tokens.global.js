@@ -1,8 +1,8 @@
 /**
- * @eamonxg/aurora-tokens v1.2.1 -- GENERATED, DO NOT EDIT.
- * Aurora design-token engine (browser global). Built from spec.js/defaults.js
- * + engine.js by build-global.mjs. Depends on the global `Color`
- * (utils/color.global.js in luci-app-aurora-config); load that first.
+ * @eamonxg/luci-theme-tokens v2.0.0 -- GENERATED, DO NOT EDIT.
+ * Aurora design-token engine (browser global). Built from aurora/spec.js +
+ * aurora/defaults.js + operators.js by build.mjs. Depends on the global
+ * `Color` (utils/color.global.js in luci-app-aurora-config); load that first.
  */
 var AuroraTokens = (() => {
   var __defProp = Object.defineProperty;
@@ -33,7 +33,7 @@ var AuroraTokens = (() => {
     resolve: () => resolve
   });
 
-  // spec.js
+  // aurora/spec.js
   var DERIVATIONS = {
     light: {
       text_muted: ["mix", "text", "bg", 0.62],
@@ -112,7 +112,7 @@ var AuroraTokens = (() => {
     }
   };
 
-  // defaults.js
+  // aurora/defaults.js
   var DEFAULTS = {
     light: {
       bg: "oklch(0.984 0.004 235)",
@@ -145,7 +145,7 @@ var AuroraTokens = (() => {
   // shim-color-global.js
   var shim_color_global_default = globalThis.Color;
 
-  // engine.js
+  // operators.js
   var C = (v) => v instanceof shim_color_global_default ? v : new shim_color_global_default(v);
   var mix = (a, b, p) => shim_color_global_default.mix(C(a), C(b), 1 - p, { space: "oklab", outputSpace: "oklch" });
   var shade = (a, dl) => {
@@ -212,6 +212,101 @@ var AuroraTokens = (() => {
       return resolved;
     };
   }
+
+  // aurora/presets.js
+  var statusKeys = ["info", "warning", "success", "danger"];
+  var STATUS = {
+    light: Object.fromEntries(statusKeys.map((k) => [k, DEFAULTS.light[k]])),
+    dark: Object.fromEntries(statusKeys.map((k) => [k, DEFAULTS.dark[k]]))
+  };
+  var PRESETS = {
+    default: {
+      light: { ...DEFAULTS.light },
+      dark: { ...DEFAULTS.dark }
+    },
+    "sage-green": {
+      light: {
+        bg: "oklch(0.9761 0.0041 91.4461)",
+        surface: "oklch(1 0 0)",
+        text: "oklch(0.2417 0.0298 269.8827)",
+        brand: "oklch(0.6333 0.0309 154.9039)",
+        on_brand: "oklch(1 0 0)",
+        link: "oklch(0.6333 0.0309 154.9039)",
+        ...STATUS.light
+      },
+      dark: {
+        bg: "oklch(0.1448 0 0)",
+        surface: "oklch(0.1822 0 0)",
+        text: "oklch(0.9702 0 0)",
+        brand: "oklch(0.6333 0.0309 154.9039)",
+        on_brand: "oklch(0 0 0)",
+        link: "oklch(0.6333 0.0309 154.9039)",
+        ...STATUS.dark
+      }
+    },
+    "amber-sand": {
+      light: {
+        bg: "oklch(0.9818 0.0054 95.0986)",
+        surface: "oklch(0.9818 0.0054 95.0986)",
+        text: "oklch(0.3438 0.0269 95.7226)",
+        brand: "oklch(0.6171 0.1375 39.0427)",
+        on_brand: "oklch(1 0 0)",
+        link: "oklch(0.6171 0.1375 39.0427)",
+        ...STATUS.light
+      },
+      dark: {
+        bg: "oklch(0.2679 0.0036 106.6427)",
+        surface: "oklch(0.3085 0.0035 106.6039)",
+        text: "oklch(0.8074 0.0142 93.0137)",
+        brand: "oklch(0.6724 0.1308 38.7559)",
+        on_brand: "oklch(0 0 0)",
+        link: "oklch(0.6724 0.1308 38.7559)",
+        ...STATUS.dark
+      }
+    },
+    monochrome: {
+      light: {
+        bg: "oklch(0.9900 0 0)",
+        surface: "oklch(1 0 0)",
+        text: "oklch(0 0 0)",
+        brand: "oklch(0 0 0)",
+        on_brand: "oklch(1 0 0)",
+        link: "oklch(0 0 0)",
+        ...STATUS.light
+      },
+      dark: {
+        bg: "oklch(0 0 0)",
+        surface: "oklch(0.1400 0 0)",
+        text: "oklch(1 0 0)",
+        brand: "oklch(1 0 0)",
+        on_brand: "oklch(0 0 0)",
+        link: "oklch(1 0 0)",
+        ...STATUS.dark
+      }
+    },
+    "sky-blue": {
+      light: {
+        bg: "oklch(1 0 0)",
+        surface: "oklch(0.9784 0.0011 197.1387)",
+        text: "oklch(0.1884 0.0128 248.5103)",
+        brand: "oklch(0.6723 0.1606 244.9955)",
+        on_brand: "oklch(1 0 0)",
+        link: "oklch(0.6723 0.1606 244.9955)",
+        ...STATUS.light
+      },
+      dark: {
+        bg: "oklch(0 0 0)",
+        surface: "oklch(0.2097 0.0080 274.5332)",
+        text: "oklch(0.9328 0.0025 228.7857)",
+        brand: "oklch(0.6692 0.1607 245.0110)",
+        on_brand: "oklch(1 0 0)",
+        link: "oklch(0.6692 0.1607 245.0110)",
+        ...STATUS.dark
+      }
+    }
+  };
+
+  // aurora/index.js
   var resolveTokens = createResolver(DERIVATIONS);
 
   // global.js
