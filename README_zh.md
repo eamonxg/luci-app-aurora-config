@@ -39,29 +39,17 @@
 
 ### 使用 eamonxg 软件源:
 
-OpenWrt 25.12+ 和 Snapshot 版本使用 `apk`；其他版本使用 `opkg`：
-
-> **提示**：您可以运行 `opkg --version` 或 `apk --version` 来确认您的包管理器。如果有输出内容（而非 "not found"），那就是您的包管理器。
-
 ```sh
 wget -qO- https://openwrt.eamonxg.fun/install.sh | sh
 ```
 
-- **opkg**（OpenWrt < 25.12）：
-
-  ```sh
-  opkg install luci-app-aurora-config
-  ```
-
-- **apk**（OpenWrt 25.12+ 及 snapshots）：
-
-  ```sh
-  apk add luci-app-aurora-config
-  ```
-
-一次性添加源，之后更新只需 `opkg update && opkg install luci-app-aurora-config` / `apk update && apk add luci-app-aurora-config`，无需再手动下载安装包。详细信息见 [openwrt.eamonxg.fun](https://openwrt.eamonxg.fun/)。
+这就是全部安装步骤——脚本会添加软件源，并安装您从列表中勾选的软件包，翻译一并装好。之后用常规命令升级即可：`apk update && apk upgrade luci-app-aurora-config`，或 `opkg update && opkg upgrade luci-app-aurora-config`。详细信息见 [openwrt.eamonxg.fun](https://openwrt.eamonxg.fun/)。
 
 ### 使用 GitHub Release:
+
+OpenWrt 25.12+ 和 Snapshot 版本使用 `apk`；其他版本使用 `opkg`：
+
+> **提示**：您可以运行 `opkg --version` 或 `apk --version` 来确认您的包管理器。如果有输出内容（而非 "not found"），那就是您的包管理器。
 
 ```sh
 cd /tmp

@@ -39,29 +39,17 @@ Run these commands on the router itself (e.g. over an SSH session).
 
 ### Using the eamonxg feed:
 
-OpenWrt 25.12+ and snapshots use `apk`; other versions use `opkg`:
-
-> **Tip**: You can confirm your package manager by running `opkg --version` or `apk --version`. If it returns output (not "not found"), that's your package manager.
-
 ```sh
 wget -qO- https://openwrt.eamonxg.fun/install.sh | sh
 ```
 
-- **opkg** (OpenWrt < 25.12):
-
-  ```sh
-  opkg install luci-app-aurora-config
-  ```
-
-- **apk** (OpenWrt 25.12+ and snapshots):
-
-  ```sh
-  apk add luci-app-aurora-config
-  ```
-
-Adds the feed once; later updates are just `opkg update && opkg install luci-app-aurora-config` / `apk update && apk add luci-app-aurora-config` — no re-downloading the file. Details: [openwrt.eamonxg.fun](https://openwrt.eamonxg.fun/).
+That is the whole installation — the script adds the feed and installs whatever you tick from the list it shows, translations included. Upgrade later with the usual commands: `apk update && apk upgrade luci-app-aurora-config`, or `opkg update && opkg upgrade luci-app-aurora-config`. Details: [openwrt.eamonxg.fun](https://openwrt.eamonxg.fun/).
 
 ### Using a GitHub release:
+
+OpenWrt 25.12+ and snapshots use `apk`; other versions use `opkg`:
+
+> **Tip**: You can confirm your package manager by running `opkg --version` or `apk --version`. If it returns output (not "not found"), that's your package manager.
 
 ```sh
 cd /tmp
