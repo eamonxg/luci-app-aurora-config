@@ -5,10 +5,15 @@
 "require rpc";
 "require ui";
 "require fs";
-"require utils.version-api";
 "require utils.asset-upload as assetUpload";
+"require utils.feed-check as feedCheck";
 
 const CONFIG_IMPORT_PATH = "/tmp/aurora_config_import.tmp";
+
+const FEED_HOST = "openwrt.eamonxg.fun";
+const MANIFEST_URL = `https://${FEED_HOST}/manifest.json`;
+const MANIFEST_CACHE_KEY = "aurora.manifest";
+const FEED_NOTICE_KEY = "aurora.feed_notice_dismissed";
 
 // Version of the vendored @eamonxg/luci-theme-tokens engine -- stamped by
 // scripts/sync-tokens.mjs, verified by tests/theme-token-sync.test.mjs.
@@ -70,12 +75,6 @@ const callRemoveIcon = rpc.declare({
   params: ["filename"],
 });
 
-const callApplyThemePreset = rpc.declare({
-  object: "luci.aurora",
-  method: "apply_theme_preset",
-  params: ["name"],
-});
-
 const callPrepareFont = rpc.declare({
   object: "luci.aurora",
   method: "prepare_font",
@@ -117,6 +116,13 @@ const callImportConfig = rpc.declare({
 const callResetDefaults = rpc.declare({
   object: "luci.aurora",
   method: "reset_defaults",
+});
+
+// The only rpcd method this feature adds, and it fires solely when the user
+// confirms the dialog. Feed status itself rides along on get_init_data.
+const callAddFeed = rpc.declare({
+  object: "luci.aurora",
+  method: "add_feed",
 });
 
 const callWritePwaManifest = rpc.declare({
@@ -401,6 +407,15 @@ const COLOR_FORMAT_HELP = _(
   "Fields accept #hex, rgb(), hsl(), lab(), and oklch(). The picker fills hex; other formats can be typed.",
 );
 
+// Shown once per mode sub-tab. This used to be the description of the two
+// SectionValue cards that wrapped the colour fields; with those cards gone the
+// tab's own description slot is where LuCI expects this kind of preamble.
+// It cannot move into the field placeholder -- renderColorField already writes
+// that with the token's preset value, which is the more useful hint.
+const COLOR_TAB_HINT =
+  _("Changes preview here instantly; Save or Save & Apply persists them.") +
+  ` ${COLOR_FORMAT_HELP}`;
+
 const cssTokenName = (key) => key.replaceAll("_", "-");
 const colorOptionName = (mode, key) => `${mode}_${key}`;
 
@@ -594,11 +609,22 @@ const createColorEditor = (themeConfig, presetColors) => {
       ALL_COLOR_TOKENS.map(({ key }) => [key, valueFor(mode, key)]),
     );
 
+  // What a source token is worth for derivation purposes. An untouched field is
+  // empty and shows its preset as a placeholder -- the theme still renders with
+  // that preset, so derivation has to use it too. Reading only input.value made
+  // a single unset source colour blank all 21 derived previews, which is the
+  // default state on a fresh install: uci stores nothing until you edit.
+  const sourceValueFor = (mode, key) => {
+    const typed = valueFor(mode, key).trim();
+    if (typed) return typed;
+    return (presetColors?.[colorOptionName(mode, key)] || "").trim();
+  };
+
   const automaticForMode = (mode) => {
     if (typeof AuroraTokens === "undefined") return null;
     const inputs = {};
     for (const { key } of COLOR_TOKENS) {
-      const value = valueFor(mode, key).trim();
+      const value = sourceValueFor(mode, key);
       if (!value) return null;
       inputs[key] = value;
     }
@@ -943,6 +969,278 @@ const createColorEditor = (themeConfig, presetColors) => {
   };
 };
 
+// Miniature wireframes for the navigation choices. Pure CSS -- no images, no
+// requests -- painted from theme variables, so they follow dark mode on their
+// own. A dropdown named "Mega Menu" says nothing about what the page will look
+// like; these do.
+const navWireBar = (width) =>
+  E("span", { class: "aurora-nav-wire-bar", style: `width:${width};` });
+
+// What separates the three layouts is which part of the page the menu covers
+// when it opens, so that is what each drawing shows: a full-width sheet, a
+// narrow panel anchored under one item, or a full-height rail. The page
+// content sits underneath, dimmed, which is what makes the dropdown legible --
+// you can see the page still showing beside the panel.
+// Logo left, menu items centred, icon area right -- the real header's shape.
+// The active item has to sit among the menu items: highlighting something in
+// the icon area would point at the search button instead of the navigation.
+const navTopBar = (activeIndex) =>
+  E("span", { class: "aurora-nav-wire-top" }, [
+    E("span", { class: "aurora-nav-wire-logo" }),
+    E(
+      "span",
+      { class: "aurora-nav-wire-menu" },
+      [0, 1, 2, 3].map((index) =>
+        E("span", {
+          class:
+            "aurora-nav-wire-item" + (index === activeIndex ? " is-active" : ""),
+        }),
+      ),
+    ),
+    E("span", { class: "aurora-nav-wire-icon" }),
+  ]);
+
+const navWireBarActive = (width) =>
+  E("span", { class: "aurora-nav-wire-bar is-active", style: `width:${width};` });
+
+const navUnderlay = (widths) =>
+  E(
+    "span",
+    { class: "aurora-nav-wire-underlay" },
+    widths.map((width) => navWireBar(width)),
+  );
+
+const NAV_CHOICE_WIREFRAMES = {
+  "mega-menu": () =>
+    E("span", { class: "aurora-nav-wire" }, [
+      navTopBar(1),
+      navUnderlay(["70%", "90%", "55%", "80%"]),
+      // One entry inside the panel is brand-tinted too: the open menu marks the
+      // page you are on, and a panel of uniformly grey bars loses that.
+      E("span", { class: "aurora-nav-wire-panel is-full" }, [
+        E("span", { class: "aurora-nav-wire-col" }, [
+          navWireBar("80%"),
+          navWireBar("60%"),
+        ]),
+        E("span", { class: "aurora-nav-wire-col" }, [
+          navWireBar("70%"),
+          navWireBarActive("85%"),
+        ]),
+        E("span", { class: "aurora-nav-wire-col" }, [
+          navWireBar("60%"),
+          navWireBar("70%"),
+        ]),
+      ]),
+    ]),
+  dropdown: () =>
+    E("span", { class: "aurora-nav-wire" }, [
+      navTopBar(1),
+      navUnderlay(["70%", "90%", "55%", "80%"]),
+      E("span", { class: "aurora-nav-wire-panel is-anchored" }, [
+        E("span", { class: "aurora-nav-wire-col" }, [
+          navWireBar("85%"),
+          navWireBarActive("65%"),
+          navWireBar("75%"),
+        ]),
+      ]),
+    ]),
+  sidebar: () =>
+    E("span", { class: "aurora-nav-wire aurora-nav-wire-side" }, [
+      E("span", { class: "aurora-nav-wire-rail" }, [
+        navWireBar("70%"),
+        navWireBar("90%"),
+        E("span", { class: "aurora-nav-wire-bar is-active", style: "width:75%;" }),
+        E("span", { class: "aurora-nav-wire-bar is-child", style: "width:80%;" }),
+        navWireBar("65%"),
+      ]),
+      E("span", { class: "aurora-nav-wire-main" }, [
+        navWireBar("55%"),
+        E("span", { class: "aurora-nav-wire-bar is-dim", style: "width:85%;" }),
+        E("span", { class: "aurora-nav-wire-bar is-dim", style: "width:70%;" }),
+      ]),
+    ]),
+};
+
+const ensureNavChoiceStyles = () => {
+  if (document.getElementById("aurora-nav-choice-styles")) return;
+  document.head.appendChild(
+    E(
+      "style",
+      { id: "aurora-nav-choice-styles" },
+      `
+/* Sized to their content and left-aligned: three choices have no reason to
+   span the full row, and letting them stretch flattened the thumbnails into
+   6:1 letterboxes where a sidebar rail no longer read as a sidebar. */
+.aurora-nav-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+.aurora-nav-choices > .cbi-radio {
+  border: 1px solid var(--hairline);
+  border-radius: calc(var(--radius-base) * 1.5);
+  cursor: pointer;
+  display: block;
+  flex: 0 0 auto;
+  padding: .5rem;
+  width: 12rem;
+}
+.aurora-nav-choices > .cbi-radio:has(input:checked) {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 1px var(--brand);
+}
+.aurora-nav-choices > .cbi-radio:focus-within {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+/* Locked to the shape of a screen, never to the shape of its card. */
+.aurora-nav-wire {
+  aspect-ratio: 4 / 3;
+  background: var(--bg);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-base);
+  display: block;
+  margin-bottom: .45rem;
+  /* Clips the sidebar rail to the rounded corners; without it the rail's
+     square top-left leaves a notch in the frame. */
+  overflow: hidden;
+  padding: .3rem;
+  position: relative;
+}
+.aurora-nav-wire-top {
+  align-items: center;
+  display: flex;
+  gap: .18rem;
+  height: .5rem;
+}
+.aurora-nav-wire-menu {
+  display: flex;
+  flex: 1;
+  gap: .18rem;
+  justify-content: center;
+}
+.aurora-nav-wire-logo,
+.aurora-nav-wire-item,
+.aurora-nav-wire-bar {
+  background: var(--hairline);
+  border-radius: 1px;
+}
+.aurora-nav-wire-logo {
+  background: var(--text-subtle);
+  height: .2rem;
+  width: .5rem;
+}
+.aurora-nav-wire-item {
+  height: .2rem;
+  width: .4rem;
+}
+/* A square, because that corner of the header holds the search icon -- a wide
+   bar there reads as one more menu item. */
+.aurora-nav-wire-icon {
+  background: var(--hairline);
+  border-radius: 1px;
+  height: .22rem;
+  width: .22rem;
+}
+.aurora-nav-wire-bar {
+  height: .18rem;
+}
+.aurora-nav-wire-item.is-active,
+.aurora-nav-wire-bar.is-active {
+  background: var(--brand);
+}
+.aurora-nav-wire-bar.is-child {
+  margin-left: 18%;
+}
+.aurora-nav-wire-bar.is-dim {
+  opacity: .5;
+}
+.aurora-nav-wire-underlay {
+  display: flex;
+  flex-direction: column;
+  gap: .18rem;
+  left: .3rem;
+  opacity: .3;
+  position: absolute;
+  right: .3rem;
+  top: 1rem;
+}
+/* The panel floats above the page: that is the whole distinction between a
+   full-width sheet and a dropdown anchored under one item. */
+.aurora-nav-wire-panel {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 3px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, .16);
+  display: flex;
+  gap: .25rem;
+  padding: .25rem;
+  position: absolute;
+  top: .95rem;
+}
+.aurora-nav-wire-panel.is-full {
+  left: .3rem;
+  right: .3rem;
+}
+.aurora-nav-wire-panel.is-anchored {
+  right: 22%;
+  width: 38%;
+}
+.aurora-nav-wire-col,
+.aurora-nav-wire-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: .18rem;
+}
+.aurora-nav-wire-side {
+  display: flex;
+  gap: .25rem;
+  padding: 0;
+}
+.aurora-nav-wire-rail {
+  background: var(--surface);
+  border-right: 1px solid var(--hairline);
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+  padding: .3rem;
+  width: 32%;
+}
+.aurora-nav-wire-main {
+  gap: .2rem;
+  padding: .3rem .3rem .3rem 0;
+}
+`,
+    ),
+  );
+};
+
+const renderNavChoiceWidget = function (section_id, option_index, cfgvalue) {
+  ensureNavChoiceStyles();
+  const node = form.ListValue.prototype.renderWidget.apply(this, arguments);
+  node.classList.add("aurora-nav-choices");
+
+  // ui.Select separates horizontal radios with " \xa0 " text nodes; they would
+  // wedge gaps into the flex row.
+  Array.from(node.childNodes)
+    .filter((child) => child.nodeType !== Node.ELEMENT_NODE)
+    .forEach((child) => node.removeChild(child));
+
+  node.querySelectorAll("input[type=radio]").forEach((input) => {
+    const wireframe = NAV_CHOICE_WIREFRAMES[input.value];
+    if (!wireframe || !input.parentNode) return;
+    // Before the input, never between input/label/text: ui.Select's caption
+    // handler reaches the input via previousElementSibling twice, and breaking
+    // that chain would silently kill click-to-select.
+    const drawing = wireframe();
+    drawing.addEventListener("click", () => input.click());
+    input.parentNode.insertBefore(drawing, input);
+  });
+
+  return node;
+};
+
 const renderColorField = function (optionIndex, sectionId, inTable) {
   const rendered = form.Value.prototype.render.apply(this, [
     optionIndex,
@@ -1035,20 +1333,21 @@ const addColorInputs = (section, mode, tokens, editor) => {
 };
 
 const createColorSections = (section, mode, editor) => {
-  const baseSection = section.taboption(
+  // Source tokens hang straight off the mode sub-tab -- no SectionValue in
+  // between. addColorInputs speaks section.option(...), so this adapter turns
+  // those calls into taboption(mode, ...) without touching its signature.
+  addColorInputs(
+    { option: (...args) => section.taboption(mode, ...args) },
     mode,
-    form.SectionValue,
-    `_${mode}_base_colors`,
-    form.NamedSection,
-    "theme",
-    "aurora",
-    _("Source Color Tokens"),
-    _(
-      "The 10 source tokens that drive the theme. Changes preview here instantly; Save or Save & Apply persists them.",
-    ) + ` ${COLOR_FORMAT_HELP}`,
+    COLOR_TOKENS,
+    editor,
   );
-  addColorInputs(baseSection.subsection, mode, COLOR_TOKENS, editor);
 
+  // The derived tokens keep the one remaining wrapper. It earns its place
+  // twice over: it gives the 30 fields a DOM container for enhanceDerivedFold
+  // to collapse, and it keeps them out of the source rows' parent, which is
+  // how enhanceColorTokenGroups tells the two apart (it groups by
+  // row.parentElement). It renders no title -- the fold's summary is the label.
   const derivedSection = section.taboption(
     mode,
     form.SectionValue,
@@ -1056,10 +1355,6 @@ const createColorSections = (section, mode, editor) => {
     form.NamedSection,
     "theme",
     "aurora",
-    _("Derived Color Tokens"),
-    _(
-      "Tokens computed from the source colors. Leave a field empty to keep its automatic value; enter a color only to override it. Changes preview here instantly; Save or Save & Apply persists them.",
-    ) + ` ${COLOR_FORMAT_HELP}`,
   );
   addColorInputs(
     derivedSection.subsection,
@@ -1083,29 +1378,63 @@ const ensureColorGroupStyles = () => {
       "style",
       { id: "aurora-color-group-styles" },
       `
-.aurora-token-group {
-  border: 1px solid var(--hairline);
-  border-radius: calc(var(--radius-base) * 1.5);
-  margin: 0 0 1rem;
-  overflow: hidden;
+/* Both folds -- the per-group headings and the derived block -- share one
+   summary treatment. They differ only in how they draw their chevron: the
+   groups use a real button so a stray click cannot collapse them, the derived
+   block is a plain marker. */
+.aurora-token-group,
+.aurora-derived-fold {
+  margin: 0;
 }
-.aurora-token-group[open] {
-  background: var(--surface);
-}
-.aurora-token-group > summary {
+.aurora-token-group > summary,
+.aurora-derived-fold > summary {
   align-items: center;
-  cursor: default;
+  border-bottom: 1px solid var(--hairline);
   display: flex;
   gap: 1rem;
-  justify-content: space-between;
   list-style: none;
-  padding: 1rem 1.25rem;
+  padding: 1rem 0 .75rem;
 }
-.aurora-token-group > summary::-webkit-details-marker {
+.aurora-token-group > summary::-webkit-details-marker,
+.aurora-derived-fold > summary::-webkit-details-marker {
   display: none;
 }
-/* Box + interaction reset; the chevron glyph itself is reused from the Aurora
-   theme's .navigation-group-toggle::after, so no SVG is duplicated here. */
+.aurora-token-group > summary {
+  cursor: default;
+  justify-content: space-between;
+}
+.aurora-derived-fold > summary {
+  cursor: pointer;
+}
+.aurora-derived-fold > summary::before {
+  color: var(--text-muted);
+  content: "\\25B8";
+  transition: rotate .2s ease;
+}
+.aurora-derived-fold[open] > summary::before {
+  rotate: 90deg;
+}
+.aurora-token-group-title,
+.aurora-derived-fold-title {
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+}
+.aurora-token-group-description,
+.aurora-derived-fold-description {
+  color: var(--text-muted);
+  display: block;
+  font-size: .875rem;
+  line-height: 1.45;
+}
+.aurora-token-group-description {
+  margin-top: .25rem;
+}
+.aurora-token-group-body {
+  padding: 1rem 0;
+}
+/* Box + interaction reset; the chevron glyph is reused from the Aurora theme's
+   .navigation-group-toggle::after, so no SVG is duplicated here. */
 .aurora-token-group-toggle {
   align-items: center;
   appearance: none;
@@ -1134,21 +1463,79 @@ const ensureColorGroupStyles = () => {
 .aurora-token-group[open] .aurora-token-group-toggle::after {
   rotate: 90deg;
 }
-.aurora-token-group-title {
+/* Derived colours: 21 tokens nobody edits on most installs. As a tile grid the
+   whole computed palette is visible at once instead of scrolling past 21
+   near-identical rows, and each tile still holds its real input. */
+.aurora-derived-host {
   display: block;
-  font-size: 1rem;
-  font-weight: 700;
 }
-.aurora-token-group-description {
-  color: var(--text-muted);
-  display: block;
-  font-size: .875rem;
-  line-height: 1.45;
-  margin-top: .25rem;
+.aurora-derived-host > .cbi-value-title {
+  display: none;
 }
-.aurora-token-group-body {
-  border-top: 1px solid var(--hairline);
-  padding: 1rem 1.25rem;
+/* The fold only groups rows. Left alone the theme gives this nested section the
+   same card chrome as the page card around it -- a border, radius and shadow
+   drawn a second time just inside the first. The #maincontent prefix is not
+   decoration: the theme sets that chrome from "#maincontent .cbi-section", and
+   a plain class selector loses to it. */
+#maincontent .aurora-derived-fold > .cbi-section {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  margin: 0;
+  padding: 0;
+}
+.aurora-derived-fold .aurora-token-group-body {
+  display: grid;
+  gap: .5rem;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+}
+.aurora-tile {
+  align-items: center;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-base);
+  display: grid;
+  gap: 0 .5rem;
+  grid-template-areas: "swatch title" "swatch field";
+  grid-template-columns: auto 1fr;
+  padding: .5rem;
+}
+/* The theme spaces stacked rows with ".cbi-value + .cbi-value{margin-top}".
+   In a grid that is the gap's job, and the stray top margin left the first
+   tile of each row 12px taller than its neighbours, since grid items stretch
+   to the row height while the others start lower. Matching the adjacent-
+   sibling specificity is what makes this stick. */
+.aurora-tile + .aurora-tile,
+.aurora-derived-fold .aurora-token-group-body > .cbi-value {
+  margin: 0;
+}
+.aurora-tile > .aurora-tile-swatch {
+  grid-area: swatch;
+}
+.aurora-tile > .cbi-value-title {
+  font-size: .8125rem;
+  grid-area: title;
+  min-width: 0;
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: auto;
+}
+.aurora-tile > .cbi-value-field {
+  grid-area: field;
+  min-width: 0;
+}
+/* Width only. Shrinking the font and padding squashed the theme's pill input
+   without shrinking its radius, so the tiles ended up with flattened capsules
+   that matched nothing else on the page. */
+.aurora-tile input[type="text"] {
+  width: 100%;
+}
+/* The description is the tile's tooltip instead; the validation message under
+   the input is not hidden -- a rejected colour has to say so. */
+.aurora-tile .cbi-value-description {
+  display: none;
 }
 `,
     ),
@@ -1242,6 +1629,63 @@ const enhanceColorTokenGroups = (root) => {
       container.insertBefore(details, first);
       groupRows.forEach((row) => body.appendChild(row));
     }
+  });
+};
+
+// Collapse each mode's derived tokens into one fold. The anchor is the
+// .cbi-section that createColorSections keeps around them -- the one wrapper
+// that survived the flattening. Thirty automatic tokens are a reference, not
+// a control panel: they stay one click away rather than pushing the ten source
+// colours off the top of the page.
+const enhanceDerivedFold = (root) => {
+  const derivedRows = Array.from(
+    root.querySelectorAll('[data-aurora-color-kind="derived"]'),
+  );
+  const sections = new Set(
+    derivedRows
+      .map((row) => row.closest(".cbi-section"))
+      .filter((section) => section && !section.dataset.auroraDerivedFolded),
+  );
+
+  sections.forEach((section) => {
+    section.dataset.auroraDerivedFolded = "true";
+    const summary = E("summary", {}, [
+      E("span", { class: "aurora-derived-fold-title" }, _("Derived Colors")),
+      E(
+        "span",
+        { class: "aurora-derived-fold-description" },
+        _(
+          "Computed from the source colors; leave a field empty to keep its automatic value.",
+        ),
+      ),
+    ]);
+    const details = E("details", { class: "aurora-derived-fold" }, [summary]);
+    section.parentNode.insertBefore(details, section);
+    details.appendChild(section);
+    // The SectionValue renders inside a .cbi-value flex row that still holds an
+    // empty title column; left alone it takes a third of the width off a grid
+    // that wants all of it.
+    details.parentElement?.classList.add("aurora-derived-host");
+  });
+
+  // Reshape each derived row into a tile: the swatch leads, the label and the
+  // input stack beside it. Moving the node is safe -- the colour editor holds
+  // it by reference and keeps repainting it wherever it lives.
+  derivedRows.forEach((row) => {
+    if (row.dataset.auroraTileBuilt) return;
+    const picker = row.querySelector('input[type="color"]');
+    const swatch = picker?.parentElement;
+    if (!swatch) return;
+    row.dataset.auroraTileBuilt = "true";
+    row.classList.add("aurora-tile");
+    swatch.classList.add("aurora-tile-swatch");
+    swatch.style.marginLeft = "0";
+    row.insertBefore(swatch, row.firstChild);
+
+    // The description is hidden by the grid; keep it reachable on hover.
+    const description = row.querySelector(".cbi-value-description");
+    const text = description?.textContent?.trim();
+    if (text) row.title = text;
   });
 };
 
@@ -1407,8 +1851,13 @@ const fromLoginBgUrl = (value) => {
   return match ? match[1] : "";
 };
 
-const isImageFile = (filename) =>
-  /\.(jpg|jpeg|png|gif|webp|avif|svg|bmp|ico)$/i.test(filename);
+// 正则先绑常量,绝不能让字面量紧跟在箭头后面 —— jsmin 会把它当成除号,压缩
+// 产物直接语法错误。见 docs/DEVELOPMENT.md §11 与 tests/jsmin-safety.test.mjs。
+const IMAGE_NAME_RE = /\.(jpg|jpeg|png|gif|webp|avif|svg|bmp|ico)$/i;
+const PNG_NAME_RE = /\.png$/i;
+const ICO_NAME_RE = /\.ico$/i;
+
+const isImageFile = (filename) => IMAGE_NAME_RE.test(filename);
 
 const makeIconListLoader = (
   filterFn,
@@ -1507,7 +1956,10 @@ return view.extend({
       uci.load("aurora"),
       L.resolveDefault(callGetInitData(), {}),
       colorLibraryReady,
-    ]).then(([uciData, initData]) => {
+      // Already fetched and session-cached while LuCI rendered the navigation,
+      // so this resolves from cache rather than costing a request.
+      L.resolveDefault(ui.menu.load(), null),
+    ]).then(([uciData, initData, , menuTree]) => {
       // Theme config comes from the uci cache populated by uci.load("aurora")
       // above, so no separate theme-config RPC is needed.
       const themeConfig = readThemeConfigFromUci();
@@ -1523,6 +1975,7 @@ return view.extend({
 
       // Preserve the positional layout render() expects:
       // [0]=uci [1]={theme} [2]=versions [3]=fonts [4]=icons [5]=preset
+      // [6]=feed [7]=menu
       return [
         uciData,
         { theme: themeConfig },
@@ -1530,6 +1983,8 @@ return view.extend({
         { fonts: initData?.fonts || {} },
         iconsData,
         initData?.theme_preset || { result: -1, colors: {} },
+        initData?.feed || { pm: "unknown", configured: false, channel: "" },
+        menuTree,
       ];
     });
   },
@@ -1539,6 +1994,12 @@ return view.extend({
     const installedVersions = loadData[2];
     const fontPresetsBySlot = loadData[3]?.fonts || {};
     const presetColors = loadData[5]?.colors || {};
+    const feedStatus = loadData[6] || {
+      pm: "unknown",
+      configured: false,
+      channel: "",
+    };
+    const menuTree = loadData[7];
     this.colorEditor?.destroy();
     const colorEditor = createColorEditor(themeConfig, presetColors);
     this.colorEditor = colorEditor;
@@ -1552,17 +2013,6 @@ return view.extend({
 
     let so;
     const viewCtx = this;
-
-    const normalizePresetName = (presetName) =>
-      presetName === "classic" || !presetName ? "default" : presetName;
-
-    const buildPresetOptions = () => [
-      { name: "default", label: _("Default") },
-      { name: "monochrome", label: _("Monochrome") },
-      { name: "sage-green", label: _("Sage Green") },
-      { name: "amber-sand", label: _("Amber Sand") },
-      { name: "sky-blue", label: _("Sky Blue") },
-    ];
 
     const FONT_DEFAULT_STACKS = {
       sans: '"Lato", ui-sans-serif, system-ui, sans-serif',
@@ -1616,101 +2066,11 @@ return view.extend({
       ].concat(custom);
     };
 
-    const buildPresetToolbarNode = () => {
-      const presetOptions = buildPresetOptions();
-      const uciPreset = normalizePresetName(themeConfig.active_preset);
-      const initialPreset = presetOptions.some((p) => p.name === uciPreset)
-        ? uciPreset
-        : "default";
-
-      const select = E(
-        "select",
-        {
-          class: "cbi-input-select",
-        },
-        presetOptions.map((preset) =>
-          E(
-            "option",
-            {
-              value: preset.name,
-              selected: preset.name === initialPreset ? "selected" : null,
-            },
-            preset.label,
-          ),
-        ),
-      );
-
-      const resolvePresetSelection = () => {
-        const presetName = select.value || "default";
-        const presetLabel =
-          select?.selectedOptions?.[0]?.textContent || presetName;
-        return { presetName, presetLabel };
-      };
-
-      const applyButton = E(
-        "button",
-        {
-          class: "cbi-button cbi-button-apply",
-          title: _("Apply Preset"),
-          click: ui.createHandlerFn(viewCtx, () => {
-            const { presetName, presetLabel } = resolvePresetSelection();
-
-            return ui.showModal(_("Apply Preset"), [
-              E(
-                "p",
-                {},
-                _(
-                  "Apply the '%s' preset now? It is saved immediately and the page reloads. Presets set the light and dark colors only — layout, typography, branding, navigation, and toolbar are left unchanged.",
-                ).format(presetLabel),
-              ),
-              E("div", { class: "right" }, [
-                E("button", { class: "btn", click: ui.hideModal }, _("Cancel")),
-                " ",
-                E(
-                  "button",
-                  {
-                    class: "btn cbi-button-action important",
-                    click: () => {
-                      ui.showModal(_("Applying..."), [
-                        E("p", { class: "spinning" }, _("Applying preset...")),
-                      ]);
-                      return L.resolveDefault(
-                        callApplyThemePreset(presetName),
-                        {},
-                      ).then((ret) => {
-                        ui.hideModal();
-                        if (ret?.result === 0) {
-                          ui.addNotification(
-                            null,
-                            E("p", _("Preset applied successfully.")),
-                            "info",
-                          );
-                          window.location.reload();
-                        } else {
-                          colorEditor.cleanupPreview();
-                          ui.addNotification(
-                            null,
-                            E(
-                              "p",
-                              _("Apply failed: %s").format(
-                                ret?.error || "Unknown",
-                              ),
-                            ),
-                            "error",
-                          );
-                        }
-                      });
-                    },
-                  },
-                  _("Apply"),
-                ),
-              ]),
-            ]);
-          }),
-        },
-        _("Apply"),
-      );
-
+    const buildConfigToolbarNode = () => {
+      // The preset dropdown moved to the Theme Store's "Built-in" group, and
+      // the store itself is one tabmenu entry away -- a header button for it
+      // would be a second entrance to the same page. What is left here are the
+      // config-level actions, which have nowhere else to live.
       const exportButton = E(
         "button",
         {
@@ -1934,40 +2294,49 @@ return view.extend({
         _("Reset"),
       );
 
-      const presetGroup = E(
+      return E(
         "div",
         {
-          style: "display:flex; flex-wrap:wrap; gap:0.5em; align-items:center;",
-        },
-        [
-          E(
-            "span",
-            { style: "font-weight: 600; white-space: nowrap;" },
-            _("Preset"),
-          ),
-          select,
-          applyButton,
-        ],
-      );
-
-      const actionGroup = E(
-        "div",
-        {
+          class: "aurora-config-toolbar",
           style: "display:flex; flex-wrap:wrap; gap:0.5em; align-items:center;",
         },
         [exportButton, importButton, resetButton],
       );
-
-      return E(
-        "div",
-        {
-          class: "aurora-preset-toolbar",
-          style:
-            "display:flex; flex-wrap:wrap; gap:0.75em 1em; align-items:center;",
-        },
-        [presetGroup, actionGroup],
-      );
     };
+
+    // Named node on purpose: the update-source check appends an "update
+    // available" capsule here once it has compared the feed manifest.
+    const versionArea = E(
+      "div",
+      {
+        style:
+          "display: flex; flex-wrap: wrap; gap: 1em; align-items: center;",
+      },
+      [
+        E("span", { style: "white-space: nowrap;" }, [
+          document.createTextNode(_("Theme: ")),
+          E(
+            "span",
+            {
+              id: "theme-version",
+              class: "label success",
+            },
+            `v${themeVersion}`,
+          ),
+        ]),
+        E("span", { style: "white-space: nowrap;" }, [
+          document.createTextNode(_("Config: ")),
+          E(
+            "span",
+            {
+              id: "config-version",
+              class: "label success",
+            },
+            `v${configVersion}`,
+          ),
+        ]),
+      ],
+    );
 
     const headerBar = E(
       "div",
@@ -1975,38 +2344,212 @@ return view.extend({
         style:
           "display: flex; flex-wrap: wrap; gap: 1em; align-items: center; justify-content: space-between;",
       },
-      [
-        E("div", { style: "display: flex; flex-wrap: wrap; gap: 1em;" }, [
-          E("span", { style: "white-space: nowrap;" }, [
-            document.createTextNode(_("Theme: ")),
-            E(
-              "span",
-              {
-                id: "theme-version",
-                class: "label success",
-                style: "cursor: pointer;",
-              },
-              `v${themeVersion}`,
-            ),
-          ]),
-          E("span", { style: "white-space: nowrap;" }, [
-            document.createTextNode(_("Config: ")),
-            E(
-              "span",
-              {
-                id: "config-version",
-                class: "label success",
-                style: "cursor: pointer;",
-              },
-              `v${configVersion}`,
-            ),
-          ]),
-        ]),
-        buildPresetToolbarNode(),
-      ],
+      [versionArea, buildConfigToolbarNode()],
     );
 
     m.description = headerBar;
+
+    // ------------------------------------------------------------------
+    // Update source. Adding it is a local file operation and has to go
+    // through rpcd; checking for a newer build is a pure read and goes
+    // straight from the browser to the CDN, so the router takes no part.
+
+    const packagePagePath = feedCheck.pickPackageManagerPath(menuTree);
+
+    const goToSoftware = (label) =>
+      packagePagePath
+        ? E("a", { class: "cbi-button", href: L.url(packagePagePath) }, label)
+        : null;
+
+    const checkForUpdates = () => {
+      // Not configured means there is nothing to compare against, so no
+      // request goes out at all.
+      if (!feedStatus.configured) return Promise.resolve(null);
+
+      const cached = sessionStorage.getItem(MANIFEST_CACHE_KEY);
+      if (cached) {
+        try {
+          return Promise.resolve(JSON.parse(cached));
+        } catch (error) {
+          sessionStorage.removeItem(MANIFEST_CACHE_KEY);
+        }
+      }
+
+      return fetch(MANIFEST_URL, { credentials: "omit" })
+        .then((response) => (response.ok ? response.json() : null))
+        .then((manifest) => {
+          if (manifest)
+            sessionStorage.setItem(
+              MANIFEST_CACHE_KEY,
+              JSON.stringify(manifest),
+            );
+          return manifest;
+        })
+        // Offline, feed unreachable, CORS not deployed yet -- all the same
+        // outcome: say nothing. A settings page has no business raising an
+        // error because it could not reach an update server.
+        .catch(() => null);
+    };
+
+    const showUpdateCapsule = (manifest) => {
+      if (!manifest) return;
+      const channel = feedStatus.channel || "snapshots";
+      const format = feedStatus.pm === "opkg" ? "opkg" : "apk";
+      const packages = [
+        ["luci-theme-aurora", themeVersion],
+        ["luci-app-aurora-config", configVersion],
+      ];
+
+      packages.forEach(([pkg, installed]) => {
+        const available = feedCheck.findManifestVersion(
+          manifest,
+          channel,
+          format,
+          pkg,
+        );
+        if (!feedCheck.isNewer(installed, available)) return;
+        const label = _("Update available %s").format(available);
+        versionArea.appendChild(
+          packagePagePath
+            ? E(
+                "a",
+                { class: "label warning", href: L.url(packagePagePath) },
+                label,
+              )
+            : E("span", { class: "label warning" }, label),
+        );
+      });
+    };
+
+    const buildFeedNotice = () => {
+      if (feedStatus.pm === "unknown" || feedStatus.configured) return null;
+      if (localStorage.getItem(FEED_NOTICE_KEY) === "1") return null;
+
+      const notice = E("div", {
+        class: "alert-message warning",
+        style: "display:flex; gap:1em; align-items:center; flex-wrap:wrap;",
+      });
+
+      const fill = (nodes, className) => {
+        notice.className = className;
+        while (notice.firstChild) notice.removeChild(notice.firstChild);
+        nodes.filter(Boolean).forEach((node) => notice.appendChild(node));
+      };
+
+      const runAddFeed = () => {
+        ui.hideModal();
+        fill(
+          [E("span", { class: "spinning" }, _("Adding the update source…"))],
+          "alert-message",
+        );
+        return L.resolveDefault(callAddFeed(), { result: 1 }).then((ret) => {
+          if (ret?.result !== 0) {
+            fill(
+              [
+                E(
+                  "span",
+                  {},
+                  _("Could not add the update source: %s").format(
+                    ret?.error || _("Unknown error"),
+                  ),
+                ),
+              ],
+              "alert-message warning",
+            );
+            return;
+          }
+          if (!ret.index_refreshed) {
+            // The source is on disk; only the index refresh failed, and the
+            // Software page can redo that itself. Saying "failed" flatly here
+            // would send the user to undo work that succeeded.
+            fill(
+              [
+                E(
+                  "span",
+                  { style: "flex:1;" },
+                  _(
+                    "The update source was written, but refreshing the index failed. Hit Refresh on the Software page later.",
+                  ),
+                ),
+                goToSoftware(_("Go to Software")),
+              ],
+              "alert-message warning",
+            );
+            return;
+          }
+          fill(
+            [
+              E("span", { style: "flex:1;" }, _("Update source added")),
+              goToSoftware(_("Go to Software")),
+            ],
+            "alert-message success",
+          );
+        });
+      };
+
+      fill(
+        [
+          E(
+            "span",
+            { style: "flex:1;" },
+            _(
+              "Upgrading Aurora needs its update source. Once added, upgrades happen in System → Software like any other OpenWrt package.",
+            ),
+          ),
+          E(
+            "button",
+            {
+              class: "cbi-button cbi-button-action",
+              click: ui.createHandlerFn(viewCtx, () =>
+                ui.showModal(_("Add the Aurora update source"), [
+                  E(
+                    "p",
+                    {},
+                    _(
+                      "Afterwards you can upgrade Aurora in System → Software, like any other OpenWrt package.",
+                    ),
+                  ),
+                  E(
+                    "p",
+                    { class: "cbi-value-description" },
+                    _(
+                      "From openwrt.eamonxg.fun; the signing key ships with this package.",
+                    ),
+                  ),
+                  E("div", { class: "right" }, [
+                    E("button", { class: "btn", click: ui.hideModal }, _("Cancel")),
+                    " ",
+                    E(
+                      "button",
+                      { class: "btn cbi-button-action important", click: runAddFeed },
+                      _("Add"),
+                    ),
+                  ]),
+                ]),
+              ),
+            },
+            _("Add update source"),
+          ),
+          E(
+            "button",
+            {
+              class: "cbi-button",
+              "aria-label": _("Dismiss"),
+              // localStorage, not uci: closing a hint should not raise an
+              // unsaved-changes banner, nor cost a round trip.
+              click: () => {
+                localStorage.setItem(FEED_NOTICE_KEY, "1");
+                notice.parentNode?.removeChild(notice);
+              },
+            },
+            "×",
+          ),
+        ],
+        "alert-message warning",
+      );
+
+      return notice;
+    };
 
     const s = m.section(form.NamedSection, "theme", "aurora");
 
@@ -2023,8 +2566,8 @@ return view.extend({
       "aurora",
     );
     const colorSubsection = colorSection.subsection;
-    colorSubsection.tab("light", _("Light Mode"));
-    colorSubsection.tab("dark", _("Dark Mode"));
+    colorSubsection.tab("light", _("Light Mode"), COLOR_TAB_HINT);
+    colorSubsection.tab("dark", _("Dark Mode"), COLOR_TAB_HINT);
 
     createColorSections(colorSubsection, "light", colorEditor);
     createColorSections(colorSubsection, "dark", colorEditor);
@@ -2054,6 +2597,12 @@ return view.extend({
     so.value("sidebar", _("Sidebar"));
     so.default = "mega-menu";
     so.rmempty = false;
+    // Still a ListValue: struct_content_width_centered depends() on this, and
+    // LuCI's dependency tracking rides on the standard widget's change event.
+    // A hand-rolled control would make parse() drop the width on save -- see
+    // the retain comment below. So the radios stay, and only get a picture.
+    so.widget = "radio";
+    so.renderWidget = renderNavChoiceWidget;
 
     so = structureSubsection.option(
       form.Value,
@@ -2131,6 +2680,9 @@ return view.extend({
       const FONT_TMP_PATH = "/tmp/aurora_font.tmp";
       const customs = fontPresetsBySlot?.custom || [];
 
+      // 同 IMAGE_NAME_RE 上方的说明:正则不能紧跟在箭头后面。
+      const LOWER_START_RE = /^[a-z]/;
+
       const familyFromFilename = (name) => {
         const stem = name.replace(/\.woff2$/i, "");
         const parts = stem
@@ -2144,7 +2696,7 @@ return view.extend({
         const words = parts.length ? parts : [stem];
         return words
           .map((w) =>
-            /^[a-z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w,
+            LOWER_START_RE.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w,
           )
           .join(" ");
       };
@@ -2669,7 +3221,7 @@ return view.extend({
     );
     so.description = _("PNG fallback when SVG favicons are unsupported.");
     so.rmempty = true;
-    so.load = makeIconListLoader((icon) => /\.png$/i.test(icon), {
+    so.load = makeIconListLoader((icon) => PNG_NAME_RE.test(icon), {
       prepend: [["", _("(None)")]],
     });
 
@@ -2681,7 +3233,7 @@ return view.extend({
     so.description = _("Legacy ICO favicon fallback.");
     so.default = "favicon.ico";
     so.rmempty = false;
-    so.load = makeIconListLoader((icon) => /\.ico$/i.test(icon));
+    so.load = makeIconListLoader((icon) => ICO_NAME_RE.test(icon));
 
     const pwaIconSlots = [
       [
@@ -2845,55 +3397,7 @@ return view.extend({
     return m.render().then((mapNode) => {
       colorEditor.attach();
       enhanceColorTokenGroups(mapNode);
-
-      const updateVersionLabel = (label, hasUpdate) => {
-        if (!label || !hasUpdate) return;
-
-        label.className = "label warning";
-        Object.assign(label.style, {
-          position: "relative",
-          paddingRight: "16px",
-        });
-        const redDot = document.createElement("span");
-        redDot.style.cssText =
-          "position: absolute; top: 3px; right: 4px; width: 6px; height: 6px; background: var(--danger); border-radius: 50%;";
-        label.appendChild(redDot);
-      };
-
-      requestAnimationFrame(() => {
-        const labels = {
-          theme: mapNode.querySelector("#theme-version"),
-          config: mapNode.querySelector("#config-version"),
-        };
-
-        Object.values(labels).forEach((label) => {
-          if (label)
-            label.onclick = () =>
-              (window.location.href = L.url("admin/system/aurora/version"));
-        });
-
-        const applyUpdateStatus = (data) => {
-          if (!data) return;
-          updateVersionLabel(labels.theme, data.theme?.update_available);
-          updateVersionLabel(labels.config, data.config?.update_available);
-        };
-
-        const cached = utils_version_api.versionCache?.get?.();
-        if (cached) {
-          applyUpdateStatus(cached);
-        } else {
-          setTimeout(() => {
-            L.resolveDefault(utils_version_api.callCheckUpdates(), null)
-              .then((data) => {
-                if (data) {
-                  utils_version_api.versionCache.set(data);
-                  applyUpdateStatus(data);
-                }
-              })
-              .catch(() => {});
-          }, 0);
-        }
-      });
+      enhanceDerivedFold(mapNode);
 
       // Auto-select uploaded background and auto-generate LQIP if missing
       requestAnimationFrame(() => {
@@ -2926,7 +3430,13 @@ return view.extend({
         }
       });
 
-      return mapNode;
+      // Fire and forget: the capsule appears when the answer arrives, and if
+      // it never does the header simply stays as it is.
+      checkForUpdates().then(showUpdateCapsule);
+
+      const notice = buildFeedNotice();
+      return notice ? E("div", {}, [notice, mapNode]) : mapNode;
     });
+
   },
 });

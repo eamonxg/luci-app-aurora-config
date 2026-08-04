@@ -125,22 +125,37 @@ test("token groups only collapse via the chevron, not stray header clicks", asyn
   );
 });
 
-test("preset selector stays compact without helper prompt text", async () => {
+test("preset selector moved to the Theme Store; toolbar keeps the config actions", async () => {
   const source = await themeSource();
-  const optionsBlock = sourceBlock(
-    source,
-    "const buildPresetOptions =",
-    "const FONT_DEFAULT_STACKS =",
-  );
+  // The dropdown and its apply flow now live in gallery.js's Built-in group.
+  assert.ok(!source.includes("buildPresetOptions"), "preset dropdown should be gone");
+  assert.ok(!source.includes("apply_theme_preset"), "preset apply rpc should be gone from theme.js");
   const toolbarBlock = sourceBlock(
     source,
-    "const buildPresetToolbarNode =",
-    "const headerBar =",
+    "const buildConfigToolbarNode =",
+    "const versionArea =",
   );
+  // No store link either: the tabmenu already carries that entrance, so a
+  // header button would be a second door to the same page.
+  assert.ok(
+    !/aurora\/gallery|"gallery"/.test(toolbarBlock),
+    "the store entrance belongs to the tabmenu, not the toolbar",
+  );
+  assert.match(toolbarBlock, /exportButton/, "config actions must survive the preset removal");
+  assert.match(toolbarBlock, /resetButton/, "reset must survive too");
+});
 
-  assert.match(optionsBlock, /name:\s*"default"/);
-  assert.doesNotMatch(optionsBlock, /name:\s*"classic"/);
-  assert.doesNotMatch(optionsBlock, /description:/);
-  assert.doesNotMatch(toolbarBlock, /selectedPresetDescription/);
-  assert.doesNotMatch(toolbarBlock, /presetHelp/);
+test("derivation falls back to preset colors when a source field is untouched", async () => {
+  const source = await themeSource();
+  const block = sourceBlock(source, "const sourceValueFor =", "const isDerivedOverride =");
+  // uci stores nothing until a colour is edited, so the field is empty and the
+  // preset shows as a placeholder. Deriving from input.value alone reported
+  // "Unable to generate the automatic derived value." on all 21 derived tokens
+  // for every default install.
+  assert.match(block, /presetColors\?\.\[colorOptionName\(mode, key\)\]/);
+  assert.match(
+    block,
+    /const value = sourceValueFor\(mode, key\);/,
+    "automaticForMode must go through the fallback, not valueFor",
+  );
 });

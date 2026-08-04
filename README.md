@@ -1,6 +1,6 @@
 <h4 align="right"><strong>English</strong> | <a href="README_zh.md">简体中文</a></h4>
 <h1 align="center">LuCI App Aurora Config</h1>
-<p align="center">The configuration hub for LuCI Theme Aurora — colors, layout, typography, branding, and updates.</p>
+<p align="center">The configuration hub for LuCI Theme Aurora — colors, layout, typography, branding, and the theme store.</p>
 <div align="center">
   <a href="https://openwrt.org"><img alt="OpenWrt" src="https://img.shields.io/badge/OpenWrt-%E2%89%A523.05-00B5E2?logo=openwrt&logoColor=white"></a>
   <a href="https://github.com/eamonxg/luci-theme-aurora"><img alt="LuCI Theme Aurora" src="https://img.shields.io/badge/Theme-Aurora-46a3d1?logo=openwrt&logoColor=white"></a>
@@ -20,7 +20,8 @@
 - **Typography** — curated webfonts, downloaded once on save from pinned, checksum-verified sources — or upload your own `.woff2` files.
 - **Branding & PWA** — a drag-and-drop asset library (files can be renamed on upload) feeding the logo, favicons, app icons, and login background; a generated manifest makes the panel installable as a PWA.
 - **Shortcut toolbar** — add, label, and drag-reorder entries in the floating launcher.
-- **Backup & updates** — export, import, or reset the whole configuration and update the theme and app from the interface, no SSH required.
+- **Backup & restore** — export, import, or reset the whole configuration from the interface, no SSH required.
+- **Theme Store** — browse, apply, and share theme configurations with other users.
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/eamonxg/assets/master/aurora/preview/config/multi-theme-showcase.png" alt="Multi Theme Showcase" width="1200">

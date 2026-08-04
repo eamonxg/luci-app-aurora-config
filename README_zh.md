@@ -1,6 +1,6 @@
 <h4 align="right"><a href="README.md"><strong>English</strong></a> | 简体中文</h4>
 <h1 align="center">LuCI App Aurora Config</h1>
-<p align="center">LuCI Theme Aurora 的配置中心——配色、布局、字体、品牌与更新。</p>
+<p align="center">LuCI Theme Aurora 的配置中心——配色、布局、字体、品牌与主题商店。</p>
 <div align="center">
   <a href="https://openwrt.org"><img alt="OpenWrt" src="https://img.shields.io/badge/OpenWrt-%E2%89%A523.05-00B5E2?logo=openwrt&logoColor=white"></a>
   <a href="https://github.com/eamonxg/luci-theme-aurora"><img alt="LuCI Theme Aurora" src="https://img.shields.io/badge/Theme-Aurora-46a3d1?logo=openwrt&logoColor=white"></a>
@@ -20,7 +20,8 @@
 - **排版与字体**——精选网络字体，保存后才从固定版本、经校验的来源下载一次；也可上传自己的 `.woff2` 字体。
 - **品牌与 PWA**——拖拽上传的资源库（上传时可重命名），统一供给 Logo、favicon、应用图标与登录背景；自动生成 manifest，面板可作为 PWA 安装。
 - **悬浮工具栏**——添加、命名并拖拽排序快捷方式，快速访问常用页面。
-- **备份与更新**——一键导出、导入或重置整套配置，并在界面内直接更新主题与应用，无需 SSH。
+- **备份与恢复**——一键导出、导入或重置整套配置，无需 SSH。
+- **主题商店**——浏览、应用、分享主题配置。
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/eamonxg/assets/master/aurora/preview/config/multi-theme-showcase.png" alt="Multi Theme Showcase" width="1200">
