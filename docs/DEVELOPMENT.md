@@ -50,12 +50,13 @@ root/
 ├── etc/sysupgrade.conf.d/aurora-device # Preserves /etc/aurora/device.{key,hash} across sysupgrade
 ├── usr/libexec/rpcd/luci.aurora        # Backend RPC (shell)
 └── usr/share/aurora/
-    ├── *.template                      # Five built-in color presets (UCI fragments) — GENERATED
+    ├── *.template                      # Five built-in presets (UCI fragments). Colour block GENERATED; the layout/typography block below it is hand-authored
     ├── color-tokens.conf               # Ordered token key list for the backend — GENERATED
     └── font-presets.conf               # Font preset manifest (Fontsource packages + pinned versions) — GENERATED
 
+htdocs/luci-static/resources/aurora/presets.json  # Browser copy of all five presets (hub payload shape) for the offline store cards — GENERATED
 scripts/sync-tokens.mjs                  # Vendors tokens.global.js + color-tokens.conf + aurora-presets.json (resolved preset hex) from @eamonxg/luci-theme-tokens, stamps TOKENS_ENGINE_VERSION into theme.js, then runs gen-presets
-scripts/gen-presets.mjs                  # Regenerates *.template from scripts/aurora-presets.json (formatting only, no derivation)
+scripts/gen-presets.mjs                  # Injects the colour block into *.template, reads each template's layout/typography back out, and writes htdocs/.../aurora/presets.json
 scripts/aurora-presets.json              # Resolved preset hex values, vendored by sync-tokens.mjs — GENERATED
 scripts/gen-font-presets.mjs             # Regenerates font-presets.conf (curated manifest lives in this file)
 Makefile                                 # OpenWrt package metadata (version lives here)
@@ -199,11 +200,22 @@ emits come straight from `scripts/aurora-presets.json`.)
 
 ### A. Retune a preset / add a new one
 
-Preset ownership moved upstream in `@eamonxg/luci-theme-tokens` 2.0.0: the
-`PRESETS` map now lives in that package's `aurora/presets.js`, and its
-`build.mjs` resolves every preset to hex and ships it as
-`dist/aurora/presets.json`. This repo no longer computes preset colors —
-`gen-presets.mjs` only formats whatever `scripts/aurora-presets.json` says.
+A preset is a **whole look, not a palette**: its template carries the 62
+colour options *and* a structural block — `nav_type`, `struct_spacing`,
+`struct_radius_base`, `struct_content_width_centered`, `struct_font_sans`,
+`struct_font_mono`, `toolbar_enabled` (the shell's `PRESET_STRUCT_KEYS`).
+`apply_theme_preset` writes all of it. The two halves have different owners:
+
+- **Colours** come from upstream. Preset ownership moved into
+  `@eamonxg/luci-theme-tokens` 2.0.0: the `PRESETS` map lives in that
+  package's `aurora/presets.js`, its `build.mjs` resolves every preset to hex
+  and ships `dist/aurora/presets.json`, and `gen-presets.mjs` only formats
+  whatever `scripts/aurora-presets.json` says.
+- **Structure** is authored here, in the template itself. `sync-tokens.mjs`
+  overwrites `scripts/aurora-presets.json` on every sync, so nothing this repo
+  decides may live there.
+
+To retune colours:
 
 1. `luci-theme-tokens` repo: edit the `PRESETS` map in `aurora/presets.js`
    (each preset specifies only the **10 inputs** × light/dark), `npm test`.
@@ -215,13 +227,29 @@ Preset ownership moved upstream in `@eamonxg/luci-theme-tokens` 2.0.0: the
    etc.) → commit.
    To iterate on an unreleased preset: `node scripts/sync-tokens.mjs --local
    ../luci-theme-tokens`.
-4. A brand-new preset also needs:
-   - a new `root/usr/share/aurora/<name>.template` file in this repo (copy an
-     existing one — `gen-presets.mjs` only rewrites templates that already
-     exist, it never creates one)
-   - `theme.js` → `buildPresetOptions()` (dropdown entry)
-   - `luci.aurora` → `resolve_preset_path()` (name → template path)
-   - `80_aurora` → template fallback chain (optional)
+
+To retune the look, edit the structural block in
+`root/usr/share/aurora/<name>.template` directly, then `npm run gen-presets`
+(it re-reads the block into the browser copy). Two rules the tests enforce:
+
+- Numeric values must sit on the settings page's slider steps (spacing 0.05,
+  radius 0.125, width 1) and inside the bounds
+  `validate_and_apply_hub_payload` enforces on hub configurations.
+- Font stacks must be **copied verbatim** from field 7 of the matching
+  `font|<slot>|<id>|…` row in `font-presets.conf`. The device reverse-maps the
+  stack back to a roster id to know which woff2 files to fetch; a retyped
+  stack matches nothing and the preset silently renders its fallback family.
+
+A brand-new preset also needs:
+
+- a new `root/usr/share/aurora/<name>.template` file in this repo (copy an
+  existing one — `gen-presets.mjs` only rewrites templates that already
+  exist, it never creates one)
+- `gallery.js` → `BUILTIN_PRESETS` (store card) and `BUILTIN_SEED_RE` (so the
+  hub's own seed of it is not listed twice)
+- `luci.aurora` → `resolve_preset_path()` (name → template path)
+- `80_aurora` → template fallback chain (optional)
+- `tests/builtin-presets.test.mjs` → `PRESET_IDS`
 
 ### B. Add or change a color token
 
@@ -303,7 +331,7 @@ the `case "$1" in "list")` block at the end of the script. Common methods:
 | --- | --- |
 | `get_init_data` | Read first-paint data in one RPC: installed versions, font presets, icons, and the active preset snapshot |
 | `get_theme_preset` | Read a preset snapshot for UI placeholders and comparison |
-| `apply_theme_preset` | Apply a preset (writes color sets; other theme areas use the default profile) |
+| `apply_theme_preset` | Apply a built-in preset: colours **plus** navigation, spacing, radius, content width, both font stacks and the toolbar switch. Shortcut sections and brand images are left untouched |
 | `export_config` / `import_config` | Configuration import/export |
 | `list_icons` / `upload_icon` / `remove_icon` | Icon management |
 | `prepare_font` / `get_font_presets` / `get_font_status` | Font handling |
@@ -322,7 +350,13 @@ Store in detail.
 > `load_preset_snapshot()` validates that a template's `option (light|dark)_`
 > line count equals `COLOR_TOKEN_KEYS count × 2`. The key list ships as
 > `/usr/share/aurora/color-tokens.conf`, generated by `sync-tokens.mjs` from
-> the same registry as the templates, so the two cannot drift apart.
+> the same registry as the templates, so the two cannot drift apart. It then
+> calls `load_preset_struct_snapshot()`, which requires **every**
+> `PRESET_STRUCT_KEYS` option and checks each against the same bounds
+> `validate_and_apply_hub_payload` applies to a hub configuration — a preset
+> and a shared config are the same kind of thing, so one must not be able to
+> write a value the other rejects. A template missing any of them fails the
+> whole apply rather than landing half a look on top of the previous one.
 
 ---
 

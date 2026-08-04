@@ -15,7 +15,8 @@
 
 ## Features
 
-- **Color system** — five built-in presets plus a live editor with independent light and dark palettes; derived tones are computed automatically.
+- **Built-in presets** — five complete looks, each with its own navigation shape, corner radius, spacing, content width and typefaces, not just its own palette.
+- **Color system** — a live editor with independent light and dark palettes; derived tones are computed automatically.
 - **Layout** — Mega Menu, Dropdown, or Sidebar navigation; sliders for spacing scale, corner radius, and content width.
 - **Typography** — curated webfonts, downloaded once on save from pinned, checksum-verified sources — or upload your own `.woff2` files.
 - **Branding & PWA** — a drag-and-drop asset library (files can be renamed on upload) feeding the logo, favicons, app icons, and login background; a generated manifest makes the panel installable as a PWA.

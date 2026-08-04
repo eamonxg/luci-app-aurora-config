@@ -93,6 +93,14 @@ require_color_token_keys() {
 # template is parsed a single time.
 PRESET_SNAPSHOT=""
 
+# The layout and typography half of a preset. A built-in preset is a whole
+# look, not a palette: navigation shape, spacing, corner radius, content width
+# and both font stacks travel with the colours, exactly the fields
+# validate_and_apply_hub_payload accepts from a shared configuration. Keeping
+# the two lists identical is what makes "apply this theme" mean the same thing
+# whether the theme came off the disk or off the hub.
+readonly PRESET_STRUCT_KEYS="nav_type toolbar_enabled struct_spacing struct_radius_base struct_content_width_centered struct_font_sans struct_font_mono"
+
 normalize_preset_name() {
 	local name="${1:-default}"
 
@@ -130,13 +138,88 @@ is_color_token_key() {
 	return 1
 }
 
+# Pull the PRESET_STRUCT_KEYS options out of a template as "key=value" lines,
+# then validate each one against the very bounds
+# validate_and_apply_hub_payload enforces on an inbound hub configuration --
+# a preset that could write a spacing the hub would reject would mean this
+# package held two different definitions of a valid look.
+#
+# Every key is required. A template missing one is a broken install rather than
+# an older preset (all five ship from this same repo), and half a look applied
+# over the previous one is worse than a visible failure.
+load_preset_struct_snapshot() {
+	local template="$1"
+	local snapshot key value
+	local nav_type="" toolbar_enabled="" spacing="" radius="" width=""
+	local font_sans="" font_mono=""
+
+	snapshot=$(awk -v keys="$PRESET_STRUCT_KEYS" '
+		BEGIN {
+			n = split(keys, a, /[ \t\n]+/)
+			for (i = 1; i <= n; i++) if (a[i] != "") want[a[i]] = 1
+		}
+		/^[ \t]*option[ \t]+/ {
+			key = $2
+			if (!(key in want) || (key in seen)) next
+			seen[key] = 1
+			val = substr($0, index($0, key) + length(key))
+			sub(/^[ \t]+/, "", val)
+			sub(/[ \t]+$/, "", val)
+			if (val ~ /^'\''.*'\''$/ || val ~ /^".*"$/)
+				val = substr(val, 2, length(val) - 2)
+			print key "=" val
+		}
+	' "$template") || return 1
+
+	while IFS='=' read -r key value; do
+		case "$key" in
+		nav_type) nav_type="$value" ;;
+		toolbar_enabled) toolbar_enabled="$value" ;;
+		struct_spacing) spacing="$value" ;;
+		struct_radius_base) radius="$value" ;;
+		struct_content_width_centered) width="$value" ;;
+		struct_font_sans) font_sans="$value" ;;
+		struct_font_mono) font_mono="$value" ;;
+		esac
+	done <<-EOF
+	$snapshot
+	EOF
+
+	case "$nav_type" in mega-menu|dropdown|sidebar) ;; *) return 1 ;; esac
+	case "$toolbar_enabled" in 0|1) ;; *) return 1 ;; esac
+
+	printf '%s' "$spacing" | grep -Eq '^[0-9]+(\.[0-9]+)?rem$' || return 1
+	awk -v v="${spacing%rem}" 'BEGIN{ if (v+0<0.05 || v+0>1) exit 1 }' || return 1
+
+	printf '%s' "$radius" | grep -Eq '^[0-9]+(\.[0-9]+)?rem$' || return 1
+	awk -v v="${radius%rem}" 'BEGIN{ if (v+0<0 || v+0>2) exit 1 }' || return 1
+
+	printf '%s' "$width" | grep -Eq '^[0-9]+(\.[0-9]+)?rem$' || return 1
+	awk -v v="${width%rem}" 'BEGIN{ if (v+0<40 || v+0>160) exit 1 }' || return 1
+
+	# The stacks are written into a single-quoted `uci batch` line, so a
+	# literal quote in one would break out of it; is_valid_font_stack rejects
+	# that along with control characters, over-long values and any character
+	# outside a font stack's alphabet.
+	is_valid_font_stack "$font_sans" || return 1
+	is_valid_font_stack "$font_mono" || return 1
+
+	printf '%s\n' "$snapshot"
+	return 0
+}
+
 # Parse a preset template into PRESET_SNAPSHOT ("key=value" lines) with a single
 # awk pass. awk validates every option in one shot: the token must be known, the
 # value must be injection-safe, and the count must match PRESET_EXPECTED_COUNT.
 # This replaces the previous approach of spawning one `uci get` per token (plus a
 # grep per value), which was ~120 subprocesses on the page-load path.
+#
+# The layout/typography options are appended by load_preset_struct_snapshot, so
+# the caller writes one flat list of "key=value" pairs and cannot apply a
+# preset's colours without the look they were designed against.
 load_preset_snapshot() {
 	local template="$1"
+	local struct
 
 	PRESET_SNAPSHOT=""
 	[ -f "$template" ] || return 1
@@ -163,6 +246,10 @@ load_preset_snapshot() {
 		}
 		END { if (bad || count != expected + 0) exit 1 }
 	' "$template") || { PRESET_SNAPSHOT=""; return 1; }
+
+	struct=$(load_preset_struct_snapshot "$template") || { PRESET_SNAPSHOT=""; return 1; }
+	PRESET_SNAPSHOT="$PRESET_SNAPSHOT
+$struct"
 
 	return 0
 }
@@ -1432,6 +1519,37 @@ sync_font_css_from_uci() {
 	write_combined_font_css "$sans_preset" "$mono_preset"
 }
 
+# sync_font_css_from_uci only rewrites the CSS from whatever woff2 files are
+# already cached. A preset names a typeface this router may never have
+# downloaded -- and every font stack ends in a fallback family, so a missing
+# webfont does not fail loudly, it silently renders as Lato and the preset
+# looks like it half-applied. Fetch the files too.
+#
+# The CSS is written synchronously (so the page that reloads right after this
+# already points at whatever is cached) and the download runs detached: it
+# talks to the network, and the rpc call must not wait on it. Both slots are
+# no-ops when the preset resolves to a built-in stack, so a preset that names
+# no webfont costs nothing.
+sync_and_cache_fonts_from_uci() {
+	local sans_preset mono_preset
+
+	sans_preset=$(get_font_preset_from_uci "sans")
+	mono_preset=$(get_font_preset_from_uci "mono")
+
+	prepare_font_slot "sans" "$sans_preset" || return 1
+	prepare_font_slot "mono" "$mono_preset" || return 1
+	write_combined_font_css "$sans_preset" "$mono_preset" || return 1
+
+	(
+		cache_font_slot "sans" "$sans_preset"
+		cache_font_slot "mono" "$mono_preset"
+		write_combined_font_css "$sans_preset" "$mono_preset"
+		update_icon_cache_timestamp
+	) </dev/null >/dev/null 2>&1 &
+
+	return 0
+}
+
 # One-shot repair after a package upgrade (invoked from uci-defaults, not
 # exposed over ubus). The font cache under /www is runtime state the package
 # never touches, so a v1 install would otherwise keep serving its old
@@ -1769,9 +1887,38 @@ json_add_theme_preset_snapshot() {
 
 	json_add_int "result" 0
 	json_add_string "name" "$name"
+
+	# The snapshot is one flat list, but it is published grouped the way a hub
+	# payload groups the same fields (see build_share_payload). An object
+	# called "colors" that also held nav_type would be a trap for the next
+	# reader -- and the settings UI looks colours up by key, so a stray
+	# struct_* in there would sit undetected until something iterated it.
 	json_add_object "colors"
 	while IFS='=' read -r key value; do
-		[ -n "$key" ] && json_add_string "$key" "$value"
+		case "$key" in
+		light_*|dark_*) json_add_string "$key" "$value" ;;
+		esac
+	done <<-EOF
+	$PRESET_SNAPSHOT
+	EOF
+	json_close_object
+
+	json_add_object "layout"
+	while IFS='=' read -r key value; do
+		case "$key" in
+		nav_type|toolbar_enabled|struct_spacing|struct_radius_base|struct_content_width_centered)
+			json_add_string "$key" "$value" ;;
+		esac
+	done <<-EOF
+	$PRESET_SNAPSHOT
+	EOF
+	json_close_object
+
+	json_add_object "typography"
+	while IFS='=' read -r key value; do
+		case "$key" in
+		struct_font_sans|struct_font_mono) json_add_string "$key" "$value" ;;
+		esac
 	done <<-EOF
 	$PRESET_SNAPSHOT
 	EOF
@@ -2089,6 +2236,17 @@ FACE
 		# options, write the snapshot, then update the preset bookkeeping --
 		# replacing what used to be ~180 individual uci invocations.
 		#
+		# The snapshot carries the preset's layout and typography too, so the
+		# same loop writes nav_type, spacing, radius, content width and both
+		# font stacks. Those are `set` over whatever is there, never deleted
+		# first: unlike the colour keys they are a fixed, always-present set,
+		# and every one of them is in the snapshot.
+		#
+		# toolbar_item sections are deliberately left alone. They hold
+		# shortcuts the user wrote, and this path -- unlike hub_apply_worker --
+		# takes no pre-apply backup, so replacing them would destroy data with
+		# no way back. A preset only carries the toolbar_enabled switch.
+		#
 		# Values MUST be single-quoted: `uci batch` parses each line as a
 		# shell-like command and treats a bare `#` as a comment, so an
 		# unquoted hex color (e.g. set ...=#fcfcfc) is silently truncated to
@@ -2108,11 +2266,15 @@ FACE
 
 		if ! uci -q commit aurora; then
 			uci -q revert aurora
-			echo '{ "result": 1, "error": "Failed to commit preset colors" }'
+			echo '{ "result": 1, "error": "Failed to apply preset" }'
 			exit 0
 		fi
 
 		chmod 644 "$CONFIG_FILE" 2>/dev/null
+		# The preset just chose a typeface. Rewrite the font CSS now and fetch
+		# whatever woff2 files it names in the background, or the page that
+		# reloads in a moment renders the fallback family instead.
+		sync_and_cache_fonts_from_uci
 		echo '{ "result": 0 }'
 		;;
 

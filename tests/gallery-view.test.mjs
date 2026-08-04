@@ -186,15 +186,26 @@ test("gallery view: nav_type reaches the preview instead of being swallowed", as
   assert.match(src, /const navOf = /, "nav_type helper missing");
 });
 
-test("gallery view: built-in preset previews use the current nav_type", async () => {
+test("gallery view: built-in preset previews draw the preset's own nav_type", async () => {
   const src = await readFile(SRC, "utf8");
-  // 内置预设只写 62 个色值,导航保持不变 —— 所以「你当前的导航形态」正是应用后的样子。
-  // buildBuiltinCard 现在把 opts 交给共用的 buildCard,由它转给 buildDuo。
-  assert.match(src, /opts:\s*\{\s*nav:\s*currentNav\s*\}/, "built-in card must pass currentNav as opts");
+  // 内置预设过去只写 62 个色值,导航保持不变,所以缩略图画的是「你当前的导航
+  // 形态」。现在预设自己带 nav_type,画当前形态就是画错的东西 —— 卡片和抽屉
+  // 都走 previewOpts,和社区卡片同一条路径。
+  assert.match(src, /opts:\s*previewOpts\(preset\)/, "built-in card must draw its own nav");
+  assert.match(
+    src,
+    /buildPanes\(paletteOf\(preset\), previewOpts\(preset\)\)/,
+    "the built-in drawer must draw the preset's own nav too",
+  );
   assert.match(
     src,
     /buildDuo\(model\.palette, model\.opts\)/,
     "buildCard must forward model.opts to buildDuo",
+  );
+  // currentNav 还在,但只服务发布面板 —— 那里描述的是"你自己的配置"。
+  assert.ok(
+    !/opts:\s*\{\s*nav:\s*currentNav\s*\}/.test(src),
+    "no preview may still stand in the current nav for a preset's own",
   );
 });
 
@@ -515,8 +526,8 @@ test("gallery view: one card builder, two rows of metadata", async () => {
   assert.match(src, /const buildCardGlyphs = /);
   assert.match(
     src,
-    /const buildBuiltinCard = \(preset\) => buildCard\(\{[\s\S]*?glyphs: null,/,
-    "a built-in card must not carry a tile row",
+    /const buildBuiltinCard = \(preset\) => buildCard\(\{[\s\S]*?glyphs: buildCardGlyphs\(preset\),/,
+    "a built-in card must show its own font and corner glyphs",
   );
   assert.ok(
     !src.includes("buildBundledTiles(preset)"),
