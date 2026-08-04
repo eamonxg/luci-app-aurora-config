@@ -721,3 +721,59 @@ test("gallery view: the empty state offers recovery, not just publishing", async
   assert.ok(src.includes("importKeyPrompt"), "empty state must reach the import flow");
   assert.match(src, /hub_key_saved/, "the backup reminder must read its uci flag");
 });
+
+test("gallery: hub_me seeds the cache, and a failed one must not wipe my shares", async () => {
+  const src = await readFile(SRC, "utf8");
+  const start = src.indexOf("const refreshMyShares");
+  assert.ok(start > 0, "refreshMyShares not found");
+  const fn = src.slice(start, src.indexOf("const applyMe", start));
+  assert.ok(fn.includes("meCache.set"), "refreshMyShares must seed meCache on success");
+  // 断网时把用户已发布的作品从界面抹掉,看起来像作品没了。保留上一帧才诚实
+  // —— 我们只是没拿到新数据。
+  assert.ok(
+    !fn.includes("res.data : null"),
+    "refreshMyShares must not applyMe(null) on failure",
+  );
+});
+
+// 本设计的核心不变量,值得被钉住:LuCI 在 load() resolve 前不会进 render(),
+// 所以 load() 里任何一次到 hub 的往返都等于首屏白屏 0.8s 起步。
+test("gallery load() waits on nothing but local sources", async () => {
+  const src = await readFile(SRC, "utf8");
+  const body = src.slice(src.indexOf("  load() {"), src.indexOf("  render(loadData) {"));
+  assert.ok(body.length > 0, "load() body not found");
+  assert.ok(!body.includes("callHubList"), "callHubList must not block first paint");
+  assert.ok(!body.includes("callHubMe"), "callHubMe must not block first paint");
+  assert.ok(body.includes("presets.json"), "load() still reads the bundled presets");
+  assert.ok(body.includes('uci.load("aurora")'), "load() still reads uci");
+});
+
+test("gallery paints from cache first, then goes to the network", async () => {
+  const src = await readFile(SRC, "utf8");
+  const tail = src.slice(src.lastIndexOf("renderBanner();"));
+  assert.ok(tail.includes("meCache.getStale"), "my shares must paint from cache");
+  assert.ok(tail.includes("appendChild"), "the tail should mount the DOM");
+  // 顺序要求:两个请求都在 DOM 挂载之后
+  assert.ok(
+    tail.indexOf('fetchSort("hot")') > tail.indexOf("appendChild"),
+    "the list fetch must come after the first paint is mounted",
+  );
+  assert.ok(
+    tail.indexOf("refreshMyShares()") > tail.indexOf("appendChild"),
+    "hub_me must come after the first paint is mounted",
+  );
+  // loadData 不再携带这两份网络结果
+  assert.ok(!tail.includes("loadData.listRes"), "listRes is gone from loadData");
+  assert.ok(!tail.includes("loadData.meRes"), "meRes is gone from loadData");
+});
+
+test("gallery: importing a creator key drops the previous account's cached profile", async () => {
+  const src = await readFile(SRC, "utf8");
+  const i = src.indexOf("callHubImportKey");
+  assert.ok(i > 0, "callHubImportKey not found");
+  const block = src.slice(i, i + 1200);
+  assert.ok(
+    block.includes("meCache.clear()"),
+    "a new key means a different account -- the cached profile is someone else's",
+  );
+});

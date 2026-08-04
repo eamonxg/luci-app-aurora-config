@@ -1033,9 +1033,11 @@ return view.extend({
   handleReset: null,
 
   load() {
+    // 刻意只留本地来源。presets.json 随包安装,uci.load 走本机 ubus(实测
+    // ~90ms)。到 hub 的两个调用移到 render() 之后 —— LuCI 在 load() resolve
+    // 前不会进 render(),把一次 205ms RTT / 首连 800ms 的往返放在这里,等于
+    // 让首屏白等它。见 docs/specs/2026-08-05-store-first-paint.md。
     return Promise.all([
-      L.resolveDefault(hubApi.callHubList("hot", 1), null),
-      L.resolveDefault(hubApi.callHubMe(), null),
       L.resolveDefault(
         fetch(L.resource("aurora/presets.json")).then((res) =>
           res.ok ? res.json() : null,
@@ -1043,9 +1045,7 @@ return view.extend({
         null,
       ),
       uci.load("aurora"),
-    ]).then(([listRes, meRes, presetsRes]) => ({
-      listRes,
-      meRes,
+    ]).then(([presetsRes]) => ({
       presets: (presetsRes && presetsRes.presets) || null,
       hubApplied: uci.get("aurora", "theme", "hub_applied") || "",
       // Set by rpcd whenever the key leaves the router (export or import).
@@ -1503,9 +1503,21 @@ return view.extend({
 
     // One request carries both halves of the answer: who this router
     // publishes as, and what it has published.
+    // hub_me 是本页唯一还走 ubus 的网络调用 —— device_token 是 0600 的写凭证
+    // (hub_share/hub_update/hub_delete 都靠它认证),不下发到浏览器。整条链路
+    // 实测约 0.9s,其中 ubus 只占 0.09s,其余全是路由器到 hub 那次不可复用的
+    // TLS 握手加 205ms 跨太平洋 RTT。所以结果要落缓存:下次打开页面由缓存先
+    // 画,这一次往返就不再挡在首屏前面。
+    //
+    // 失败时刻意什么都不做。原先是 applyMe(null),而 applyMe 会把 myShares
+    // 置空 —— 断网的用户会眼看着自己已发布的作品从界面上消失。保留上一帧才
+    // 是诚实的:我们只是没拿到新数据,不是作品没了。
     const refreshMyShares = () =>
       L.resolveDefault(hubApi.callHubMe(), null).then((res) => {
-        applyMe(res && res.result === 0 ? res.data : null);
+        if (res && res.result === 0) {
+          hubApi.meCache.set(res.data);
+          applyMe(res.data);
+        }
       });
 
     const applyMe = (data) => {
@@ -1795,6 +1807,11 @@ return view.extend({
             return;
           }
           ui.hideModal();
+          // 换账号了 —— 缓存里那份档案属于上一个 key。先清掉再刷新,否则
+          // "导入成功、随后 hub_me 失败"会把上一个账号的作品留在界面上,
+          // 而 Task 2 之后失败路径不再自行清空。
+          hubApi.meCache.clear();
+          applyMe(null);
           refreshMyShares().then(() => {
             keySaved = true;
             ui.addNotification(
@@ -2531,11 +2548,10 @@ return view.extend({
       state.online.hot = cached.items;
 
     renderBanner();
-    applyMe(
-      loadData.meRes && loadData.meRes.result === 0 ? loadData.meRes.data : null,
-    );
-    selectTab("all");
-    applyResult(loadData.listRes, "hot");
+    // 缓存或 null。null 走空态,不是错误态 —— 一台刚装好的路由器本来就没有
+    // 已发布的作品,和"拿不到数据"是两回事。
+    applyMe(hubApi.meCache.getStale());
+    selectTab("all"); // 末行已 renderContent(),首帧在此成型
 
     [
       styleEl,
@@ -2544,6 +2560,12 @@ return view.extend({
       drawerMask,
       drawerEl,
     ].forEach((child) => rootEl.appendChild(child));
+
+    // 网络在 DOM 挂载之后才发起。此刻画面已经成型:内置预设来自随包的
+    // presets.json,在线列表与创作者档案来自上面两处缓存。两个请求回来后
+    // 各自 reconcile,失败则保留当前这帧。
+    fetchSort("hot");
+    refreshMyShares();
 
     return rootEl;
   },

@@ -856,8 +856,9 @@ has_batch_unsafe_char() {
 # commit failure.
 #
 # $1 is the FULL flat hub config body (as returned by hub_http_get -- there
-# is no "data" wrapper; that wrapper is only ever added by the hub_list/
-# hub_get *handlers* for the frontend, see hub_apply_worker). The config
+# is no "data" wrapper; that envelope belongs to the frontend and is added
+# by hubFetch in htdocs/.../utils/hub-api.js, which never touches this
+# path, see hub_apply_worker). The config
 # name for hub_applied bookkeeping lives at the body's root ("name"), not
 # inside "payload" -- it is read here, before "payload" is ever selected,
 # so the caller no longer has to extract and pass it separately.
@@ -1107,9 +1108,10 @@ hub_apply_worker() {
 
 	# $body is the hub's response to a direct hub_http_get call: a FLAT
 	# object (id/name/author/.../payload/assets at the root), never wrapped
-	# in "data" -- that wrapper is added only by the hub_list/hub_get
-	# *handlers* for the frontend's benefit. validate_and_apply_hub_payload
-	# takes this flat body directly and does its own json_load/json_select.
+	# in "data" -- that envelope is the frontend's, added by hubFetch in
+	# utils/hub-api.js on the browser-direct read path, which this code
+	# never goes through. validate_and_apply_hub_payload takes this flat
+	# body directly and does its own json_load/json_select.
 	write_hub_job_status "$job_id" "running" "validate" ""
 	if ! validate_and_apply_hub_payload "$body"; then
 		write_hub_job_status "$job_id" "error" "validate" "bad_payload"
@@ -1971,13 +1973,6 @@ case "$1" in
 	json_add_object "get_system_info"; json_close_object
 	json_add_object "remove_login_bg"; json_close_object
 	json_add_object "write_pwa_manifest"; json_close_object
-	json_add_object "hub_list"
-		json_add_string "sort" "sort"
-		json_add_string "page" "page"
-	json_close_object
-	json_add_object "hub_get"
-		json_add_string "id" "id"
-	json_close_object
 	json_add_object "hub_apply"
 		json_add_string "id" "id"
 	json_close_object
@@ -2439,31 +2434,6 @@ MANIFEST
 		json_add_string "package_manager" "$(detect_package_manager)"
 		json_add_string "language" "$(get_system_lang)"
 		json_dump; json_cleanup
-		;;
-
-	"hub_list")
-		read -r input; json_load "$input" 2>/dev/null
-		json_get_var sort "sort"; json_get_var page "page"; json_cleanup
-		case "$sort" in hot|new) ;; *) sort=hot ;; esac
-		case "$page" in ''|*[!0-9]*) page=1 ;; esac
-		if body=$(hub_http_get "/api/v1/themes/aurora/configs?sort=$sort&page=$page"); then
-			printf '{ "result": 0, "data": %s }\n' "$body"
-		else
-			echo '{ "result": 1, "error": "hub_unreachable" }'
-		fi
-		;;
-
-	"hub_get")
-		read -r input; json_load "$input" 2>/dev/null
-		json_get_var id "id"; json_cleanup
-		case "$id" in ''|*[!A-Za-z0-9]*)
-			echo '{ "result": 1, "error": "invalid_id" }'; exit 0 ;;
-		esac
-		if body=$(hub_http_get "/api/v1/themes/aurora/configs/$id"); then
-			printf '{ "result": 0, "data": %s }\n' "$body"
-		else
-			echo '{ "result": 1, "error": "hub_unreachable" }'
-		fi
 		;;
 
 	"hub_apply")

@@ -3,7 +3,7 @@
 "require rpc";
 
 const CACHE_KEY = "aurora.hub.list";
-const CACHE_TTL = 300000;
+const ME_CACHE_KEY = "aurora.hub.me";
 
 const HUB_BASE = "https://themes.eamonxg.fun";
 const HUB_TIMEOUT_MS = 15000;
@@ -34,48 +34,41 @@ const hubFetch = (path) => {
 // 直接拼。其它一律返回 "",调用方退回纯色块。
 const ASSET_PATH_RE = /^\/assets\/[A-Za-z0-9]{1,32}\/[a-z0-9_]{1,32}$/;
 
-return baseclass.extend({
-  listCache: {
-    get() {
-      try {
-        const cached = localStorage.getItem(CACHE_KEY);
-        if (!cached) return null;
-        const { timestamp, value } = JSON.parse(cached);
-        if (Date.now() - timestamp > CACHE_TTL) {
-          this.clear();
-          return null;
-        }
-        return value;
-      } catch (e) {
-        return null;
-      }
-    },
-
-    getStale() {
-      try {
-        const cached = localStorage.getItem(CACHE_KEY);
-        if (!cached) return null;
-        return JSON.parse(cached).value ?? null;
-      } catch (e) {
-        return null;
-      }
-    },
-
-    set(value) {
-      try {
-        localStorage.setItem(
-          CACHE_KEY,
-          JSON.stringify({ timestamp: Date.now(), value }),
-        );
-      } catch (e) {
-        console.error("Failed to cache hub list data:", e);
-      }
-    },
-
-    clear() {
-      localStorage.removeItem(CACHE_KEY);
-    },
+// 两份 localStorage 缓存的共同实现。它们只作首帧的种子:render 先用缓存画出
+// 画面,随后 fetchSort / refreshMyShares 的结果无条件覆盖 —— 所以刻意不设
+// TTL。到 hub 的每次往返都是 205ms 起步、首连约 800ms(TLS 握手不可复用),
+// 一份"旧但立刻可用"的数据,比一次准确的白屏有用得多。
+//
+// 信封保留 timestamp:它没有读者,但在真机上翻 localStorage 时,它是唯一能看
+// 出这帧画面有多旧的东西,而且保持了与旧版本写入的条目同形,无需迁移。
+const makeCache = (key, label) => ({
+  getStale() {
+    try {
+      const cached = localStorage.getItem(key);
+      if (!cached) return null;
+      return JSON.parse(cached).value ?? null;
+    } catch (e) {
+      return null;
+    }
   },
+
+  set(value) {
+    try {
+      localStorage.setItem(key, JSON.stringify({ timestamp: Date.now(), value }));
+    } catch (e) {
+      console.error("Failed to cache hub " + label + " data:", e);
+    }
+  },
+
+  clear() {
+    localStorage.removeItem(key);
+  },
+});
+
+return baseclass.extend({
+  listCache: makeCache(CACHE_KEY, "list"),
+
+  meCache: makeCache(ME_CACHE_KEY, "me"),
 
   callHubList(sort, page) {
     const safeSort = sort === "new" ? "new" : "hot";

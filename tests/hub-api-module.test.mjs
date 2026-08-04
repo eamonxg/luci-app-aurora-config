@@ -34,13 +34,26 @@ test("hub-api list/detail go straight to the hub from the browser", async () => 
   );
 });
 
-test("hub-api module keeps the list cache TTL logic", () => {
-  return readFile(SRC, "utf8").then((src) => {
-    assert.match(src, /CACHE_TTL\s*=\s*300000/);
-    assert.match(src, /localStorage\.getItem\(CACHE_KEY\)/);
-    assert.match(src, /localStorage\.setItem\(/);
-    assert.match(src, /localStorage\.removeItem\(CACHE_KEY\)/);
-  });
+// 两份缓存共享一个语义:只作首帧种子,不设 TTL。fetchSort / refreshMyShares
+// 每次渲染都会覆盖它们,所以"过期"没有意义 —— 而一份永远可用的旧数据,正是
+// 首屏不必等待 205ms 跨太平洋往返的前提。
+test("hub-api: caches are first-paint seeds, not TTL'd stores", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.ok(!src.includes("CACHE_TTL"), "CACHE_TTL had no live reader; it should be gone");
+  assert.ok(
+    !/^\s+get\(\)\s*\{/m.test(src),
+    "listCache.get() had no caller; it should be gone",
+  );
+  assert.match(src, /localStorage\.getItem\(/);
+  assert.match(src, /localStorage\.setItem\(/);
+  assert.match(src, /localStorage\.removeItem\(/);
+});
+
+test("hub-api exposes meCache alongside listCache", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.ok(src.includes("meCache"), "missing meCache");
+  assert.ok(src.includes("aurora.hub.list"), "missing list cache key");
+  assert.ok(src.includes("aurora.hub.me"), "missing me cache key");
 });
 
 test("hub-api module exposes the apply/status/restore declares (Task 6)", async () => {
@@ -139,4 +152,77 @@ test("hub-api exposes callHubMe and drops callHubMyShares", async () => {
   assert.ok(src.includes("callHubMe"), "missing callHubMe");
   assert.ok(!src.includes("callHubMyShares"), "callHubMyShares must be gone");
   assert.match(src, /method:\s*"hub_me"/);
+});
+
+// localStorage 在 node 里不存在。模块只在方法体内引用它,因此调用前把桩挂到
+// globalThis 即可 —— 与上面 hubAssetUrl 那两个测试一样,真的把代码跑起来,
+// 而不是对源码做模式匹配。
+function withLocalStorage(fn) {
+  const store = new Map();
+  const had = "localStorage" in globalThis;
+  const prev = globalThis.localStorage;
+  globalThis.localStorage = {
+    getItem: (k) => (store.has(k) ? store.get(k) : null),
+    setItem: (k, v) => store.set(k, String(v)),
+    removeItem: (k) => store.delete(k),
+  };
+  try {
+    return fn(store);
+  } finally {
+    if (had) globalThis.localStorage = prev;
+    else delete globalThis.localStorage;
+  }
+}
+
+test("meCache round-trips the creator profile and clear() empties it", async () => {
+  const m = await load();
+  withLocalStorage(() => {
+    assert.equal(m.meCache.getStale(), null);
+    m.meCache.set({ id: "abc12345", nickname: "eamon", configs: [{ id: "x" }] });
+    assert.deepEqual(m.meCache.getStale(), {
+      id: "abc12345",
+      nickname: "eamon",
+      configs: [{ id: "x" }],
+    });
+    m.meCache.clear();
+    assert.equal(m.meCache.getStale(), null);
+  });
+});
+
+test("meCache.getStale never expires -- it is a first-paint seed", async () => {
+  const m = await load();
+  withLocalStorage((store) => {
+    // 一条 1970 年的信封仍必须返回。过期没有意义:refreshMyShares 每次渲染
+    // 都会覆盖它,而扔掉它只会换来一次 0.9s 的白屏。
+    store.set(
+      "aurora.hub.me",
+      JSON.stringify({ timestamp: 0, value: { id: "old", nickname: null, configs: [] } }),
+    );
+    assert.deepEqual(m.meCache.getStale(), {
+      id: "old",
+      nickname: null,
+      configs: [],
+    });
+  });
+});
+
+test("both caches survive corrupt localStorage", async () => {
+  const m = await load();
+  withLocalStorage((store) => {
+    store.set("aurora.hub.me", "{not json");
+    store.set("aurora.hub.list", "{not json");
+    assert.equal(m.meCache.getStale(), null);
+    assert.equal(m.listCache.getStale(), null);
+  });
+});
+
+test("the two caches are independent -- clearing one keeps the other", async () => {
+  const m = await load();
+  withLocalStorage(() => {
+    m.listCache.set({ items: [{ id: "a" }] });
+    m.meCache.set({ id: "me", nickname: null, configs: [] });
+    m.meCache.clear();
+    assert.equal(m.meCache.getStale(), null);
+    assert.deepEqual(m.listCache.getStale(), { items: [{ id: "a" }] });
+  });
 });

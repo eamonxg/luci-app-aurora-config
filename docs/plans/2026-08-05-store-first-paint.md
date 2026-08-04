@@ -776,11 +776,24 @@ Expected: 第一行 `✓ 两个方法已消失`；第二行 ≥ 3。
 - Performance 面板的 First Contentful Paint
 - Network 面板里 `themes.eamonxg.fun/api/v1/...` 与 ubus `hub_me` 两条请求的**发起时刻**
 
-Expected：
-- 两条请求的发起时刻**晚于** FCP（这是本设计的核心证据）
-- 刷新时画面立即出现（目标 ~0.1s），而不是白屏 0.9s
+**实测结果（2026-08-05，真机 192.168.8.1，Chrome headless + CDP）**
 
-把实测 FCP 数字记回本文件此处：`实测 FCP = ______ ms`
+⚠️ **FCP 是错误指标，别再用它。** LuCI 的外壳（header / 菜单 / Loading…）先于
+view 绘制，所以 FCP 新旧两版都是 ~300–370ms，量不到 `load()` 的等待。
+正确指标是**商城内容进 DOM 的时刻**——用 `MutationObserver` 观察
+`.aurora-store` / `.aurora-store-card`。（注入探针要观察 `document` 而不是
+`document.documentElement`：`addScriptToEvaluateOnNewDocument` 执行时后者还不
+存在，`.observe()` 会抛异常让探针静默失效。）
+
+| | 旧版（改动前） | 新版 |
+|---|---|---|
+| 商城内容进 DOM | **1318 / 1810 / 2078 ms** | **445 / 426 / 456 ms** |
+| 有 localStorage 缓存时 | — | 407 / 428 / 428 ms |
+| hub 请求发起时刻 | 384–412 ms（**内容在等它**） | 425–454 ms（**晚于内容 ~1ms**） |
+
+中位数 **1810ms → 445ms，约 4 倍**。新版 `store_root ≈ hub_req + 1ms`，即渲染
+完立刻发请求 —— 核心不变量成立。剩下的 ~430ms 是 LuCI 自身加载 view 模块的
+开销，已与 hub 无关，这也是有无缓存差别不大的原因。
 
 - [ ] **Step 4: 断网降级**
 
@@ -812,6 +825,25 @@ Expected：上一个账号的作品**不残留**在「我的分享」里。
 DevTools Console 执行 `localStorage.clear()` 后刷新。
 
 Expected：立即出现 5 个内置预设（不是白屏），在线区显示加载中/空态，随后填充。
+
+**Step 4/5/6 实测结果（均通过）**
+
+- **断网降级**：路由器 `/etc/hosts` 黑洞 hub（断 `hub_me`）+ CDP
+  `Network.setBlockedURLs` 拦截浏览器直连，重载后 `My Shares 1` **仍在**，
+  `meCache` 未被清空。Task 2 的核心行为成立。
+- **导入 key**：走真实 UI 路径（My Shares → Import a key → 填 textarea →
+  Import）。导入后 `meCache` 变为 `none`，标签从 `My Shares1` 变为
+  `My Shares` —— 上一个账号的作品不残留。原 key 已备份并恢复，
+  创作者身份 `PutProbe / 6ed2e31j` 完好。
+- **全新安装**：冷启动 profile（无 localStorage）下 5 张内置预设卡在
+  426–456ms 出现，不白屏。
+- **rpcd 面**：`ubus -v list luci.aurora` 中 `hub_list`/`hub_get` 已消失，
+  其余 10 个 hub 方法俱在，`hub_me` 调用正常返回。
+
+自动化脚本踩过的三个坑，留给后来者：① OpenWrt 无 sftp-server，`scp` 必须加
+`-O`；② LuCI 会话可用 `ubus call session create` + `grant` 自造，但
+`session_retrieve` 要求 `values.token` 是字符串，只设 `username` 会 403；
+③ 页面路由是 `admin/system/aurora/gallery`，不是 `admin/aurora/gallery`。
 
 - [ ] **Step 7: GATE —— 汇报并征询是否 push**
 

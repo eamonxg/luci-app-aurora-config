@@ -67,48 +67,6 @@ test("rpcd script: PUT and DELETE pair --method with --body-file, never --post-f
   );
 });
 
-test("rpcd script: hub_list and hub_get registered in list branch", () => {
-  assert.ok(rpcd.includes('json_add_object "hub_list"'));
-  assert.ok(rpcd.includes('json_add_object "hub_get"'));
-});
-
-test("rpcd script: hub_list and hub_get call handlers exist", () => {
-  assert.ok(rpcd.includes('"hub_list")'));
-  assert.ok(rpcd.includes('"hub_get")'));
-});
-
-test("rpcd script: hub_list whitelists sort and guards page", () => {
-  assert.match(rpcd, /case "\$sort" in hot\|new\) ;; \*\) sort=hot ;; esac/);
-  assert.match(rpcd, /case "\$page" in ''\|\*\[!0-9\]\*\) page=1 ;; esac/);
-});
-
-test("rpcd script: hub_list passes through hub JSON with a unified error shell", () => {
-  assert.match(
-    rpcd,
-    /hub_http_get "\/api\/v1\/themes\/aurora\/configs\?sort=\$sort&page=\$page"/,
-  );
-  assert.match(
-    rpcd,
-    /printf '\{ "result": 0, "data": %s \}\\n' "\$body"/,
-  );
-  assert.ok(rpcd.includes('"result": 1, "error": "hub_unreachable"'));
-});
-
-test("rpcd script: hub_get guards id against injection before use", () => {
-  assert.match(rpcd, /case "\$id" in ''\|\*\[!A-Za-z0-9\]\*\)/);
-  assert.match(
-    rpcd,
-    /hub_http_get "\/api\/v1\/themes\/aurora\/configs\/\$id"/,
-  );
-});
-
-test("acl: hub_list and hub_get granted under read.ubus", () => {
-  const acljson = JSON.parse(acl);
-  const readMethods = acljson["luci-app-aurora"].read.ubus["luci.aurora"];
-  assert.ok(readMethods.includes("hub_list"), "hub_list should be a read method");
-  assert.ok(readMethods.includes("hub_get"), "hub_get should be a read method");
-});
-
 // --- Task 5: apply job (backup + local validation + assets + rollback) ---
 
 test("rpcd script: job status writer and validator functions are defined", () => {
@@ -231,10 +189,10 @@ test("rpcd script: bad payload is rejected before any uci write (validator retur
 });
 
 // --- FINAL-REVIEW: hub_http_get returns the hub config body FLAT (no "data"
-// wrapper -- that wrapper is only ever added by the hub_list/hub_get
-// *handlers* for the frontend). hub_apply_worker and hub_my_shares call
-// hub_http_get directly, so a `json_select data` there always fails,
-// meaning every hub_apply used to report bad_payload unconditionally. ---
+// wrapper -- that envelope is the frontend's, added by hubFetch in
+// utils/hub-api.js). hub_apply_worker and hub_my_shares call hub_http_get
+// directly, so a `json_select data` there always fails, meaning every
+// hub_apply used to report bad_payload unconditionally. ---
 
 test("rpcd script: hub_apply_worker never selects a 'data' wrapper off the raw hub_http_get body", () => {
   const workerBody = extractFunctionBody(rpcd, "hub_apply_worker");
