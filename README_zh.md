@@ -47,6 +47,8 @@ wget -qO- https://openwrt.eamonxg.fun/install.sh | sh
 
 这就是全部安装步骤——脚本会添加软件源，并安装您从列表中勾选的软件包，翻译一并装好。之后用常规命令升级即可：`apk update && apk upgrade luci-app-aurora-config`，或 `opkg update && opkg upgrade luci-app-aurora-config`。详细信息见 [openwrt.eamonxg.fun](https://openwrt.eamonxg.fun/)。
 
+> **apk**：若此前是从下载的 `.apk` 文件安装的，该文件会把软件包钉死在 `/etc/apk/world` 里，此后 `apk upgrade` 会静默地什么都不做——报告成功，版本却没变。执行一次 `apk add luci-app-aurora-config`（只写包名，不带路径）即可解除。上面的脚本已自动处理这一步。
+
 ### 使用 GitHub Release:
 
 OpenWrt 25.12+ 和 Snapshot 版本使用 `apk`；其他版本使用 `opkg`：

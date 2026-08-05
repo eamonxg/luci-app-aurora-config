@@ -47,6 +47,8 @@ wget -qO- https://openwrt.eamonxg.fun/install.sh | sh
 
 That is the whole installation — the script adds the feed and installs whatever you tick from the list it shows, translations included. Upgrade later with the usual commands: `apk update && apk upgrade luci-app-aurora-config`, or `opkg update && opkg upgrade luci-app-aurora-config`. Details: [openwrt.eamonxg.fun](https://openwrt.eamonxg.fun/).
 
+> **apk**: if this package was previously installed from a downloaded `.apk` file, that pinned it in `/etc/apk/world` and `apk upgrade` will silently do nothing — success reported, version unchanged. Run `apk add luci-app-aurora-config` once (the name, no path) to clear the pin. The script above already does this for you.
+
 ### Using a GitHub release:
 
 OpenWrt 25.12+ and snapshots use `apk`; other versions use `opkg`:
