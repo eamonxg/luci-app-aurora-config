@@ -5,7 +5,7 @@ msgstr "Content-Type: text/plain; charset=UTF-8"
 msgid "%d downloads"
 msgstr "%d indirme"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1981
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2261
 msgid "%d shortcuts"
 msgstr "%d kısayol"
 
@@ -25,7 +25,7 @@ msgstr "(devre dışı)"
 msgid "1 download"
 msgstr "1 indirme"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1980
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2260
 msgid "1 shortcut"
 msgstr "1 kısayol"
 
@@ -85,7 +85,7 @@ msgstr "Güncelleme kaynağı ekleniyor…"
 msgid "Afterwards you can upgrade Aurora in System → Software, like any other OpenWrt package."
 msgstr "Ardından Aurora'yı diğer OpenWrt paketleri gibi Sistem → Yazılım üzerinden güncelleyebilirsiniz."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2276
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2560
 msgid "All"
 msgstr "Tümü"
 
@@ -93,13 +93,13 @@ msgstr "Tümü"
 msgid "Amber Sand"
 msgstr "Kehribar Kumu"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1485
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1584
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:746
 msgid "Anonymous"
 msgstr "Anonim"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1536
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2264
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1647
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2548
 msgid "Anyone who applies this gets all of it. You can update or remove it later."
 msgstr "Bunu uygulayan herkes hepsini alır. Daha sonra güncelleyebilir veya kaldırabilirsiniz."
 
@@ -119,28 +119,28 @@ msgstr "Uygulama Simgesi 512×512"
 msgid "Apple Touch Icon"
 msgstr "Apple Touch Simgesi"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1189
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1288
 msgid "Applied."
 msgstr "Uygulandı."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1289
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1369
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1402
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1431
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1388
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1468
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1501
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1530
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:874
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:889
 msgid "Apply"
 msgstr "Uygula"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1227
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1326
 msgid "Apply Configuration"
 msgstr "Yapılandırmayı uygula"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1260
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1359
 msgid "Apply Preset"
 msgstr "Hazır Ayarı Uygula"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1284
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1383
 msgid "Apply failed: %s"
 msgstr "Uygulama başarısız oldu: %s"
 
@@ -148,7 +148,7 @@ msgstr "Uygulama başarısız oldu: %s"
 msgid "Apply it anyway? Your current settings are backed up first."
 msgstr "Yine de uygulansın mı? Mevcut ayarlarınız önce yedeklenir."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1264
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1363
 msgid "Apply the '%s' preset now? It is saved immediately and the page reloads. A preset carries a whole look — colors, navigation, spacing, corner radius, content width and fonts. Your shortcuts, logo, icons and login background are left as they are."
 msgstr "'%s' hazır ayarı şimdi uygulansın mı? Hemen kaydedilir ve sayfa yeniden yüklenir. Bir hazır ayar görünümün tamamını taşır: renkler, gezinme, boşluk, köşe yarıçapı, içerik genişliği ve yazı tipleri. Kısayollarınız, logonuz, simgeleriniz ve giriş arka planınız olduğu gibi kalır."
 
@@ -156,25 +156,25 @@ msgstr "'%s' hazır ayarı şimdi uygulansın mı? Hemen kaydedilir ve sayfa yen
 msgid "Apply this configuration now? Your current settings are backed up first."
 msgstr "Bu yapılandırma şimdi uygulansın mı? Mevcut ayarlarınız önce yedeklenir."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1205
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1237
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1304
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1336
 msgid "Applying"
 msgstr "Uygulanıyor"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1270
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1369
 msgid "Applying preset..."
 msgstr "Hazır ayar uygulanıyor..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1206
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1305
 msgid "Applying this configuration…"
 msgstr "Yapılandırma uygulanıyor…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1177
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1276
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:807
 msgid "Applying timed out. Please try again."
 msgstr "Uygulama zaman aşımına uğradı. Lütfen tekrar deneyin."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1269
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1368
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2185
 msgid "Applying..."
 msgstr "Uygulanıyor..."
@@ -195,17 +195,21 @@ msgstr "Aurora Tema Ayarları"
 msgid "Automatic"
 msgstr "Otomatik"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1738
-msgid "Back up key"
-msgstr "Anahtarı yedekle"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1969
+msgid "Back up identity"
+msgstr "Kimliği yedekle"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1844
-msgid "Back up the current key first"
-msgstr "Önce mevcut anahtarı yedekle"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2093
+msgid "Back up the current identity first"
+msgstr "Önce mevcut kimliği yedekle"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1669
-msgid "Back up your creator key"
-msgstr "Oluşturucu anahtarınızı yedekleyin"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1872
+msgid "Back up your creator identity"
+msgstr "Yaratıcı kimliğini yedekle"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1942
+msgid "Backed up"
+msgstr "Yedeklendi"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:140
 msgid "Background"
@@ -263,9 +267,9 @@ msgstr "Aktif navigasyon ve seçili durumlar için marka tonlu yüzey."
 msgid "Branding & Shortcuts"
 msgstr "Marka ve Kısayollar"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1328
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2277
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2450
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1427
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2561
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2740
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2063
 msgid "Built-in"
 msgstr "Yerleşik"
@@ -276,7 +280,7 @@ msgstr "Birlikte gelen içerik"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:272
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:381
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2222
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2506
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:857
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2176
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2254
@@ -288,13 +292,13 @@ msgstr "İptal"
 msgid "Canvas and panel surfaces that frame the interface."
 msgstr "Arayüzü çerçeveleyen tuval ve panel yüzeyleri."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2194
-msgid "Change"
-msgstr "Değiştir"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2142
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2428
 msgid "Change your name"
 msgstr "Adınızı değiştirin"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1989
+msgid "Changed routers? Restore your identity"
+msgstr "Yönlendirici mi değiştirdin? Kimliğini geri yükle"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:416
 msgid "Changes preview here instantly; Save or Save & Apply persists them."
@@ -312,18 +316,22 @@ msgstr "Bu token için tam bir renk seçin"
 msgid "Choose an uploaded icon for this shortcut"
 msgstr "Bu kısayol için yüklenmiş bir simge seçin"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2061
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2025
+msgid "Choose backup file…"
+msgstr "Yedek dosyasını seç…"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2345
 msgid "Choose the name to publish under."
 msgstr "Yayınlarken kullanılacak adı seçin."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1304
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1380
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1712
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1403
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1479
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1904
 msgid "Close"
 msgstr "Kapat"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1339
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1902
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1438
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2182
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:759
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2556
 msgid "Colors"
@@ -333,7 +341,7 @@ msgstr "Renkler"
 msgid "Colors only"
 msgstr "Yalnızca renkler"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2456
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2746
 msgid "Community"
 msgstr "Topluluk"
 
@@ -357,7 +365,7 @@ msgstr "Yapılandırma başarıyla içe aktarıldı."
 msgid "Confirm Upload"
 msgstr "Yüklemeyi Onayla"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1993
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2273
 msgid "Content"
 msgstr "İçerik"
 
@@ -365,7 +373,7 @@ msgstr "İçerik"
 msgid "Content Max Width"
 msgstr "Maksimum İçerik Genişliği"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1925
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2205
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:713
 msgid "Content Width"
 msgstr "İçerik genişliği"
@@ -373,6 +381,15 @@ msgstr "İçerik genişliği"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:229
 msgid "Control Fill"
 msgstr "Denetim dolgusu"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1851
+msgid "Copied"
+msgstr "Kopyalandı"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1846
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1853
+msgid "Copy"
+msgstr "Kopyala"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:709
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2623
@@ -383,6 +400,10 @@ msgstr "Köşe Yarıçapı"
 msgid "Could not add the update source: %s"
 msgstr "Güncelleme kaynağı eklenemedi: %s"
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1864
+msgid "Couldn't copy. The identity is shown above — select it and copy it manually."
+msgstr "Kopyalanamadı. Kimlik yukarıda gösteriliyor — seçip elle kopyala."
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:805
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:828
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:841
@@ -390,17 +411,21 @@ msgstr "Güncelleme kaynağı eklenemedi: %s"
 msgid "Couldn't reach the theme store. Please try again."
 msgstr "Tema mağazasına ulaşılamadı. Lütfen tekrar deneyin."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1653
-msgid "Couldn't read your key. Please try again."
-msgstr "Anahtarınız okunamadı. Lütfen tekrar deneyin."
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1801
+msgid "Couldn't read your identity. Please try again."
+msgstr "Kimliğin okunamadı. Lütfen tekrar dene."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2037
+msgid "Couldn't restore that identity. Check it and try again."
+msgstr "O kimlik geri yüklenemedi. Kontrol edip tekrar dene."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:835
 msgid "Couldn't save that name. Try again."
 msgstr "Bu ad kaydedilemedi. Tekrar deneyin."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1793
-msgid "Couldn't use that key. Check it and try again."
-msgstr "Bu anahtar kullanılamadı. Kontrol edip tekrar deneyin."
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1983
+msgid "Created automatically the first time you publish — no sign-up, no password. It decides which configurations in the store are yours, and who can change or remove them. Backing it up saves an identity backup file; import that file after a reflash, or on a new router, and your work comes back to you."
+msgstr "İlk yayınladığında otomatik olarak oluşturulur — kayıt yok, şifre yok. Mağazadaki hangi yapılandırmaların sana ait olduğunu ve onları kimin değiştirip kaldırabileceğini belirler. Yedeklemek bir kimlik yedek dosyası kaydeder; yeniden flash'ladıktan sonra ya da yeni bir yönlendiricide o dosyayı içe aktar, çalışmaların sana geri döner."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2036
 msgid "Custom"
@@ -457,7 +482,7 @@ msgstr "Başlıklar, gövde metni, simgeler ve form değerleri için varsayılan
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:159
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:393
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1608
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1719
 msgid "Delete"
 msgstr "Sil"
 
@@ -477,7 +502,7 @@ msgstr "Marka Varlığını Sil"
 msgid "Delete Custom Font"
 msgstr "Özel Yazı Tipini Sil"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1569
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1680
 msgid "Delete Share"
 msgstr "Paylaşımı sil"
 
@@ -485,11 +510,11 @@ msgstr "Paylaşımı sil"
 msgid "Delete failed: %s"
 msgstr "Silme başarısız: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1570
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1681
 msgid "Delete this shared configuration from the theme store?"
 msgstr "Bu paylaşılan yapılandırma tema mağazasından silinsin mi?"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1577
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1688
 msgid "Deleted."
 msgstr "Silindi."
 
@@ -517,11 +542,11 @@ msgstr "Tuval, yüzey ve metin renklerinden türetilenler: mat ve hafif metinler
 msgid "Derived from the status accents: alert, label, and badge backgrounds."
 msgstr "Durum vurgularından türetilenler: alarm, etiket ve rozet arka planları."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2254
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2538
 msgid "Description"
 msgstr "Açıklama"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1994
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2274
 msgid "Details"
 msgstr "Ayrıntılar"
 
@@ -533,11 +558,11 @@ msgstr "Modal iletişim pencerelerinin arkasındaki karartma arka planı."
 msgid "Dismiss"
 msgstr "Kapat"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1706
-msgid "Download"
-msgstr "İndir"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1898
+msgid "Download backup file"
+msgstr "Yedek dosyasını indir"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1887
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2167
 msgid "Downloads"
 msgstr "İndirmeler"
 
@@ -654,7 +679,7 @@ msgstr "Yazı tipi adı, örn. MiSans"
 msgid "Font for code, command output, and the system log viewer."
 msgstr "Kod, komut çıktısı ve sistem günlüğü görüntüleyici için yazı tipi."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1931
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2211
 msgid "Fonts"
 msgstr "Yazı tipleri"
 
@@ -670,7 +695,7 @@ msgstr "openwrt.eamonxg.fun adresinden; imzalama anahtarı bu pakete dâhildir."
 msgid "Full-screen login page background; use a wide image."
 msgstr "Tam ekran giriş sayfası arka planı; geniş bir görsel kullanın."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2018
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2302
 msgid "Give it a name"
 msgstr "Bir ad verin"
 
@@ -691,11 +716,15 @@ msgstr "İnce Çizgi"
 msgid "Hidden"
 msgstr "Gizli"
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1831
+msgid "Hide"
+msgstr "Gizle"
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:3243
 msgid "Home Screen icon for iOS and iPadOS."
 msgstr "iOS ve iPadOS için Ana Ekran simgesi."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2278
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2562
 msgid "Hot"
 msgstr "Popüler"
 
@@ -715,7 +744,7 @@ msgstr "Hafif birincil düğmeler ve seçili yüzeyler için üzerine gelme dolg
 msgid "Hover state for filled primary buttons and high-emphasis controls."
 msgstr "Dolu birincil düğmeler ve yüksek vurgulu kontroller için üzerine gelme durumu."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2249
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2533
 msgid "How it looks in the store"
 msgstr "Mağazada nasıl görünecek"
 
@@ -727,7 +756,6 @@ msgstr "Sayfa içeriği, yardım metni ve durum çıktısındaki köprüler."
 msgid "Icon"
 msgstr "Simge"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1850
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2216
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2236
 msgid "Import"
@@ -740,15 +768,6 @@ msgstr "Aurora Yapılandırması İçe Aktarılsın mı?"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2138
 msgid "Import Aurora Settings"
 msgstr "Aurora Ayarlarını İçe Aktar"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1851
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1877
-msgid "Import a creator key"
-msgstr "Oluşturucu anahtarı içe aktar"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1747
-msgid "Import a key"
-msgstr "Anahtar içe aktar"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2208
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2225
@@ -763,18 +782,18 @@ msgstr "İçe aktarma işlemi /etc/config/aurora dosyasını değiştirir, tüm 
 msgid "Importing..."
 msgstr "İçe aktarılıyor..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1155
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1309
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1254
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1408
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:629
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:632
 msgid "In use"
 msgstr "Kullanımda"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1965
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2245
 msgid "Included"
 msgstr "Dahil"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1491
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1590
 msgid "Includes assets"
 msgstr "Varlık içerir"
 
@@ -806,7 +825,7 @@ msgstr "Geçersiz renk ifadesi."
 msgid "Invalid, missing, or cyclic color expression."
 msgstr "Geçersiz, eksik veya döngüsel renk ifadesi."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1678
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1882
 msgid "It exists only on this router. Reflashing without keeping settings erases it."
 msgstr "Yalnızca bu yönlendiricide bulunur. Ayarları korumadan yeniden yüklemek onu siler."
 
@@ -826,7 +845,7 @@ msgstr "Belirgin yuvarlak köşeler"
 msgid "Layout"
 msgstr "Düzen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1341
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1440
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:761
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2557
 msgid "Layout & Typography"
@@ -853,7 +872,7 @@ msgstr "Açık"
 msgid "Light Mode"
 msgstr "Açık Mod"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1902
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2182
 msgid "Light and dark, 62 values"
 msgstr "Açık ve koyu, 62 değer"
 
@@ -869,12 +888,12 @@ msgstr "Bağlantı"
 msgid "Links marked ↗ open sites outside your router. You'll be asked to confirm before applying."
 msgstr "↗ işaretli bağlantılar yönlendiricinizin dışındaki siteleri açar. Uygulamadan önce onayınız istenir."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1238
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1388
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1337
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1487
 msgid "Loading theme details…"
 msgstr "Tema ayrıntıları yükleniyor…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2400
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2690
 msgid "Loading…"
 msgstr "Yükleniyor…"
 
@@ -937,14 +956,18 @@ msgstr "Monospace Yazı Tipi"
 msgid "Muted Text"
 msgstr "Mat/Donuk Metin"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2280
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2481
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2564
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2759
 msgid "My Shares"
 msgstr "Paylaşımlarım"
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2756
+msgid "My creator identity"
+msgstr "Yaratıcı kimliğim"
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:118
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1886
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2253
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2166
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2537
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2776
 msgid "Name"
 msgstr "Ad"
@@ -953,7 +976,7 @@ msgstr "Ad"
 msgid "Name it login-bg.* to use it as the login page background."
 msgstr "Giriş sayfası arka planı olarak kullanmak için login-bg.* olarak adlandırın."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1904
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2184
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:707
 msgid "Navigation"
 msgstr "Gezinme"
@@ -966,7 +989,7 @@ msgstr "Navigasyon Stili"
 msgid "Navigation, spacing, corner radius, and content width. Takes effect after Save & Apply."
 msgstr "Navigasyon, boşluklar, köşe yarıçapı ve içerik genişliği. Kaydet ve Uygula yapıldıktan sonra geçerli olur."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2279
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2563
 msgid "New"
 msgstr "Yeni"
 
@@ -974,7 +997,7 @@ msgstr "Yeni"
 msgid "No brand assets uploaded yet."
 msgstr "Henüz hiçbir marka varlığı yüklenmedi."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2421
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2711
 msgid "No configs here yet — go share the first one."
 msgstr "Henüz yapılandırma yok — ilkini siz paylaşın."
 
@@ -986,7 +1009,7 @@ msgstr "Yüklenmiş özel yazı tipi yok."
 msgid "No file selected or upload failed"
 msgstr "Dosya seçilmedi veya yükleme başarısız oldu"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2420
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2710
 msgid "No themes match your search."
 msgstr "Aramanızla eşleşen tema yok."
 
@@ -994,19 +1017,23 @@ msgstr "Aramanızla eşleşen tema yok."
 msgid "None"
 msgstr "Yok"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1726
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1942
+msgid "Not backed up"
+msgstr "Yedeklenmedi"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1933
 msgid "Not named yet"
 msgstr "Henüz adlandırılmadı"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1869
-msgid "Nothing shared yet — publish your current configuration, or import a creator key to bring back what you shared before."
-msgstr "Henüz bir paylaşım yok — mevcut yapılandırmanızı yayınlayın ya da daha önce paylaştıklarınızı geri getirmek için bir oluşturucu anahtarı içe aktarın."
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2120
+msgid "Nothing shared yet"
+msgstr "Henüz bir şey paylaşmadın"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:168
 msgid "On-Brand Text"
 msgstr "Marka Üzeri Metin"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2024
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2308
 msgid "One line about where this configuration fits."
 msgstr "Bu yapılandırmanın nereye uygun olduğuna dair tek satır."
 
@@ -1042,16 +1069,16 @@ msgstr "SVG favicon'ların desteklenmediği durumlar için PNG yedeği."
 msgid "Page canvas behind the header, navigation, content, and login screen."
 msgstr "Üstbilgi, navigasyon, içerik ve giriş ekranının arkasındaki sayfa tuvali."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1820
-msgid "Paste the creator key you backed up, or pick the file you downloaded."
-msgstr "Yedeklediğiniz oluşturucu anahtarını yapıştırın ya da indirdiğiniz dosyayı seçin."
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2069
+msgid "Paste the identity you backed up, or pick the backup file you downloaded. What you shared before comes back under this router."
+msgstr "Yedeklediğin kimliği yapıştır ya da indirdiğin yedek dosyasını seç. Daha önce paylaştıkların bu yönlendiriciye geri döner."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2153
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2439
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:825
 msgid "Pick a name between 1 and 40 characters."
 msgstr "1 ile 40 karakter arasında bir ad seçin."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2054
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2338
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:822
 msgid "Please enter a name."
 msgstr "Lütfen bir ad girin."
@@ -1068,7 +1095,7 @@ msgstr "Tipografi Hazırlanıyor"
 msgid "Preparing selected typefaces..."
 msgstr "Seçilen yazı tipleri hazırlanıyor..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1277
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1376
 msgid "Preset applied successfully."
 msgstr "Hazır ayar başarıyla uygulandı."
 
@@ -1084,37 +1111,50 @@ msgstr "İlerleme Sonu"
 msgid "Progress Start"
 msgstr "İlerleme Başlangıcı"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2048
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2332
 msgid "Publish"
 msgstr "Yayınla"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2181
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2184
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2471
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2474
 msgid "Publish as"
 msgstr "Şu adla yayınla"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2211
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2477
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2137
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2495
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2611
 msgid "Publish current configuration"
 msgstr "Geçerli yapılandırmayı yayınla"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2101
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2123
+msgid "Publish this router's whole appearance to the store and anyone can apply it in one click. Publishing creates your creator identity automatically."
+msgstr "Bu yönlendiricinin tüm görünümünü mağazada yayınla; herkes tek tıkla uygulayabilsin. Yayınladığında yaratıcı kimliğin otomatik olarak oluşturulur."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2158
+msgid "Publish your current configuration and it shows up here."
+msgstr "Mevcut yapılandırmanı yayınla, burada görünsün."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2385
 msgid "Published."
 msgstr "Yayınlandı."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2102
-msgid "Published. Your creator account lives only on this router — back up the key so a reflash can't take it."
-msgstr "Yayınlandı. Oluşturucu hesabınız yalnızca bu yönlendiricide var — yeniden yükleme onu alıp götürmesin diye anahtarı yedekleyin."
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2386
+msgid "Published. Your creator identity lives only on this router — back it up so a reflash can't take it."
+msgstr "Yayınlandı. Yaratıcı kimliğin yalnızca bu yönlendiricide bulunuyor — yeniden flash'lamanın onu alıp götürmemesi için yedekle."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:225
 msgid "Raised layer for dropdowns, modals, and tooltips."
 msgstr "Açılır menüler, modallar ve araç ipuçları için yükseltilmiş katman."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1431
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1530
 msgid "Re-apply"
 msgstr "Yeniden uygula"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1527
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1975
+msgid "Rename"
+msgstr "Yeniden adlandır"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1638
 msgid "Replace the shared configuration with your current settings?"
 msgstr "Paylaşılan yapılandırma mevcut ayarlarınızla değiştirilsin mi?"
 
@@ -1152,27 +1192,32 @@ msgstr "Çözümlenen renk seçici tarafından gösterilemiyor."
 msgid "Resolved preview color - click to pick"
 msgstr "Çözümlenen önizleme rengi - seçmek için tıklayın"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1141
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1237
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2099
 msgid "Restore"
 msgstr "Geri yükle"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1117
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1213
 msgid "Restore Previous Configuration"
 msgstr "Önceki yapılandırmayı geri yükle"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1164
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1263
 msgid "Restore previous configuration"
 msgstr "Önceki yapılandırmayı geri yükle"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1807
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2100
+msgid "Restore your creator identity"
+msgstr "Yaratıcı kimliğini geri yükle"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2056
 msgid "Restored."
 msgstr "Geri yüklendi."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1806
-msgid "Restored. What you shared before is back under this account."
-msgstr "Geri yüklendi. Daha önce paylaştıklarınız yeniden bu hesapta."
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2055
+msgid "Restored. What you shared before is back under this identity."
+msgstr "Geri yüklendi. Daha önce paylaştıkların yeniden bu kimliğin altında."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1126
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1222
 msgid "Restoring"
 msgstr "Geri yükleniyor"
 
@@ -1180,11 +1225,11 @@ msgstr "Geri yükleniyor"
 msgid "Restoring..."
 msgstr "Geri yükleniyor..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1127
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1223
 msgid "Restoring…"
 msgstr "Geri yükleniyor…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2384
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2674
 msgid "Retry"
 msgstr "Tekrar dene"
 
@@ -1217,7 +1262,7 @@ msgstr "Sans-Serif Yazı Tipi"
 msgid "Sans-serif and monospace typefaces used across the theme. Pick a curated webfont — downloaded once after saving, from pinned, checksum-verified sources, then served locally — or upload your own .woff2 files."
 msgstr "Tema genelinde kullanılan sans-serif ve eş aralıklı yazı tipleri. Kaydettikten sonra, sürümü sabitlenmiş ve sağlama toplamı doğrulanmış kaynaklardan yalnızca bir kez indirilip ardından yerel olarak sunulan seçilmiş bir web yazı tipi seçin veya kendi .woff2 dosyalarınızı yükleyin."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2169
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2455
 msgid "Save"
 msgstr "Kaydet"
 
@@ -1229,7 +1274,7 @@ msgstr "Kaydedilen veya hazır ayar değeri"
 msgid "Scrim"
 msgstr "Scrim (Örtü)"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2307
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2591
 msgid "Search themes or authors…"
 msgstr "Tema veya yazar ara…"
 
@@ -1241,23 +1286,23 @@ msgstr "Ayırıcılar, bölücüler ve girdi veya kart kenarlıkları."
 msgid "Settings reset successfully."
 msgstr "Ayarlar başarıyla sıfırlandı."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1917
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2197
 msgid "Shape"
 msgstr "Şekil"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2324
-msgid "Share My Configuration"
-msgstr "Yapılandırmamı paylaş"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2456
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2746
 msgid "Shared by other people"
 msgstr "Başkalarının paylaştıkları"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1337
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2146
+msgid "Shared on another router before? Restore my identity"
+msgstr "Daha önce başka bir yönlendiriciden paylaştın mı? Kimliğimi geri yükle"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1436
 msgid "Ships with the theme and works offline."
 msgstr "Temayla birlikte gelir ve çevrimdışı çalışır."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2450
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2740
 msgid "Ships with the theme, works offline"
 msgstr "Temayla birlikte gelir, çevrimdışı çalışır"
 
@@ -1277,19 +1322,20 @@ msgstr "Kısayol URL'si"
 msgid "Shortcuts %d"
 msgstr "Kısayollar %d"
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1826
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1837
+msgid "Show"
+msgstr "Göster"
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:3351
 msgid "Show Shortcut Toolbar"
 msgstr "Kısayol Araç Çubuğunu Göster"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1692
-msgid "Show key"
-msgstr "Anahtarı göster"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:3353
 msgid "Show the floating launcher on all pages."
 msgstr "Yüzen başlatıcıyı tüm sayfalarda göster."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2439
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2729
 msgid "Showing a saved copy — reconnecting…"
 msgstr "Kayıtlı kopya gösteriliyor — yeniden bağlanılıyor…"
 
@@ -1301,6 +1347,10 @@ msgstr "Görünür"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2597
 msgid "Sidebar"
 msgstr "Kenar Çubuğu"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1957
+msgid "Signs everything you share. It lives only on this router."
+msgstr "Paylaştığın her şeyi imzalar. Yalnızca bu yönlendiricide bulunur."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:3204
 msgid "Site Branding"
@@ -1328,7 +1378,7 @@ msgstr "Kullanım"
 msgid "Small corners"
 msgstr "Hafif yuvarlak köşeler"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1914
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2194
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:708
 msgid "Spacing"
 msgstr "Boşluk"
@@ -1397,15 +1447,15 @@ msgstr "Metin, Bağlantılar ve Marka"
 msgid "That description is too long."
 msgstr "Açıklama çok uzun."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1787
-msgid "That doesn't look like a creator key."
-msgstr "Bu bir oluşturucu anahtarına benzemiyor."
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2031
+msgid "That doesn't look like a creator identity."
+msgstr "Bu bir yaratıcı kimliğine benzemiyor."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:824
 msgid "That name is already taken. Try another."
 msgstr "Bu ad zaten alınmış. Başka bir tane deneyin."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2033
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2317
 msgid "The name your shares are signed with"
 msgstr "Paylaşımlarınızın imzalandığı ad"
 
@@ -1421,7 +1471,7 @@ msgstr "Güncelleme kaynağı yazıldı, ancak dizin yenilenemedi. Daha sonra Ya
 msgid "Theme Settings"
 msgstr "Tema Ayarları"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2327
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2614
 #: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:21
 msgid "Theme Store"
 msgstr "Tema Mağazası"
@@ -1438,14 +1488,6 @@ msgstr "Tema:"
 msgid "There's nothing to restore yet."
 msgstr "Henüz geri yüklenecek bir şey yok."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1758
-msgid "This account exists only on this router — reflashing without keeping settings erases it."
-msgstr "Bu hesap yalnızca bu yönlendiricide var — ayarları korumadan yeniden yüklemek onu siler."
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1757
-msgid "This account lives on this router."
-msgstr "Bu hesap bu yönlendiricide tutuluyor."
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:806
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:811
 msgid "This configuration can't be applied."
@@ -1455,36 +1497,36 @@ msgstr "Bu yapılandırma uygulanamıyor."
 msgid "This configuration links to these external sites:"
 msgstr "Bu yapılandırma şu harici sitelere bağlantı veriyor:"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1673
-msgid "This key is your account. Anyone who has it can publish under your name and delete what you have shared."
-msgstr "Bu anahtar sizin hesabınızdır. Ona sahip olan herkes sizin adınıza yayın yapabilir ve paylaştıklarınızı silebilir."
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2146
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2432
 msgid "This name signs everything you have published, including what is already in the store."
 msgstr "Bu ad, mağazada zaten bulunanlar dâhil yayınladığınız her şeyi imzalar."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1350
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1449
 msgid "This preset uses a downloaded typeface. The router fetches it once after applying; until then the text falls back to the built-in font."
 msgstr "Bu hazır ayar indirilen bir yazı tipi kullanır. Yönlendirici uyguladıktan sonra onu bir kez indirir; o ana kadar metin yerleşik yazı tipiyle görünür."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1121
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1217
 msgid "This replaces your current settings with the ones from just before the last applied configuration."
 msgstr "Bu, mevcut ayarlarınızı en son uygulanan yapılandırmadan hemen öncekilerle değiştirir."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1836
-msgid "This router already has shares of its own. Importing a different key gives them up for good — back up the current key first if you still want them."
-msgstr "Bu yönlendiricinin zaten kendi paylaşımları var. Farklı bir anahtar içe aktarmak onlardan temelli vazgeçer — hâlâ istiyorsanız önce mevcut anahtarı yedekleyin."
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2085
+msgid "This router already has shared configurations of its own. Switching to another identity gives them up for good — back up the current identity first if you still want them."
+msgstr "Bu yönlendiricinin zaten kendi paylaştığı yapılandırmaları var. Başka bir kimliğe geçmek onlardan temelli vazgeçmek demek — hâlâ istiyorsan önce mevcut kimliği yedekle."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:838
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:848
 msgid "This share is no longer available."
 msgstr "Bu paylaşım artık mevcut değil."
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1876
+msgid "This text is your identity. Anyone who has it can publish under your name and delete what you have shared — don't post it anywhere public."
+msgstr "Bu metin senin kimliğin. Eline geçen herkes senin adınla yayın yapabilir ve paylaştıklarını silebilir — herkese açık hiçbir yere yapıştırma."
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:804
 msgid "This theme is no longer available."
 msgstr "Bu tema artık mevcut değil."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1977
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2257
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:718
 msgid "Toolbar"
 msgstr "Araç çubuğu"
@@ -1542,11 +1584,11 @@ msgstr "%s yüklenemiyor."
 msgid "Unable to load the Aurora stylesheet."
 msgstr "Aurora stil sayfası yüklenemiyor."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1377
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1476
 msgid "Unable to load this theme right now. Please try again."
 msgstr "Bu tema şu anda yüklenemiyor. Lütfen tekrar deneyin."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2376
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2666
 msgid "Unable to reach the theme store right now."
 msgstr "Tema mağazasına şu anda ulaşılamıyor."
 
@@ -1580,17 +1622,17 @@ msgstr "Bilinmeyen hata"
 msgid "Unsupported file type. Allowed: %s"
 msgstr "Desteklenmeyen dosya türü. İzin verilenler: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1484
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1613
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1583
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1737
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:742
 msgid "Untitled theme"
 msgstr "Adsız tema"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1558
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1669
 msgid "Update"
 msgstr "Güncelle"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1523
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1634
 msgid "Update Share"
 msgstr "Paylaşımı güncelle"
 
@@ -1602,19 +1644,19 @@ msgstr "Güncelleme mevcut %s"
 msgid "Update source added"
 msgstr "Güncelleme kaynağı eklendi"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1599
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1710
 msgid "Update with current configuration"
 msgstr "Mevcut yapılandırmayla güncelle"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1548
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1659
 msgid "Updated."
 msgstr "Güncellendi."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1539
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1650
 msgid "Updating"
 msgstr "Güncelleniyor"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1540
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1651
 msgid "Updating…"
 msgstr "Güncelleniyor…"
 
@@ -1646,16 +1688,20 @@ msgstr "Uyarı"
 msgid "Warning Surface"
 msgstr "Uyarı Yüzeyi"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1531
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2259
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1642
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2543
 msgid "What gets shared"
 msgstr "Neler paylaşılıyor"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1980
+msgid "What is this? Where did it come from?"
+msgstr "Bu nedir? Nereden geldi?"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:3129
 msgid "Will replace the existing '%s'."
 msgstr "Mevcut “%s” dosyasının yerini alacak."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1473
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1572
 msgid "Works offline"
 msgstr "Çevrimdışı çalışır"
 
@@ -1670,7 +1716,7 @@ msgstr "Mevcut yapılandırmanız şu anda paylaşılamıyor."
 msgid "Your current settings are backed up before applying, and you can roll back with one click afterwards."
 msgstr "Uygulamadan önce mevcut ayarlarınız yedeklenir; sonrasında tek tıkla geri dönebilirsiniz."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1360
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1459
 msgid "Your shortcuts, logo, icons and login background are left exactly as they are."
 msgstr "Kısayollarınız, logonuz, simgeleriniz ve giriş arka planınız aynen kalır."
 

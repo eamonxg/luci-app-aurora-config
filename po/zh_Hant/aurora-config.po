@@ -5,7 +5,7 @@ msgstr "Content-Type: text/plain; charset=UTF-8"
 msgid "%d downloads"
 msgstr "%d 次下載"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1981
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2261
 msgid "%d shortcuts"
 msgstr "%d 個捷徑"
 
@@ -25,7 +25,7 @@ msgstr "（已關閉）"
 msgid "1 download"
 msgstr "1 次下載"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1980
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2260
 msgid "1 shortcut"
 msgstr "1 個捷徑"
 
@@ -85,7 +85,7 @@ msgstr "正在新增更新來源…"
 msgid "Afterwards you can upgrade Aurora in System → Software, like any other OpenWrt package."
 msgstr "之後就能在「系統 → 軟體套件」裡升級 Aurora，和升級其他 OpenWrt 軟體一樣。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2276
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2560
 msgid "All"
 msgstr "全部"
 
@@ -93,13 +93,13 @@ msgstr "全部"
 msgid "Amber Sand"
 msgstr "琥珀沙"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1485
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1584
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:746
 msgid "Anonymous"
 msgstr "匿名"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1536
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2264
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1647
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2548
 msgid "Anyone who applies this gets all of it. You can update or remove it later."
 msgstr "套用這套配置的人會連同上面這些一起裝上。你隨時可以更新或刪除。"
 
@@ -119,28 +119,28 @@ msgstr "應用程式圖示 512×512"
 msgid "Apple Touch Icon"
 msgstr "Apple Touch 圖示"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1189
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1288
 msgid "Applied."
 msgstr "已套用。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1289
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1369
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1402
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1431
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1388
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1468
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1501
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1530
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:874
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:889
 msgid "Apply"
 msgstr "套用"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1227
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1326
 msgid "Apply Configuration"
 msgstr "套用設定"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1260
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1359
 msgid "Apply Preset"
 msgstr "套用預設組"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1284
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1383
 msgid "Apply failed: %s"
 msgstr "套用失敗：%s"
 
@@ -148,7 +148,7 @@ msgstr "套用失敗：%s"
 msgid "Apply it anyway? Your current settings are backed up first."
 msgstr "仍要套用嗎？會先備份你目前的設定。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1264
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1363
 msgid "Apply the '%s' preset now? It is saved immediately and the page reloads. A preset carries a whole look — colors, navigation, spacing, corner radius, content width and fonts. Your shortcuts, logo, icons and login background are left as they are."
 msgstr "立即套用「%s」預設組嗎？系統會立即儲存並重新載入頁面。預設組帶的是一整套外觀——配色、導覽、間距、圓角半徑、內容寬度與字型。你的捷徑、Logo、圖示與登入背景維持不變。"
 
@@ -156,25 +156,25 @@ msgstr "立即套用「%s」預設組嗎？系統會立即儲存並重新載入�
 msgid "Apply this configuration now? Your current settings are backed up first."
 msgstr "現在套用這套設定嗎？會先備份你目前的設定。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1205
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1237
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1304
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1336
 msgid "Applying"
 msgstr "正在套用"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1270
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1369
 msgid "Applying preset..."
 msgstr "正在套用預設組..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1206
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1305
 msgid "Applying this configuration…"
 msgstr "正在套用這套設定…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1177
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1276
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:807
 msgid "Applying timed out. Please try again."
 msgstr "套用逾時，請重試。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1269
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1368
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2185
 msgid "Applying..."
 msgstr "正在套用..."
@@ -195,17 +195,21 @@ msgstr "Aurora 主題設定"
 msgid "Automatic"
 msgstr "自動"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1738
-msgid "Back up key"
-msgstr "備份金鑰"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1969
+msgid "Back up identity"
+msgstr "備份身分"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1844
-msgid "Back up the current key first"
-msgstr "先備份目前金鑰"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2093
+msgid "Back up the current identity first"
+msgstr "先備份目前身分"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1669
-msgid "Back up your creator key"
-msgstr "備份你的創作者金鑰"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1872
+msgid "Back up your creator identity"
+msgstr "備份創作者身分"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1942
+msgid "Backed up"
+msgstr "已備份"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:140
 msgid "Background"
@@ -263,9 +267,9 @@ msgstr "帶有品牌色調的表面，用於作用中導覽和選取狀態。"
 msgid "Branding & Shortcuts"
 msgstr "品牌與捷徑"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1328
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2277
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2450
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1427
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2561
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2740
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2063
 msgid "Built-in"
 msgstr "內建"
@@ -276,7 +280,7 @@ msgstr "隨附內容"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:272
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:381
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2222
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2506
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:857
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2176
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2254
@@ -288,13 +292,13 @@ msgstr "取消"
 msgid "Canvas and panel surfaces that frame the interface."
 msgstr "構成介面框架的頁面畫布與面板表面。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2194
-msgid "Change"
-msgstr "更改"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2142
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2428
 msgid "Change your name"
 msgstr "更改你的名稱"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1989
+msgid "Changed routers? Restore your identity"
+msgstr "換了路由器？恢復身分"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:416
 msgid "Changes preview here instantly; Save or Save & Apply persists them."
@@ -312,18 +316,22 @@ msgstr "為此變數選擇一個實際色彩"
 msgid "Choose an uploaded icon for this shortcut"
 msgstr "為此捷徑選擇一個已上傳的圖示"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2061
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2025
+msgid "Choose backup file…"
+msgstr "選擇備份檔案…"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2345
 msgid "Choose the name to publish under."
 msgstr "選一個用來署名的名稱。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1304
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1380
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1712
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1403
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1479
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1904
 msgid "Close"
 msgstr "關閉"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1339
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1902
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1438
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2182
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:759
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2556
 msgid "Colors"
@@ -333,7 +341,7 @@ msgstr "顏色"
 msgid "Colors only"
 msgstr "僅配色"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2456
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2746
 msgid "Community"
 msgstr "社群"
 
@@ -357,7 +365,7 @@ msgstr "設定匯入成功。"
 msgid "Confirm Upload"
 msgstr "確認上傳"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1993
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2273
 msgid "Content"
 msgstr "內容"
 
@@ -365,7 +373,7 @@ msgstr "內容"
 msgid "Content Max Width"
 msgstr "內容最大寬度"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1925
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2205
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:713
 msgid "Content Width"
 msgstr "內容寬度"
@@ -373,6 +381,15 @@ msgstr "內容寬度"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:229
 msgid "Control Fill"
 msgstr "控制項填充"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1851
+msgid "Copied"
+msgstr "已複製"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1846
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1853
+msgid "Copy"
+msgstr "複製"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:709
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2623
@@ -383,6 +400,10 @@ msgstr "圓角半徑"
 msgid "Could not add the update source: %s"
 msgstr "新增更新來源失敗：%s"
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1864
+msgid "Couldn't copy. The identity is shown above — select it and copy it manually."
+msgstr "複製不了。身分已顯示在上面，請手動選取複製。"
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:805
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:828
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:841
@@ -390,17 +411,21 @@ msgstr "新增更新來源失敗：%s"
 msgid "Couldn't reach the theme store. Please try again."
 msgstr "無法連線主題商店，請重試。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1653
-msgid "Couldn't read your key. Please try again."
-msgstr "讀不到你的金鑰，請重試。"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1801
+msgid "Couldn't read your identity. Please try again."
+msgstr "讀不到你的身分，請重試。"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2037
+msgid "Couldn't restore that identity. Check it and try again."
+msgstr "恢復不了。檢查一下再試。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:835
 msgid "Couldn't save that name. Try again."
 msgstr "這個名稱沒能儲存，請重試。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1793
-msgid "Couldn't use that key. Check it and try again."
-msgstr "這個金鑰無法使用，檢查後重試。"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1983
+msgid "Created automatically the first time you publish — no sign-up, no password. It decides which configurations in the store are yours, and who can change or remove them. Backing it up saves an identity backup file; import that file after a reflash, or on a new router, and your work comes back to you."
+msgstr "第一次發布配置時自動生成，不用註冊、沒有密碼。它決定商店裡哪些配置屬於你、誰能修改或下架它們。備份會存成一個身分備份檔案；重刷系統之後、或者換了新路由器，匯入這個檔案，作品就回到你名下。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2036
 msgid "Custom"
@@ -457,7 +482,7 @@ msgstr "用於標題、正文、圖示和表單值的預設前景。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:159
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:393
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1608
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1719
 msgid "Delete"
 msgstr "刪除"
 
@@ -477,7 +502,7 @@ msgstr "刪除品牌素材"
 msgid "Delete Custom Font"
 msgstr "刪除自訂字型"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1569
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1680
 msgid "Delete Share"
 msgstr "刪除分享"
 
@@ -485,11 +510,11 @@ msgstr "刪除分享"
 msgid "Delete failed: %s"
 msgstr "刪除失敗：%s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1570
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1681
 msgid "Delete this shared configuration from the theme store?"
 msgstr "從主題商店刪除這條分享的設定嗎？"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1577
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1688
 msgid "Deleted."
 msgstr "已刪除。"
 
@@ -517,11 +542,11 @@ msgstr "衍生自頁面畫布、表面和文字顏色：低調與柔和文字、
 msgid "Derived from the status accents: alert, label, and badge backgrounds."
 msgstr "衍生自狀態強調色：提示、標籤和徽章背景色。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2254
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2538
 msgid "Description"
 msgstr "描述"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1994
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2274
 msgid "Details"
 msgstr "明細"
 
@@ -533,11 +558,11 @@ msgstr "彈出式對話方塊背後的暗化背景 (遮罩)。"
 msgid "Dismiss"
 msgstr "關閉"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1706
-msgid "Download"
-msgstr "下載"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1898
+msgid "Download backup file"
+msgstr "下載備份檔案"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1887
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2167
 msgid "Downloads"
 msgstr "下載量"
 
@@ -654,7 +679,7 @@ msgstr "字型名稱，例如 MiSans"
 msgid "Font for code, command output, and the system log viewer."
 msgstr "用於程式碼、指令輸出和系統記錄檢視器的字型。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1931
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2211
 msgid "Fonts"
 msgstr "字型"
 
@@ -670,7 +695,7 @@ msgstr "來自 openwrt.eamonxg.fun，簽章公鑰隨本套件發佈。"
 msgid "Full-screen login page background; use a wide image."
 msgstr "全螢幕登入頁面背景；建議使用寬幅圖片。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2018
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2302
 msgid "Give it a name"
 msgstr "取個名字"
 
@@ -691,11 +716,15 @@ msgstr "極細線"
 msgid "Hidden"
 msgstr "隱藏"
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1831
+msgid "Hide"
+msgstr "隱藏"
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:3243
 msgid "Home Screen icon for iOS and iPadOS."
 msgstr "用於 iOS 和 iPadOS 的主畫面圖示。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2278
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2562
 msgid "Hot"
 msgstr "熱門"
 
@@ -715,7 +744,7 @@ msgstr "用於柔和主按鈕和選取表面的懸停填滿色。"
 msgid "Hover state for filled primary buttons and high-emphasis controls."
 msgstr "用於實色填滿主按鈕和高強調控制項的懸停狀態。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2249
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2533
 msgid "How it looks in the store"
 msgstr "在商店裡的樣子"
 
@@ -727,7 +756,6 @@ msgstr "網頁內容、說明文字和狀態輸出中的超連結。"
 msgid "Icon"
 msgstr "圖示"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1850
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2216
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2236
 msgid "Import"
@@ -740,15 +768,6 @@ msgstr "匯入 Aurora 設定？"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2138
 msgid "Import Aurora Settings"
 msgstr "匯入 Aurora 設定"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1851
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1877
-msgid "Import a creator key"
-msgstr "匯入創作者金鑰"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1747
-msgid "Import a key"
-msgstr "匯入金鑰"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2208
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2225
@@ -763,18 +782,18 @@ msgstr "匯入將取代 /etc/config/aurora，套用所有設定並重新載入�
 msgid "Importing..."
 msgstr "正在匯入..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1155
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1309
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1254
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1408
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:629
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:632
 msgid "In use"
 msgstr "正在使用"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1965
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2245
 msgid "Included"
 msgstr "包含"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1491
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1590
 msgid "Includes assets"
 msgstr "含素材"
 
@@ -806,7 +825,7 @@ msgstr "無效的顏色運算式。"
 msgid "Invalid, missing, or cyclic color expression."
 msgstr "顏色運算式無效、缺失或存在循環參照。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1678
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1882
 msgid "It exists only on this router. Reflashing without keeping settings erases it."
 msgstr "它只存在於這台路由器上。刷機時不保留設定就會消失。"
 
@@ -826,7 +845,7 @@ msgstr "大圓角"
 msgid "Layout"
 msgstr "版面配置"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1341
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1440
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:761
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2557
 msgid "Layout & Typography"
@@ -853,7 +872,7 @@ msgstr "淺色"
 msgid "Light Mode"
 msgstr "亮色模式"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1902
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2182
 msgid "Light and dark, 62 values"
 msgstr "淺色 + 深色，共 62 項"
 
@@ -869,12 +888,12 @@ msgstr "連結"
 msgid "Links marked ↗ open sites outside your router. You'll be asked to confirm before applying."
 msgstr "標 ↗ 的會開啟路由器以外的網站，套用前會再確認一次。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1238
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1388
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1337
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1487
 msgid "Loading theme details…"
 msgstr "正在載入主題詳情…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2400
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2690
 msgid "Loading…"
 msgstr "載入中…"
 
@@ -937,14 +956,18 @@ msgstr "等寬字型"
 msgid "Muted Text"
 msgstr "柔和文字"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2280
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2481
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2564
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2759
 msgid "My Shares"
 msgstr "我的分享"
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2756
+msgid "My creator identity"
+msgstr "我的創作者身分"
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:118
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1886
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2253
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2166
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2537
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2776
 msgid "Name"
 msgstr "名稱"
@@ -953,7 +976,7 @@ msgstr "名稱"
 msgid "Name it login-bg.* to use it as the login page background."
 msgstr "命名為 login-bg.* 可用作登入頁背景。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1904
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2184
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:707
 msgid "Navigation"
 msgstr "導覽"
@@ -966,7 +989,7 @@ msgstr "導覽樣式"
 msgid "Navigation, spacing, corner radius, and content width. Takes effect after Save & Apply."
 msgstr "導覽、間距、圓角半徑和內容寬度。於點擊「儲存並套用」後生效。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2279
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2563
 msgid "New"
 msgstr "最新"
 
@@ -974,7 +997,7 @@ msgstr "最新"
 msgid "No brand assets uploaded yet."
 msgstr "尚未上傳品牌素材。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2421
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2711
 msgid "No configs here yet — go share the first one."
 msgstr "這裡還沒有設定——去分享第一條吧。"
 
@@ -986,7 +1009,7 @@ msgstr "尚未上傳自訂字型。"
 msgid "No file selected or upload failed"
 msgstr "未選擇檔案或上傳失敗"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2420
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2710
 msgid "No themes match your search."
 msgstr "沒有符合搜尋的主題。"
 
@@ -994,19 +1017,23 @@ msgstr "沒有符合搜尋的主題。"
 msgid "None"
 msgstr "無"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1726
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1942
+msgid "Not backed up"
+msgstr "未備份"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1933
 msgid "Not named yet"
 msgstr "還沒取名"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1869
-msgid "Nothing shared yet — publish your current configuration, or import a creator key to bring back what you shared before."
-msgstr "還沒有分享過 — 發布目前設定，或者匯入創作者金鑰找回以前分享的。"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2120
+msgid "Nothing shared yet"
+msgstr "還沒有分享過"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:168
 msgid "On-Brand Text"
 msgstr "品牌背景上的文字"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2024
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2308
 msgid "One line about where this configuration fits."
 msgstr "一句話說說這套配置適合什麼場景。"
 
@@ -1042,16 +1069,16 @@ msgstr "當不支援 SVG 網站圖示時的 PNG 備用方案。"
 msgid "Page canvas behind the header, navigation, content, and login screen."
 msgstr "位於頁首、導覽、內容和登入畫面背後的頁面畫布。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1820
-msgid "Paste the creator key you backed up, or pick the file you downloaded."
-msgstr "貼上你備份的創作者金鑰，或者選擇下載的檔案。"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2069
+msgid "Paste the identity you backed up, or pick the backup file you downloaded. What you shared before comes back under this router."
+msgstr "貼上你備份過的身分，或者選擇下載的備份檔案。恢復之後，你以前分享的作品就回到這台路由器上管理。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2153
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2439
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:825
 msgid "Pick a name between 1 and 40 characters."
 msgstr "取一個 1 到 40 個字的名稱。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2054
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2338
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:822
 msgid "Please enter a name."
 msgstr "請輸入名稱。"
@@ -1068,7 +1095,7 @@ msgstr "正在準備排版"
 msgid "Preparing selected typefaces..."
 msgstr "正在準備所選字型..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1277
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1376
 msgid "Preset applied successfully."
 msgstr "預設組套用成功。"
 
@@ -1084,37 +1111,50 @@ msgstr "進度結束點"
 msgid "Progress Start"
 msgstr "進度起始點"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2048
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2332
 msgid "Publish"
 msgstr "發佈"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2181
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2184
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2471
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2474
 msgid "Publish as"
 msgstr "署名"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2211
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2477
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2137
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2495
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2611
 msgid "Publish current configuration"
 msgstr "發佈目前配置"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2101
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2123
+msgid "Publish this router's whole appearance to the store and anyone can apply it in one click. Publishing creates your creator identity automatically."
+msgstr "把這台路由器的整套外觀發布到商店，別人就能一鍵套用。發布時會自動為你建立創作者身分。"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2158
+msgid "Publish your current configuration and it shows up here."
+msgstr "發布當前配置，它就會出現在這裡。"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2385
 msgid "Published."
 msgstr "已發佈。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2102
-msgid "Published. Your creator account lives only on this router — back up the key so a reflash can't take it."
-msgstr "已發布。你的創作者帳號只存在於這台路由器上 — 備份金鑰，刷機就帶不走它。"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2386
+msgid "Published. Your creator identity lives only on this router — back it up so a reflash can't take it."
+msgstr "已發布。你的創作者身分只存在這台路由器上 —— 備份一下，刷機就帶不走它。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:225
 msgid "Raised layer for dropdowns, modals, and tooltips."
 msgstr "用於下拉選單、彈出式對話方塊和工具提示的懸浮層 (抬高層)。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1431
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1530
 msgid "Re-apply"
 msgstr "重新套用"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1527
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1975
+msgid "Rename"
+msgstr "改名"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1638
 msgid "Replace the shared configuration with your current settings?"
 msgstr "用你目前的設定取代這條分享的設定嗎？"
 
@@ -1152,27 +1192,32 @@ msgstr "挑色器無法顯示解析後的顏色。"
 msgid "Resolved preview color - click to pick"
 msgstr "解析後的預覽顏色 - 點擊進行選擇"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1141
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1237
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2099
 msgid "Restore"
 msgstr "還原"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1117
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1213
 msgid "Restore Previous Configuration"
 msgstr "還原先前的設定"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1164
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1263
 msgid "Restore previous configuration"
 msgstr "還原先前的設定"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1807
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2100
+msgid "Restore your creator identity"
+msgstr "恢復創作者身分"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2056
 msgid "Restored."
 msgstr "已恢復。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1806
-msgid "Restored. What you shared before is back under this account."
-msgstr "已恢復。你以前分享的東西回到這個帳號名下了。"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2055
+msgid "Restored. What you shared before is back under this identity."
+msgstr "已恢復。你以前分享的作品回來了。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1126
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1222
 msgid "Restoring"
 msgstr "正在還原"
 
@@ -1180,11 +1225,11 @@ msgstr "正在還原"
 msgid "Restoring..."
 msgstr "正在恢復..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1127
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1223
 msgid "Restoring…"
 msgstr "正在還原…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2384
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2674
 msgid "Retry"
 msgstr "重試"
 
@@ -1217,7 +1262,7 @@ msgstr "無襯線字型"
 msgid "Sans-serif and monospace typefaces used across the theme. Pick a curated webfont — downloaded once after saving, from pinned, checksum-verified sources, then served locally — or upload your own .woff2 files."
 msgstr "主題全域使用的無襯線與等寬字型。可選用精選網路字型——儲存後才從固定版本、經檢查碼驗證的來源下載一次,之後由本機提供——也可上傳自己的 .woff2 字型檔案。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2169
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2455
 msgid "Save"
 msgstr "儲存"
 
@@ -1229,7 +1274,7 @@ msgstr "已儲存或來自預設組的值"
 msgid "Scrim"
 msgstr "遮罩"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2307
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2591
 msgid "Search themes or authors…"
 msgstr "搜尋主題或作者…"
 
@@ -1241,23 +1286,23 @@ msgstr "分隔線、分隔符號以及輸入框或卡片的邊框。"
 msgid "Settings reset successfully."
 msgstr "設定重設成功。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1917
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2197
 msgid "Shape"
 msgstr "外形"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2324
-msgid "Share My Configuration"
-msgstr "分享我的設定"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2456
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2746
 msgid "Shared by other people"
 msgstr "由其他人分享"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1337
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2146
+msgid "Shared on another router before? Restore my identity"
+msgstr "在別的路由器分享過？恢復我的身分"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1436
 msgid "Ships with the theme and works offline."
 msgstr "隨主題內建，離線可用。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2450
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2740
 msgid "Ships with the theme, works offline"
 msgstr "隨主題附帶，離線可用"
 
@@ -1277,19 +1322,20 @@ msgstr "捷徑 URL"
 msgid "Shortcuts %d"
 msgstr "捷徑 %d"
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1826
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1837
+msgid "Show"
+msgstr "顯示"
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:3351
 msgid "Show Shortcut Toolbar"
 msgstr "顯示快捷工具列"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1692
-msgid "Show key"
-msgstr "顯示金鑰"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:3353
 msgid "Show the floating launcher on all pages."
 msgstr "在所有網頁上顯示懸浮啟動器。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2439
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2729
 msgid "Showing a saved copy — reconnecting…"
 msgstr "正在顯示已儲存的副本——重新連線中…"
 
@@ -1301,6 +1347,10 @@ msgstr "顯示"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:2597
 msgid "Sidebar"
 msgstr "側邊欄"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1957
+msgid "Signs everything you share. It lives only on this router."
+msgstr "你分享的一切都以它署名。它只存在這台路由器上。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:3204
 msgid "Site Branding"
@@ -1328,7 +1378,7 @@ msgstr "用途"
 msgid "Small corners"
 msgstr "小圓角"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1914
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2194
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:708
 msgid "Spacing"
 msgstr "間距"
@@ -1397,15 +1447,15 @@ msgstr "文字、連結與品牌"
 msgid "That description is too long."
 msgstr "描述太長了。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1787
-msgid "That doesn't look like a creator key."
-msgstr "這看起來不像創作者金鑰。"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2031
+msgid "That doesn't look like a creator identity."
+msgstr "這看起來不像創作者身分。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:824
 msgid "That name is already taken. Try another."
 msgstr "這個名稱已經被占用了，換一個。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2033
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2317
 msgid "The name your shares are signed with"
 msgstr "你分享的東西署這個名"
 
@@ -1421,7 +1471,7 @@ msgstr "更新來源已寫入，但索引重新整理失敗。稍後在軟體套
 msgid "Theme Settings"
 msgstr "主題設定"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2327
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2614
 #: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:21
 msgid "Theme Store"
 msgstr "主題商店"
@@ -1438,14 +1488,6 @@ msgstr "主題："
 msgid "There's nothing to restore yet."
 msgstr "還沒有可還原的設定。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1758
-msgid "This account exists only on this router — reflashing without keeping settings erases it."
-msgstr "這個帳號只存在於這台路由器上 — 刷機時不保留設定就會消失。"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1757
-msgid "This account lives on this router."
-msgstr "這個帳號存在這台路由器上。"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:806
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:811
 msgid "This configuration can't be applied."
@@ -1455,36 +1497,36 @@ msgstr "這套設定無法套用。"
 msgid "This configuration links to these external sites:"
 msgstr "這套設定包含指向以下外部網站的連結："
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1673
-msgid "This key is your account. Anyone who has it can publish under your name and delete what you have shared."
-msgstr "這個金鑰就是你的帳號。拿到它的人能用你的名義發布，也能刪掉你分享的東西。"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2146
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2432
 msgid "This name signs everything you have published, including what is already in the store."
 msgstr "這個名稱會署在你發布過的所有東西上，包括商店裡已經有的。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1350
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1449
 msgid "This preset uses a downloaded typeface. The router fetches it once after applying; until then the text falls back to the built-in font."
 msgstr "此預設組使用需要下載的字型。套用後路由器會下載一次，在那之前文字會先以內建字型顯示。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1121
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1217
 msgid "This replaces your current settings with the ones from just before the last applied configuration."
 msgstr "將目前設定還原為上次套用設定之前的狀態。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1836
-msgid "This router already has shares of its own. Importing a different key gives them up for good — back up the current key first if you still want them."
-msgstr "這台路由器已經有自己分享的東西了。匯入別的金鑰就等於永久放棄它們 — 還想要就先備份目前金鑰。"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2085
+msgid "This router already has shared configurations of its own. Switching to another identity gives them up for good — back up the current identity first if you still want them."
+msgstr "這台路由器已經有自己的作品。換成別的身分會永久放棄它們 —— 還想要就先備份目前身分。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:838
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:848
 msgid "This share is no longer available."
 msgstr "這條分享已不存在。"
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1876
+msgid "This text is your identity. Anyone who has it can publish under your name and delete what you have shared — don't post it anywhere public."
+msgstr "這串文字就是你的身分。拿到它的人可以用你的名字發布，也能刪掉你已分享的作品 —— 別貼到公開的地方。"
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:804
 msgid "This theme is no longer available."
 msgstr "這個主題已不存在。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1977
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2257
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:718
 msgid "Toolbar"
 msgstr "工具列"
@@ -1542,11 +1584,11 @@ msgstr "無法載入 %s。"
 msgid "Unable to load the Aurora stylesheet."
 msgstr "無法載入 Aurora 樣式表。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1377
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1476
 msgid "Unable to load this theme right now. Please try again."
 msgstr "暫時無法載入這個主題，請重試。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2376
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2666
 msgid "Unable to reach the theme store right now."
 msgstr "暫時連不上主題商店。"
 
@@ -1580,17 +1622,17 @@ msgstr "未知錯誤"
 msgid "Unsupported file type. Allowed: %s"
 msgstr "不支援的檔案類型,僅支援:%s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1484
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1613
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1583
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1737
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:742
 msgid "Untitled theme"
 msgstr "未命名主題"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1558
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1669
 msgid "Update"
 msgstr "更新"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1523
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1634
 msgid "Update Share"
 msgstr "更新分享"
 
@@ -1602,19 +1644,19 @@ msgstr "有新版 %s"
 msgid "Update source added"
 msgstr "更新來源已新增"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1599
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1710
 msgid "Update with current configuration"
 msgstr "用目前設定更新"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1548
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1659
 msgid "Updated."
 msgstr "已更新。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1539
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1650
 msgid "Updating"
 msgstr "正在更新"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1540
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1651
 msgid "Updating…"
 msgstr "正在更新…"
 
@@ -1646,16 +1688,20 @@ msgstr "警告"
 msgid "Warning Surface"
 msgstr "警告表面"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1531
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2259
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1642
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:2543
 msgid "What gets shared"
 msgstr "本次分享包含"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1980
+msgid "What is this? Where did it come from?"
+msgstr "這是什麼？從哪來的？"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/theme.js:3129
 msgid "Will replace the existing '%s'."
 msgstr "將取代既有的「%s」。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1473
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1572
 msgid "Works offline"
 msgstr "離線可用"
 
@@ -1670,7 +1716,7 @@ msgstr "你目前的設定暫時無法分享。"
 msgid "Your current settings are backed up before applying, and you can roll back with one click afterwards."
 msgstr "套用前會自動備份目前設定，套用後可一鍵還原。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1360
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/gallery.js:1459
 msgid "Your shortcuts, logo, icons and login background are left exactly as they are."
 msgstr "你的捷徑、Logo、圖示與登入背景維持原樣不變。"
 

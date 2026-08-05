@@ -1031,9 +1031,50 @@ const STORE_CSS =
   ".aurora-store-field label{display:block;font-size:0.8em;font-weight:600;" +
   "color:var(--text-muted,#666);margin-bottom:4px;}" +
   ".aurora-store-field input,.aurora-store-field textarea{width:100%;}" +
-  ".aurora-store-keybar{display:flex;justify-content:space-between;align-items:center;" +
-  "gap:1em;flex-wrap:wrap;padding:0.8em 1em;margin:0.8em 0;" +
-  "border:1px solid var(--hairline,rgba(0,0,0,0.12));border-radius:10px;}" +
+  ".aurora-store-idcard{display:flex;align-items:center;gap:0.9em;flex-wrap:wrap;" +
+  "padding:0.85em 1em;margin:0.6em 0 0;border-radius:12px;" +
+  "background:var(--surface,#fff);" +
+  "border:1px solid var(--hairline,rgba(0,0,0,0.12));}" +
+  ".aurora-store-idcard .av{flex:none;width:42px;height:42px;border-radius:11px;" +
+  "display:grid;place-items:center;font-weight:700;font-size:1.05em;" +
+  "background:var(--brand-subtle,rgba(0,0,0,0.05));color:var(--brand,#333);" +
+  "border:1px solid var(--hairline,rgba(0,0,0,0.12));}" +
+  ".aurora-store-idcard .who{flex:1;min-width:0;}" +
+  ".aurora-store-idcard .nm{display:flex;align-items:center;gap:0.5em;" +
+  "flex-wrap:wrap;font-weight:600;}" +
+  ".aurora-store-idcard .hid{color:var(--text-subtle,#888);font-weight:400;" +
+  "font-size:0.8em;font-family:ui-monospace,Menlo,monospace;}" +
+  ".aurora-store-idcard .meta{color:var(--text-muted,#777);font-size:0.85em;" +
+  "margin-top:2px;}" +
+  ".aurora-store-idcard .acts{display:flex;gap:0.5em;flex-wrap:wrap;}" +
+  ".aurora-store-pill{display:inline-flex;align-items:center;font-size:0.72em;" +
+  "font-weight:600;padding:1px 8px;border-radius:99px;" +
+  "border:1px solid currentColor;}" +
+  ".aurora-store-pill.ok{color:var(--brand,#333);}" +
+  ".aurora-store-pill.risk{color:var(--warning,#a86a00);}" +
+  ".aurora-store-why{margin:0.6em 0 0;padding:0.75em 0.9em;border-radius:10px;" +
+  "background:var(--surface-sunken,rgba(0,0,0,0.04));" +
+  "border:1px solid var(--hairline,rgba(0,0,0,0.08));" +
+  "font-size:0.85em;color:var(--text-muted,#777);line-height:1.7;}" +
+  ".aurora-store-why summary{cursor:pointer;color:var(--brand,#333);" +
+  "font-weight:600;list-style:none;}" +
+  ".aurora-store-why summary::-webkit-details-marker{display:none;}" +
+  ".aurora-store-empty{margin-top:1em;padding:1.3em 1.4em;border-radius:12px;" +
+  "border:1px dashed var(--hairline,rgba(0,0,0,0.2));}" +
+  ".aurora-store-empty h4{margin:0 0 0.4em;font-size:1.02em;}" +
+  ".aurora-store-empty p{margin:0;color:var(--text-muted,#777);" +
+  "font-size:0.9em;max-width:56ch;}" +
+  ".aurora-store-empty .row{display:flex;gap:0.8em;align-items:center;" +
+  "flex-wrap:wrap;margin-top:1.1em;}" +
+  // 两处文字链:身份卡折叠说明里的"恢复身份",和空态引导卡里的那条。
+  ".aurora-store-why .lnk,.aurora-store-empty .lnk{" +
+  "background:none;border:0;padding:0;cursor:pointer;font:inherit;" +
+  "color:var(--brand,#333);text-decoration:underline;}" +
+  ".aurora-store-keybox{display:flex;align-items:center;gap:0.7em;margin:0.9em 0;" +
+  "padding:0.7em 0.8em;border-radius:9px;" +
+  "background:var(--surface-sunken,rgba(0,0,0,0.04));" +
+  "border:1px solid var(--hairline,rgba(0,0,0,0.12));}" +
+  ".aurora-store-filebtn{display:inline-block;cursor:pointer;}" +
   // A card's quick-apply button is revealed by hovering the card. A touch
   // screen never hovers, so on a phone that button was simply unreachable --
   // the only way to apply from the grid was to open the drawer first. Keyed on
@@ -1061,7 +1102,7 @@ const STORE_CSS =
   // button drops below it, rather than the two sharing a line that fits
   // neither -- the button alone is wider than a 320px screen's text column.
   ".aurora-store-applied .msg{flex:1 1 100%;}" +
-  ".aurora-store-keybar{align-items:flex-start;padding:0.7em 0.8em;}" +
+  ".aurora-store-idcard{align-items:flex-start;padding:0.7em 0.8em;}" +
   ".aurora-store-share{padding:0.9em 1em 1em;}" +
   ".aurora-store-grid{gap:12px;}" +
   // The drawer is 92vw here, so its 1.3em gutters cost real reading width.
@@ -1724,12 +1765,40 @@ return view.extend({
       URL.revokeObjectURL(url);
     };
 
+    // LuCI 只从 http://192.168.1.1 提供,那不是 secure context,所以
+    // navigator.clipboard 在这个页面上恒为 undefined —— 真正会跑的是下面
+    // execCommand 那条。现代调用留在前面,只为极少数套了 https 反代的装法。
+    const copyText = (text) => {
+      if (navigator.clipboard && navigator.clipboard.writeText)
+        return navigator.clipboard.writeText(text);
+
+      return new Promise((resolve, reject) => {
+        const scratch = E("textarea", {
+          style: "position:fixed;top:-1000px;left:-1000px;opacity:0;",
+        });
+        scratch.value = text;
+        document.body.appendChild(scratch);
+        scratch.select();
+        let ok = false;
+        try {
+          ok = document.execCommand("copy");
+        } catch (e) {
+          ok = false;
+        }
+        document.body.removeChild(scratch);
+        if (ok) resolve();
+        else reject();
+      });
+    };
+
+    const KEY_MASK = "•".repeat(64);
+
     const backupKeyPrompt = () => {
       L.resolveDefault(hubApi.callHubExportKey(), null).then((res) => {
         if (!res || res.result !== 0 || !res.key) {
           ui.addNotification(
             null,
-            E("p", {}, _("Couldn't read your key. Please try again.")),
+            E("p", {}, _("Couldn't read your identity. Please try again.")),
             "warning",
           );
           return;
@@ -1739,37 +1808,81 @@ return view.extend({
         // view is browse-only and has no uci write path of its own.
         keySaved = true;
 
-        const reveal = E(
+        // 默认遮住。这串东西等同于账号密码,不该因为"我只是想看看这个弹窗长
+        // 什么样"就明晃晃地摊在旁边的人也看得见的屏幕上。
+        const keyEl = E(
           "code",
-          { style: "word-break:break-all;display:none;margin:0.6em 0;" },
-          [document.createTextNode(res.key)],
+          {
+            style:
+              "flex:1;min-width:0;word-break:break-all;font-size:0.85em;line-height:1.5;",
+          },
+          [document.createTextNode(KEY_MASK)],
         );
+        let shown = false;
 
-        ui.showModal(_("Back up your creator key"), [
+        const toggleBtn = E(
+          "button",
+          { type: "button", class: "cbi-button" },
+          _("Show"),
+        );
+        const reveal = () => {
+          shown = true;
+          keyEl.textContent = res.key;
+          toggleBtn.textContent = _("Hide");
+        };
+        toggleBtn.addEventListener("click", () => {
+          if (shown) {
+            shown = false;
+            keyEl.textContent = KEY_MASK;
+            toggleBtn.textContent = _("Show");
+          } else {
+            reveal();
+          }
+        });
+
+        const copyBtn = E(
+          "button",
+          { type: "button", class: "cbi-button" },
+          _("Copy"),
+        );
+        copyBtn.addEventListener("click", () => {
+          copyText(res.key).then(
+            () => {
+              copyBtn.textContent = _("Copied");
+              window.setTimeout(() => {
+                copyBtn.textContent = _("Copy");
+              }, 1500);
+            },
+            () => {
+              // 复制不成不能是死路 —— 把身份亮出来,至少还能手动选中。
+              reveal();
+              ui.addNotification(
+                null,
+                E(
+                  "p",
+                  {},
+                  _("Couldn't copy. The identity is shown above — select it and copy it manually."),
+                ),
+                "warning",
+              );
+            },
+          );
+        });
+
+        ui.showModal(_("Back up your creator identity"), [
           E(
             "p",
             {},
-            _("This key is your account. Anyone who has it can publish under your name and delete what you have shared."),
+            _("This text is your identity. Anyone who has it can publish under your name and delete what you have shared — don't post it anywhere public."),
           ),
+          E("div", { class: "aurora-store-keybox" }, [keyEl, toggleBtn]),
           E(
             "p",
-            {},
+            { style: "color:var(--text-muted);font-size:0.85em;margin:0;" },
             _("It exists only on this router. Reflashing without keeping settings erases it."),
           ),
-          reveal,
           E("div", { class: "right", style: "margin-top:1em;" }, [
-            E(
-              "button",
-              {
-                type: "button",
-                class: "cbi-button",
-                click: () => {
-                  reveal.style.display =
-                    reveal.style.display === "none" ? "block" : "none";
-                },
-              },
-              _("Show key"),
-            ),
+            copyBtn,
             " ",
             E(
               "button",
@@ -1782,7 +1895,7 @@ return view.extend({
                   renderContent();
                 },
               },
-              _("Download"),
+              _("Download backup file"),
             ),
             " ",
             E(
@@ -1795,56 +1908,93 @@ return view.extend({
       });
     };
 
-    // Standing strip above "My Shares": says who this router is, and while
-    // the key has never left the box, that losing it is possible.
-    const buildKeyBar = () => {
+    // "我的分享" 顶上的常驻卡片:这台路由器以谁的名义发布,身份备没备份,以及
+    // 三个身份动作都在这里。
+    //
+    // 它取代了原来那条 keybar。keybar 的毛病不在样式,在于 profile.id 为空时
+    // 整条不渲染 —— 于是一台全新路由器看不到"备份"那一半,页面上唯一跟身份
+    // 有关的按钮就只剩"导入",一个还没有身份的人被要求先导入一个身份。这里
+    // 仍然在没有身份时返回 null,但引导态改由调用方给(见 renderMyShares),
+    // 那里说的是"发布",不是"导入"。
+    //
+    // 改名也搬到了这里。它以前只挂在发布面板内部那个 "Publish as" 字段的
+    // Change 按钮上 —— 不点开发布面板就找不到,等于"想改个名得先假装去发个布"。
+    const buildIdentityCard = () => {
       if (!profile.id) return null;
 
-      const label = profile.nickname
-        ? profile.nickname + " · #" + profile.id
-        : _("Not named yet") + " · #" + profile.id;
-
-      const actions = [];
-      if (!keySaved) {
-        actions.push(
-          E(
-            "button",
-            {
-              type: "button",
-              class: "btn cbi-button-action",
-              click: () => backupKeyPrompt(),
-            },
-            _("Back up key"),
-          ),
-          " ",
+      const nameRow = [];
+      if (profile.nickname) {
+        nameRow.push(
+          E("strong", {}, [document.createTextNode(profile.nickname)]),
+        );
+      } else {
+        nameRow.push(
+          E("strong", { style: "color:var(--text-muted);" }, [
+            document.createTextNode(_("Not named yet")),
+          ]),
         );
       }
-      actions.push(
+      nameRow.push(
+        E("span", { class: "hid" }, [document.createTextNode("#" + profile.id)]),
         E(
-          "button",
-          { type: "button", class: "cbi-button", click: () => importKeyPrompt() },
-          _("Import a key"),
+          "span",
+          { class: "aurora-store-pill " + (keySaved ? "ok" : "risk") },
+          keySaved ? _("Backed up") : _("Not backed up"),
         ),
       );
 
-      return E("div", { class: "aurora-store-keybar" }, [
-        E("div", {}, [
-          E("strong", {}, [document.createTextNode(label)]),
-          E("div", { style: "color:var(--text-muted);font-size:0.85em;" }, [
-            document.createTextNode(
-              keySaved
-                ? _("This account lives on this router.")
-                : _("This account exists only on this router — reflashing without keeping settings erases it."),
+      // 首字母做头像。昵称可以是任意 Unicode,取第一个 code point 而不是第一个
+      // UTF-16 码元 —— 否则一个 emoji 昵称会被切成半个代理对,画出一个方块。
+      const initial = profile.nickname ? Array.from(profile.nickname)[0] : "#";
+
+      return E("div", {}, [
+        E("div", { class: "aurora-store-idcard" }, [
+          E("div", { class: "av" }, [document.createTextNode(initial)]),
+          E("div", { class: "who" }, [
+            E("div", { class: "nm" }, nameRow),
+            E("div", { class: "meta" }, [
+              document.createTextNode(
+                _("Signs everything you share. It lives only on this router."),
+              ),
+            ]),
+          ]),
+          E("div", { class: "acts" }, [
+            E(
+              "button",
+              {
+                type: "button",
+                class: keySaved ? "cbi-button" : "btn cbi-button-action",
+                click: () => backupKeyPrompt(),
+              },
+              _("Back up identity"),
+            ),
+            " ",
+            E(
+              "button",
+              { type: "button", class: "cbi-button", click: () => promptRename() },
+              _("Rename"),
             ),
           ]),
         ]),
-        E("div", {}, actions),
+        E("details", { class: "aurora-store-why" }, [
+          E("summary", {}, _("What is this? Where did it come from?")),
+          E("p", { style: "margin:0 0 0.6em;" }, [
+            document.createTextNode(
+              _("Created automatically the first time you publish — no sign-up, no password. It decides which configurations in the store are yours, and who can change or remove them. Backing it up saves an identity backup file; import that file after a reflash, or on a new router, and your work comes back to you."),
+            ),
+          ]),
+          E(
+            "button",
+            { type: "button", class: "lnk", click: () => restoreIdentityPrompt() },
+            _("Changed routers? Restore your identity"),
+          ),
+        ]),
       ]);
     };
 
     const KEY_RE = /^[a-f0-9]{64}$/;
 
-    const importKeyPrompt = () => {
+    const restoreIdentityPrompt = () => {
       // The share panel's fields get their width from .aurora-store-field; this
       // one lives in a modal, where a default-sized textarea leaves a 64-hex
       // key wrapping inside a box narrower than the dialog holding it.
@@ -1856,9 +2006,12 @@ return view.extend({
       const err = E("p", {
         style: "color:var(--danger);font-weight:600;display:none;margin:0.6em 0 0;",
       });
-      const picker = E("input", { type: "file", accept: ".txt,text/plain" });
 
-      // One parse path: the file button only fills the box.
+      // One parse path: the file button only fills the box. The input itself is
+      // hidden behind a label -- the browser's own "no file selected" chrome
+      // says nothing a user of this dialog needs.
+      const picker = E("input", { type: "file", accept: ".txt,text/plain" });
+      picker.style.display = "none";
       picker.addEventListener("change", () => {
         const file = picker.files && picker.files[0];
         if (!file) return;
@@ -1866,17 +2019,22 @@ return view.extend({
           input.value = text.trim();
         });
       });
+      const fileBtn = E(
+        "label",
+        { class: "cbi-button aurora-store-filebtn" },
+        [document.createTextNode(_("Choose backup file…")), picker],
+      );
 
       const commit = () => {
         const key = input.value.trim().toLowerCase();
         if (!KEY_RE.test(key)) {
-          err.textContent = _("That doesn't look like a creator key.");
+          err.textContent = _("That doesn't look like a creator identity.");
           err.style.display = "block";
           return;
         }
         L.resolveDefault(hubApi.callHubImportKey(key), null).then((res) => {
           if (!res || res.result !== 0) {
-            err.textContent = _("Couldn't use that key. Check it and try again.");
+            err.textContent = _("Couldn't restore that identity. Check it and try again.");
             err.style.display = "block";
             return;
           }
@@ -1894,7 +2052,7 @@ return view.extend({
                 "p",
                 {},
                 myShares.length
-                  ? _("Restored. What you shared before is back under this account.")
+                  ? _("Restored. What you shared before is back under this identity.")
                   : _("Restored."),
               ),
               "info",
@@ -1908,15 +2066,15 @@ return view.extend({
         E(
           "p",
           {},
-          _("Paste the creator key you backed up, or pick the file you downloaded."),
+          _("Paste the identity you backed up, or pick the backup file you downloaded. What you shared before comes back under this router."),
         ),
         input,
-        E("div", { style: "margin-top:0.6em;" }, [picker]),
+        E("div", { style: "margin-top:0.6em;" }, [fileBtn]),
         err,
       ];
 
-      // Replacing a key that still owns published work is unrecoverable, so
-      // the current key gets one last chance to be saved first.
+      // Replacing an identity that still owns published work is unrecoverable,
+      // so the current one gets one last chance to be saved first.
       if (myShares.length) {
         body.splice(
           1,
@@ -1924,7 +2082,7 @@ return view.extend({
           E(
             "p",
             { style: "color:var(--danger);" },
-            _("This router already has shares of its own. Importing a different key gives them up for good — back up the current key first if you still want them."),
+            _("This router already has shared configurations of its own. Switching to another identity gives them up for good — back up the current identity first if you still want them."),
           ),
         );
         body.push(
@@ -1932,14 +2090,14 @@ return view.extend({
             E(
               "button",
               { type: "button", class: "cbi-button", click: () => backupKeyPrompt() },
-              _("Back up the current key first"),
+              _("Back up the current identity first"),
             ),
           ]),
         );
       }
 
-      body.push(buildConfirmActions(commit, _("Import")));
-      ui.showModal(_("Import a creator key"), body);
+      body.push(buildConfirmActions(commit, _("Restore")));
+      ui.showModal(_("Restore your creator identity"), body);
     };
 
     // The tab keeps the count of what is already published, so the number is
@@ -1949,25 +2107,56 @@ return view.extend({
       TABS.forEach(renderTabLabel);
       while (mySharesEl.firstChild) mySharesEl.removeChild(mySharesEl.firstChild);
       if (!myShares.length) {
+        // 两种空:一台从没发布过任何东西的路由器,和一个把作品都删光了的
+        // 创作者。前者需要被引导(顺带告诉他身份是怎么来的),后者已经知道
+        // 这地方是干嘛的,再讲一遍是啰嗦。
+        //
+        // 引导卡里那颗发布按钮和页头那颗不构成重复:它只在一件作品都没有的
+        // 时候出现,一旦有了作品整张卡就没了。被删掉的是原先常驻在标签页
+        // 顶部、和页头那颗同时在场的第三颗。
+        if (!profile.id) {
+          mySharesEl.appendChild(
+            E("div", { class: "aurora-store-empty" }, [
+              E("h4", {}, _("Nothing shared yet")),
+              E("p", {}, [
+                document.createTextNode(
+                  _("Publish this router's whole appearance to the store and anyone can apply it in one click. Publishing creates your creator identity automatically."),
+                ),
+              ]),
+              E("div", { class: "row" }, [
+                E(
+                  "button",
+                  {
+                    type: "button",
+                    class: "btn cbi-button-action important",
+                    click: () => {
+                      shareOpen = true;
+                      renderContent();
+                    },
+                  },
+                  _("Publish current configuration"),
+                ),
+                E(
+                  "button",
+                  {
+                    type: "button",
+                    class: "lnk",
+                    click: () => restoreIdentityPrompt(),
+                  },
+                  _("Shared on another router before? Restore my identity"),
+                ),
+              ]),
+            ]),
+          );
+          return;
+        }
+
         mySharesEl.appendChild(
           E(
             "p",
-            { style: "color:var(--text-muted);padding:1.5em 0 0.8em;" },
-            // Direction-free on purpose: the publish control sits above this
-            // message, so "below" pointed at nothing. The second half is what
-            // a freshly reflashed router needs -- its work is still in the
-            // store, it just needs the key back.
-            _("Nothing shared yet — publish your current configuration, or import a creator key to bring back what you shared before."),
+            { style: "color:var(--text-muted);padding:1.2em 0 0.8em;" },
+            _("Publish your current configuration and it shows up here."),
           ),
-        );
-        mySharesEl.appendChild(
-          E("div", { style: "padding-bottom:1em;" }, [
-            E(
-              "button",
-              { type: "button", class: "cbi-button", click: () => importKeyPrompt() },
-              _("Import a creator key"),
-            ),
-          ]),
         );
         return;
       }
@@ -2194,7 +2383,7 @@ return view.extend({
                 {},
                 keySaved
                   ? _("Published.")
-                  : _("Published. Your creator account lives only on this router — back up the key so a reflash can't take it."),
+                  : _("Published. Your creator identity lives only on this router — back it up so a reflash can't take it."),
               ),
               "info",
             );
@@ -2223,6 +2412,8 @@ return view.extend({
     // Identity is asked for once. After that it is shown, not re-typed:
     // re-offering a filled-in box on every publish suggests the signature is
     // per-config, which is exactly what this stopped being.
+    //
+    // Reached from the identity card only -- see buildIdentityCard.
     const promptRename = () => {
       const input = E("input", {
         type: "text",
@@ -2268,10 +2459,14 @@ return view.extend({
     submitBtn.addEventListener("click", doSubmit);
 
     // Before the account has a name: an input. After: the signature it will
-    // carry, plus a way to change it. The short id is shown here (and in the
-    // detail drawer) rather than on cards -- names are unique, so a number on
-    // every card would be noise, but it is what lets someone prove which
-    // "Eamon" they are.
+    // carry -- read-only. The short id is shown here (and in the detail
+    // drawer) rather than on cards -- names are unique, so a number on every
+    // card would be noise, but it is what lets someone prove which "Eamon"
+    // they are.
+    //
+    // Renaming used to hang off a Change button right here, which made this
+    // panel the only route to it. It lives on the identity card now, so this
+    // field states the signature and nothing else.
     const buildIdentityField = (field) => {
       if (!profile.nickname) return field(_("Publish as"), nicknameInput);
 
@@ -2282,12 +2477,6 @@ return view.extend({
           E("span", { style: "color:var(--text-muted);margin-left:0.5em;" }, [
             document.createTextNode("#" + (profile.id || "")),
           ]),
-          " ",
-          E(
-            "button",
-            { type: "button", class: "cbi-button", click: () => promptRename() },
-            _("Change"),
-          ),
         ]),
       ]);
     };
@@ -2416,7 +2605,10 @@ return view.extend({
           selectTab("mine");
         },
       },
-      _("Share My Configuration"),
+      // Same words as the panel it opens, and the only persistent publish
+      // control on the page -- the tab used to carry a second button whose
+      // sole difference was that the header one switched tabs first.
+      _("Publish current configuration"),
     );
 
     const titleEl = E("h2", {}, _("Theme Store"));
@@ -2559,26 +2751,12 @@ return view.extend({
         push(buildOnlineGrid(state.tab));
       } else if (state.tab === "mine") {
         if (shareOpen) push(buildSharePanel());
-        else
-          push(
-            E("div", { style: "margin-top:1em;" }, [
-              E(
-                "button",
-                {
-                  type: "button",
-                  class: "cbi-button cbi-button-add",
-                  click: () => {
-                    shareOpen = true;
-                    renderContent();
-                  },
-                },
-                _("Publish current configuration"),
-              ),
-            ]),
-          );
+        const identityCard = buildIdentityCard();
+        if (identityCard) {
+          push(buildSectionTitle(_("My creator identity"), ""));
+          push(identityCard);
+        }
         push(buildSectionTitle(_("My Shares"), ""));
-        const keyBar = buildKeyBar();
-        if (keyBar) push(keyBar);
         push(mySharesEl);
       }
     };

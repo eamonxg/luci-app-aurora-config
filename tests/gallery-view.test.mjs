@@ -760,7 +760,10 @@ test("gallery view: the key backup path exists and warns before overwriting", as
 
 test("gallery view: the empty state offers recovery, not just publishing", async () => {
   const src = await readFile(SRC, "utf8");
-  assert.ok(src.includes("importKeyPrompt"), "empty state must reach the import flow");
+  assert.ok(
+    src.includes("restoreIdentityPrompt"),
+    "empty state must reach the identity-restore flow",
+  );
   assert.match(src, /hub_key_saved/, "the backup reminder must read its uci flag");
 });
 
@@ -818,4 +821,148 @@ test("gallery: importing a creator key drops the previous account's cached profi
     block.includes("meCache.clear()"),
     "a new key means a different account -- the cached profile is someone else's",
   );
+});
+
+test("backup dialog: masked by default, with show/copy/download and an insecure-context copy fallback", async () => {
+  const src = await readFile(SRC, "utf8");
+
+  // 弹窗标题与正文改说“身份”,不再说“密钥”。
+  assert.ok(
+    src.includes('_("Back up your creator identity")'),
+    "backup dialog must be titled with the identity wording",
+  );
+  assert.ok(
+    !src.includes('_("Back up your creator key")'),
+    "the old key wording must be gone",
+  );
+
+  // 默认遮住:先渲染掩码,点“显示”才换成真值。
+  assert.match(src, /const KEY_MASK = "•"\.repeat\(64\)/);
+  assert.ok(src.includes('_("Show")') && src.includes('_("Hide")'));
+
+  // 复制按钮 + 复制成功的瞬时反馈。
+  assert.ok(src.includes('_("Copy")') && src.includes('_("Copied")'));
+  assert.ok(src.includes('_("Download backup file")'));
+
+  // http://192.168.1.1 不是 secure context,navigator.clipboard 是 undefined。
+  // execCommand 兜底才是真正会跑的那条路径。
+  assert.match(src, /navigator\.clipboard && navigator\.clipboard\.writeText/);
+  assert.match(src, /document\.execCommand\("copy"\)/);
+
+  // 复制失败不能是死路:把身份亮出来让人手动选。
+  assert.ok(
+    src.includes(
+      '_("Couldn\'t copy. The identity is shown above — select it and copy it manually.")',
+    ),
+    "copy failure must fall back to revealing the identity",
+  );
+});
+
+test("restore dialog: identity wording, a real file button, and one parse path", async () => {
+  const src = await readFile(SRC, "utf8");
+
+  assert.match(src, /const restoreIdentityPrompt = \(\) =>/);
+  assert.ok(
+    !src.includes("importKeyPrompt"),
+    "importKeyPrompt must be renamed everywhere, call sites included",
+  );
+
+  assert.ok(src.includes('_("Restore your creator identity")'));
+  assert.ok(src.includes('_("That doesn\'t look like a creator identity.")'));
+  assert.ok(src.includes('_("Couldn\'t restore that identity. Check it and try again.")'));
+  assert.ok(src.includes('_("Choose backup file…")'));
+  assert.ok(src.includes('_("Back up the current identity first")'));
+
+  // 文件选择器被 label 包住并隐藏 —— 浏览器默认的 "未选择文件" 在这里是噪音。
+  assert.match(src, /class: "cbi-button aurora-store-filebtn"/);
+  assert.match(src, /picker\.style\.display = "none"/);
+
+  // 弹窗自身的旧措辞。两个"导入"按钮标签还挂在 keybar 和空态上,它们连同
+  // 那两处一起消失 —— 断言在下面身份卡和空态的用例里。
+  assert.ok(!src.includes('_("That doesn\'t look like a creator key.")'));
+  assert.ok(!src.includes('_("Couldn\'t use that key. Check it and try again.")'));
+});
+
+test("identity card: names the router's creator, and carries back-up / rename / restore", async () => {
+  const src = await readFile(SRC, "utf8");
+
+  assert.match(src, /const buildIdentityCard = \(\) =>/);
+  assert.ok(!src.includes("buildKeyBar"), "buildKeyBar must be gone, call site included");
+
+  // 没有身份时返回 null —— 引导态由调用方负责,卡片不假装有一个空账号。
+  assert.match(src, /if \(!profile\.id\) return null;/);
+
+  assert.ok(src.includes('_("My creator identity")'));
+  assert.ok(src.includes('_("Back up identity")'));
+  assert.ok(src.includes('_("Not backed up")'));
+  assert.ok(src.includes('_("Backed up")'));
+
+  // 改名从发布面板里搬出来,成为身份卡上的常驻动作。
+  assert.match(
+    src,
+    /click: \(\) => promptRename\(\) \},\s*_\("Rename"\)/,
+    "the card must offer Rename",
+  );
+
+  // 折叠说明回答“这是什么、从哪来的”,并在末尾提供恢复入口。
+  assert.ok(src.includes('_("What is this? Where did it come from?")'));
+  assert.ok(src.includes('_("Changed routers? Restore your identity")'));
+  assert.match(src, /class: "aurora-store-why"/);
+
+  // 昵称来自 hub,属不可信文本。
+  assert.match(src, /document\.createTextNode\(profile\.nickname\)/);
+
+  // 发布面板里那份只读署名不再重复提供改名 —— 改名只有一个入口。
+  const renameSites = (src.match(/promptRename\(\)/g) || []).length;
+  assert.equal(renameSites, 1, "rename must have exactly one entry point");
+});
+
+test("publishing has exactly one persistent entry point", async () => {
+  const src = await readFile(SRC, "utf8");
+
+  // 页头按钮复用发布面板的标题措辞 —— 点它打开的面板就叫这个名字。
+  assert.ok(
+    !src.includes('_("Share My Configuration")'),
+    "the header button must stop being a second, differently-worded verb",
+  );
+
+  // 常驻的页内按钮没了。剩下三处用同一个词:页头按钮、面板标题、以及空态
+  // 引导卡里那个 —— 引导卡与作品列表互斥,不是第四个常驻入口。
+  const publishLabels =
+    (src.match(/_\("Publish current configuration"\)/g) || []).length;
+  assert.equal(
+    publishLabels,
+    3,
+    "expected the header button, the panel heading and the empty-state CTA",
+  );
+
+  assert.match(src, /shareOpen = true;\s*selectTab\("mine"\);/);
+});
+
+test("my-shares empty state onboards instead of demanding an import", async () => {
+  const src = await readFile(SRC, "utf8");
+
+  assert.ok(src.includes('_("Nothing shared yet")'));
+  assert.ok(
+    src.includes(
+      '_("Publish this router\'s whole appearance to the store and anyone can apply it in one click. Publishing creates your creator identity automatically.")',
+    ),
+  );
+  assert.ok(
+    src.includes('_("Shared on another router before? Restore my identity")'),
+  );
+  assert.ok(src.includes('_("Publish your current configuration and it shows up here.")'));
+
+  // 引导卡只在“连身份都还没有”时出现;已有身份、零作品是另一句话。
+  assert.match(src, /if \(!profile\.id\) \{/);
+  assert.match(src, /class: "aurora-store-empty"/);
+
+  // 旧的那句“或者导入创作者密钥”彻底消失,连同两个旧按钮标签。
+  assert.ok(
+    !src.includes(
+      '_("Nothing shared yet — publish your current configuration, or import a creator key to bring back what you shared before.")',
+    ),
+  );
+  assert.ok(!src.includes('_("Import a creator key")'));
+  assert.ok(!src.includes('_("Import a key")'));
 });
