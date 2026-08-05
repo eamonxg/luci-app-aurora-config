@@ -1,9 +1,9 @@
 # Drift guard for the vendored color-token artifacts: tokens.global.js,
 # color-tokens.conf, and the preset templates are vendored from the
 # @eamonxg/luci-theme-tokens npm package (published from the luci-theme-tokens
-# repo) at the version pinned in package.json. This fails when the committed
-# artifacts no longer match the pinned package — run
-# `node scripts/sync-tokens.mjs` locally and commit to fix.
+# repo) at the version pinned in .dev/package.json. This fails when the
+# committed artifacts no longer match the pinned package — run
+# `cd .dev && node scripts/sync-tokens.mjs` locally and commit to fix.
 name: Token sync check
 
 on:
@@ -12,31 +12,37 @@ on:
     - cron: "0 3 * * 1"
   push:
     paths:
-      - "htdocs/luci-static/resources/utils/*.js"
+      - ".dev/**"
       - "root/usr/share/aurora/**"
-      - "scripts/**"
-      - "tests/**"
-      - "package.json"
   pull_request:
     paths:
-      - "htdocs/luci-static/resources/utils/*.js"
+      - ".dev/**"
       - "root/usr/share/aurora/**"
-      - "scripts/**"
-      - "tests/**"
-      - "package.json"
 
 jobs:
   check:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .dev
     steps:
       - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: pnpm
+          cache-dependency-path: .dev/pnpm-lock.yaml
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
 
       - name: Check vendored artifacts against the pinned package
         run: node scripts/sync-tokens.mjs --check
 
       - name: Run tests
-        run: node --test tests/*.test.mjs
+        run: pnpm test

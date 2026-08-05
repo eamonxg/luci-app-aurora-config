@@ -322,15 +322,20 @@ list_font_files() {
 
 
 
+# Memoised in $_pkg_manager: get_init_data asks twice (feed status and installed
+# versions) and each `$(...)` is its own fork. Callers read the variable after
+# calling; nothing is echoed.
+_pkg_manager=""
 detect_package_manager() {
+	[ -n "$_pkg_manager" ] && return
 	# Decide from the on-disk database, exactly as install.sh does. Probing for
 	# binaries can answer differently on the same machine (both can be present
 	# during migration), and the two paths must never disagree about what this
 	# device is.
-	if [ -f /lib/apk/db/installed ]; then echo "apk";
-	elif [ -f /usr/lib/opkg/status ]; then echo "opkg";
-	else echo "unknown"; fi
-	}
+	if [ -f /lib/apk/db/installed ]; then _pkg_manager="apk"
+	elif [ -f /usr/lib/opkg/status ]; then _pkg_manager="opkg"
+	else _pkg_manager="unknown"; fi
+}
 
 get_system_lang() {
 	local lang=""
@@ -1723,7 +1728,7 @@ aurora_feed_error() {
 aurora_add_feed() {
 	local pm refreshed="0"
 
-	pm=$(detect_package_manager)
+	detect_package_manager; pm="$_pkg_manager"
 	case "$pm" in
 	apk)
 		mkdir -p /etc/apk/keys /etc/apk/repositories.d 2>/dev/null || {
@@ -1768,7 +1773,7 @@ aurora_add_feed() {
 json_add_feed_status() {
 	local pm configured="0" channel="" line=""
 
-	pm=$(detect_package_manager)
+	detect_package_manager; pm="$_pkg_manager"
 	case "$pm" in
 	apk)
 		line=$(grep -F "https://$AURORA_FEED_HOST/" \
@@ -1798,7 +1803,7 @@ json_add_feed_status() {
 json_add_installed_versions() {
 	local pkg_manager
 
-	pkg_manager=$(detect_package_manager)
+	detect_package_manager; pkg_manager="$_pkg_manager"
 	parse_installed_packages "$pkg_manager"
 
 	json_add_object "theme"; json_add_string "installed_version" "$theme_inst"; json_close_object
@@ -1847,21 +1852,27 @@ json_add_font_presets() {
 }
 
 json_add_icons() {
-	local file
+	local file size path sizes
 
 	json_add_array "icons"
-	if [ -d "$ICON_PATH" ]; then
-		for file in "$ICON_PATH"/*; do
-			[ -f "$file" ] && json_add_string "" "${file##*/}"
-		done
-	fi
+	for file in "$ICON_PATH"/*; do
+		[ -f "$file" ] && json_add_string "" "${file##*/}"
+	done
 	json_close_array
+
+	# One wc for the whole directory instead of one per file: on the routers
+	# this runs on, the fork costs more than the read it performs. Output is
+	# "<size> <path>" per file, plus a "total" line when there is more than
+	# one -- the -f guard drops that line without matching its wording.
+	# Fed through a heredoc rather than a pipe: a pipe runs the loop in a
+	# subshell, and every json_add_int would be written to a shell that exits.
+	sizes=$(wc -c "$ICON_PATH"/* 2>/dev/null)
 	json_add_object "icon_sizes"
-	if [ -d "$ICON_PATH" ]; then
-		for file in "$ICON_PATH"/*; do
-			[ -f "$file" ] && json_add_int "${file##*/}" "$(wc -c < "$file")"
-		done
-	fi
+	while read -r size path; do
+		[ -f "$path" ] && json_add_int "${path##*/}" "$size"
+	done <<-EOF
+	$sizes
+	EOF
 	json_close_object
 }
 
@@ -2431,7 +2442,8 @@ MANIFEST
 
 	"get_system_info")
 		json_init
-		json_add_string "package_manager" "$(detect_package_manager)"
+		detect_package_manager
+		json_add_string "package_manager" "$_pkg_manager"
 		json_add_string "language" "$(get_system_lang)"
 		json_dump; json_cleanup
 		;;

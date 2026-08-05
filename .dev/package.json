@@ -1,0 +1,19 @@
+{
+  "name": "luci-app-aurora-config-dev",
+  "private": true,
+  "type": "module",
+  "description": "Build and test harness. htdocs/luci-static/resources is generated from src/resource by scripts/build-js.mjs -- never edit it by hand. Also pins the @eamonxg/luci-theme-tokens version that scripts/sync-tokens.mjs vendors (and lets Renovate/Dependabot propose bumps).",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "node scripts/build-js.mjs",
+    "check": "node scripts/build-js.mjs --check",
+    "test": "node scripts/build-js.mjs --check && node --test tests/*.test.mjs",
+    "sync-tokens": "node scripts/sync-tokens.mjs",
+    "gen-presets": "node scripts/gen-presets.mjs",
+    "gen-font-presets": "node scripts/gen-font-presets.mjs"
+  },
+  "devDependencies": {
+    "@eamonxg/luci-theme-tokens": "2.0.0",
+    "terser": "^5.43.1"
+  }
+}
