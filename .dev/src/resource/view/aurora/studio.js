@@ -2028,7 +2028,11 @@ return view.extend({
     const colorEditor = createColorEditor(themeConfig, presetColors);
     this.colorEditor = colorEditor;
 
-    const m = new form.Map("aurora", _("Design Studio"));
+    // No title: LuCI's tab strip sits directly above this and already reads
+    // "Design Studio". form.Map renders its title as an <h2> right under that
+    // strip, so passing one printed the same words twice. description is a
+    // separate slot in form.js, so the header bar below still renders.
+    const m = new form.Map("aurora");
 
     const themeVersion =
       installedVersions?.theme?.installed_version || "Unknown";

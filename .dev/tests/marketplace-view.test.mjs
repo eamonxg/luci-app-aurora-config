@@ -330,8 +330,8 @@ test("gallery view: a two-row header with a segmented filter row", async () => {
   assert.ok(!src.includes("aurora-store-search"), "bespoke search pill must go");
   assert.ok(!src.includes(".innerHTML"));
 
-  // 标题和搜索、分享按钮同一行,所以 h2 必须在页头容器里,不在它上面
-  assert.match(src, /aurora-store-head" \}, \[\s*titleEl/, "the title must sit in the header row");
+  // 标题那条断言没了:页头里已经不放标题,tab 条自己写着"主题市场"。
+  // 见下方 "the tab strip names the page, so the head carries no heading"。
   // 那句总说明删掉了 —— 分区副标题接管了它的活
   assert.ok(!src.includes("cbi-map-descr"), "the blanket description must give way to section subtitles");
 
@@ -997,4 +997,21 @@ test("gallery: a delete the hub refuses still re-reads My Shares", async () => {
     2,
     "both the success and the failure branch must re-read hub_me",
   );
+});
+
+// Same duplication as studio.js: the tab strip above the content already says
+// "主题市场", and the store head printed it again as an <h2> immediately below.
+test("gallery: the tab strip names the page, so the head carries no heading", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.ok(
+    !src.includes('_("Theme Marketplace")'),
+    "the tab strip above already names the page",
+  );
+  assert.ok(
+    !/E\("h2"/.test(src),
+    "no page-level h2 belongs in the store head",
+  );
+  // The spacer is what pushes search and share to the right; without the
+  // heading it is the first child, and it still has to be there.
+  assert.match(src, /class: "sp"/);
 });

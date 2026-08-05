@@ -20,13 +20,20 @@ test("layout: the workbench shell is gone", async () => {
   );
 });
 
-test("layout: the map carries the page title again", async () => {
+// LuCI already names this page in the tab strip directly above the content
+// (menu.d: "Design Studio"). form.Map renders its own title as an <h2> right
+// under that strip, so handing it one printed the same two words twice, a
+// hand's width apart. The tab is the one that has to stay: it is how you get
+// to the other page.
+test("layout: the tab strip names the page, so the map carries no title", async () => {
   const src = await readFile(SRC, "utf8");
-  assert.match(
-    src,
-    /new form\.Map\("aurora", _\("Theme Studio"\)\)/,
-    "the title belongs to form.Map, not a wrapper",
+  assert.match(src, /new form\.Map\("aurora"\)/, "form.Map must take no title");
+  assert.ok(
+    !/new form\.Map\("aurora",\s*_\(/.test(src),
+    "no title string may be handed to form.Map",
   );
+  // description is a separate slot in form.js and still renders on its own,
+  // which is what keeps the version chips and the export/import/reset row.
   assert.match(src, /m\.description = headerBar/);
 });
 

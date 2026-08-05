@@ -913,7 +913,6 @@ const buildExternalUrlConfirm = (urls, onConfirm) => [
 const STORE_CSS =
   ".aurora-store-head{display:flex;gap:0.8em;align-items:flex-end;flex-wrap:wrap;" +
   "margin:0.4em 0 0;}" +
-  ".aurora-store-head h2{margin:0;}" +
   ".aurora-store-head input{max-width:280px;}" +
   ".aurora-store-head .sp{flex:1;}" +
   ".aurora-store-applied{display:flex;align-items:center;gap:0.6em;flex-wrap:wrap;" +
@@ -2635,11 +2634,13 @@ return view.extend({
       _("Publish current configuration"),
     );
 
-    const titleEl = E("h2", {}, _("Theme Marketplace"));
-
     const headEl = E("div", {}, [
       E("div", { class: "aurora-store-head" }, [
-        titleEl,
+        // No heading here: the tab strip directly above already reads "Theme
+        // Marketplace", and this printed the same words again a hand's width
+        // below it. The spacer stays -- it is what pushes the two controls
+        // right now that nothing precedes them.
+        //
         // Pushes search + share to the right on a desktop; the mobile rule
         // drops it, so the two controls take full rows instead of being
         // squeezed against a spacer that has nothing left to push.
