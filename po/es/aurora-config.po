@@ -184,8 +184,8 @@ msgid "Assign uploaded images to icons, favicons, PWA metadata, and the login ba
 msgstr "Asigne las imágenes subidas a iconos, favicons, metadatos de PWA y al fondo de inicio de sesión. Se guarda al hacer clic en Guardar o Guardar y aplicar."
 
 #: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:3
-msgid "Aurora Design"
-msgstr "Diseño de Aurora"
+msgid "Aurora Theme Design"
+msgstr "Diseño del tema Aurora"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:1288
 msgid "Automatic"
@@ -348,11 +348,6 @@ msgstr "Calculados a partir de los colores de origen; deje un campo vacío para 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2352
 msgid "Config:"
 msgstr "Config:"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2631
-#: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:21
-msgid "Configuration Marketplace"
-msgstr "Mercado de configuraciones"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2142
 msgid "Configuration exported successfully."
@@ -546,6 +541,11 @@ msgstr "Derivados de los acentos de estado: fondos de alertas, etiquetas y disti
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2555
 msgid "Description"
 msgstr "Descripción"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2031
+#: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:13
+msgid "Design Studio"
+msgstr "Estudio de diseño"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2291
 msgid "Details"
@@ -1468,10 +1468,10 @@ msgstr "La barra de herramientas está desactivada en esta configuración."
 msgid "The update source was written, but refreshing the index failed. Hit Refresh on the Software page later."
 msgstr "La fuente de actualizaciones se escribió, pero no se pudo actualizar el índice. Pulse Actualizar en la página Software más tarde."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2031
-#: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:13
-msgid "Theme Studio"
-msgstr "Estudio"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2631
+#: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:21
+msgid "Theme Marketplace"
+msgstr "Mercado de temas"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:501
 msgid "Theme stylesheet resolver timed out."

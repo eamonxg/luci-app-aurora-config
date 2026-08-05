@@ -184,8 +184,8 @@ msgid "Assign uploaded images to icons, favicons, PWA metadata, and the login ba
 msgstr "将上传的图片分配给图标、网站图标（Favicon）、PWA 元数据和登录背景。在点击“保存”或“保存并应用”时生效。"
 
 #: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:3
-msgid "Aurora Design"
-msgstr "Aurora 设计"
+msgid "Aurora Theme Design"
+msgstr "Aurora 主题设计"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:1288
 msgid "Automatic"
@@ -348,11 +348,6 @@ msgstr "由源色自动推导；留空即保持自动值。"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2352
 msgid "Config:"
 msgstr "配置："
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2631
-#: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:21
-msgid "Configuration Marketplace"
-msgstr "配置广场"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2142
 msgid "Configuration exported successfully."
@@ -546,6 +541,11 @@ msgstr "衍生自状态强调色：提示、标签和徽章背景色。"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2555
 msgid "Description"
 msgstr "描述"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2031
+#: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:13
+msgid "Design Studio"
+msgstr "设计工作台"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2291
 msgid "Details"
@@ -1468,10 +1468,10 @@ msgstr "这套配置里工具栏本身是关闭的。"
 msgid "The update source was written, but refreshing the index failed. Hit Refresh on the Software page later."
 msgstr "更新源已写入，但索引刷新失败。稍后在软件包页面点一次「刷新列表」即可。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2031
-#: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:13
-msgid "Theme Studio"
-msgstr "主题工作台"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2631
+#: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:21
+msgid "Theme Marketplace"
+msgstr "主题市场"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:501
 msgid "Theme stylesheet resolver timed out."

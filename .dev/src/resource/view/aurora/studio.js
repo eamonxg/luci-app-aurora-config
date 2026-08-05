@@ -2028,7 +2028,7 @@ return view.extend({
     const colorEditor = createColorEditor(themeConfig, presetColors);
     this.colorEditor = colorEditor;
 
-    const m = new form.Map("aurora", _("Theme Studio"));
+    const m = new form.Map("aurora", _("Design Studio"));
 
     const themeVersion =
       installedVersions?.theme?.installed_version || "Unknown";

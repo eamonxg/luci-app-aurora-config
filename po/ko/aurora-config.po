@@ -184,8 +184,8 @@ msgid "Assign uploaded images to icons, favicons, PWA metadata, and the login ba
 msgstr "업로드된 이미지를 아이콘, 파비콘, PWA 메타데이터 및 로그인 배경에 할당합니다. '저장' 또는 '저장 및 적용' 시 저장됩니다."
 
 #: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:3
-msgid "Aurora Design"
-msgstr "Aurora 디자인"
+msgid "Aurora Theme Design"
+msgstr "Aurora 테마 디자인"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:1288
 msgid "Automatic"
@@ -348,11 +348,6 @@ msgstr "소스 색상에서 계산됩니다. 비워 두면 자동 값이 유지�
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2352
 msgid "Config:"
 msgstr "구성:"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2631
-#: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:21
-msgid "Configuration Marketplace"
-msgstr "구성 마켓플레이스"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2142
 msgid "Configuration exported successfully."
@@ -546,6 +541,11 @@ msgstr "상태 강조색에서 파생됨: 알림, 레이블 및 배지 배경."
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2555
 msgid "Description"
 msgstr "설명"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2031
+#: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:13
+msgid "Design Studio"
+msgstr "디자인 스튜디오"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2291
 msgid "Details"
@@ -1468,10 +1468,10 @@ msgstr "이 구성에서는 툴바 자체가 꺼져 있습니다."
 msgid "The update source was written, but refreshing the index failed. Hit Refresh on the Software page later."
 msgstr "업데이트 소스는 기록되었지만 색인 새로 고침에 실패했습니다. 나중에 소프트웨어 페이지에서 새로 고침을 누르세요."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2031
-#: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:13
-msgid "Theme Studio"
-msgstr "스튜디오"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2631
+#: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:21
+msgid "Theme Marketplace"
+msgstr "테마 마켓플레이스"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:501
 msgid "Theme stylesheet resolver timed out."

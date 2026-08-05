@@ -184,8 +184,8 @@ msgid "Assign uploaded images to icons, favicons, PWA metadata, and the login ba
 msgstr "Wijs geüploade afbeeldingen toe aan iconen, favicons, PWA-metadata en de login-achtergrond. Wordt opgeslagen bij Opslaan of Opslaan & Toepassen."
 
 #: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:3
-msgid "Aurora Design"
-msgstr "Aurora-ontwerp"
+msgid "Aurora Theme Design"
+msgstr "Aurora-themaontwerp"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:1288
 msgid "Automatic"
@@ -348,11 +348,6 @@ msgstr "Berekend uit de bronkleuren; laat een veld leeg om de automatische waard
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2352
 msgid "Config:"
 msgstr "Configuratie:"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2631
-#: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:21
-msgid "Configuration Marketplace"
-msgstr "Configuratie-marktplaats"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2142
 msgid "Configuration exported successfully."
@@ -546,6 +541,11 @@ msgstr "Afgeleid van de statusaccenten: achtergronden voor meldingen, labels en 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2555
 msgid "Description"
 msgstr "Beschrijving"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2031
+#: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:13
+msgid "Design Studio"
+msgstr "Ontwerpstudio"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2291
 msgid "Details"
@@ -1468,10 +1468,10 @@ msgstr "De werkbalk zelf staat uit in deze configuratie."
 msgid "The update source was written, but refreshing the index failed. Hit Refresh on the Software page later."
 msgstr "De updatebron is weggeschreven, maar het vernieuwen van de index is mislukt. Klik later op Vernieuwen op de Software-pagina."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2031
-#: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:13
-msgid "Theme Studio"
-msgstr "Studio"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2631
+#: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:21
+msgid "Theme Marketplace"
+msgstr "Themamarktplaats"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:501
 msgid "Theme stylesheet resolver timed out."

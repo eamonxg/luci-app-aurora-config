@@ -184,8 +184,8 @@ msgid "Assign uploaded images to icons, favicons, PWA metadata, and the login ba
 msgstr "Yüklenen görselleri simgelere, favicon'lara, PWA meta verilerine ve giriş arka planına atayın. Kaydet veya Kaydet ve Uygula tıklandığında kaydedilir."
 
 #: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:3
-msgid "Aurora Design"
-msgstr "Aurora Tasarımı"
+msgid "Aurora Theme Design"
+msgstr "Aurora Tema Tasarımı"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:1288
 msgid "Automatic"
@@ -348,11 +348,6 @@ msgstr "Kaynak renklerden hesaplanır; alanı boş bırakmak otomatik değeri ko
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2352
 msgid "Config:"
 msgstr "Yapılandırma:"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2631
-#: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:21
-msgid "Configuration Marketplace"
-msgstr "Yapılandırma Pazarı"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2142
 msgid "Configuration exported successfully."
@@ -546,6 +541,11 @@ msgstr "Durum vurgularından türetilenler: alarm, etiket ve rozet arka planlar�
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2555
 msgid "Description"
 msgstr "Açıklama"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2031
+#: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:13
+msgid "Design Studio"
+msgstr "Tasarım Stüdyosu"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2291
 msgid "Details"
@@ -1468,10 +1468,10 @@ msgstr "Bu yapılandırmada araç çubuğunun kendisi kapalı."
 msgid "The update source was written, but refreshing the index failed. Hit Refresh on the Software page later."
 msgstr "Güncelleme kaynağı yazıldı, ancak dizin yenilenemedi. Daha sonra Yazılım sayfasında Yenile'ye basın."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2031
-#: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:13
-msgid "Theme Studio"
-msgstr "Stüdyo"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2631
+#: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:21
+msgid "Theme Marketplace"
+msgstr "Tema Pazaryeri"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:501
 msgid "Theme stylesheet resolver timed out."

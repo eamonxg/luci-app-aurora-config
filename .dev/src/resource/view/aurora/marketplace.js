@@ -2628,7 +2628,7 @@ return view.extend({
       _("Publish current configuration"),
     );
 
-    const titleEl = E("h2", {}, _("Configuration Marketplace"));
+    const titleEl = E("h2", {}, _("Theme Marketplace"));
 
     const headEl = E("div", {}, [
       E("div", { class: "aurora-store-head" }, [
