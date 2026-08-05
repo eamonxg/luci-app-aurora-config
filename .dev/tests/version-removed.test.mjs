@@ -22,7 +22,7 @@ const menu = readFileSync(
   "utf8",
 );
 const themeJs = readFileSync(
-  path.join(repoRoot, ".dev/src/resource/view/aurora/theme.js"),
+  path.join(repoRoot, ".dev/src/resource/view/aurora/studio.js"),
   "utf8",
 );
 

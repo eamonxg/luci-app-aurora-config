@@ -33,7 +33,7 @@ function extractMetadataKeys(source, mapName) {
 test("theme metadata covers exactly the tokens in the shared token engine", async () => {
   const [auroraTokens, themeSource] = await Promise.all([
     loadAuroraTokens(),
-    readFile(srcPath("view/aurora/theme.js"), "utf8"),
+    readFile(srcPath("view/aurora/studio.js"), "utf8"),
   ]);
 
   assert.deepEqual(
@@ -48,7 +48,7 @@ test("theme metadata covers exactly the tokens in the shared token engine", asyn
 
 test("theme editor writes runtime colors in browser-compatible hex form", async () => {
   const source = await readFile(
-    srcPath("view/aurora/theme.js"),
+    srcPath("view/aurora/studio.js"),
     "utf8",
   );
 
@@ -76,7 +76,7 @@ test("theme editor writes runtime colors in browser-compatible hex form", async 
 
 test("color sections describe accepted input formats", async () => {
   const source = await readFile(
-    srcPath("view/aurora/theme.js"),
+    srcPath("view/aurora/studio.js"),
     "utf8",
   );
 

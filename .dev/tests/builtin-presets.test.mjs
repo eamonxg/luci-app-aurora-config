@@ -4,7 +4,7 @@
 // corner radius, spacing, content width and typography -- everything the
 // settings page can actually configure -- stayed wherever the user had left
 // them. These tests hold the three halves of that fix together: the templates
-// carry the structure, rpcd applies it, and the Theme Store's offline copy
+// carry the structure, rpcd applies it, and the Marketplace's offline copy
 // says the same thing the templates do.
 
 import { test } from "node:test";
@@ -52,7 +52,7 @@ const structOf = (id) => {
 };
 
 const rpcd = read("root/usr/libexec/rpcd/luci.aurora");
-const gallery = read(".dev/src/resource/view/aurora/gallery.js");
+const gallery = read(".dev/src/resource/view/aurora/marketplace.js");
 const browserPresets = JSON.parse(
   read(".dev/src/resource/aurora/presets.json"),
 ).presets;
@@ -202,7 +202,7 @@ test("every preset font stack is a verbatim font-presets.conf roster stack", () 
       const fontId = roster[slot].get(s[`struct_font_${slot}`]);
       assert.ok(fontId, `${id}: struct_font_${slot} matches no ${slot} roster entry`);
 
-      // gallery.js reads typography.font_* to decide whether to warn that the
+      // marketplace.js reads typography.font_* to decide whether to warn that the
       // typeface has to be downloaded first, treating exactly "default" and
       // "system" as already on the router. That rule only holds while those
       // two ids are the ones with no woff2 files to fetch.
@@ -210,7 +210,7 @@ test("every preset font stack is a verbatim font-presets.conf roster stack", () 
       assert.equal(
         files.has(`${slot}/${fontId}`),
         !bundled,
-        `${slot}/${fontId}: BUNDLED_FONT_IDS in gallery.js assumes only ` +
+        `${slot}/${fontId}: BUNDLED_FONT_IDS in marketplace.js assumes only ` +
           `default/system need no download`,
       );
     }
@@ -320,7 +320,7 @@ test("the browser copy of the presets matches the templates", () => {
 // 62 colours cost 7,968 bytes that nothing looked at.
 test("the browser copy carries exactly the swatch keys the store reads", () => {
   const declared = /const SWATCH_KEYS = \[([^\]]*)\]/.exec(gallery);
-  assert.ok(declared, "gallery.js no longer declares SWATCH_KEYS");
+  assert.ok(declared, "marketplace.js no longer declares SWATCH_KEYS");
   const swatchKeys = [...declared[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
   assert.ok(swatchKeys.length > 0, "SWATCH_KEYS parsed empty");
 
@@ -341,7 +341,7 @@ test("the browser copy carries exactly the swatch keys the store reads", () => {
   }
 });
 
-test("the Theme Store no longer promises that a preset only repaints", () => {
+test("the Marketplace no longer promises that a preset only repaints", () => {
   assert.ok(
     !gallery.includes("Layout (unchanged by this preset)"),
     "the built-in drawer must show the preset's own layout, not the current one",
@@ -381,7 +381,7 @@ test("the store cache-busts presets.json with a hash of its contents", () => {
   const expected = createHash("sha256").update(data).digest("hex").slice(0, 8);
 
   const stamped = /const PRESETS_VERSION = "([^"]+)";/.exec(gallery)?.[1];
-  assert.ok(stamped, "gallery.js declares PRESETS_VERSION");
+  assert.ok(stamped, "marketplace.js declares PRESETS_VERSION");
   assert.equal(
     stamped,
     expected,

@@ -1,7 +1,7 @@
 "use strict";
 "require baseclass";
 
-// Palette-painted mini previews for the Theme Store (gallery.js is the only
+// Palette-painted mini previews for the Marketplace (marketplace.js is the only
 // caller: cards, detail drawer and share panel): a fake LuCI page drawn from
 // a 4-key palette ({bg, surface, text, brand}).
 // Geometry is static cssText; only sanitised

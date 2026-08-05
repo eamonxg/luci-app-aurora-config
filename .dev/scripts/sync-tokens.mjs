@@ -5,7 +5,7 @@
 //   - .dev/src/resource/utils/tokens.global.js
 //   - root/usr/share/aurora/color-tokens.conf
 //   - .dev/scripts/aurora-presets.json     (resolved preset hex values)
-// then stamps TOKENS_ENGINE_VERSION into view/aurora/theme.js and reruns
+// then stamps TOKENS_ENGINE_VERSION into view/aurora/studio.js and reruns
 // scripts/gen-presets.mjs. All vendored artifacts are committed; nothing
 // downstream (CI, SDK build, device) needs npm or the package repo.
 //
@@ -93,7 +93,7 @@ const version = JSON.parse(readFileSync(join(pkgDir, "package.json"), "utf8")).v
 
 // Stamp the engine version into theme.js: it appends ?v= when loading
 // tokens.global.js so a browser can never pair new theme.js with a cached engine.
-const THEME_VIEW = resolve(root, ".dev/src/resource/view/aurora/theme.js");
+const THEME_VIEW = resolve(root, ".dev/src/resource/view/aurora/studio.js");
 const versionLine = `const TOKENS_ENGINE_VERSION = "${version}";`;
 const themeSource = readFileSync(THEME_VIEW, "utf8").replace(
   /const TOKENS_ENGINE_VERSION = "[^"]*";/,

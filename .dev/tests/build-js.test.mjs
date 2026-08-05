@@ -12,7 +12,7 @@ const VIEW = `"use strict";
 "require view";
 "require form";
 
-const LABEL = _("Aurora Theme Settings");
+const LABEL = _("A Translatable Label");
 
 return view.extend({
   render() {
@@ -37,16 +37,16 @@ const run = (args) =>
   execFileSync(process.execPath, [BUILD, ...args], { encoding: "utf8" });
 
 test("a LuCI view keeps its directive prologue, its top-level return and its _() calls", () => {
-  const { root, src, out } = scratch({ "view/aurora/theme.js": VIEW });
+  const { root, src, out } = scratch({ "view/aurora/studio.js": VIEW });
   try {
     run(["--src", src, "--out", out]);
-    const built = readFileSync(join(out, "view/aurora/theme.js"), "utf8");
+    const built = readFileSync(join(out, "view/aurora/studio.js"), "utf8");
     assert.ok(
       built.startsWith('"use strict";"require view";"require form";'),
       `directive prologue was dropped: ${built.slice(0, 80)}`,
     );
     assert.match(built, /return view\.extend/, "top-level return was dropped");
-    assert.match(built, /_\("Aurora Theme Settings"\)/, "_() msgid was rewritten");
+    assert.match(built, /_\("A Translatable Label"\)/, "_() msgid was rewritten");
     assert.ok(built.length < VIEW.length, "output is not smaller than the source");
     assert.ok(
       !built.includes("sourceMappingURL"),
@@ -73,18 +73,18 @@ test("json is compacted and stays parseable", () => {
 });
 
 test("--check exits non-zero and names the stale file", () => {
-  const { root, src, out } = scratch({ "view/aurora/theme.js": VIEW });
+  const { root, src, out } = scratch({ "view/aurora/studio.js": VIEW });
   try {
     run(["--src", src, "--out", out]);
     run(["--check", "--src", src, "--out", out]); // fresh: must not throw
-    writeFileSync(join(out, "view/aurora/theme.js"), "stale");
+    writeFileSync(join(out, "view/aurora/studio.js"), "stale");
     assert.throws(
       () => run(["--check", "--src", src, "--out", out]),
       (error) => {
         assert.equal(error.status, 1, "--check must exit 1 when stale");
         assert.match(
           String(error.stdout) + String(error.stderr),
-          /view\/aurora\/theme\.js/,
+          /view\/aurora\/studio\.js/,
         );
         return true;
       },
@@ -95,7 +95,7 @@ test("--check exits non-zero and names the stale file", () => {
 });
 
 test("build removes artifacts whose source is gone", () => {
-  const { root, src, out } = scratch({ "view/aurora/theme.js": VIEW });
+  const { root, src, out } = scratch({ "view/aurora/studio.js": VIEW });
   try {
     run(["--src", src, "--out", out]);
     mkdirSync(join(out, "utils"), { recursive: true });

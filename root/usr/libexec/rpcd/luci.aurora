@@ -480,7 +480,7 @@ json_escape_string() {
 # Mirrors write_font_job_status: write-tmp-then-mv so a concurrent
 # get_hub_status read never observes a half-written status file. Also prunes
 # status files older than an hour on every write -- /tmp/aurora_hub_jobs is
-# never otherwise cleaned up, and gallery.js triggers a hub_apply (and thus a
+# never otherwise cleaned up, and marketplace.js triggers a hub_apply (and thus a
 # new job_id/status file) on every apply attempt.
 write_hub_job_status() {
 	local job_id="$1" state="$2" step="$3" error="$4"
@@ -2617,7 +2617,7 @@ MANIFEST
 		# The hub answers 200 even for "that name is taken": wget collapses
 		# every 4xx into the same failure as an unreachable host, so a 409
 		# would reach the page as "couldn't reach the store". Pass the body
-		# straight through -- gallery.js turns data.error into the sentence.
+		# straight through -- marketplace.js turns data.error into the sentence.
 		if nick_body=$(hub_http_post "/api/v1/me" "$nick_body_tmp"); then
 			printf '{ "result": 0, "data": %s }\n' "$nick_body"
 		else

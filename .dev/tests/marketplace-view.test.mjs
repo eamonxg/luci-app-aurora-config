@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { repo, srcPath } from "./paths.mjs";
 
-const SRC = srcPath("view/aurora/gallery.js");
+const SRC = srcPath("view/aurora/marketplace.js");
 const MENU_SRC = repo("root/usr/share/luci/menu.d/luci-app-aurora.json");
 
 test("gallery view is a browse-only view.extend using hub-api", async () => {
@@ -201,11 +201,11 @@ test("gallery view: share/update/delete copy stays result-only (no mechanism wor
 
 test("menu: theme store entry registered after theme settings", async () => {
   const menu = JSON.parse(await readFile(MENU_SRC, "utf8"));
-  assert.ok(menu["admin/system/aurora/gallery"], "gallery menu entry missing");
-  assert.equal(menu["admin/system/aurora/gallery"].order, 15);
+  assert.ok(menu["admin/system/aurora/marketplace"], "gallery menu entry missing");
+  assert.equal(menu["admin/system/aurora/marketplace"].order, 15);
   assert.equal(
-    menu["admin/system/aurora/gallery"].action.path,
-    "aurora/gallery",
+    menu["admin/system/aurora/marketplace"].action.path,
+    "aurora/marketplace",
   );
 });
 
@@ -427,7 +427,7 @@ test("share manifest skips exactly the filenames build_share_payload skips", asy
   const shellNames = shellMatch[1].split("|").sort();
 
   const jsMatch = /const FACTORY_ASSET_NAMES = \[([\s\S]*?)\];/.exec(js);
-  assert.ok(jsMatch, "FACTORY_ASSET_NAMES not found in gallery.js");
+  assert.ok(jsMatch, "FACTORY_ASSET_NAMES not found in marketplace.js");
   const jsNames = [...jsMatch[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]).sort();
 
   // A test comparing two empty arrays would pass while proving nothing --

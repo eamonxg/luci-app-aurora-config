@@ -6,7 +6,7 @@ common tasks.
 
 > **What this is.** The configuration app for the Aurora theme
 > (`luci-theme-aurora`). It adds a LuCI admin page where users tune theme
-> colors, layout, branding, and the toolbar, plus a Theme Store page to
+> colors, layout, branding, and the toolbar, plus a Configuration Marketplace page to
 > browse, apply, and share complete configurations with other users. This
 > repo only owns the *configuration UI* and *writes settings into UCI* — the
 > actual rendering lives in the theme package.
@@ -60,8 +60,8 @@ to the matching paths and reload the page or restart rpcd.
 ├── tests/paths.mjs                      # repo() / srcPath() — tests never depend on cwd
 └── src/resource/                        # ★ EDIT HERE
     ├── view/aurora/
-    │   ├── theme.js      # Main UI: color editor, layout, branding, toolbar (largest file)
-    │   └── gallery.js    # Theme Store: browse/apply, share, and "my shares"
+    │   ├── studio.js    # Theme Studio: color editor, layout, branding, toolbar (largest file)
+    │   └── marketplace.js # Configuration Marketplace: browse/apply, share, "my shares"
     ├── aurora/presets.json  # Store card data: the 4 swatch colours + layout/typography per preset — GENERATED
     └── utils/
         ├── color.global.js          # Vendored colorjs.io (global `Color`)
@@ -83,7 +83,7 @@ root/
     ├── color-tokens.conf               # Ordered token key list for the backend — GENERATED
     └── font-presets.conf               # Font preset manifest (Fontsource packages + pinned versions) — GENERATED
 
-.dev/scripts/sync-tokens.mjs             # Vendors tokens.global.js + color-tokens.conf + aurora-presets.json (resolved preset hex) from @eamonxg/luci-theme-tokens, stamps TOKENS_ENGINE_VERSION into theme.js, then runs gen-presets
+.dev/scripts/sync-tokens.mjs             # Vendors tokens.global.js + color-tokens.conf + aurora-presets.json (resolved preset hex) from @eamonxg/luci-theme-tokens, stamps TOKENS_ENGINE_VERSION into studio.js, then runs gen-presets
 .dev/scripts/gen-presets.mjs             # Injects the colour block into *.template, reads each template's layout/typography back out, and writes src/resource/aurora/presets.json (swatch colours only — §8.1)
 .dev/scripts/aurora-presets.json         # Resolved preset hex values, vendored by sync-tokens.mjs — GENERATED
 .dev/scripts/gen-font-presets.mjs        # Regenerates font-presets.conf (curated manifest lives in this file)
@@ -133,7 +133,7 @@ values.
 User edits input colors in the UI
         │
         ▼
-theme.js: persistDerivedTokens()
+studio.js: persistDerivedTokens()
   runs AuroraTokens.resolve(mode, <10 inputs>) for light + dark
   writes 30 light_<key> / dark_<key> hex entries into UCI (aurora.theme)
         │  on save
@@ -173,13 +173,13 @@ version pinned in `.dev/package.json` — `.dev/scripts/sync-tokens.mjs` copies 
 files verbatim, no local derivation:
 
 - `utils/tokens.global.js` ← `dist/aurora/tokens.global.js` — the browser
-  global, still used by `theme.js` for live preview / on-save recompute.
+  global, still used by `studio.js` for live preview / on-save recompute.
 - `root/usr/share/aurora/color-tokens.conf` ← `dist/aurora/color-tokens.conf`
   — the ordered key list the backend (`luci.aurora`) reads at runtime.
 - `.dev/scripts/aurora-presets.json` ← `dist/aurora/presets.json` — every built-in
   preset, fully resolved to runtime hex, for **all 5** presets × light/dark.
-- `view/aurora/theme.js` — only the `TOKENS_ENGINE_VERSION` constant, stamped
-  from the vendored package's `package.json` version. `theme.js` appends it as
+- `view/aurora/studio.js` — only the `TOKENS_ENGINE_VERSION` constant, stamped
+  from the vendored package's `package.json` version. `studio.js` appends it as
   `?v=` when loading `tokens.global.js`, so a version bump busts the browser's
   HTTP cache.
 
@@ -206,18 +206,18 @@ targets.
 
 Drift is caught in three layers:
 
-1. `theme.js` joins its UI metadata with the registry at load time and throws
+1. `studio.js` joins its UI metadata with the registry at load time and throws
    on missing/stale entries (`buildColorTokenTables`).
 2. `.dev/tests/theme-token-sync.test.mjs` re-runs `sync-tokens.mjs --check` against
    the registry (the check also covers the `TOKENS_ENGINE_VERSION` stamp in
-   `theme.js`, and a dedicated test asserts it matches the engine header).
+   `studio.js`, and a dedicated test asserts it matches the engine header).
 3. `.github/workflows/token-sync-check.yml` runs the same check in CI (push/PR
    and weekly); Renovate/Dependabot can bump the pin when luci-theme-tokens
    releases.
 
 Consumers of `tokens.global.js` at runtime:
 
-1. **Frontend** — `theme.js` loads it for live preview, on-save computation,
+1. **Frontend** — `studio.js` loads it for live preview, on-save computation,
    and the ordered token tables (`COLOR_TOKENS` et al.).
 
 (`.dev/scripts/gen-presets.mjs` no longer loads it — see above; the presets it
@@ -277,7 +277,7 @@ A brand-new preset also needs:
 - a new `root/usr/share/aurora/<name>.template` file in this repo (copy an
   existing one — `gen-presets.mjs` only rewrites templates that already
   exist, it never creates one)
-- `gallery.js` → `BUILTIN_PRESETS` (store card) and `BUILTIN_SEED_RE` (so the
+- `marketplace.js` → `BUILTIN_PRESETS` (store card) and `BUILTIN_SEED_RE` (so the
   hub's own seed of it is not listed twice)
 - `luci.aurora` → `resolve_preset_path()` (name → template path)
 - `80_aurora` → template fallback chain (optional)
@@ -298,10 +298,10 @@ A brand-new preset also needs:
    refreshes `tokens.global.js`, `color-tokens.conf`, and
    `.dev/scripts/aurora-presets.json` (and, via `gen-presets.mjs`, the preset
    templates) in one go (if there's a new token, follow the test prompts to
-   fill in `theme.js` copy).
+   fill in `studio.js` copy).
    To iterate on an unreleased spec: `node .dev/scripts/sync-tokens.mjs --local
    ../luci-theme-tokens`.
-5. For a new token, add its UI copy in `theme.js` →
+5. For a new token, add its UI copy in `studio.js` →
    `COLOR_TOKEN_METADATA` / `DERIVED_COLOR_TOKEN_METADATA` (and a group entry if
    needed). The tests and `buildColorTokenTables()` fail loudly until every
    registry token has metadata.
@@ -317,7 +317,7 @@ generated, so an edit is not finished until it has been built.
 
 ```bash
 cd .dev
-$EDITOR src/resource/view/aurora/theme.js   # edit the SOURCE
+$EDITOR src/resource/view/aurora/studio.js  # edit the SOURCE
 pnpm build                                  # regenerate htdocs/
 pnpm test                                   # --check runs first
 cd .. && git add -A && git commit           # source and artifact travel together
@@ -402,14 +402,14 @@ the `case "$1" in "list")` block at the end of the script. Common methods:
 | `list_icons` / `upload_icon` / `remove_icon` | Icon management |
 | `prepare_font` / `get_font_presets` / `get_font_status` | Font handling |
 | `upload_font` / `remove_font` | Custom (user-uploaded) font management |
-| `hub_list` / `hub_get` | Theme Store: browse the hub's config list / read one config's full payload |
-| `hub_apply` / `get_hub_status` | Theme Store: kick off an async apply job / poll its progress |
-| `hub_restore_backup` | Theme Store: one-tap rollback to the pre-apply snapshot |
-| `hub_share` / `hub_update` / `hub_delete` | Theme Store: publish the current config / edit / unpublish a share |
-| `hub_my_shares` | Theme Store: list this device's own published shares |
+| `hub_list` / `hub_get` | Marketplace: browse the hub's config list / read one config's full payload |
+| `hub_apply` / `get_hub_status` | Marketplace: kick off an async apply job / poll its progress |
+| `hub_restore_backup` | Marketplace: one-tap rollback to the pre-apply snapshot |
+| `hub_share` / `hub_update` / `hub_delete` | Marketplace: publish the current config / edit / unpublish a share |
+| `hub_my_shares` | Marketplace: list this device's own published shares |
 
 ACLs live in `root/usr/share/rpcd/acl.d/luci-app-aurora.json`; the menu entries
-(`Theme Settings`, `Theme Store`) in
+(`Theme Studio`, `Configuration Marketplace`) in
 `root/usr/share/luci/menu.d/luci-app-aurora.json`. §8 below covers the Theme
 Store in detail.
 
@@ -490,7 +490,7 @@ it via `remove_font`):
   - the gate deletes the tmp file on every rejection (front-end callers
     never clean up).
 - Front-end plumbing lives in `utils/asset-upload.js` (dropzone, progress
-  row, delete confirm, cgi-upload XHR); `view/aurora/theme.js` composes it
+  row, delete confirm, cgi-upload XHR); `view/aurora/studio.js` composes it
   for both the Custom Fonts and Brand Asset Library sections.
 - Stored under `/www/luci-static/aurora/fonts/custom/<slot>-<slug>.{woff2,meta,face}`
   (`.face` is the pre-rendered `@font-face` block, `.meta` carries the
@@ -501,9 +501,9 @@ it via `remove_font`):
 
 ---
 
-## 8. Theme Store
+## 8. Configuration Marketplace
 
-The Theme Store lets users browse configurations shared by other users, apply
+The Marketplace lets users browse configurations shared by other users, apply
 one with a single click, and share their own — all through a public hub at
 **`https://themes.eamonxg.fun`**. Nothing about it changes how colors are
 derived or how UCI is structured; it is a distribution layer on top of the
@@ -511,7 +511,7 @@ existing config format.
 
 ### 8.1 Pieces
 
-- **`view/aurora/gallery.js`** — the `admin/system/aurora/gallery` page: a
+- **`view/aurora/marketplace.js`** — the `admin/system/aurora/marketplace` page: a
   card grid (Hot/New sort, swatch preview, downloads count) that opens a
   detail modal per config (palette, layout, typography, included assets) with
   an Apply button; a "Share My Configuration" modal; and a "My Shares" table
@@ -550,7 +550,7 @@ opposite sides of the ubus boundary, and neither can replace the other:
   offline rendering.
 
 `gen-presets.mjs` writes both from one source, so they cannot drift, and
-`builtin-presets.test.mjs` parses `SWATCH_KEYS` out of `gallery.js` to make
+`builtin-presets.test.mjs` parses `SWATCH_KEYS` out of `marketplace.js` to make
 sure the generator's copy of that list stays in step. Add a key there and the
 test fails until the generator follows, rather than the card quietly rendering
 a blank swatch.
@@ -562,7 +562,7 @@ a blank swatch.
 | `hub_list(sort, page)` | Fetch a page of the hub's config list (`sort` is `hot` or `new`) |
 | `hub_get(id)` | Fetch one config's full payload + asset list for the detail modal |
 | `hub_apply(id)` | Forks an async apply job (`hub_apply_worker`) in the background, returns a `job_id` immediately |
-| `get_hub_status(job_id)` | Poll a job's `state`/`step`/`error`; the frontend polls this every 1.5s (`gallery.js: pollApplyStatus`) |
+| `get_hub_status(job_id)` | Poll a job's `state`/`step`/`error`; the frontend polls this every 1.5s (`marketplace.js: pollApplyStatus`) |
 | `hub_restore_backup` | Roll back to the single most recent pre-apply snapshot |
 | `hub_share(name, description, author)` | Publish the current local config as a new hub entry |
 | `hub_my_shares` | List this device's own published shares (re-validates each id against the hub, dropping any that 404) |
@@ -759,7 +759,7 @@ roughly 10% of the file's apparent age — from the epoch, that is years — and
 serve their copy **without even sending `If-None-Match`**. (luci-base and the
 theme carry real dates; only ours are at the epoch.)
 
-That is not theoretical. The Theme Store spent months drawing its built-in
+That is not theoretical. The Marketplace spent months drawing its built-in
 cards from a `presets.json` whose shape had changed underneath it: against the
 old `{light,dark}` shape, `paletteOf` finds no colours and `navOf` no layout,
 so every card rendered with the fallback palette and a top nav bar. Both fail
@@ -805,7 +805,7 @@ deleted**. The regex loses its terminator and the browser reports
 `Invalid regular expression: missing /`. The whole view fails to load.
 
 This actually shipped: the theme store was dead on-device for exactly this
-reason, in `gallery.js`'s `isExternalShortcut`.
+reason, in `marketplace.js`'s `isExternalShortcut`.
 
 **2. Template literals are not understood at all.** Backticks mean nothing to
 jsmin, so:

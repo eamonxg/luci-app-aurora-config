@@ -572,7 +572,7 @@ test("rpcd script: nickname is set through its own write method", () => {
   assert.match(body, /hub_http_post\s+"\/api\/v1\/me"/);
   // The hub answers 200 even for "that name is taken" -- wget collapses every
   // 4xx into the same failure as an unreachable host -- so the body is passed
-  // through for gallery.js to turn into a sentence.
+  // through for marketplace.js to turn into a sentence.
   assert.match(body, /"result": 0, "data": %s/);
 });
 
@@ -590,7 +590,7 @@ test("rpcd script: key export/import exist and validate the shape", () => {
   assert.match(rpcd, /\*\[!a-f0-9\]\*\)/);
   assert.match(rpcd, /chmod 600 "\$DEVICE_DIR\/device\.key\.tmp"/);
   // Both "the key now lives somewhere else" paths record the flag in rpcd:
-  // gallery.js is a browse-only view with no uci write path of its own.
+  // marketplace.js is a browse-only view with no uci write path of its own.
   assert.ok(
     rpcd.split("hub_key_saved").length - 1 >= 2,
     "both export and import must record hub_key_saved",

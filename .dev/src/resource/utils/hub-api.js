@@ -9,7 +9,7 @@ const HUB_BASE = "https://themes.eamonxg.fun";
 const HUB_TIMEOUT_MS = 15000;
 
 // 浏览器直连 hub 的读路径。返回包络刻意与 rpcd 保持一致
-// （{result:0,data} / {result:1,error}），gallery.js 无需感知传输方式的变化。
+// （{result:0,data} / {result:1,error}），marketplace.js 无需感知传输方式的变化。
 const hubFetch = (path) => {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), HUB_TIMEOUT_MS);

@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { repo, srcPath } from "./paths.mjs";
 
-const SRC = srcPath("view/aurora/theme.js");
+const SRC = srcPath("view/aurora/studio.js");
 
 test("feed ui: no manifest request when the feed is not configured", async () => {
   const src = await readFile(SRC, "utf8");

@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { repo, srcPath } from "./paths.mjs";
 
-const SRC = srcPath("view/aurora/theme.js");
+const SRC = srcPath("view/aurora/studio.js");
 
 test("layout: the workbench shell is gone", async () => {
   const src = await readFile(SRC, "utf8");
@@ -16,7 +16,7 @@ test("layout: the workbench shell is gone", async () => {
   );
   assert.ok(
     !/require utils\.theme-preview/.test(src),
-    "theme.js must stop requiring theme-preview (gallery.js still uses the file)",
+    "studio.js must stop requiring theme-preview (marketplace.js still uses the file)",
   );
 });
 
@@ -24,7 +24,7 @@ test("layout: the map carries the page title again", async () => {
   const src = await readFile(SRC, "utf8");
   assert.match(
     src,
-    /new form\.Map\("aurora", _\("Aurora Theme Settings"\)\)/,
+    /new form\.Map\("aurora", _\("Theme Studio"\)\)/,
     "the title belongs to form.Map, not a wrapper",
   );
   assert.match(src, /m\.description = headerBar/);
@@ -41,10 +41,10 @@ test("layout: handleReset restages colors instead of reloading the page", async 
   assert.match(src, /this\.colorEditor\?\.schedule\("dark"\)/);
 });
 
-test("layout: the header has no second Theme Store entry and no preset dropdown", async () => {
+test("layout: the header has no second Marketplace entry and no preset dropdown", async () => {
   const src = await readFile(SRC, "utf8");
   assert.ok(
-    !src.includes("Browse more themes in the Theme Store"),
+    !src.includes("Browse more themes in the Marketplace"),
     "tabmenu already links the store; a header button is a duplicate entry",
   );
   assert.ok(
@@ -215,7 +215,7 @@ test("layout: the three outer tabs are back", async () => {
 });
 
 test("the two engine scripts download in parallel and still execute in order", async () => {
-  const source = await readFile(srcPath("view/aurora/theme.js"), "utf8");
+  const source = await readFile(srcPath("view/aurora/studio.js"), "utf8");
   assert.match(
     source,
     /script\.async = false/,

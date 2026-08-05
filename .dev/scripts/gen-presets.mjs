@@ -3,7 +3,7 @@
 // @eamonxg/luci-theme-tokens build time (inputs rounded to hex first, then
 // derived, so stored == what the config UI recomputes; see the package's
 // build.mjs). This script only formats and injects UCI option lines, and
-// mirrors the preset data into the JS sources so the Theme Store can render
+// mirrors the preset data into the JS sources so the Marketplace can render
 // the built-in preset cards offline (.dev/src/resource/aurora/presets.json).
 //
 // Only the colours come from the vendored json. A preset's layout and
@@ -31,7 +31,7 @@ const SRC_PRESETS = resolve(
 
 // The two groups a hub payload sorts these keys into (see build_share_payload
 // in root/usr/libexec/rpcd/luci.aurora). The browser copy is emitted in that
-// same shape, so the Theme Store reads a built-in preset with exactly the
+// same shape, so the Marketplace reads a built-in preset with exactly the
 // accessors it already uses for a shared configuration.
 const LAYOUT_KEYS = [
   "nav_type",
@@ -115,7 +115,7 @@ const structureOf = (preset, source) => {
   return { layout: pick(LAYOUT_KEYS), typography };
 };
 
-// The four colours the Theme Store draws a card from -- gallery.js SWATCH_KEYS.
+// The four colours the Marketplace draws a card from -- marketplace.js SWATCH_KEYS.
 // Kept in sync by builtin-presets.test.mjs, which parses that declaration and
 // fails if this list drifts from it.
 const SWATCH_KEYS = ["bg", "surface", "text", "brand"];
@@ -163,7 +163,7 @@ for (const preset of Object.keys(presets)) {
   const { layout, typography } = structureOf(preset, source);
   // `toolbar` is always empty and always present: applying a built-in preset
   // never rewrites the user's shortcut sections (see apply_theme_preset), and
-  // the Theme Store reads the key to decide whether to draw a shortcut tile.
+  // the Marketplace reads the key to decide whether to draw a shortcut tile.
   browserPresets[preset] = {
     colors: flatColors(preset),
     layout,
@@ -172,7 +172,7 @@ for (const preset of Object.keys(presets)) {
   };
 }
 
-// Browser copy for the Theme Store's built-in preset cards. Same data as the
+// Browser copy for the Marketplace's built-in preset cards. Same data as the
 // templates, projected into the hub's payload shape; regenerated together so
 // the two can never drift.
 mkdirSync(dirname(SRC_PRESETS), { recursive: true });
@@ -180,7 +180,7 @@ const presetsJson = JSON.stringify({ presets: browserPresets }, null, 2) + "\n";
 writeFileSync(SRC_PRESETS, presetsJson, "utf8");
 console.log("gen-presets: wrote .dev/src/resource/aurora/presets.json");
 
-// Stamp a content hash into gallery.js, which appends it as ?v= when fetching
+// Stamp a content hash into marketplace.js, which appends it as ?v= when fetching
 // the file above. uhttpd dates every static resource at the epoch and sends no
 // Cache-Control, so a browser's heuristic freshness for it runs to years and it
 // never revalidates -- without this stamp, a change here reaches nobody who has
@@ -188,12 +188,12 @@ console.log("gen-presets: wrote .dev/src/resource/aurora/presets.json");
 // engine; tests/builtin-presets.test.mjs checks the two agree.
 const hash = createHash("sha256").update(presetsJson).digest("hex").slice(0, 8);
 const stampLine = `const PRESETS_VERSION = "${hash}";`;
-const galleryPath = resolve(root, ".dev/src/resource/view/aurora/gallery.js");
+const galleryPath = resolve(root, ".dev/src/resource/view/aurora/marketplace.js");
 const gallery = readFileSync(galleryPath, "utf8").replace(
   /const PRESETS_VERSION = "[^"]*";/,
   stampLine,
 );
 if (!gallery.includes(stampLine))
-  throw new Error("PRESETS_VERSION marker not found in gallery.js");
+  throw new Error("PRESETS_VERSION marker not found in marketplace.js");
 writeFileSync(galleryPath, gallery, "utf8");
-console.log(`gen-presets: stamped PRESETS_VERSION=${hash} into gallery.js`);
+console.log(`gen-presets: stamped PRESETS_VERSION=${hash} into marketplace.js`);

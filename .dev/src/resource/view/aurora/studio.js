@@ -2028,7 +2028,7 @@ return view.extend({
     const colorEditor = createColorEditor(themeConfig, presetColors);
     this.colorEditor = colorEditor;
 
-    const m = new form.Map("aurora", _("Aurora Theme Settings"));
+    const m = new form.Map("aurora", _("Theme Studio"));
 
     const themeVersion =
       installedVersions?.theme?.installed_version || "Unknown";
@@ -2091,7 +2091,7 @@ return view.extend({
     };
 
     const buildConfigToolbarNode = () => {
-      // The preset dropdown moved to the Theme Store's "Built-in" group, and
+      // The preset dropdown moved to the Marketplace's "Built-in" group, and
       // the store itself is one tabmenu entry away -- a header button for it
       // would be a second entrance to the same page. What is left here are the
       // config-level actions, which have nowhere else to live.

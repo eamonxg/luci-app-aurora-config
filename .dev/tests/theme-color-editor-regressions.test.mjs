@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 import test from "node:test";
 import { repo, srcPath } from "./paths.mjs";
 
-const themePath = srcPath("view/aurora/theme.js");
+const themePath = srcPath("view/aurora/studio.js");
 
 async function themeSource() {
   return readFile(themePath, "utf8");
@@ -126,9 +126,9 @@ test("token groups only collapse via the chevron, not stray header clicks", asyn
   );
 });
 
-test("preset selector moved to the Theme Store; toolbar keeps the config actions", async () => {
+test("preset selector moved to the Marketplace; toolbar keeps the config actions", async () => {
   const source = await themeSource();
-  // The dropdown and its apply flow now live in gallery.js's Built-in group.
+  // The dropdown and its apply flow now live in marketplace.js's Built-in group.
   assert.ok(!source.includes("buildPresetOptions"), "preset dropdown should be gone");
   assert.ok(!source.includes("apply_theme_preset"), "preset apply rpc should be gone from theme.js");
   const toolbarBlock = sourceBlock(

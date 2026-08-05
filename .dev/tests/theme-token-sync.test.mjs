@@ -34,7 +34,7 @@ function parseTemplate(source) {
 
 // Guards the bug fixed in gen-presets.mjs: the config UI loads the 10 inputs as
 // hex and recomputes derived tokens from them to decide "automatic vs override"
-// (syncDerivedInitialState in view/aurora/theme.js). If a template seeds a
+// (syncDerivedInitialState in view/aurora/studio.js). If a template seeds a
 // derived value that disagrees with that recompute by even one 8-bit step, a
 // clean preset misreads it as a manual override and shows a value in the box.
 // Every stored derived value MUST equal the engine's recompute from the same
@@ -99,7 +99,7 @@ test("color-tokens.conf lists exactly the engine's tokens, inputs first", async 
 // matches the version baked into the vendored engine's header.
 test("theme.js cache-busts the token engine with the vendored version", async () => {
   const theme = await readFile(
-    srcPath("view/aurora/theme.js"),
+    srcPath("view/aurora/studio.js"),
     "utf8",
   );
   const engine = await readFile(resolve(RES, "tokens.global.js"), "utf8");

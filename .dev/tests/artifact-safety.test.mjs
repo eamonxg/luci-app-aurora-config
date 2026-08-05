@@ -156,7 +156,7 @@ test("no hidden file was shipped", async () => {
 // version, or browsers keep the copy they have: uhttpd dates our installed
 // files at the epoch and sends no Cache-Control, so the heuristic freshness a
 // browser computes runs to years and it never revalidates. This is how the
-// Theme Store spent months rendering built-in cards from a presets.json whose
+// Marketplace spent months rendering built-in cards from a presets.json whose
 // shape had changed underneath it.
 //
 // Resources LuCI itself `require`s are out of scope -- LuCI appends its own
@@ -171,7 +171,7 @@ test("self-fetched resources carry a cache-busting version", async () => {
     );
   }
 
-  const theme = await readFile(join(OUT, "view/aurora/theme.js"), "utf8");
+  const theme = await readFile(join(OUT, "view/aurora/studio.js"), "utf8");
   // The version is the loader's second argument; the "?v=" concatenation lives
   // inside loadGlobalScript, so assert on both halves.
   assert.match(
@@ -187,10 +187,10 @@ test("self-fetched resources carry a cache-busting version", async () => {
         `already has it will never ask for it again`,
     );
 
-  const gallery = await readFile(join(OUT, "view/aurora/gallery.js"), "utf8");
+  const gallery = await readFile(join(OUT, "view/aurora/marketplace.js"), "utf8");
   assert.match(
     gallery,
     /aurora\/presets\.json"\)\s*\+\s*"\?v=[^"]+"/,
-    "gallery.js fetches presets.json with no ?v=",
+    "marketplace.js fetches presets.json with no ?v=",
   );
 });
