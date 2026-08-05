@@ -967,3 +967,34 @@ test("my-shares empty state onboards instead of demanding an import", async () =
   assert.ok(!src.includes('_("Import a creator key")'));
   assert.ok(!src.includes('_("Import a key")'));
 });
+
+// The hub soft-deletes: /api/v1/me keeps listing a share this device has
+// already deleted, marked `status: "removed"`. Nothing else in this view reads
+// `status`, so an unfiltered list re-renders that share with live Update and
+// Delete buttons -- which is why a delete looked broken end to end: it
+// succeeded, the row stayed, and the second click hit a 404.
+test("gallery: a share the hub has removed never reaches My Shares", async () => {
+  const src = await readFile(SRC, "utf8");
+  const start = src.indexOf("const renderMyShares");
+  assert.ok(start > 0, "renderMyShares not found");
+  const head = src.slice(start, src.indexOf("TABS.forEach", start));
+  assert.match(
+    head,
+    /status !== "removed"/,
+    "renderMyShares must drop the shares the hub has already removed",
+  );
+});
+
+test("gallery: a delete the hub refuses still re-reads My Shares", async () => {
+  const src = await readFile(SRC, "utf8");
+  const start = src.indexOf("const confirmDeleteShare");
+  assert.ok(start > 0, "confirmDeleteShare not found");
+  const fn = src.slice(start, src.indexOf("const buildMyShareRow", start));
+  // Two refreshes, not one. The failure branch is the only way a row the hub
+  // has already dropped ever leaves the screen.
+  assert.equal(
+    (fn.match(/refreshMyShares\(\)/g) || []).length,
+    2,
+    "both the success and the failure branch must re-read hub_me",
+  );
+});

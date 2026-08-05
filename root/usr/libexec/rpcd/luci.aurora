@@ -388,15 +388,23 @@ fetch_url() {
 	local output="$1"
 	shift
 	local tries_arg=""
+	# A caller that needs to tell a 404 apart from a dead network sets
+	# FETCH_URL_ERR to a file to collect stderr, which also drops -q --
+	# -q silences the very line that names the status. Everyone else stays
+	# quiet and throws stderr away, which is what the asset-download loop
+	# wants: it fetches many files and its progress meters have nowhere to go
+	# but rpcd's stderr.
+	local quiet="-q" err="/dev/null"
+	[ -n "$FETCH_URL_ERR" ] && { quiet=""; err="$FETCH_URL_ERR"; }
 
 	if wget --help 2>&1 | grep -q -- '--tries'; then
 		tries_arg="--tries=1"
 	fi
 
 	if command -v timeout >/dev/null 2>&1; then
-		timeout 12 wget -qO "$output" --timeout=8 $tries_arg "$@"
+		timeout 12 wget $quiet -O "$output" --timeout=8 $tries_arg "$@" 2>"$err"
 	else
-		wget -qO "$output" --timeout=8 $tries_arg "$@"
+		wget $quiet -O "$output" --timeout=8 $tries_arg "$@" 2>"$err"
 	fi
 }
 
@@ -419,10 +427,37 @@ ensure_device_identity() {
 	DEVICE_HASH=$(cat "$DEVICE_DIR/device.hash")
 }
 
+# "This one is gone" and "the store is down" are different things to tell a
+# user, and uclient-fetch hands its caller neither: exit 8 covers every error
+# status the hub can send, and -q silences the one line that names which. So
+# the three helpers below keep stderr and read the status off it. Measured on
+# the device against the live hub: a 404 exits 8 and prints "HTTP error 404";
+# a host it cannot reach exits 4 and prints "Failed to send request". The
+# wording is uclient-fetch's own fixed format, not the hub's -- a device
+# carrying busybox wget instead prints something else, misses the match, and
+# degrades to the network answer, which is what it reported before anyway.
+hub_http_gone() {  # $1=stderr_file
+	grep -q '^HTTP error 404$' "$1" 2>/dev/null
+}
+
+# Returns 2, not 1, when the store has no such config any more, so the apply
+# path can say "this theme is gone" instead of blaming the network. fetch_url
+# stays the transport: it carries the --tries shim the asset downloads rely on.
 hub_http_get() {  # $1=path
-	local out; out=$(mktemp)
-	if fetch_url "$out" "$HUB_BASE$1"; then cat "$out"; rm -f "$out"; return 0; fi
-	rm -f "$out"; return 1
+	local out err rc; out=$(mktemp); err=$(mktemp)
+	FETCH_URL_ERR="$err"
+	fetch_url "$out" "$HUB_BASE$1"
+	rc=$?
+	FETCH_URL_ERR=""
+	if [ "$rc" = 0 ]; then
+		cat "$out"
+	elif hub_http_gone "$err"; then
+		rc=2
+	else
+		rc=1
+	fi
+	rm -f "$out" "$err"
+	return "$rc"
 }
 
 hub_http_post() {  # $1=path  $2=body_file
@@ -444,26 +479,43 @@ hub_http_post() {  # $1=path  $2=body_file
 # Verified on the device: with --body-file the hub answers
 # {"id":"...","removed":true}; with the POST-selecting flag instead, wget only
 # prints its usage. Update and delete never once worked before this.
+#
+# Returns 2, not 1, when the hub has no such share any more (see hub_http_gone).
 hub_http_put() {  # $1=path  $2=body_file
-	local out; out=$(mktemp)
-	if timeout 15 wget -qO "$out" --timeout=12 \
+	local out err rc; out=$(mktemp); err=$(mktemp)
+	timeout 15 wget -O "$out" --timeout=12 \
 	     --header='Content-Type: application/json' \
-	     --method=PUT --body-file="$2" "$HUB_BASE$1"; then
-		cat "$out"; rm -f "$out"; return 0
+	     --method=PUT --body-file="$2" "$HUB_BASE$1" 2>"$err"
+	rc=$?
+	if [ "$rc" = 0 ]; then
+		cat "$out"
+	elif hub_http_gone "$err"; then
+		rc=2
+	else
+		rc=1
 	fi
-	rm -f "$out"; return 1
+	rm -f "$out" "$err"
+	return "$rc"
 }
 
-# Same --method/--body-file pairing as hub_http_put above; the hub expects the
-# device_token in a JSON body even on DELETE.
+# Same --method/--body-file pairing and the same 0/2/1 contract as
+# hub_http_put above; the hub expects the device_token in a JSON body even on
+# DELETE.
 hub_http_delete() {  # $1=path  $2=body_file
-	local out; out=$(mktemp)
-	if timeout 15 wget -qO "$out" --timeout=12 \
+	local out err rc; out=$(mktemp); err=$(mktemp)
+	timeout 15 wget -O "$out" --timeout=12 \
 	     --header='Content-Type: application/json' \
-	     --method=DELETE --body-file="$2" "$HUB_BASE$1"; then
-		cat "$out"; rm -f "$out"; return 0
+	     --method=DELETE --body-file="$2" "$HUB_BASE$1" 2>"$err"
+	rc=$?
+	if [ "$rc" = 0 ]; then
+		cat "$out"
+	elif hub_http_gone "$err"; then
+		rc=2
+	else
+		rc=1
 	fi
-	rm -f "$out"; return 1
+	rm -f "$out" "$err"
+	return "$rc"
 }
 
 # Minimal JSON string escaper for values that have already been rejected
@@ -1092,7 +1144,7 @@ validate_and_apply_hub_payload() {
 # frontend can poll get_hub_status.
 hub_apply_worker() {
 	local job_id="$1" id="$2"
-	local body tmpfile
+	local body tmpfile fetch_rc
 	local asset_i=1 a_kind a_sha256 a_url target
 
 	ensure_device_identity
@@ -1106,8 +1158,18 @@ hub_apply_worker() {
 	rm -rf "$DEVICE_DIR/pre-hub-images"
 
 	write_hub_job_status "$job_id" "running" "fetch" ""
-	if ! body=$(hub_http_get "/api/v1/themes/aurora/configs/$id"); then
-		write_hub_job_status "$job_id" "error" "fetch" "hub_unreachable"
+	body=$(hub_http_get "/api/v1/themes/aurora/configs/$id")
+	fetch_rc=$?
+	if [ "$fetch_rc" != 0 ]; then
+		# 2 is the store answering "no such config": the theme was taken down
+		# between its card being drawn and Apply being tapped. Telling the
+		# user to check their connection over that sends them hunting for a
+		# fault that is not theirs.
+		if [ "$fetch_rc" = 2 ]; then
+			write_hub_job_status "$job_id" "error" "fetch" "invalid_id"
+		else
+			write_hub_job_status "$job_id" "error" "fetch" "hub_unreachable"
+		fi
 		return 1
 	fi
 
@@ -2721,19 +2783,24 @@ MANIFEST
 			"$update_payload_json" "$update_assets_json" \
 			> "$update_body_tmp"
 
-		if update_body=$(hub_http_put "/api/v1/themes/aurora/configs/$id" "$update_body_tmp"); then
-			json_load "$update_body" 2>/dev/null
-			json_get_var update_version "version"
-			json_cleanup
-			update_version=$(printf '%s' "$update_version" | tr -d '[:cntrl:]')
-			json_init
-			json_add_int "result" 0
-			json_add_string "version" "$update_version"
-			json_dump; json_cleanup
-		else
-			echo '{ "result": 1, "error": "hub_unreachable" }'
-		fi
+		update_body=$(hub_http_put "/api/v1/themes/aurora/configs/$id" "$update_body_tmp")
+		update_rc=$?
 		rm -f "$update_body_tmp"
+
+		case "$update_rc" in
+			0)
+				json_load "$update_body" 2>/dev/null
+				json_get_var update_version "version"
+				json_cleanup
+				update_version=$(printf '%s' "$update_version" | tr -d '[:cntrl:]')
+				json_init
+				json_add_int "result" 0
+				json_add_string "version" "$update_version"
+				json_dump; json_cleanup
+			;;
+			2) echo '{ "result": 1, "error": "invalid_id" }' ;;
+			*) echo '{ "result": 1, "error": "hub_unreachable" }' ;;
+		esac
 		;;
 
 	"hub_delete")
@@ -2750,13 +2817,19 @@ MANIFEST
 		delete_body_tmp=$(mktemp)
 		printf '{"device_token":"%s"}' "$DEVICE_TOKEN" > "$delete_body_tmp"
 
-		if hub_http_delete "/api/v1/themes/aurora/configs/$id" "$delete_body_tmp" >/dev/null; then
-			# No local bookkeeping to undo -- hub_me re-reads the truth.
-			echo '{ "result": 0 }'
-		else
-			echo '{ "result": 1, "error": "hub_unreachable" }'
-		fi
+		hub_http_delete "/api/v1/themes/aurora/configs/$id" "$delete_body_tmp" >/dev/null
+		delete_rc=$?
 		rm -f "$delete_body_tmp"
+
+		case "$delete_rc" in
+			# No local bookkeeping to undo -- hub_me re-reads the truth.
+			0) echo '{ "result": 0 }' ;;
+			# The hub has no such share anymore. Reporting that as
+			# hub_unreachable sent the user off checking their internet over a
+			# share that was simply already gone.
+			2) echo '{ "result": 1, "error": "invalid_id" }' ;;
+			*) echo '{ "result": 1, "error": "hub_unreachable" }' ;;
+		esac
 		;;
 
 	esac

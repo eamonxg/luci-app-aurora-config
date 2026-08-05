@@ -615,3 +615,109 @@ test("acl: hub_me is readable and the stale hub_my_shares entry is gone", () => 
   assert.ok(read.includes("hub_me"), "hub_me missing from read");
   assert.ok(!read.includes("hub_my_shares"), "stale hub_my_shares in acl");
 });
+
+// --- A share the hub has already dropped is not an unreachable hub ---
+//
+// Measured on the device against the live hub: DELETE on an id the hub has
+// already removed answers 404 -- uclient-fetch exits 8 and prints
+// "HTTP error 404" on stderr; a host it cannot reach exits 4 and prints
+// "Failed to send request". `-q` silences both lines, and the exit code alone
+// lumps every error status together, so the helpers could only ever report
+// hub_unreachable -- telling a user the store is down when their share is
+// simply gone.
+
+test("rpcd script: hub_http_gone reads the 404 off uclient-fetch's stderr", () => {
+  const body = extractFunctionBody(rpcd, "hub_http_gone");
+  assert.match(body, /HTTP error 404/, "the status line is the only 404 signal");
+});
+
+for (const fn of ["hub_http_put", "hub_http_delete"]) {
+  test(`rpcd script: ${fn} tells a share the hub dropped apart from an unreachable hub`, () => {
+    const body = extractFunctionBody(rpcd, fn);
+    assert.ok(!/wget -qO/.test(body), "-q swallows the line that names the status");
+    assert.match(body, /2>"\$err"/, "stderr must be kept, not discarded");
+    assert.match(body, /hub_http_gone "\$err"/, "the status line must be consulted");
+    assert.match(body, /rc=2/, "a dropped share needs a return code of its own");
+  });
+}
+
+test("rpcd script: hub_delete answers invalid_id, not hub_unreachable, when the share is gone", () => {
+  const branchMatch = rpcd.match(/"hub_delete"\)([\s\S]*?)\n\t;;/);
+  assert.ok(branchMatch);
+  const body = branchMatch[1];
+  assert.match(
+    body,
+    /\n\t\t\t2\)[\s\S]{0,400}?"error": "invalid_id"/,
+    "return code 2 must map to invalid_id",
+  );
+  assert.match(body, /\*\)[\s\S]{0,200}?"error": "hub_unreachable"/);
+});
+
+test("rpcd script: hub_update answers invalid_id, not hub_unreachable, when the share is gone", () => {
+  // Sliced to the next branch, not by the `\n\t;;` the other hub_update test
+  // uses: that one is lazy but the nearest single-tab `;;` is the end of the
+  // outer case, so it swallows hub_delete along with it and would go green on
+  // hub_delete's fix alone.
+  const start = rpcd.indexOf('"hub_update")');
+  const end = rpcd.indexOf('"hub_delete")', start);
+  assert.ok(start > 0 && end > start, "hub_update branch not found");
+  const body = rpcd.slice(start, end);
+  assert.match(
+    body,
+    /\n\t\t\t2\)[\s\S]{0,400}?"error": "invalid_id"/,
+    "return code 2 must map to invalid_id",
+  );
+});
+
+// --- The same 404 blindness on the read path ---
+//
+// hub_http_get goes through fetch_url, which is shared with asset downloads
+// and is -q for their sake. So applying a theme the store had already taken
+// down reported hub_unreachable too, and the store page told the user to check
+// their connection over a theme that was simply gone.
+
+test("rpcd script: fetch_url stays quiet unless the caller asks to keep stderr", () => {
+  const body = extractFunctionBody(rpcd, "fetch_url");
+  assert.match(body, /FETCH_URL_ERR/, "callers need a way to opt into stderr");
+  // The other caller is the asset download loop; it must not start spraying
+  // uclient-fetch progress meters into rpcd's stderr.
+  assert.match(body, /\/dev\/null/, "discarding stderr stays the default");
+  assert.match(body, /-q/, "quiet stays the default");
+});
+
+test("rpcd script: hub_http_get tells a theme the store dropped apart from an unreachable hub", () => {
+  const body = extractFunctionBody(rpcd, "hub_http_get");
+  assert.match(body, /FETCH_URL_ERR/, "stderr must be kept for this one call");
+  assert.match(body, /hub_http_gone "\$err"/, "the status line must be consulted");
+  assert.match(body, /rc=2/, "a dropped theme needs a return code of its own");
+});
+
+test("rpcd script: the apply worker reports invalid_id when the store no longer has the theme", () => {
+  const body = extractFunctionBody(rpcd, "hub_apply_worker");
+  assert.match(
+    body,
+    /"error" "fetch" "invalid_id"/,
+    "a 404 on fetch must not be reported as hub_unreachable",
+  );
+  assert.match(body, /"error" "fetch" "hub_unreachable"/, "the network case must survive");
+});
+
+// §8.2 drifted silently: it still listed hub_list, hub_get and hub_my_shares
+// long after they were deleted, and carried an `author` param that hub_share
+// and hub_update never took. Nothing checked it, so nothing stopped it. This
+// pins the table to the acl -- the one file that decides what is callable.
+test("docs: the marketplace method table stays in step with the acl", () => {
+  const docs = readFileSync(path.join(repoRoot, "docs/DEVELOPMENT.md"), "utf8");
+  const section = docs.slice(docs.indexOf("### 8.2 "), docs.indexOf("### 8.3 "));
+  const documented = [...section.matchAll(/^\| `([a-z_]+)/gm)]
+    .map((m) => m[1])
+    .sort();
+  const parsed = JSON.parse(acl)["luci-app-aurora"];
+  const exposed = [
+    ...parsed.read.ubus["luci.aurora"],
+    ...parsed.write.ubus["luci.aurora"],
+  ]
+    .filter((m) => /^(hub_|get_hub_)/.test(m))
+    .sort();
+  assert.deepEqual(documented, exposed);
+});

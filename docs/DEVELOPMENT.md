@@ -402,11 +402,17 @@ the `case "$1" in "list")` block at the end of the script. Common methods:
 | `list_icons` / `upload_icon` / `remove_icon` | Icon management |
 | `prepare_font` / `get_font_presets` / `get_font_status` | Font handling |
 | `upload_font` / `remove_font` | Custom (user-uploaded) font management |
-| `hub_list` / `hub_get` | Marketplace: browse the hub's config list / read one config's full payload |
 | `hub_apply` / `get_hub_status` | Marketplace: kick off an async apply job / poll its progress |
 | `hub_restore_backup` | Marketplace: one-tap rollback to the pre-apply snapshot |
 | `hub_share` / `hub_update` / `hub_delete` | Marketplace: publish the current config / edit / unpublish a share |
-| `hub_my_shares` | Marketplace: list this device's own published shares |
+| `hub_me` | Marketplace: this device's creator profile and everything it has published |
+| `hub_set_nickname` / `hub_export_key` / `hub_import_key` | Marketplace: name the creator identity / back it up / restore it on another router |
+
+Browsing the store is *not* in this list: the browser fetches the hub's public
+list and detail endpoints directly (`utils/hub-api.js`), so no shell forks and
+no rpcd round trip stand between the store page and its cards. Only calls that
+need the device's write credential or the device's own filesystem go through
+rpcd.
 
 ACLs live in `root/usr/share/rpcd/acl.d/luci-app-aurora.json`; the menu entries
 (`Theme Studio`, `Configuration Marketplace`) in
@@ -559,15 +565,31 @@ a blank swatch.
 
 | Method | Purpose |
 | --- | --- |
-| `hub_list(sort, page)` | Fetch a page of the hub's config list (`sort` is `hot` or `new`) |
-| `hub_get(id)` | Fetch one config's full payload + asset list for the detail modal |
-| `hub_apply(id)` | Forks an async apply job (`hub_apply_worker`) in the background, returns a `job_id` immediately |
 | `get_hub_status(job_id)` | Poll a job's `state`/`step`/`error`; the frontend polls this every 1.5s (`marketplace.js: pollApplyStatus`) |
-| `hub_restore_backup` | Roll back to the single most recent pre-apply snapshot |
-| `hub_share(name, description, author)` | Publish the current local config as a new hub entry |
-| `hub_my_shares` | List this device's own published shares (re-validates each id against the hub, dropping any that 404) |
-| `hub_update(id, name, author, description)` | Republish this device's share `id` with the current local config |
+| `hub_apply(id)` | Forks an async apply job (`hub_apply_worker`) in the background, returns a `job_id` immediately |
 | `hub_delete(id)` | Unpublish share `id` |
+| `hub_export_key` | Read `device.key` back out so a creator identity can be moved to another router |
+| `hub_import_key(key)` | Adopt an exported identity, taking over the shares it owns |
+| `hub_me` | One request for both halves of the answer: who this router publishes as, and what it has published |
+| `hub_restore_backup` | Roll back to the single most recent pre-apply snapshot |
+| `hub_set_nickname(nickname)` | Set the creator name the hub shows on this device's shares |
+| `hub_share(name, description)` | Publish the current local config as a new hub entry |
+| `hub_update(id, name, description)` | Republish this device's share `id` with the current local config |
+
+`hub_list`/`hub_get`/`hub_my_shares` are gone. The first two moved into the
+browser (see §8.1); `hub_my_shares` walked a local id list and re-validated
+each id against the hub on every page load, and `hub_me` replaced it with a
+single request whose answer is the hub's own — there is no local record left to
+lose or wrongly prune. `tests/rpcd-hub.test.mjs` pins this table to the ACL, so
+adding a method without documenting it fails the suite.
+
+The three helpers that talk to the hub — `hub_http_get`, `hub_http_put`,
+`hub_http_delete` — return **0** on success, **2** when the hub answers 404,
+and **1** when it cannot be reached at all. The distinction is not free:
+uclient-fetch exits 8 for every error status alike and `-q` suppresses the one
+line naming it, so the helpers keep stderr and read the status off it. Without
+that, unpublishing a share that was already gone, or applying a theme the store
+had taken down, both told the user their connection was broken.
 
 ### 8.3 Device identity
 
