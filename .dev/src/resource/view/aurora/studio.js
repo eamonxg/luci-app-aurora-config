@@ -2322,13 +2322,29 @@ return view.extend({
         _("Reset"),
       );
 
+      // 发布的起点在这里,不在商店。这一排本来就是对"整套配置"动手的地方 ——
+      // 导出是存给自己,分享是发给别人,同一族。商店那边原先有三个入口同时在
+      // 场(页头按钮、面板标题、空态卡按钮),说的都是同一句话;它们一起删掉,
+      // 商店从此只干两件事:逛别人的、管自己的。
+      const shareButton = E(
+        "button",
+        {
+          class: "cbi-button",
+          click: () => {
+            window.location.href =
+              L.url("admin/system/aurora/marketplace") + "?share=1";
+          },
+        },
+        _("Share to the store"),
+      );
+
       return E(
         "div",
         {
           class: "aurora-config-toolbar",
           style: "display:flex; flex-wrap:wrap; gap:0.5em; align-items:center;",
         },
-        [exportButton, importButton, resetButton],
+        [exportButton, importButton, shareButton, resetButton],
       );
     };
 

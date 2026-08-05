@@ -253,12 +253,12 @@ test("acl: the fixed /tmp/aurora_hub_share.json path is gone (share/update now u
   assert.ok(!rpcd.includes("/tmp/aurora_hub_share.json"), "script must no longer reference the fixed share-body path");
 });
 
-test("rpcd script: hub_share and hub_update write their request body via mktemp, not a fixed path", () => {
-  const shareBranchMatch = rpcd.match(/"hub_share"\)([\s\S]*?)\n\t\t;;/);
-  const updateBranchMatch = rpcd.match(/"hub_update"\)([\s\S]*?)\n\t\t;;/);
-  assert.ok(shareBranchMatch && updateBranchMatch);
-  assert.match(shareBranchMatch[1], /share_body_tmp=\$\(mktemp\)/);
-  assert.match(updateBranchMatch[1], /update_body_tmp=\$\(mktemp\)/);
+test("rpcd script: the publish calls write their request body via mktemp, not a fixed path", () => {
+  const beginMatch = rpcd.match(/"hub_share_begin"\)([\s\S]*?)\n\t\t;;/);
+  const commitMatch = rpcd.match(/"hub_share_commit"\)([\s\S]*?)\n\t\t;;/);
+  assert.ok(beginMatch && commitMatch);
+  assert.match(beginMatch[1], /draft_body_tmp=\$\(mktemp\)/);
+  assert.match(commitMatch[1], /commit_body_tmp=\$\(mktemp\)/);
 });
 
 test("sysupgrade: device identity files are preserved across firmware upgrades", () => {
@@ -390,47 +390,54 @@ test("rpcd script: build_share_payload skips factory-default image filenames", (
   assert.match(rpcd, /logo\.svg\|favicon\.ico\|app-icon-192x192\.png\|app-icon-512x512\.png\|apple-touch-icon\.png/);
 });
 
-test("rpcd script: build_share_payload computes sha256/size and base64-encodes assets, busybox-safe", () => {
+// sha256/size 仍然由路由器算 —— 这是浏览器直传能安全的关键:hub 校验浏览器
+// 送上来的字节 hash 等于路由器声明的 hash,所以一个被篡改的页面换不掉这张图。
+// base64 那一步没了(见 "emits a filename sidecar" 一测)。
+test("rpcd script: build_share_payload computes sha256/size, busybox-safe", () => {
   assert.match(rpcd, /sha256sum "\$file" 2>\/dev\/null \| cut -d' ' -f1/);
   assert.match(rpcd, /wc -c < "\$file"/);
-  assert.match(rpcd, /base64 -w0 "\$file" 2>\/dev\/null \|\| base64 "\$file"/);
 });
 
-test("rpcd script: hub_share, hub_me, hub_update, hub_delete handlers exist", () => {
-  assert.ok(rpcd.includes('"hub_share")'));
+// hub_share/hub_update 是单请求的老路:它们把整张登录背景 base64 塞进一个
+// 1.6MB 的 body,而 uclient-fetch 走 TLS 推不动 —— 任何设了登录背景的人都
+// 发布不出去。三段式取代了它们,这里钉住"不许回来"。
+test("rpcd script: hub_share_begin, hub_share_commit, hub_me, hub_delete handlers exist", () => {
+  assert.ok(rpcd.includes('"hub_share_begin")'));
+  assert.ok(rpcd.includes('"hub_share_commit")'));
   assert.ok(rpcd.includes('"hub_me")'));
-  assert.ok(rpcd.includes('"hub_update")'));
   assert.ok(rpcd.includes('"hub_delete")'));
+  assert.ok(!rpcd.includes('"hub_share")'), "the single-request publish is gone");
+  assert.ok(!rpcd.includes('"hub_update")'), "the single-request update is gone");
 });
 
-test("rpcd script: hub_share, hub_me, hub_update, hub_delete registered in list branch", () => {
-  assert.ok(rpcd.includes('json_add_object "hub_share"'));
+test("rpcd script: the hub methods are registered in the list branch", () => {
+  assert.ok(rpcd.includes('json_add_object "hub_share_begin"'));
+  assert.ok(rpcd.includes('json_add_object "hub_share_commit"'));
   assert.ok(rpcd.includes('json_add_object "hub_me"'));
-  assert.ok(rpcd.includes('json_add_object "hub_update"'));
   assert.ok(rpcd.includes('json_add_object "hub_delete"'));
 });
 
-test("rpcd script: hub_share validates name/description with has_control_char before use", () => {
-  const shareBranchMatch = rpcd.match(/"hub_share"\)([\s\S]*?)\n\t;;/);
-  assert.ok(shareBranchMatch, "hub_share branch should exist");
+test("rpcd script: hub_share_begin validates name/description with has_control_char before use", () => {
+  const shareBranchMatch = rpcd.match(/"hub_share_begin"\)([\s\S]*?)\n\t;;/);
+  assert.ok(shareBranchMatch, "hub_share_begin branch should exist");
   const body = shareBranchMatch[1];
   assert.match(body, /has_control_char\s+"\$name"/);
   assert.match(body, /has_control_char\s+"\$description"/);
   // The signature is not a publish field any more; hub_set_nickname owns it.
-  assert.ok(!/\$author/.test(body), "hub_share must not handle an author");
+  assert.ok(!/\$author/.test(body), "publishing must not handle an author");
 });
 
-test("rpcd script: hub_share ensures device identity, builds payload, and POSTs", () => {
-  const shareBranchMatch = rpcd.match(/"hub_share"\)([\s\S]*?)\n\t;;/);
+test("rpcd script: hub_share_begin ensures device identity, builds payload, and opens a draft", () => {
+  const shareBranchMatch = rpcd.match(/"hub_share_begin"\)([\s\S]*?)\n\t;;/);
   assert.ok(shareBranchMatch);
   const body = shareBranchMatch[1];
   assert.match(body, /ensure_device_identity/);
   assert.match(body, /build_share_payload/);
   assert.match(body, /device_token/);
-  assert.match(body, /hub_http_post\s+"\/api\/v1\/themes\/aurora\/configs"/);
+  assert.match(body, /hub_http_post\s+"\/api\/v1\/themes\/aurora\/configs\/draft"/);
   // Nothing is recorded locally: a published id is the hub's to remember, and
   // a local copy would survive a key import it no longer belongs to.
-  assert.ok(!/hub_shares/.test(body), "hub_share must not keep a local id list");
+  assert.ok(!/hub_shares/.test(body), "publishing must not keep a local id list");
 });
 
 // The old hub_my_shares walked a local id file and issued one hub request per
@@ -453,13 +460,16 @@ test("rpcd script: hub_me asks the hub once and keeps no local list", () => {
   );
 });
 
-test("rpcd script: hub_update guards id charset, builds payload, and PUTs with device_token", () => {
-  const branchMatch = rpcd.match(/"hub_update"\)([\s\S]*?)\n\t;;/);
+// 更新不再有自己的方法:它就是带 target_id 的发布。这条钉住 target_id 的
+// 字符集守卫 —— 注意不能写成 ''|*[A-Za-z0-9]*),那个通配只要求"含有"一个
+// 字母数字,"ab/../x" 也会过。
+test("rpcd script: hub_share_begin guards target_id charset and forwards it", () => {
+  const branchMatch = rpcd.match(/"hub_share_begin"\)([\s\S]*?)\n\t;;/);
   assert.ok(branchMatch);
   const body = branchMatch[1];
-  assert.match(body, /case "\$id" in ''\|\*\[!A-Za-z0-9\]\*\)/);
+  assert.match(body, /\*\[!A-Za-z0-9\]\*\) echo '\{ "result": 1, "error": "invalid_id" \}'/);
+  assert.match(body, /"target_id":"%s"/);
   assert.match(body, /build_share_payload/);
-  assert.match(body, /hub_http_put\s+"\/api\/v1\/themes\/aurora\/configs\/\$id"/);
   assert.match(body, /device_token/);
 });
 
@@ -474,19 +484,22 @@ test("rpcd script: hub_delete guards id charset and DELETEs with device_token", 
   assert.ok(!/hub_shares/.test(body), "hub_delete must not maintain a local id list");
 });
 
-test("acl: hub_share, hub_update, hub_delete granted under write.ubus; hub_me under read.ubus", () => {
+test("acl: the publish calls are granted under write.ubus; hub_me under read.ubus", () => {
   const acljson = JSON.parse(acl);
   const writeMethods = acljson["luci-app-aurora"].write.ubus["luci.aurora"];
   const readMethods = acljson["luci-app-aurora"].read.ubus["luci.aurora"];
-  assert.ok(writeMethods.includes("hub_share"));
-  assert.ok(writeMethods.includes("hub_update"));
+  assert.ok(writeMethods.includes("hub_share_begin"));
+  assert.ok(writeMethods.includes("hub_share_commit"));
   assert.ok(writeMethods.includes("hub_delete"));
   assert.ok(readMethods.includes("hub_me"));
+  // 老方法必须一并从 ACL 撤掉,否则一个被删掉的入口还挂在权限表上。
+  assert.ok(!writeMethods.includes("hub_share"));
+  assert.ok(!writeMethods.includes("hub_update"));
 });
 
 // Note: the fixed /tmp/aurora_hub_share.json path was removed (see the
 // "acl: the fixed /tmp/aurora_hub_share.json path is gone" test above) --
-// hub_share/hub_update now write their request bodies via mktemp instead.
+// the publish calls write their request bodies via mktemp instead.
 
 // --- Security review round 3: asset path traversal + un-enforced hub schema ---
 
@@ -653,14 +666,13 @@ test("rpcd script: hub_delete answers invalid_id, not hub_unreachable, when the 
   assert.match(body, /\*\)[\s\S]{0,200}?"error": "hub_unreachable"/);
 });
 
-test("rpcd script: hub_update answers invalid_id, not hub_unreachable, when the share is gone", () => {
-  // Sliced to the next branch, not by the `\n\t;;` the other hub_update test
-  // uses: that one is lazy but the nearest single-tab `;;` is the end of the
-  // outer case, so it swallows hub_delete along with it and would go green on
-  // hub_delete's fix alone.
-  const start = rpcd.indexOf('"hub_update")');
-  const end = rpcd.indexOf('"hub_delete")', start);
-  assert.ok(start > 0 && end > start, "hub_update branch not found");
+test("rpcd script: hub_share_commit answers invalid_id, not hub_unreachable, when the draft is gone", () => {
+  // Sliced to the next branch, not by the `\n\t;;` the other tests use: that
+  // one is lazy but the nearest single-tab `;;` is the end of the outer case,
+  // so it swallows the following branch and would go green on its fix alone.
+  const start = rpcd.indexOf('"hub_share_commit")');
+  const end = rpcd.indexOf('"hub_me")', start);
+  assert.ok(start > 0 && end > start, "hub_share_commit branch not found");
   const body = rpcd.slice(start, end);
   assert.match(
     body,
@@ -720,4 +732,46 @@ test("docs: the marketplace method table stays in step with the acl", () => {
     .filter((m) => /^(hub_|get_hub_)/.test(m))
     .sort();
   assert.deepEqual(documented, exposed);
+});
+
+// 浏览器直传之后,路由器不再需要把 1.2MB 的图 base64 塞进 JSON —— 实测
+// uclient-fetch 走 TLS 推不动那么大的 body(512KB 三次挂一次,1MB 必断)。
+// 它只需要告诉浏览器每个 kind 对应哪个本机文件名。
+test("build_share_payload: emits a filename sidecar, not base64", () => {
+  assert.match(rpcd, /local out_file="\$1" files_file="\$\{1\}\.files"/);
+  assert.match(rpcd, /printf '%s\\t%s\\n' "\$kind" "\$fname" >> "\$files_file"/);
+  assert.ok(!/base64 -w0/.test(rpcd), "base64 encoding should be gone");
+  assert.ok(!/data_b64/.test(rpcd), "data_b64 should be gone from the rpcd script");
+});
+
+// 一律报 hub_unreachable 是"发布失败看起来像商店挂了"的全部原因:-q 把
+// uclient-fetch 唯一会说出理由的那一行也吞了。hub_http_put/delete 一直会
+// 区分 404,post 只是没跟上。
+test("hub_http_post distinguishes a rejection from an outage", () => {
+  assert.match(rpcd, /hub_http_post\(\)\s*\{[\s\S]*?2>"\$err"/);
+  assert.match(rpcd, /HUB_HTTP_STATUS=/);
+  assert.ok(
+    !/wget -qO "\$out" --timeout=12/.test(rpcd),
+    "-q swallowed the reason uclient-fetch prints",
+  );
+});
+
+// 三段式发布：路由器建草稿拿票据 -> 浏览器直传字节 -> 路由器提交。
+// 中间那段不经过路由器,因为 uclient-fetch 走 TLS 推不动大 body。
+test("rpcd exposes the three-step publish", () => {
+  for (const m of ["hub_share_begin", "hub_share_commit"]) {
+    assert.match(rpcd, new RegExp(`json_add_object "${m}"`), `${m} missing from list`);
+    assert.ok(rpcd.includes(`"${m}")`), `${m} missing from call`);
+    assert.ok(acl.includes(`"${m}"`), `${m} missing from ACL write list`);
+  }
+});
+
+test("hub_share_begin hands out local asset URLs, never the device token", () => {
+  assert.match(rpcd, /\/luci-static\/aurora\/images\//);
+  const begin = rpcd.slice(rpcd.indexOf('"hub_share_begin")'));
+  const body = begin.slice(0, begin.indexOf("\n\t\t;;"));
+  assert.match(body, /configs\/draft/);
+  // 拼回复的那一段里不能出现 DEVICE_TOKEN
+  const reply = body.slice(body.indexOf("json_add_array \"assets\""));
+  assert.ok(!/DEVICE_TOKEN/.test(reply), "the device token must never reach the response");
 });

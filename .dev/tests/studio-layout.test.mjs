@@ -236,3 +236,15 @@ test("the two engine scripts download in parallel and still execute in order", a
     "awaiting the first script before requesting the second costs a second round trip",
   );
 });
+
+// 发布的起点在工作台,不在商店。导出/导入/重置都是对"整套配置"动手,分享是
+// 同一族的事 —— 导出是存给自己,分享是发给别人。商店那边三处发布入口因此
+// 全部删掉(见 marketplace-view.test.mjs)。
+test("studio: publishing starts here, next to export/import", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(src, /_\("Share to the store"\)/);
+  // 意图用 URL 参数传,不用 sessionStorage:刷新、回退、收藏行为都可预测。
+  assert.match(src, /L\.url\("admin\/system\/aurora\/marketplace"\)/);
+  assert.match(src, /"\?share=1"/);
+  assert.match(src, /\[exportButton, importButton, shareButton, resetButton\]/);
+});

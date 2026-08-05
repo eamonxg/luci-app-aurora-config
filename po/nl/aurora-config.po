@@ -1,19 +1,20 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2605
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:627
 msgid "%d downloads"
 msgstr "%d downloads"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2278
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2271
 msgid "%d shortcuts"
 msgstr "%d snelkoppelingen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3416
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3436
 msgid "(No icons uploaded)"
 msgstr "(Geen iconen geüpload)"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3249
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3269
 msgid "(None)"
 msgstr "(Geen)"
 
@@ -21,19 +22,20 @@ msgstr "(Geen)"
 msgid "(disabled)"
 msgstr "(uitgeschakeld)"
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2604
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:627
 msgid "1 download"
 msgstr "1 download"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2277
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2270
 msgid "1 shortcut"
 msgstr "1 snelkoppeling"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3273
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3293
 msgid "192×192 icon for the installable web app manifest."
 msgstr "192×192 icoon voor het manifest van de installeerbare web-app."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3279
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3299
 msgid "512×512 icon for the installable web app manifest."
 msgstr "512×512 icoon voor het manifest van de installeerbare web-app."
 
@@ -61,31 +63,31 @@ msgstr "Accent voor waarschuwingen, opmerkingen en validatieberichten."
 msgid "Accents for notifications, validation, and status feedback."
 msgstr "Accenten voor meldingen, validatie en statusfeedback."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2549
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2569
 msgid "Add"
 msgstr "Toevoegen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3387
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3407
 msgid "Add shortcuts, assign icons, and drag rows to reorder them."
 msgstr "Snelkoppelingen toevoegen, iconen toewijzen en rijen slepen om ze te ordenen."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2528
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2548
 msgid "Add the Aurora update source"
 msgstr "Aurora-updatebron toevoegen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2555
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2575
 msgid "Add update source"
 msgstr "Updatebron toevoegen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2466
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2486
 msgid "Adding the update source…"
 msgstr "Updatebron wordt toegevoegd…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2532
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2552
 msgid "Afterwards you can upgrade Aurora in System → Software, like any other OpenWrt package."
 msgstr "Daarna kunt u Aurora bijwerken via Systeem → Software, net als elk ander OpenWrt-pakket."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2577
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2728
 msgid "All"
 msgstr "Alle"
 
@@ -93,13 +95,12 @@ msgstr "Alle"
 msgid "Amber Sand"
 msgstr "Amberzand"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1601
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1621
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:763
 msgid "Anonymous"
 msgstr "Anoniem"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1664
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2565
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2714
 msgid "Anyone who applies this gets all of it. You can update or remove it later."
 msgstr "Iedereen die dit toepast, krijgt dit allemaal. U kunt het later bijwerken of verwijderen."
 
@@ -107,79 +108,79 @@ msgstr "Iedereen die dit toepast, krijgt dit allemaal. U kunt het later bijwerke
 msgid "App Icon"
 msgstr "App-pictogram"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3271
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3291
 msgid "App Icon 192×192"
 msgstr "App-icoon 192×192"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3277
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3297
 msgid "App Icon 512×512"
 msgstr "App-icoon 512×512"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3265
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3285
 msgid "Apple Touch Icon"
 msgstr "Apple Touch-icoon"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1305
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1325
 msgid "Applied."
 msgstr "Toegepast."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1405
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1485
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1518
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1547
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:891
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:906
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1425
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1505
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1538
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1567
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:900
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:915
 msgid "Apply"
 msgstr "Toepassen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1343
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1363
 msgid "Apply Configuration"
 msgstr "Configuratie toepassen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1376
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1396
 msgid "Apply Preset"
 msgstr "Preset toepassen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1400
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1420
 msgid "Apply failed: %s"
 msgstr "Toepassen mislukt: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:904
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:913
 msgid "Apply it anyway? Your current settings are backed up first."
 msgstr "Toch toepassen? Uw huidige instellingen worden eerst geback-upt."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1380
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1400
 msgid "Apply the '%s' preset now? It is saved immediately and the page reloads. A preset carries a whole look — colors, navigation, spacing, corner radius, content width and fonts. Your shortcuts, logo, icons and login background are left as they are."
 msgstr "Preset '%s' nu toepassen? Deze wordt meteen opgeslagen en de pagina wordt herladen. Een preset bevat een compleet uiterlijk — kleuren, navigatie, ruimte, hoekstraal, inhoudsbreedte en lettertypen. Je snelkoppelingen, logo, pictogrammen en inlogachtergrond blijven zoals ze zijn."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:887
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:896
 msgid "Apply this configuration now? Your current settings are backed up first."
 msgstr "Deze configuratie nu toepassen? Uw huidige instellingen worden eerst geback-upt."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1321
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1353
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1341
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1373
 msgid "Applying"
 msgstr "Toepassen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1386
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1406
 msgid "Applying preset..."
 msgstr "Preset toepassen..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1322
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1342
 msgid "Applying this configuration…"
 msgstr "Configuratie wordt toegepast…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1293
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1313
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:824
 msgid "Applying timed out. Please try again."
 msgstr "Toepassen duurde te lang. Probeer het opnieuw."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1385
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2209
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1405
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2213
 msgid "Applying..."
 msgstr "Toepassen..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3229
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3249
 msgid "Assign uploaded images to icons, favicons, PWA metadata, and the login background. Saved on Save or Save & Apply."
 msgstr "Wijs geüploade afbeeldingen toe aan iconen, favicons, PWA-metadata en de login-achtergrond. Wordt opgeslagen bij Opslaan of Opslaan & Toepassen."
 
@@ -191,19 +192,19 @@ msgstr "Aurora-themaontwerp"
 msgid "Automatic"
 msgstr "Automatisch"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1986
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1981
 msgid "Back up identity"
 msgstr "Identiteit back-uppen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2110
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2105
 msgid "Back up the current identity first"
 msgstr "Eerst de huidige identiteit back-uppen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1889
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1884
 msgid "Back up your creator identity"
 msgstr "Back-up van je makersidentiteit"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1959
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1954
 msgid "Backed up"
 msgstr "Back-up gemaakt"
 
@@ -227,11 +228,11 @@ msgstr "Achtergrond voor succesmeldingen en labels voor een gezonde status."
 msgid "Background for warning alerts, notices, and labels."
 msgstr "Achtergrond for waarschuwingsmeldingen, opmerkingen en labels."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2649
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2669
 msgid "Base corner radius applied to buttons, inputs, cards, and surfaces."
 msgstr "Basis hoekstraal toegepast op knoppen, invoervelden, kaarten en oppervlakken."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2636
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2656
 msgid "Base spacing unit that scales padding and gaps across the interface."
 msgstr "Basisafstandseenheid die padding en gaten over de interface schaalt."
 
@@ -243,7 +244,7 @@ msgstr "Basisoppervlak voor panelen, kaarten, formulieren, tabellen en neutrale 
 msgid "Brand"
 msgstr "Brand"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3027
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3047
 msgid "Brand Asset Library"
 msgstr "Merk-assetbibliotheek"
 
@@ -259,14 +260,14 @@ msgstr "Details brand-interactie"
 msgid "Brand-tinted surface for active navigation and selected states."
 msgstr "In brand-kleur getint oppervlak voor actieve navigatie en geselecteerde toestanden."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2582
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2602
 msgid "Branding & Shortcuts"
 msgstr "Huisstijl en snelkoppelingen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1444
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2578
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2757
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2087
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1464
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2729
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2892
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2091
 msgid "Built-in"
 msgstr "Ingebouwd"
 
@@ -276,11 +277,11 @@ msgstr "Meegeleverde inhoud"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:272
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:381
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2523
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:874
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2200
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2278
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2544
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2663
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:883
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2204
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2282
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2564
 msgid "Cancel"
 msgstr "Annuleren"
 
@@ -288,11 +289,11 @@ msgstr "Annuleren"
 msgid "Canvas and panel surfaces that frame the interface."
 msgstr "Canvas- en paneeloppervlakken die de interface omlijsten."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2445
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2505
 msgid "Change your name"
 msgstr "Je naam wijzigen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2006
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2001
 msgid "Changed routers? Restore your identity"
 msgstr "Andere router? Herstel je identiteit"
 
@@ -300,7 +301,7 @@ msgstr "Andere router? Herstel je identiteit"
 msgid "Changes preview here instantly; Save or Save & Apply persists them."
 msgstr "Wijzigingen worden hier direct getoond; Opslaan of Opslaan en toepassen maakt ze definitief."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2174
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2178
 msgid "Checking file…"
 msgstr "Bestand controleren…"
 
@@ -308,28 +309,28 @@ msgstr "Bestand controleren…"
 msgid "Choose a literal color for this token"
 msgstr "Kies een exacte kleur voor dit token"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3419
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3439
 msgid "Choose an uploaded icon for this shortcut"
 msgstr "Kies een geüpload icoon voor deze snelkoppeling"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2042
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2037
 msgid "Choose backup file…"
 msgstr "Back-upbestand kiezen…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2362
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2409
 msgid "Choose the name to publish under."
 msgstr "Kies de naam waaronder je publiceert."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1420
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1496
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1921
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1440
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1516
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1916
 msgid "Close"
 msgstr "Sluiten"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1455
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2199
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1475
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2192
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:776
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2580
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2600
 msgid "Colors"
 msgstr "Kleuren"
 
@@ -337,7 +338,7 @@ msgstr "Kleuren"
 msgid "Colors only"
 msgstr "Alleen kleuren"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2763
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2898
 msgid "Community"
 msgstr "Community"
 
@@ -345,15 +346,15 @@ msgstr "Community"
 msgid "Computed from the source colors; leave a field empty to keep its automatic value."
 msgstr "Berekend uit de bronkleuren; laat een veld leeg om de automatische waarde te behouden."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2352
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2372
 msgid "Config:"
 msgstr "Configuratie:"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2142
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2146
 msgid "Configuration exported successfully."
 msgstr "Configuratie succesvol geëxporteerd."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2221
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2225
 msgid "Configuration imported successfully."
 msgstr "Configuratie succesvol geïmporteerd."
 
@@ -361,15 +362,15 @@ msgstr "Configuratie succesvol geïmporteerd."
 msgid "Confirm Upload"
 msgstr "Upload bevestigen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2290
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2283
 msgid "Content"
 msgstr "Inhoud"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2663
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2683
 msgid "Content Max Width"
 msgstr "Maximale breedte inhoud"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2222
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2215
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:730
 msgid "Content Width"
 msgstr "Inhoudsbreedte"
@@ -378,56 +379,60 @@ msgstr "Inhoudsbreedte"
 msgid "Control Fill"
 msgstr "Veldvulling"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1868
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1863
 msgid "Copied"
 msgstr "Gekopieerd"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1863
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1870
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1858
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1865
 msgid "Copy"
 msgstr "Kopiëren"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:726
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2647
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2667
 msgid "Corner Radius"
 msgstr "Hoekstraal"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2476
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2496
 msgid "Could not add the update source: %s"
 msgstr "Kan de updatebron niet toevoegen: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1881
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1876
 msgid "Couldn't copy. The identity is shown above — select it and copy it manually."
 msgstr "Kopiëren lukte niet. De identiteit staat hierboven — selecteer en kopieer haar handmatig."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:822
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:845
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:858
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:866
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:867
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:875
 msgid "Couldn't reach the theme store. Please try again."
 msgstr "Themawinkel is niet bereikbaar. Probeer het opnieuw."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1818
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:852
+msgid "Couldn't read one of the images from this router. Try reloading the page."
+msgstr ""
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1813
 msgid "Couldn't read your identity. Please try again."
 msgstr "Je identiteit kon niet worden gelezen. Probeer het opnieuw."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2054
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2049
 msgid "Couldn't restore that identity. Check it and try again."
 msgstr "Die identiteit kon niet worden hersteld. Controleer haar en probeer opnieuw."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:852
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:861
 msgid "Couldn't save that name. Try again."
 msgstr "Kan die naam niet opslaan. Probeer het opnieuw."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2000
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1995
 msgid "Created automatically the first time you publish — no sign-up, no password. It decides which configurations in the store are yours, and who can change or remove them. Backing it up saves an identity backup file; import that file after a reflash, or on a new router, and your work comes back to you."
 msgstr "Wordt automatisch aangemaakt zodra je voor het eerst publiceert — geen registratie, geen wachtwoord. Ze bepaalt welke configuraties in de winkel van jou zijn en wie ze mag wijzigen of verwijderen. Een back-up slaat een identiteitsback-upbestand op; importeer dat na een herinstallatie of op een nieuwe router en je werk komt weer bij je terug."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2060
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2064
 msgid "Custom"
 msgstr "Aangepast"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2695
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2715
 msgid "Custom Fonts"
 msgstr "Aangepaste lettertypen"
 
@@ -464,7 +469,7 @@ msgstr "Gevaar-oppervlak"
 msgid "Dark"
 msgstr "Donker"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2594
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2614
 msgid "Dark Mode"
 msgstr "Donkere modus"
 
@@ -478,47 +483,47 @@ msgstr "Domyślny kolor pierwszego planu dla nagłówków, tekstu głównego, ik
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:159
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:393
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1736
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1731
 msgid "Delete"
 msgstr "Verwijderen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3084
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3104
 msgid "Delete '%s' from /www/luci-static/aurora/images/? Theme settings that reference it may need updating."
 msgstr "'%s' verwijderen uit /www/luci-static/aurora/images/? Thema-instellingen die hiernaar verwijzen moeten mogelijk worden bijgewerkt."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2731
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2751
 msgid "Delete '%s'? The interface will fall back to the default typeface."
 msgstr "'%s' verwijderen? De interface valt terug op het standaardlettertype."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3083
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3103
 msgid "Delete Brand Asset"
 msgstr "Merk-asset verwijderen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2730
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2750
 msgid "Delete Custom Font"
 msgstr "Aangepast lettertype verwijderen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1697
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1689
 msgid "Delete Share"
 msgstr "Deling verwijderen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2746
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2766
 msgid "Delete failed: %s"
 msgstr "Verwijderen mislukt: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1698
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1690
 msgid "Delete this shared configuration from the theme store?"
 msgstr "Deze gedeelde configuratie uit de themawinkel verwijderen?"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1705
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1697
 msgid "Deleted."
 msgstr "Verwijderd."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3097
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3117
 msgid "Deleted: %s"
 msgstr "Verwijderd: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3089
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3109
 msgid "Deleting…"
 msgstr "Verwijderen…"
 
@@ -538,16 +543,15 @@ msgstr "Afgeleid van de canvas-, oppervlakte- och tekstkleuren: gedempte en subt
 msgid "Derived from the status accents: alert, label, and badge backgrounds."
 msgstr "Afgeleid van de statusaccenten: achtergronden voor meldingen, labels en badges."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2555
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2700
 msgid "Description"
 msgstr "Beschrijving"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2031
 #: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:13
 msgid "Design Studio"
 msgstr "Ontwerpstudio"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2291
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2284
 msgid "Details"
 msgstr "Details"
 
@@ -555,44 +559,44 @@ msgstr "Details"
 msgid "Dimming backdrop behind modal dialogs."
 msgstr "Dimmen van de backdrop achter modale dialoogvensters."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2561
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2581
 msgid "Dismiss"
 msgstr "Sluiten"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1915
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1910
 msgid "Download backup file"
 msgstr "Back-upbestand downloaden"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2184
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2169
 msgid "Downloads"
 msgstr "Downloads"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2777
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2797
 msgid "Drop a .woff2 font here, or click to browse"
 msgstr "Sleep een .woff2-lettertype hierheen of klik om te bladeren"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3126
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3146
 msgid "Drop image asset here, or click to browse"
 msgstr "Sleep afbeelding hiernaartoe, of klik om te bladeren"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:134
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2620
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2640
 msgid "Dropdown"
 msgstr "Dropdown"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3396
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3416
 msgid "Enabled"
 msgstr "Ingeschakeld"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3411
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3431
 msgid "Enter a LuCI shortcut URL"
 msgstr "Voer een LuCI-snelkoppeling-URL in"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3405
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3425
 msgid "Enter a shortcut label"
 msgstr "Voer een label voor de snelkoppeling in"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2303
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2307
 msgid "Error: %s"
 msgstr "Fout: %s"
 
@@ -600,23 +604,23 @@ msgstr "Fout: %s"
 msgid "Expand or collapse this group"
 msgstr "Klap deze groep uit of in"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2155
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2159
 msgid "Export"
 msgstr "Exporteren"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2102
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2106
 msgid "Export Aurora Settings"
 msgstr "Aurora-instellingen exporteren"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2107
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2111
 msgid "Export failed"
 msgstr "Exporteren mislukt"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2149
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2153
 msgid "Export failed: %s"
 msgstr "Exporteren mislukt: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3105
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3125
 msgid "Failed to delete: %s"
 msgstr "Verwijderen mislukt: %s"
 
@@ -624,11 +628,11 @@ msgstr "Verwijderen mislukt: %s"
 msgid "Faint Hover"
 msgstr "Lichte hover"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3255
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3275
 msgid "Favicon (ICO / Legacy)"
 msgstr "Favicon (ICO / Legacy)"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3244
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3264
 msgid "Favicon (PNG)"
 msgstr "Favicon (PNG)"
 
@@ -640,7 +644,7 @@ msgstr "Velden accepteren #hex, rgb(), hsl(), lab() en oklch(). De kiezer vult h
 msgid "File is %s, exceeding the 8MB limit."
 msgstr "Het bestand is %s en overschrijdt de limiet van 8 MB."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3177
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3197
 msgid "Filename (with extension)"
 msgstr "Bestandsnaam (met extensie)"
 
@@ -648,7 +652,11 @@ msgstr "Bestandsnaam (met extensie)"
 msgid "Fill for form controls: inputs, selects, textareas, and checkboxes."
 msgstr "Vulkleur voor formuliervelden: invoervelden, keuzelijsten, tekstvakken en selectievakjes."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3366
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2382
+msgid "Finishing…"
+msgstr "Afronden…"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3386
 msgid "Floating shortcut launcher shown along the right edge of the interface."
 msgstr "Zwevende snelkoppeling-launcher weergegeven aan de rechterkant van de interface."
 
@@ -664,23 +672,23 @@ msgstr "Focusring"
 msgid "Focus outline for inputs, selects, and keyboard-operated controls."
 msgstr "Focus-omlijning voor invoervelden, selecties en via het toetsenbord bediende elementen."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2920
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2940
 msgid "Font CSS file is empty"
 msgstr "Lettertype CSS-bestand is leeg"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2916
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2936
 msgid "Font CSS file is not available"
 msgstr "Lettertype CSS-bestand is niet beschikbaar"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2787
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2807
 msgid "Font family name, e.g. MiSans"
 msgstr "Lettertypenaam, bijv. MiSans"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2865
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2885
 msgid "Font for code, command output, and the system log viewer."
 msgstr "Lettertype voor code, opdrachtuitvoer en de systeemlogboekviewer."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2228
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2221
 msgid "Fonts"
 msgstr "Lettertypen"
 
@@ -688,22 +696,26 @@ msgstr "Lettertypen"
 msgid "Foregrounds, hyperlinks, the brand color, and its contrast text."
 msgstr "Voorgronden, hyperlinks, de brand-kleur en de bijbehorende contrasttekst."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2539
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2559
 msgid "From openwrt.eamonxg.fun; the signing key ships with this package."
 msgstr "Van openwrt.eamonxg.fun; de ondertekeningssleutel zit in dit pakket."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3298
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3318
 msgid "Full-screen login page background; use a wide image."
 msgstr "Volledig scherm achtergrond voor inlogpagina; gebruik een brede afbeelding."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2319
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2328
 msgid "Give it a name"
 msgstr "Geef het een naam"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2498
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2507
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2518
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2527
 msgid "Go to Software"
 msgstr "Naar Software"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2149
+msgid "Go to the design studio"
+msgstr "Naar de designstudio"
 
 #: applications/luci-app-aurora-config/root/usr/share/rpcd/acl.d/luci-app-aurora.json:3
 msgid "Grant access to Aurora theme configuration"
@@ -717,15 +729,15 @@ msgstr "Haarlijn"
 msgid "Hidden"
 msgstr "Verborgen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1848
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1843
 msgid "Hide"
 msgstr "Verbergen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3267
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3287
 msgid "Home Screen icon for iOS and iPadOS."
 msgstr "Beginscherm-icoon voor iOS en iPadOS."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2579
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2730
 msgid "Hot"
 msgstr "Populair"
 
@@ -745,7 +757,7 @@ msgstr "Hover-invulling voor subtiele primaire knoppen en geselecteerde oppervla
 msgid "Hover state for filled primary buttons and high-emphasis controls."
 msgstr "Hover-status voor gevulde primaire knoppen en elementen met hoge nadruk."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2550
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2695
 msgid "How it looks in the store"
 msgstr "Hoe het eruitziet in de winkel"
 
@@ -753,48 +765,48 @@ msgstr "Hoe het eruitziet in de winkel"
 msgid "Hyperlinks in page content, help text, and status output."
 msgstr "Hyperlinks in pagina-inhoud, helptekst och statusuitvoer."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3413
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3433
 msgid "Icon"
 msgstr "Icoon"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2240
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2260
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2244
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2264
 msgid "Import"
 msgstr "Importeren"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2182
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2186
 msgid "Import Aurora Configuration?"
 msgstr "Aurora-configuratie importeren?"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2162
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2166
 msgid "Import Aurora Settings"
 msgstr "Aurora-instellingen importeren"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2232
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2249
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2236
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2253
 msgid "Import failed: %s"
 msgstr "Importeren mislukt: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2186
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2190
 msgid "Importing replaces /etc/config/aurora, applies all settings, and reloads the page. Uploaded images stay on disk."
 msgstr "Importeren vervangt /etc/config/aurora, past alle instellingen toe en herlaadt de pagina. Geüploade afbeeldingen blijven op de schijf staan."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2208
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2212
 msgid "Importing..."
 msgstr "Importeren..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1271
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1425
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1291
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1445
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:646
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:649
 msgid "In use"
 msgstr "In gebruik"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2262
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2255
 msgid "Included"
 msgstr "Inbegrepen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1607
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1627
 msgid "Includes assets"
 msgstr "Met bestanden"
 
@@ -826,15 +838,15 @@ msgstr "Ongeldige kleuruitdrukking."
 msgid "Invalid, missing, or cyclic color expression."
 msgstr "Ongeldige, ontbrekende of cyclische kleuruitdrukking."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1899
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1894
 msgid "It exists only on this router. Reflashing without keeping settings erases it."
 msgstr "Hij bestaat alleen op deze router. Opnieuw flashen zonder instellingen te behouden wist hem."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3127
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3147
 msgid "JPG · PNG · WebP · AVIF · SVG · GIF · ICO"
 msgstr "JPG · PNG · WebP · AVIF · SVG · GIF · ICO"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2832
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2852
 msgid "Keep custom font files as small as possible, as they are stored in the router's limited flash storage."
 msgstr "Houd aangepaste lettertypebestanden zo klein mogelijk, omdat ze worden opgeslagen in de beperkte flash-opslag van de router."
 
@@ -842,17 +854,17 @@ msgstr "Houd aangepaste lettertypebestanden zo klein mogelijk, omdat ze worden o
 msgid "Large corners"
 msgstr "Sterk afgeronde hoeken"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2606
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2626
 msgid "Layout"
 msgstr "Lay-out"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1457
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1477
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:778
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2581
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2601
 msgid "Layout & Typography"
 msgstr "Lay-out en typografie"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2618
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2638
 msgid "Layout pattern for the primary navigation menu."
 msgstr "Lay-outpatroon voor het primaire navigatiemenu."
 
@@ -860,7 +872,7 @@ msgstr "Lay-outpatroon voor het primaire navigatiemenu."
 msgid "Leading color for progress meters."
 msgstr "Primaire kleur voor voortgangsmeters."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3257
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3277
 msgid "Legacy ICO favicon fallback."
 msgstr "Fallback voor verouderde ICO-favicons."
 
@@ -869,11 +881,11 @@ msgstr "Fallback voor verouderde ICO-favicons."
 msgid "Light"
 msgstr "Licht"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2593
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2613
 msgid "Light Mode"
 msgstr "Lichte modus"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2199
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2192
 msgid "Light and dark, 62 values"
 msgstr "Licht en donker, 62 waarden"
 
@@ -889,17 +901,17 @@ msgstr "Link"
 msgid "Links marked ↗ open sites outside your router. You'll be asked to confirm before applying."
 msgstr "Links met ↗ openen sites buiten uw router. U wordt om bevestiging gevraagd voordat er wordt toegepast."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1354
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1504
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1374
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1524
 msgid "Loading theme details…"
 msgstr "Themadetails worden geladen…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2707
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2842
 msgid "Loading…"
 msgstr "Laden…"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:316
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3296
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3316
 msgid "Login Background"
 msgstr "Inlogachtergrond"
 
@@ -907,7 +919,7 @@ msgstr "Inlogachtergrond"
 msgid "Logo"
 msgstr "Logo"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3235
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3255
 msgid "Logo (SVG)"
 msgstr "Logo (SVG)"
 
@@ -915,7 +927,7 @@ msgstr "Logo (SVG)"
 msgid "Low-emphasis text for small labels, placeholders, and disabled hints."
 msgstr "Tekst met lage nadruk voor kleine labels, placeholders en uitgeschakelde tips."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2665
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2685
 msgid "Maximum width of the centered content area."
 msgstr "Maximale breedte van het gecentreerde inhoudsgebied."
 
@@ -924,7 +936,7 @@ msgid "Medium-emphasis text for helper copy, metadata, and summaries."
 msgstr "Tekst met gemiddelde nadruk voor helpteksten, metadata en samenvattingen."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:133
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2619
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2639
 msgid "Mega Menu"
 msgstr "Megamenu"
 
@@ -944,12 +956,12 @@ msgstr "Monospace-lettertype"
 msgid "Monochrome"
 msgstr "Monochroom"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2772
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2795
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2792
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2815
 msgid "Monospace"
 msgstr "Monospace"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2858
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2878
 msgid "Monospace Typeface"
 msgstr "Monospace lettertype"
 
@@ -957,76 +969,76 @@ msgstr "Monospace lettertype"
 msgid "Muted Text"
 msgstr "Gedempte tekst"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2581
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2776
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2732
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2918
 msgid "My Shares"
 msgstr "Mijn delingen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2773
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2915
 msgid "My creator identity"
 msgstr "Mijn makersidentiteit"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:118
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2183
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2554
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2800
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2168
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2699
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2820
 msgid "Name"
 msgstr "Naam"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3170
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3190
 msgid "Name it login-bg.* to use it as the login page background."
 msgstr "Geef het de naam login-bg.* om het als achtergrond van de inlogpagina te gebruiken."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2201
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2194
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:724
 msgid "Navigation"
 msgstr "Navigatie"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2616
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2636
 msgid "Navigation Style"
 msgstr "Navigatiestijl"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2607
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2627
 msgid "Navigation, spacing, corner radius, and content width. Takes effect after Save & Apply."
 msgstr "Navigatie, afstand, hoekstraal en inhoudsbreedte. Wordt van kracht na Opslaan & Toepassen."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2580
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2731
 msgid "New"
 msgstr "Nieuw"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3117
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3137
 msgid "No brand assets uploaded yet."
 msgstr "Nog geen merk-assets geüpload."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2728
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2863
 msgid "No configs here yet — go share the first one."
 msgstr "Nog geen configuraties — deel de eerste!"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2755
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2775
 msgid "No custom fonts uploaded."
 msgstr "Geen aangepaste lettertypen geüpload."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2172
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2176
 msgid "No file selected or upload failed"
 msgstr "Geen bestand geselecteerd of uploaden mislukt"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2727
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2862
 msgid "No themes match your search."
 msgstr "Geen thema's gevonden voor uw zoekopdracht."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3303
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3323
 msgid "None"
 msgstr "Geen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1959
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1954
 msgid "Not backed up"
 msgstr "Geen back-up"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1950
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1945
 msgid "Not named yet"
 msgstr "Nog geen naam"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2137
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2133
 msgid "Nothing shared yet"
 msgstr "Nog niets gedeeld"
 
@@ -1034,11 +1046,19 @@ msgstr "Nog niets gedeeld"
 msgid "On-Brand Text"
 msgstr "Tekst in merk-kleur"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2325
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2650
+msgid "Once published, anyone can find it and apply it in one click. You can update or remove it later."
+msgstr ""
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2334
 msgid "One line about where this configuration fits."
 msgstr "Eén regel over waar deze configuratie voor past."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2778
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2595
+msgid "One more piece in the store"
+msgstr ""
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2798
 msgid "Only .woff2 files up to 8MB are accepted."
 msgstr "Alleen .woff2-bestanden tot 8 MB worden geaccepteerd."
 
@@ -1062,7 +1082,7 @@ msgstr "Operationele statusaccenten"
 msgid "Overlay Surface"
 msgstr "Overlay-oppervlak"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3246
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3266
 msgid "PNG fallback when SVG favicons are unsupported."
 msgstr "PNG-fallback wanneer SVG-favicons niet worden ondersteund."
 
@@ -1070,37 +1090,41 @@ msgstr "PNG-fallback wanneer SVG-favicons niet worden ondersteund."
 msgid "Page canvas behind the header, navigation, content, and login screen."
 msgstr "Pagina-canvas achter de koptekst, navigatie, inhoud en het inlogscherm."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2086
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2081
 msgid "Paste the identity you backed up, or pick the backup file you downloaded. What you shared before comes back under this router."
 msgstr "Plak de identiteit waarvan je een back-up hebt gemaakt, of kies het gedownloade back-upbestand. Wat je eerder deelde, komt terug op deze router."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2456
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2516
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:842
 msgid "Pick a name between 1 and 40 characters."
 msgstr "Kies een naam van 1 tot 40 tekens."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2355
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2402
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:839
 msgid "Please enter a name."
 msgstr "Voer een naam in."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3090
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3110
 msgid "Please wait…"
 msgstr "Even geduld…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2988
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3008
 msgid "Preparing Typography"
 msgstr "Typografie voorbereiden"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2985
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3005
 msgid "Preparing selected typefaces..."
 msgstr "Geselecteerde lettertypen voorbereiden..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1393
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2378
+msgid "Preparing…"
+msgstr "Voorbereiden…"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1413
 msgid "Preset applied successfully."
 msgstr "Preset succesvol toegepast."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2862
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2882
 msgid "Primary font for all interface text — headings, body, menus, forms, and tables."
 msgstr "Primair lettertype voor alle interfacetekst — koppen, hoofdtekst, menu's, formulieren en tabellen."
 
@@ -1112,34 +1136,25 @@ msgstr "Einde voortgang"
 msgid "Progress Start"
 msgstr "Start voortgang"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2349
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2396
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2631
 msgid "Publish"
 msgstr "Publiceren"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2488
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2491
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2548
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2551
 msgid "Publish as"
 msgstr "Publiceren als"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2154
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2512
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2628
-msgid "Publish current configuration"
-msgstr "Huidige configuratie publiceren"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2595
+msgid "Publish as a new one"
+msgstr ""
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2140
-msgid "Publish this router's whole appearance to the store and anyone can apply it in one click. Publishing creates your creator identity automatically."
-msgstr "Publiceer het volledige uiterlijk van deze router in de winkel, dan kan iedereen het met één klik toepassen. Bij het publiceren wordt je makersidentiteit automatisch aangemaakt."
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2175
-msgid "Publish your current configuration and it shows up here."
-msgstr "Publiceer je huidige configuratie, dan verschijnt die hier."
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2402
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2456
 msgid "Published."
 msgstr "Gepubliceerd."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2403
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2457
 msgid "Published. Your creator identity lives only on this router — back it up so a reflash can't take it."
 msgstr "Gepubliceerd. Je makersidentiteit bestaat alleen op deze router — maak een back-up, dan neemt een herinstallatie haar niet mee."
 
@@ -1147,37 +1162,38 @@ msgstr "Gepubliceerd. Je makersidentiteit bestaat alleen op deze router — maak
 msgid "Raised layer for dropdowns, modals, and tooltips."
 msgstr "Verhoogde laag voor dropdowns, modale vensters en tooltips."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1547
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1567
 msgid "Re-apply"
 msgstr "Opnieuw toepassen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1992
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1987
 msgid "Rename"
 msgstr "Naam wijzigen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1655
-msgid "Replace the shared configuration with your current settings?"
-msgstr "De gedeelde configuratie vervangen door uw huidige instellingen?"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2602
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2631
+msgid "Replace “%s”"
+msgstr ""
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:382
 msgid "Replaces the light and dark colors; everything else stays as it is."
 msgstr "Vervangt alleen de lichte en donkere kleuren; al het andere blijft ongewijzigd."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2312
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2318
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2316
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2322
 msgid "Reset"
 msgstr "Resetten"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2273
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2277
 msgid "Reset /etc/config/aurora to the packaged Default preset — colors, layout, typography, branding, navigation, and toolbar. Uploaded images stay on disk; custom selections not in the Default preset are cleared."
 msgstr "Herstel /etc/config/aurora naar de meegeleverde standaardpreset — kleuren, lay-out, typografie, branding, navigatie en werkbalk. Geüploade afbeeldingen blijven op de schijf staan; aangepaste selecties die niet in de standaardpreset zitten, worden gewist."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2267
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2269
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2271
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2273
 msgid "Reset All Aurora Settings"
 msgstr "Alle Aurora-instellingen resetten"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2285
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2289
 msgid "Resetting..."
 msgstr "Resetten..."
 
@@ -1193,44 +1209,44 @@ msgstr "Berekende kleur can niet worden weergegeven door de kiezer."
 msgid "Resolved preview color - click to pick"
 msgstr "Berekende voorbeeldkleur - klik om te kiezen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1254
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2116
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1274
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2111
 msgid "Restore"
 msgstr "Herstellen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1230
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1250
 msgid "Restore Previous Configuration"
 msgstr "Vorige configuratie herstellen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1280
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1300
 msgid "Restore previous configuration"
 msgstr "Vorige configuratie herstellen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2117
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2112
 msgid "Restore your creator identity"
 msgstr "Je makersidentiteit herstellen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2073
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2068
 msgid "Restored."
 msgstr "Hersteld."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2072
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2067
 msgid "Restored. What you shared before is back under this identity."
 msgstr "Hersteld. Wat je eerder deelde, staat weer onder deze identiteit."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1239
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1259
 msgid "Restoring"
 msgstr "Herstellen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2286
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2290
 msgid "Restoring..."
 msgstr "Herstellen..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1240
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1260
 msgid "Restoring…"
 msgstr "Herstellen…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2691
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2826
 msgid "Retry"
 msgstr "Opnieuw proberen"
 
@@ -1238,7 +1254,7 @@ msgstr "Opnieuw proberen"
 msgid "Rounded corners"
 msgstr "Afgeronde hoeken"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3236
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3256
 msgid "SVG mark for the browser tab and login page."
 msgstr "SVG-teken voor het browsertabblad och de inlogpagina."
 
@@ -1250,20 +1266,20 @@ msgstr "Saliegroen"
 msgid "Sans Font"
 msgstr "Sans-lettertype"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2772
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2794
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2792
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2814
 msgid "Sans-Serif"
 msgstr "Schreefloos"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2858
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2878
 msgid "Sans-Serif Typeface"
 msgstr "Sans-serif lettertype"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2686
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2706
 msgid "Sans-serif and monospace typefaces used across the theme. Pick a curated webfont — downloaded once after saving, from pinned, checksum-verified sources, then served locally — or upload your own .woff2 files."
 msgstr "Schreefloze en monospace-lettertypen voor het hele thema. Kies een geselecteerd webfont — na het opslaan eenmalig gedownload van bronnen met vaste versie en checksumverificatie, daarna lokaal geserveerd — of upload uw eigen .woff2-bestanden."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2472
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2532
 msgid "Save"
 msgstr "Opslaan"
 
@@ -1275,7 +1291,7 @@ msgstr "Opgeslagen of preset-waarde"
 msgid "Scrim"
 msgstr "Scrim"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2608
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2759
 msgid "Search themes or authors…"
 msgstr "Zoek thema's of auteurs…"
 
@@ -1283,39 +1299,48 @@ msgstr "Zoek thema's of auteurs…"
 msgid "Separators, dividers, and input or card borders."
 msgstr "Scheidingslijnen, verdelers en randen van invoervelden of kaarten."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2295
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2299
 msgid "Settings reset successfully."
 msgstr "Instellingen succesvol gereset."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2214
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2207
 msgid "Shape"
 msgstr "Vorm"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2763
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2646
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2338
+msgid "Share to the store"
+msgstr "Delen in de store"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2898
 msgid "Shared by other people"
 msgstr "Gedeeld door anderen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2163
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2158
 msgid "Shared on another router before? Restore my identity"
 msgstr "Eerder gedeeld vanaf een andere router? Mijn identiteit herstellen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1453
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2136
+msgid "Sharing starts in the design studio: make the appearance what you want there, then publish from that page."
+msgstr ""
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1473
 msgid "Ships with the theme and works offline."
 msgstr "Wordt met het thema meegeleverd en werkt offline."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2757
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2892
 msgid "Ships with the theme, works offline"
 msgstr "Meegeleverd met het thema, werkt offline"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3401
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3421
 msgid "Shortcut Label"
 msgstr "Label van snelkoppeling"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3365
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3385
 msgid "Shortcut Toolbar"
 msgstr "Werkbalk voor snelkoppelingen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3407
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3427
 msgid "Shortcut URL"
 msgstr "URL van snelkoppeling"
 
@@ -1323,20 +1348,20 @@ msgstr "URL van snelkoppeling"
 msgid "Shortcuts %d"
 msgstr "Snelkoppelingen %d"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1843
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1854
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1838
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1849
 msgid "Show"
 msgstr "Tonen"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3375
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3395
 msgid "Show Shortcut Toolbar"
 msgstr "Snelkoppeling-werkbalk weergeven"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3377
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3397
 msgid "Show the floating launcher on all pages."
 msgstr "De zwevende launcher op alle pagina's weergeven."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2746
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2881
 msgid "Showing a saved copy — reconnecting…"
 msgstr "Opgeslagen kopie wordt getoond — opnieuw verbinden…"
 
@@ -1345,15 +1370,15 @@ msgid "Shown"
 msgstr "Zichtbaar"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:135
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2621
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2641
 msgid "Sidebar"
 msgstr "Zijbalk"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1974
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1969
 msgid "Signs everything you share. It lives only on this router."
 msgstr "Ondertekent alles wat je deelt. Bestaat alleen op deze router."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3228
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3248
 msgid "Site Branding"
 msgstr "Site-branding"
 
@@ -1370,8 +1395,8 @@ msgid "Sky Blue"
 msgstr "Hemelsblauw"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:91
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2754
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2801
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2774
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2821
 msgid "Slot"
 msgstr "Gebruik"
 
@@ -1379,12 +1404,12 @@ msgstr "Gebruik"
 msgid "Small corners"
 msgstr "Licht afgeronde hoeken"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2211
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2204
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:725
 msgid "Spacing"
 msgstr "Ruimte"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2634
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2654
 msgid "Spacing Scale"
 msgstr "Afstandsschaal"
 
@@ -1424,7 +1449,7 @@ msgstr "Verzonken oppervlak"
 msgid "Surface"
 msgstr "Oppervlak"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2086
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2090
 msgid "System Mono"
 msgstr "Systeem Mono"
 
@@ -1448,7 +1473,7 @@ msgstr "Tekst, links & merk"
 msgid "That description is too long."
 msgstr "De beschrijving is te lang."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2048
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2043
 msgid "That doesn't look like a creator identity."
 msgstr "Dat lijkt geen makersidentiteit."
 
@@ -1456,19 +1481,22 @@ msgstr "Dat lijkt geen makersidentiteit."
 msgid "That name is already taken. Try another."
 msgstr "Die naam is al bezet. Probeer een andere."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2334
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2343
 msgid "The name your shares are signed with"
 msgstr "De naam waarmee je gedeelde configuraties zijn ondertekend"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:849
+msgid "The theme store refused this configuration. Nothing was published."
+msgstr ""
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:607
 msgid "The toolbar itself is turned off in this configuration."
 msgstr "De werkbalk zelf staat uit in deze configuratie."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2494
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2514
 msgid "The update source was written, but refreshing the index failed. Hit Refresh on the Software page later."
 msgstr "De updatebron is weggeschreven, maar het vernieuwen van de index is mislukt. Klik later op Vernieuwen op de Software-pagina."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2631
 #: applications/luci-app-aurora-config/root/usr/share/luci/menu.d/luci-app-aurora.json:21
 msgid "Theme Marketplace"
 msgstr "Themamarktplaats"
@@ -1477,7 +1505,7 @@ msgstr "Themamarktplaats"
 msgid "Theme stylesheet resolver timed out."
 msgstr "Time-out bij het ophalen van het themastijlblad."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2341
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2361
 msgid "Theme:"
 msgstr "Thema:"
 
@@ -1490,32 +1518,36 @@ msgstr "Er is nog niets om te herstellen."
 msgid "This configuration can't be applied."
 msgstr "Deze configuratie kan niet worden toegepast."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:895
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:904
 msgid "This configuration links to these external sites:"
 msgstr "Deze configuratie verwijst naar deze externe sites:"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2449
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2509
 msgid "This name signs everything you have published, including what is already in the store."
 msgstr "Deze naam ondertekent alles wat je hebt gepubliceerd, ook wat al in de winkel staat."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1466
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1486
 msgid "This preset uses a downloaded typeface. The router fetches it once after applying; until then the text falls back to the built-in font."
 msgstr "Deze preset gebruikt een lettertype dat gedownload moet worden. De router haalt het na het toepassen eenmalig op; tot die tijd wordt het ingebouwde lettertype getoond."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1234
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1254
 msgid "This replaces your current settings with the ones from just before the last applied configuration."
 msgstr "Dit vervangt uw huidige instellingen door die van vlak vóór de laatst toegepaste configuratie."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2102
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2097
 msgid "This router already has shared configurations of its own. Switching to another identity gives them up for good — back up the current identity first if you still want them."
 msgstr "Deze router heeft al eigen gedeelde configuraties. Overschakelen naar een andere identiteit geeft ze definitief op — maak eerst een back-up van de huidige identiteit als je ze wilt houden."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:855
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:865
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:854
+msgid "This share belongs to another identity."
+msgstr ""
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:864
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:874
 msgid "This share is no longer available."
 msgstr "Deze deling is niet meer beschikbaar."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1893
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1888
 msgid "This text is your identity. Anyone who has it can publish under your name and delete what you have shared — don't post it anywhere public."
 msgstr "Deze tekst is je identiteit. Wie hem heeft, kan onder jouw naam publiceren en verwijderen wat je hebt gedeeld — plaats hem nergens openbaar."
 
@@ -1523,7 +1555,7 @@ msgstr "Deze tekst is je identiteit. Wie hem heeft, kan onder jouw naam publicer
 msgid "This theme is no longer available."
 msgstr "Dit thema is niet meer beschikbaar."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2274
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2267
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:735
 msgid "Toolbar"
 msgstr "Werkbalk"
@@ -1532,7 +1564,7 @@ msgstr "Werkbalk"
 msgid "Toolbar %d"
 msgstr "Werkbalk %d"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3386
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3406
 msgid "Toolbar Shortcuts"
 msgstr "Werkbalksnelkoppelingen"
 
@@ -1541,19 +1573,19 @@ msgid "Trailing color for progress meters."
 msgstr "Secundaire kleur voor voortgangsmeters."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:91
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3116
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3136
 msgid "Type"
 msgstr "Type"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2964
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2984
 msgid "Typeface download failed after retries — the system font stack is in effect. Save again to retry."
 msgstr "Downloaden van het lettertype is na meerdere pogingen mislukt — het systeemlettertype wordt gebruikt. Sla opnieuw op om het nogmaals te proberen."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2685
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2705
 msgid "Typography"
 msgstr "Typografie"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3009
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3029
 msgid "Typography preparation failed:"
 msgstr "Voorbereiding van typografie mislukt:"
 
@@ -1565,7 +1597,7 @@ msgstr "Kan de geselecteerde kleur niet converteren."
 msgid "Unable to create the theme color resolver."
 msgstr "Kan de themakleur-resolver niet aanmaken."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:870
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:879
 msgid "Unable to delete this share right now."
 msgstr "Deze deling kan nu niet worden verwijderd."
 
@@ -1581,11 +1613,11 @@ msgstr "Kan %s niet laden."
 msgid "Unable to load the Aurora stylesheet."
 msgstr "Kan het Aurora-stijlblad niet laden."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1493
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1513
 msgid "Unable to load this theme right now. Please try again."
 msgstr "Dit thema kan nu niet worden geladen. Probeer het opnieuw."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2683
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2818
 msgid "Unable to reach the theme store right now."
 msgstr "De themawinkel is momenteel niet bereikbaar."
 
@@ -1597,21 +1629,21 @@ msgstr "Kan kleuruitdrukkingen niet verwerken."
 msgid "Unable to restore the previous configuration."
 msgstr "De vorige configuratie kan niet worden hersteld."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:849
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:858
 msgid "Unable to share this configuration right now."
 msgstr "Deze configuratie kan nu niet worden gedeeld."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:862
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:871
 msgid "Unable to update this share right now."
 msgstr "Deze deling kan nu niet worden bijgewerkt."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2746
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2823
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3212
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2766
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2843
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3232
 msgid "Unknown"
 msgstr "Onbekend"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2477
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2497
 msgid "Unknown error"
 msgstr "Onbekende fout"
 
@@ -1619,49 +1651,29 @@ msgstr "Onbekende fout"
 msgid "Unsupported file type. Allowed: %s"
 msgstr "Niet-ondersteund bestandstype. Toegestaan: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1600
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1754
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1620
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1749
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:759
 msgid "Untitled theme"
 msgstr "Naamloos thema"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1686
-msgid "Update"
-msgstr "Bijwerken"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1651
-msgid "Update Share"
-msgstr "Deling bijwerken"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2435
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2455
 msgid "Update available %s"
 msgstr "Update beschikbaar %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2506
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2526
 msgid "Update source added"
 msgstr "Updatebron toegevoegd"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1727
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1722
 msgid "Update with current configuration"
 msgstr "Bijwerken met huidige configuratie"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1676
-msgid "Updated."
-msgstr "Bijgewerkt."
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1667
-msgid "Updating"
-msgstr "Bijwerken"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1668
-msgid "Updating…"
-msgstr "Bijwerken…"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2519
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2539
 msgid "Upgrading Aurora needs its update source. Once added, upgrades happen in System → Software like any other OpenWrt package."
 msgstr "Voor het bijwerken van Aurora is de updatebron nodig. Eenmaal toegevoegd verlopen updates via Systeem → Software, net als bij elk OpenWrt-pakket."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3028
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3048
 msgid "Upload and manage images for icons, favicons, PWA assets, and the login background. Files are stored in <code>/www/luci-static/aurora/images/</code>."
 msgstr "Upload en beheer afbeeldingen voor iconen, favicons, PWA-assets och de login-achtergrond. Bestanden worden opgeslagen in <code>/www/luci-static/aurora/images/</code>."
 
@@ -1677,6 +1689,22 @@ msgstr "Uploaden mislukt (HTTP %s)"
 msgid "Upload failed: %s"
 msgstr "Uploaden mislukt: %s"
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2390
+msgid "Uploading %s… %d%%"
+msgstr ""
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2389
+msgid "Uploading %s… %d%% (%d/%d)"
+msgstr ""
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:853
+msgid "Uploading the images failed. Check this computer's internet connection and try again."
+msgstr ""
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2180
+msgid "Want to publish another one? Set it up in the design studio and publish from there."
+msgstr ""
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:207
 msgid "Warning"
 msgstr "Waarschuwing"
@@ -1685,27 +1713,34 @@ msgstr "Waarschuwing"
 msgid "Warning Surface"
 msgstr "Waarschuwing-oppervlak"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1659
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2560
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2709
 msgid "What gets shared"
 msgstr "Wat er wordt gedeeld"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1997
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1992
 msgid "What is this? Where did it come from?"
 msgstr "Wat is dit? Waar komt het vandaan?"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3153
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2611
+msgid "Where this configuration goes"
+msgstr ""
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3173
 msgid "Will replace the existing '%s'."
 msgstr "Vervangt het bestaande bestand '%s'."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1589
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1609
 msgid "Works offline"
 msgstr "Werkt offline"
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:848
+msgid "You've published as much as one router may publish today. Try again tomorrow."
+msgstr ""
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:843
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:844
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:856
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:857
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:865
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:866
 msgid "Your current configuration can't be shared right now."
 msgstr "Uw huidige configuratie kan nu niet worden gedeeld."
 
@@ -1713,14 +1748,14 @@ msgstr "Uw huidige configuratie kan nu niet worden gedeeld."
 msgid "Your current settings are backed up before applying, and you can roll back with one click afterwards."
 msgstr "Uw huidige instellingen worden vóór het toepassen geback-upt; daarna kunt u met één klik terug."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1476
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1496
 msgid "Your shortcuts, logo, icons and login background are left exactly as they are."
 msgstr "Je snelkoppelingen, logo, pictogrammen en inlogachtergrond blijven precies zoals ze zijn."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3403
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3423
 msgid "e.g., Network Interfaces"
 msgstr "bijv. Netwerkinterfaces"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2993
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3013
 msgid "unknown error"
 msgstr "onbekende fout"

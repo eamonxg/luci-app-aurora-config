@@ -7,8 +7,8 @@ LUCI_TITLE:=LuCI configuration UI for the Aurora theme
 LUCI_DEPENDS:=+luci-base
 LUCI_PKGARCH:=all
 
-PKG_VERSION:=1.1.9
-PKG_RELEASE:=20260805
+PKG_VERSION:=1.1.10
+PKG_RELEASE:=20260806
 PKG_LICENSE:=Apache-2.0
 
 # jsmin (luci.mk's default JS minifier) predates ES6 and corrupts this

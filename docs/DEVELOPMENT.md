@@ -573,8 +573,8 @@ a blank swatch.
 | `hub_me` | One request for both halves of the answer: who this router publishes as, and what it has published |
 | `hub_restore_backup` | Roll back to the single most recent pre-apply snapshot |
 | `hub_set_nickname(nickname)` | Set the creator name the hub shows on this device's shares |
-| `hub_share(name, description)` | Publish the current local config as a new hub entry |
-| `hub_update(id, name, description)` | Republish this device's share `id` with the current local config |
+| `hub_share_begin(name, description, target_id)` | Open a publish draft on the hub and return one upload ticket per asset, plus the local `/luci-static/` URL backing each. `target_id` empty publishes a new entry, non-empty replaces that share |
+| `hub_share_commit(draft_id)` | Claim a draft whose assets the browser has finished uploading, turning it into a config (or an update) |
 
 `hub_list`/`hub_get`/`hub_my_shares` are gone. The first two moved into the
 browser (see §8.1); `hub_my_shares` walked a local id list and re-validated

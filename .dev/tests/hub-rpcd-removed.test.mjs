@@ -72,8 +72,8 @@ test("acl: the methods the page still calls are kept", () => {
   assert.ok(read.includes("hub_me"), "hub_me is still called on every page load");
   assert.ok(read.includes("get_hub_status"), "apply polling still needs get_hub_status");
   assert.ok(write.includes("hub_apply"));
-  assert.ok(write.includes("hub_share"));
-  assert.ok(write.includes("hub_update"));
+  assert.ok(write.includes("hub_share_begin"));
+  assert.ok(write.includes("hub_share_commit"));
   assert.ok(write.includes("hub_delete"));
   assert.ok(write.includes("hub_import_key"));
 });

@@ -460,15 +460,32 @@ hub_http_get() {  # $1=path
 	return "$rc"
 }
 
+# Same 0/2/1 contract as hub_http_put/hub_http_delete, plus 3: the hub was
+# reached and refused the request outright (quota, validation, ownership).
+# The -q that used to be here swallowed the one line uclient-fetch prints
+# naming the status, so "your daily quota is used up" and "this router has no
+# route to the internet" arrived in LuCI as the same sentence -- which is most
+# of why a publish that could never have worked looked like a store outage.
+# HUB_HTTP_STATUS carries the code for callers that want a finer branch; it is
+# empty when no status could be parsed.
 hub_http_post() {  # $1=path  $2=body_file
-	local out; out=$(mktemp)
+	local out err rc; out=$(mktemp); err=$(mktemp)
+	HUB_HTTP_STATUS=""
 	# uclient-fetch/wget on OpenWrt: --post-file + --header both supported
-	if timeout 15 wget -qO "$out" --timeout=12 \
+	timeout 15 wget -O "$out" --timeout=12 \
 	     --header='Content-Type: application/json' \
-	     --post-file="$2" "$HUB_BASE$1"; then
-		cat "$out"; rm -f "$out"; return 0
+	     --post-file="$2" "$HUB_BASE$1" 2>"$err"
+	rc=$?
+	if [ "$rc" = 0 ]; then
+		cat "$out"
+	elif hub_http_gone "$err"; then
+		rc=2
+	else
+		HUB_HTTP_STATUS=$(sed -n 's/^HTTP error \([0-9][0-9]*\)$/\1/p' "$err" | head -n1)
+		[ -n "$HUB_HTTP_STATUS" ] && rc=3 || rc=1
 	fi
-	rm -f "$out"; return 1
+	rm -f "$out" "$err"
+	return "$rc"
 }
 
 # Mirrors hub_http_post for the update path, with one difference that is easy
@@ -702,22 +719,23 @@ is_valid_font_stack() {
 
 # Assembles the current /etc/config/aurora into the hub's strict payload
 # schema and writes it to $1 (colors/layout/typography/toolbar/assets, no
-# device_token/name -- those are the caller's job). Custom, non-default image
-# assets are additionally base64-encoded and appended, one JSON object per
-# line, to "$1.b64" for the caller to splice into the share/update request's
-# top-level "assets" array; the payload's own "assets" entries carry only
-# {kind,sha256,size} per the hub schema. v1 never ships font assets --
-# typography.font_sans/font_mono are resolve_font_preset_id ids only.
+# device_token/name -- those are the caller's job). The payload's "assets"
+# entries carry only {kind,sha256,size} per the hub schema; the bytes
+# themselves never pass through here. Which local file backs each kind is
+# written to "$1.files", one "kind<TAB>filename" line each, for hub_share_begin
+# to turn into a /luci-static/aurora/images/ URL the browser fetches and
+# uploads itself. v1 never ships font assets -- typography.font_sans/font_mono
+# are resolve_font_preset_id ids only.
 build_share_payload() {
-	local out_file="$1" b64_file="${1}.b64"
+	local out_file="$1" files_file="${1}.files"
 	local token prefix key value
 	local sid title url icon enabled tcount trimmed_title tlen
-	local kind fname file sha256 size b64
+	local kind fname file sha256 size
 	local font_sans_id font_mono_id struct_font_sans struct_font_mono
 
 	require_color_token_keys || return 1
 
-	: > "$b64_file"
+	: > "$files_file"
 
 	json_init
 	json_add_int "schema" 1
@@ -859,9 +877,11 @@ build_share_payload() {
 		json_add_int "size" "$size"
 		json_close_object
 
-		# BusyBox `base64` has no `-w0`; fall back to unwrapping with `tr`.
-		b64=$(base64 -w0 "$file" 2>/dev/null || base64 "$file" 2>/dev/null | tr -d '\n')
-		printf '{"kind":"%s","data_b64":"%s"}\n' "$kind" "$b64" >> "$b64_file"
+		# 只记文件名。字节由浏览器从本机 /luci-static/aurora/images/ 直接读、
+		# 直接 PUT 到 hub —— uclient-fetch 走 TLS 传不动这个量级(实测 512KB
+		# 三次里挂一次、1MB 必断,而同机 curl 传 1.6MB 只要 3.4 秒),而浏览器
+		# fetch 没有这个限制。
+		printf '%s\t%s\n' "$kind" "$fname" >> "$files_file"
 	done
 	json_close_array
 
@@ -2053,9 +2073,13 @@ case "$1" in
 		json_add_string "job_id" "job_id"
 	json_close_object
 	json_add_object "hub_restore_backup"; json_close_object
-	json_add_object "hub_share"
+	json_add_object "hub_share_begin"
 		json_add_string "name" "name"
 		json_add_string "description" "description"
+		json_add_string "target_id" "target_id"
+	json_close_object
+	json_add_object "hub_share_commit"
+		json_add_string "draft_id" "draft_id"
 	json_close_object
 	json_add_object "hub_set_nickname"
 		json_add_string "nickname" "nickname"
@@ -2064,11 +2088,6 @@ case "$1" in
 	json_add_object "hub_export_key"; json_close_object
 	json_add_object "hub_import_key"
 		json_add_string "key" "key"
-	json_close_object
-	json_add_object "hub_update"
-		json_add_string "id" "id"
-		json_add_string "name" "name"
-		json_add_string "description" "description"
 	json_close_object
 	json_add_object "hub_delete"
 		json_add_string "id" "id"
@@ -2573,10 +2592,19 @@ MANIFEST
 		fi
 		;;
 
-	"hub_share")
+
+	# 三段式发布的第一段。发出去的只有 payload + 元信息(实测约 2.3KB),远在
+	# uclient-fetch 稳得住的量级里 —— 64KB 到 384KB 实测都是 3/3 通过,而把
+	# 一张 1.2MB 的登录背景 base64 塞进去的老做法是 1.6MB,必断。
+	#
+	# 回复里刻意不含 device_token:浏览器拿到的是 hub 签的一张票据,权限窄到
+	# 只剩"把这一份字节传到这一个位置"。device_token 是创作者身份本身,谁拿到
+	# 谁能以你的名义发布和删除你所有作品,它留在 0600 的 device.key 里。
+	"hub_share_begin")
 		read -r input; json_load "$input" 2>/dev/null
 		json_get_var name "name"
 		json_get_var description "description"
+		json_get_var target_id "target_id"
 		json_cleanup
 
 		has_control_char "$name" && {
@@ -2590,51 +2618,149 @@ MANIFEST
 		[ "${#description}" -le 500 ] || {
 			echo '{ "result": 1, "error": "invalid_description" }'; exit 0; }
 
+		# 空串 = 新发布;非空必须是纯字母数字。不能写成 ''|*[A-Za-z0-9]*)
+		# —— 那个通配只要求"含有"一个字母数字,"ab/../x" 也会过。
+		case "$target_id" in
+		'') ;;
+		*[!A-Za-z0-9]*) echo '{ "result": 1, "error": "invalid_id" }'; exit 0 ;;
+		esac
+
 		require_color_token_keys || {
 			echo '{ "result": 1, "error": "config_unavailable" }'; exit 0; }
 
 		ensure_device_identity
 
-		share_payload_tmp=$(mktemp)
-		if ! build_share_payload "$share_payload_tmp"; then
-			rm -f "$share_payload_tmp" "$share_payload_tmp.b64"
+		draft_payload_tmp=$(mktemp)
+		if ! build_share_payload "$draft_payload_tmp"; then
+			rm -f "$draft_payload_tmp" "$draft_payload_tmp.files"
 			echo '{ "result": 1, "error": "payload_build_failed" }'
 			exit 0
 		fi
-		share_payload_json=$(cat "$share_payload_tmp")
-		share_assets_json="[$(tr '\n' ',' < "$share_payload_tmp.b64" 2>/dev/null | sed 's/,$//')]"
-		rm -f "$share_payload_tmp" "$share_payload_tmp.b64"
+		draft_payload_json=$(cat "$draft_payload_tmp")
 
 		name_esc=$(json_escape_string "$name")
 		description_esc=$(json_escape_string "$description")
 
-		# No author field: the hub signs this with the creator profile that
-		# owns the device_token.
-		share_body_tmp=$(mktemp)
-		printf '{"device_token":"%s","name":"%s","description":"%s","payload":%s,"assets":%s}' \
-			"$DEVICE_TOKEN" "$name_esc" "$description_esc" \
-			"$share_payload_json" "$share_assets_json" \
-			> "$share_body_tmp"
+		draft_body_tmp=$(mktemp)
+		if [ -n "$target_id" ]; then
+			printf '{"device_token":"%s","name":"%s","description":"%s","target_id":"%s","payload":%s}' \
+				"$DEVICE_TOKEN" "$name_esc" "$description_esc" "$target_id" \
+				"$draft_payload_json" > "$draft_body_tmp"
+		else
+			printf '{"device_token":"%s","name":"%s","description":"%s","payload":%s}' \
+				"$DEVICE_TOKEN" "$name_esc" "$description_esc" \
+				"$draft_payload_json" > "$draft_body_tmp"
+		fi
 
-		if share_body=$(hub_http_post "/api/v1/themes/aurora/configs" "$share_body_tmp"); then
-			json_load "$share_body" 2>/dev/null
-			json_get_var share_id "id"
+		if draft_body=$(hub_http_post "/api/v1/themes/aurora/configs/draft" "$draft_body_tmp"); then
+			rm -f "$draft_body_tmp"
+
+			# jshn 的 json_init 和 json_load 共用同一份全局状态:一边解析响应
+			# 一边拼回复会把两者互相冲掉(拼到一半的输出被 json_load 清空)。
+			# 所以先把响应摊成一个制表符分隔的临时文件,cleanup 之后再拼输出。
+			tickets_tmp=$(mktemp)
+			draft_id=""; dup_id=""
+			json_load "$draft_body" 2>/dev/null
+			json_get_var draft_id "draft_id"
+			json_get_var dup_id "id"
+			if json_select "assets" >/dev/null 2>&1; then
+				idx=1
+				while json_select "$idx" >/dev/null 2>&1; do
+					json_get_var a_kind "kind"
+					json_get_var a_url "url"
+					json_get_var a_ticket "ticket"
+					printf '%s\t%s\t%s\n' "$a_kind" "$a_url" "$a_ticket" >> "$tickets_tmp"
+					json_select ..
+					idx=$((idx + 1))
+				done
+				json_select ..
+			fi
 			json_cleanup
-			if [ -n "$share_id" ]; then
-				# Nothing recorded locally: hub_me lists what this key owns
-				# straight from the hub, so a local copy could only ever go
-				# stale or lie after a key import.
+
+			# hub 判重:内容一模一样的东西已经在商店里了,一个字节都不用传。
+			if [ -z "$draft_id" ] && [ -n "$dup_id" ]; then
+				rm -f "$draft_payload_tmp" "$draft_payload_tmp.files" "$tickets_tmp"
+				printf '{ "result": 0, "duplicate": 1, "id": "%s" }\n' "$dup_id"
+				exit 0
+			fi
+			[ -n "$draft_id" ] || {
+				rm -f "$draft_payload_tmp" "$draft_payload_tmp.files" "$tickets_tmp"
+				echo '{ "result": 1, "error": "hub_bad_response" }'; exit 0; }
+
+			# 把 hub 发回的票据与本机文件名按 kind 对起来,交给浏览器。
+			TAB=$(printf '\t')
+			json_init
+			json_add_int "result" 0
+			json_add_string "draft_id" "$draft_id"
+			json_add_array "assets"
+			while IFS="$TAB" read -r a_kind a_url a_ticket; do
+				[ -n "$a_kind" ] || continue
+				a_fname=$(awk -F'\t' -v k="$a_kind" '$1==k{print $2; exit}' \
+					"$draft_payload_tmp.files")
+				[ -n "$a_fname" ] || continue
+				json_add_object ""
+				json_add_string "kind" "$a_kind"
+				json_add_string "src" "/luci-static/aurora/images/$a_fname"
+				json_add_string "url" "$a_url"
+				json_add_string "ticket" "$a_ticket"
+				json_close_object
+			done < "$tickets_tmp"
+			json_close_array
+			json_dump; json_cleanup
+			rm -f "$draft_payload_tmp" "$draft_payload_tmp.files" "$tickets_tmp"
+		else
+			rc=$?
+			rm -f "$draft_body_tmp" "$draft_payload_tmp" "$draft_payload_tmp.files"
+			case "$rc" in
+			3) case "$HUB_HTTP_STATUS" in
+			   429) echo '{ "result": 1, "error": "quota_exceeded" }' ;;
+			   403) echo '{ "result": 1, "error": "not_owner" }' ;;
+			   *)   echo '{ "result": 1, "error": "hub_rejected" }' ;;
+			   esac ;;
+			2) echo '{ "result": 1, "error": "invalid_id" }' ;;
+			*) echo '{ "result": 1, "error": "hub_unreachable" }' ;;
+			esac
+		fi
+		;;
+
+	# 三段式的最后一段。字节此刻已经在 hub 的 draft/ 前缀下,这里只是拿
+	# device_token 认领它 —— 浏览器全程没有能力让一份配置真正上架。
+	"hub_share_commit")
+		read -r input; json_load "$input" 2>/dev/null
+		json_get_var draft_id "draft_id"
+		json_cleanup
+
+		case "$draft_id" in ''|*[!A-Za-z0-9]*)
+			echo '{ "result": 1, "error": "invalid_id" }'; exit 0 ;;
+		esac
+
+		ensure_device_identity
+
+		commit_body_tmp=$(mktemp)
+		printf '{"device_token":"%s"}' "$DEVICE_TOKEN" > "$commit_body_tmp"
+
+		if commit_body=$(hub_http_post "/api/v1/drafts/$draft_id/commit" "$commit_body_tmp"); then
+			rm -f "$commit_body_tmp"
+			json_load "$commit_body" 2>/dev/null
+			json_get_var new_id "id"
+			json_cleanup
+			if [ -n "$new_id" ]; then
 				json_init
 				json_add_int "result" 0
-				json_add_string "id" "$share_id"
+				json_add_string "id" "$new_id"
 				json_dump; json_cleanup
 			else
 				echo '{ "result": 1, "error": "hub_bad_response" }'
 			fi
 		else
-			echo '{ "result": 1, "error": "hub_unreachable" }'
+			rc=$?
+			rm -f "$commit_body_tmp"
+			case "$rc" in
+			3) echo '{ "result": 1, "error": "hub_rejected" }' ;;
+			2) echo '{ "result": 1, "error": "invalid_id" }' ;;
+			*) echo '{ "result": 1, "error": "hub_unreachable" }' ;;
+			esac
 		fi
-		rm -f "$share_body_tmp"
 		;;
 
 	"hub_me")
@@ -2736,72 +2862,6 @@ MANIFEST
 		echo '{ "result": 0 }'
 		;;
 
-	"hub_update")
-		read -r input; json_load "$input" 2>/dev/null
-		json_get_var id "id"
-		json_get_var name "name"
-		json_get_var description "description"
-		json_cleanup
-
-		case "$id" in ''|*[!A-Za-z0-9]*)
-			echo '{ "result": 1, "error": "invalid_id" }'; exit 0 ;;
-		esac
-
-		has_control_char "$name" && {
-			echo '{ "result": 1, "error": "invalid_name" }'; exit 0; }
-		name_len=${#name}
-		[ "$name_len" -ge 1 ] && [ "$name_len" -le 60 ] || {
-			echo '{ "result": 1, "error": "invalid_name" }'; exit 0; }
-
-		has_control_char "$description" && {
-			echo '{ "result": 1, "error": "invalid_description" }'; exit 0; }
-		[ "${#description}" -le 500 ] || {
-			echo '{ "result": 1, "error": "invalid_description" }'; exit 0; }
-
-		require_color_token_keys || {
-			echo '{ "result": 1, "error": "config_unavailable" }'; exit 0; }
-
-		ensure_device_identity
-
-		update_payload_tmp=$(mktemp)
-		if ! build_share_payload "$update_payload_tmp"; then
-			rm -f "$update_payload_tmp" "$update_payload_tmp.b64"
-			echo '{ "result": 1, "error": "payload_build_failed" }'
-			exit 0
-		fi
-		update_payload_json=$(cat "$update_payload_tmp")
-		update_assets_json="[$(tr '\n' ',' < "$update_payload_tmp.b64" 2>/dev/null | sed 's/,$//')]"
-		rm -f "$update_payload_tmp" "$update_payload_tmp.b64"
-
-		name_esc=$(json_escape_string "$name")
-		description_esc=$(json_escape_string "$description")
-
-		# Same as hub_share: signing follows the profile, not the request.
-		update_body_tmp=$(mktemp)
-		printf '{"device_token":"%s","name":"%s","description":"%s","payload":%s,"assets":%s}' \
-			"$DEVICE_TOKEN" "$name_esc" "$description_esc" \
-			"$update_payload_json" "$update_assets_json" \
-			> "$update_body_tmp"
-
-		update_body=$(hub_http_put "/api/v1/themes/aurora/configs/$id" "$update_body_tmp")
-		update_rc=$?
-		rm -f "$update_body_tmp"
-
-		case "$update_rc" in
-			0)
-				json_load "$update_body" 2>/dev/null
-				json_get_var update_version "version"
-				json_cleanup
-				update_version=$(printf '%s' "$update_version" | tr -d '[:cntrl:]')
-				json_init
-				json_add_int "result" 0
-				json_add_string "version" "$update_version"
-				json_dump; json_cleanup
-			;;
-			2) echo '{ "result": 1, "error": "invalid_id" }' ;;
-			*) echo '{ "result": 1, "error": "hub_unreachable" }' ;;
-		esac
-		;;
 
 	"hub_delete")
 		read -r input; json_load "$input" 2>/dev/null

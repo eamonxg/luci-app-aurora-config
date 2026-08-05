@@ -69,22 +69,18 @@ test("hub-api module exposes the apply/status/restore declares (Task 6)", async 
   assert.match(src, /method:\s*"hub_restore_backup"/);
 });
 
-test("hub-api module exposes the share/my-shares/update/delete declares (Task 8)", async () => {
+test("hub-api module exposes the publish/my-shares/delete declares (Task 8)", async () => {
   const src = await readFile(SRC, "utf8");
-  assert.ok(src.includes("callHubShare"), "missing callHubShare");
-  assert.match(src, /method:\s*"hub_share"/);
-  assert.match(src, /params:\s*\["name", "description"\]/);
+  assert.ok(src.includes("callHubShareBegin"), "missing callHubShareBegin");
+  assert.ok(src.includes("callHubShareCommit"), "missing callHubShareCommit");
   assert.ok(src.includes("callHubMe"), "missing callHubMe");
   assert.match(src, /method:\s*"hub_me"/);
-  assert.ok(src.includes("callHubUpdate"), "missing callHubUpdate");
-  assert.match(src, /method:\s*"hub_update"/);
-  assert.match(
-    src,
-    /params:\s*\["id", "name", "description"\]/,
-    "callHubUpdate must resend the existing name and description so the hub PUT's required-name validation doesn't reject an id-only update",
-  );
   assert.ok(src.includes("callHubDelete"), "missing callHubDelete");
   assert.match(src, /method:\s*"hub_delete"/);
+  // 单请求的老路必须彻底消失:它把整张登录背景 base64 塞进一个 1.6MB 的
+  // body,而 uclient-fetch 走 TLS 推不动 —— 留着它就是留着那个 bug。
+  assert.ok(!/method:\s*"hub_share"/.test(src), "hub_share must not be re-declared");
+  assert.ok(!/method:\s*"hub_update"/.test(src), "hub_update must not be re-declared");
 });
 
 // hubAssetUrl is pure, so these tests actually run it rather than
@@ -130,10 +126,13 @@ test("hubAssetUrl rejects anything that is not a hub asset path", async () => {
   assert.equal(m.hubAssetUrl({ toString: () => "/assets/abc/logo_svg" }), "");
 });
 
-test("hub-api: share/update drop the author parameter, nickname gets its own call", async () => {
+test("hub-api: publishing drops the author parameter, nickname gets its own call", async () => {
   const src = await readFile(SRC, "utf8");
-  assert.match(src, /method:\s*"hub_share",\s*\n\s*params:\s*\["name", "description"\]/);
-  assert.match(src, /method:\s*"hub_update",\s*\n\s*params:\s*\["id", "name", "description"\]/);
+  // 署名是账号属性,由 hub 从 device_token 解析 —— 不是每次发布可以挑的字段。
+  assert.match(
+    src,
+    /method:\s*"hub_share_begin",\s*\n\s*params:\s*\["name", "description", "target_id"\]/,
+  );
   assert.ok(src.includes("callHubSetNickname"), "missing callHubSetNickname");
   assert.match(src, /method:\s*"hub_set_nickname"/);
   assert.match(src, /params:\s*\["nickname"\]/);
@@ -226,4 +225,32 @@ test("the two caches are independent -- clearing one keeps the other", async () 
     assert.equal(m.meCache.getStale(), null);
     assert.deepEqual(m.listCache.getStale(), { items: [{ id: "a" }] });
   });
+});
+
+// 三段式发布:两端走 ubus(device_token 留在路由器),中间那段字节由浏览器
+// 直接 PUT 到 hub —— uclient-fetch 走 TLS 推不动 1.2MB。
+test("hub-api declares the three-step publish", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(src, /method: "hub_share_begin"/);
+  assert.match(src, /params: \["name", "description", "target_id"\]/);
+  assert.match(src, /method: "hub_share_commit"/);
+  assert.match(src, /params: \["draft_id"\]/);
+});
+
+test("publishCurrentConfig uploads asset bytes from the browser", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(src, /publishCurrentConfig/);
+  assert.match(src, /XMLHttpRequest/, "needs upload progress events");
+  assert.match(src, /upload\.onprogress/);
+  assert.match(src, /"Bearer " \+/, "asset PUT authenticates with the ticket");
+  assert.match(src, /HUB_BASE \+ entry\.url/);
+  // 票据是浏览器唯一拿到的凭证。断言只针对代码 —— 注释里解释"为什么浏览器
+  // 拿不到 device_token"正是该留下的东西,把它一起禁掉会逼人删掉理由。
+  const code = src
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\/\/.*$/gm, "");
+  assert.ok(
+    !/device_token/.test(code),
+    "the device token must never appear in browser code",
+  );
 });

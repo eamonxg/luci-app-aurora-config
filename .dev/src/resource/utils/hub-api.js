@@ -26,6 +26,34 @@ const hubFetch = (path) => {
     .finally(() => clearTimeout(timer));
 };
 
+// 资产字节走浏览器,不走路由器。原因不是"更快"(虽然确实快),是 OpenWrt 的
+// uclient-fetch 走 TLS 根本推不动:实测同一台机器,512KB 三次里挂一次、1MB
+// 必断("Connection reset prematurely"),而同机 curl 传 1.6MB 只要 3.4 秒
+// —— 是它的 TLS 写路径在缓冲填满后不再续写。浏览器 fetch/XHR 没这个毛病。
+//
+// 浏览器拿到的是一张票据,不是 device_token:票据把 (draft_id, kind, size,
+// sha256) 全钉死,泄漏了也只能把同一份字节再传一遍。device_token 是创作者
+// 身份本身 —— 谁拿到谁能以你的名义发布、删掉你所有作品 —— 它留在路由器
+// 那个 0600 的文件里。
+//
+// 用 XHR 而不是 fetch,只为了 upload.onprogress:一张 1.2MB 的图在慢上行的
+// 线路上要传十几秒,没有进度条的等待会被当成卡死。
+const putAssetBytes = (url, ticket, blob, onProgress) =>
+  new Promise((resolve) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("PUT", url, true);
+    xhr.setRequestHeader("Authorization", "Bearer " + ticket);
+    xhr.setRequestHeader("Content-Type", "application/octet-stream");
+    xhr.timeout = 120000;
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable && onProgress) onProgress(e.loaded, e.total);
+    };
+    xhr.onload = () => resolve(xhr.status >= 200 && xhr.status < 300);
+    xhr.onerror = () => resolve(false);
+    xhr.ontimeout = () => resolve(false);
+    xhr.send(blob);
+  });
+
 // hub 的资产 url 是相对路径("/assets/{id}/{kind}"),和详情接口一直以来的
 // 返回一致 —— 拼接 base 是客户端的活,这样缓存下来的列表里不会烙进主机名。
 // HUB_BASE 归本模块所有,所以拼接也放在这里。
@@ -108,13 +136,76 @@ return baseclass.extend({
     method: "hub_restore_backup",
   }),
 
-  // No author parameter: signing is an account property the hub resolves from
-  // the device token, not something a publish call gets to choose.
-  callHubShare: rpc.declare({
+  // 三段式发布的两端。中间那段(资产字节)由 publishCurrentConfig 用浏览器
+  // 直接 PUT 到 hub —— 见下。target_id 为空串是新发布、非空是更新那一条,
+  // 所以"更新分享"不需要自己的一套方法:它跟发布本来就是同一件事,只差目标。
+  callHubShareBegin: rpc.declare({
     object: "luci.aurora",
-    method: "hub_share",
-    params: ["name", "description"],
+    method: "hub_share_begin",
+    params: ["name", "description", "target_id"],
   }),
+
+  callHubShareCommit: rpc.declare({
+    object: "luci.aurora",
+    method: "hub_share_commit",
+    params: ["draft_id"],
+  }),
+
+  // 发布一整套配置:路由器建草稿并拿票据 -> 浏览器把字节直接送到 hub ->
+  // 路由器提交。返回的信封与其它 hub 调用一致({result:0,...})。
+  publishCurrentConfig(options) {
+    const opts = options || {};
+    const report = (info) => {
+      if (typeof opts.onProgress === "function") opts.onProgress(info);
+    };
+
+    report({ phase: "begin" });
+    return L.resolveDefault(
+      this.callHubShareBegin(opts.name, opts.description || "", opts.targetId || ""),
+      null,
+    ).then((begun) => {
+      if (!begun || begun.result !== 0) {
+        return { result: 1, error: (begun && begun.error) || "hub_unreachable" };
+      }
+      // 内容与已有的一模一样:hub 直接给了那条的 id,一个字节都不必传。
+      if (begun.duplicate) return { result: 0, id: begun.id, duplicate: true };
+
+      const entries = begun.assets || [];
+      let index = 0;
+
+      // 顺序上传,不并发:一台路由器的上行本来就窄,几条流互相抢只会让每一条
+      // 都变慢,而进度条上也读不出"到底传到哪了"。
+      const next = () => {
+        if (index >= entries.length) {
+          report({ phase: "commit" });
+          return L.resolveDefault(this.callHubShareCommit(begun.draft_id), null).then(
+            (done) =>
+              done && done.result === 0
+                ? { result: 0, id: done.id }
+                : { result: 1, error: (done && done.error) || "hub_unreachable" },
+          );
+        }
+
+        const entry = entries[index];
+        const position = { kind: entry.kind, index: index + 1, count: entries.length };
+        index += 1;
+
+        // 字节从路由器自己的 web 服务器上读,同源,不需要任何凭证。
+        return fetch(entry.src)
+          .then((res) => (res.ok ? res.blob() : null))
+          .catch(() => null)
+          .then((blob) => {
+            if (!blob) return { result: 1, error: "asset_unreadable" };
+            report({ phase: "upload", loaded: 0, total: blob.size, ...position });
+            return putAssetBytes(HUB_BASE + entry.url, entry.ticket, blob, (loaded, total) =>
+              report({ phase: "upload", loaded, total, ...position }),
+            ).then((ok) => (ok ? next() : { result: 1, error: "asset_upload_failed" }));
+          });
+      };
+
+      return next();
+    });
+  },
 
   callHubSetNickname: rpc.declare({
     object: "luci.aurora",
@@ -138,12 +229,6 @@ return baseclass.extend({
     object: "luci.aurora",
     method: "hub_import_key",
     params: ["key"],
-  }),
-
-  callHubUpdate: rpc.declare({
-    object: "luci.aurora",
-    method: "hub_update",
-    params: ["id", "name", "description"],
   }),
 
   callHubDelete: rpc.declare({

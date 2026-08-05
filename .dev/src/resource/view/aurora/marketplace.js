@@ -843,6 +843,15 @@ const SHARE_ERROR_COPY = {
   config_unavailable: _("Your current configuration can't be shared right now."),
   payload_build_failed: _("Your current configuration can't be shared right now."),
   hub_unreachable: _("Couldn't reach the theme store. Please try again."),
+  // 这两条以前都被 hub_http_post 压成了 hub_unreachable ——「配额用完」和
+  // 「路由器没网」显示同一句话,是发布失败长期看起来像商店挂了的一半原因。
+  quota_exceeded: _("You've published as much as one router may publish today. Try again tomorrow."),
+  hub_rejected: _("The theme store refused this configuration. Nothing was published."),
+  // 浏览器直传独有的两种失败。第二条特意说"这台电脑"而不是"网络":路由器
+  // 能上网、你的电脑不能,是这条链路改到浏览器之后才可能出现的新情况。
+  asset_unreadable: _("Couldn't read one of the images from this router. Try reloading the page."),
+  asset_upload_failed: _("Uploading the images failed. Check this computer's internet connection and try again."),
+  not_owner: _("This share belongs to another identity."),
 };
 
 const shareErrorMessage = (code) =>
@@ -1043,6 +1052,19 @@ const STORE_CSS =
   "@media (max-width:700px){.aurora-store-share-cols{grid-template-columns:1fr;}}" +
   ".aurora-store-share-prev .aurora-store-prev{border:1px solid var(--hairline,rgba(0,0,0,0.12));" +
   "border-radius:10px;overflow:hidden;}" +
+  ".aurora-store-target{border:1px solid var(--hairline,rgba(0,0,0,0.12));" +
+  "border-radius:11px;overflow:hidden;margin-bottom:1em;}" +
+  ".aurora-store-target .hd{padding:8px 12px;font-size:0.82em;font-weight:600;" +
+  "color:var(--text-muted,#666);background:var(--surface-sunken,rgba(0,0,0,0.04));" +
+  "border-bottom:1px solid var(--hairline,rgba(0,0,0,0.12));}" +
+  ".aurora-store-target-row{display:flex;align-items:center;gap:10px;padding:9px 12px;" +
+  "cursor:pointer;font-size:0.89em;" +
+  "border-bottom:1px solid var(--hairline,rgba(0,0,0,0.08));}" +
+  ".aurora-store-target-row:last-child{border-bottom:0;}" +
+  ".aurora-store-target-row .nm{font-weight:600;min-width:0;overflow:hidden;" +
+  "text-overflow:ellipsis;}" +
+  ".aurora-store-target-row .mt{color:var(--text-muted,#777);font-size:0.88em;" +
+  "margin-left:auto;white-space:nowrap;}" +
   ".aurora-store-field{margin-bottom:0.9em;}" +
   ".aurora-store-field label{display:block;font-size:0.8em;font-weight:600;" +
   "color:var(--text-muted,#666);margin-bottom:4px;}" +
@@ -1105,7 +1127,6 @@ const STORE_CSS =
   // Once the row wraps they only add a blank line.
   ".aurora-store-head .sp,.aurora-store-applied .sp{display:none;}" +
   ".aurora-store-head input{flex:1 1 100%;max-width:none;}" +
-  ".aurora-store-head .cbi-button-add{flex:1 1 100%;}" +
   // Five tabs do not fit on a phone. Scrolling them sideways is what
   // LuCI's own .cbi-tabmenu does; wrapping turns a one-line segmented
   // control into a two-row block that reads like two separate groups.
@@ -1646,44 +1667,16 @@ return view.extend({
     // An update rebuilds and re-sends the whole configuration -- logo, login
     // background, site and app icons, shortcuts included -- so it shows the
     // same manifest the publish panel does instead of a bare one-liner.
-    const confirmUpdateShare = (item) => {
-      ui.showModal(_("Update Share"), [
-        E(
-          "p",
-          {},
-          _(
-            "Replace the shared configuration with your current settings?",
-          ),
-        ),
-        E("h4", { style: "margin:1.2em 0 0.4em;" }, _("What gets shared")),
-        buildManifestTable(),
-        E(
-          "p",
-          { style: "color:var(--text-muted);font-size:0.8em;margin-top:0.8em;" },
-          _("Anyone who applies this gets all of it. You can update or remove it later."),
-        ),
-        buildConfirmActions(() => {
-          ui.showModal(_("Updating"), [
-            E("p", { class: "spinning" }, _("Updating…")),
-          ]);
-          L.resolveDefault(
-            hubApi.callHubUpdate(item.id, item.name, item.description || ""),
-            null,
-          ).then((res) => {
-            ui.hideModal();
-            if (res && res.result === 0) {
-              ui.addNotification(null, E("p", {}, _("Updated.")), "info");
-              refreshMyShares();
-            } else {
-              ui.addNotification(
-                null,
-                E("p", {}, updateErrorMessage(res && res.error)),
-                "warning",
-              );
-            }
-          });
-        }, _("Update")),
-      ]);
+    // "更新"的意思是用工作台当前这套配置替换掉商店里的它 —— 它和发布是同一
+    // 件事,只差一个目标。所以这里不再弹一个跟当前配置八竿子打不着的确认框,
+    // 而是把人送回同一张表单,那条分享已经选中、名字和描述已经填好。一套 UI,
+    // 两个入口。
+    const openUpdateForm = (item) => {
+      shareTarget = item.id;
+      shareOpen = true;
+      nameInput.value = item.name || "";
+      descInput.value = item.description || "";
+      renderContent();
     };
 
     const confirmDeleteShare = (item) => {
@@ -1724,7 +1717,7 @@ return view.extend({
         {
           type: "button",
           class: "cbi-button",
-          click: () => confirmUpdateShare(item),
+          click: () => openUpdateForm(item),
         },
         _("Update with current configuration"),
       );
@@ -2130,56 +2123,42 @@ return view.extend({
       TABS.forEach(renderTabLabel);
       while (mySharesEl.firstChild) mySharesEl.removeChild(mySharesEl.firstChild);
       if (!myShares.length) {
-        // 两种空:一台从没发布过任何东西的路由器,和一个把作品都删光了的
-        // 创作者。前者需要被引导(顺带告诉他身份是怎么来的),后者已经知道
-        // 这地方是干嘛的,再讲一遍是啰嗦。
-        //
-        // 引导卡里那颗发布按钮和页头那颗不构成重复:它只在一件作品都没有的
-        // 时候出现,一旦有了作品整张卡就没了。被删掉的是原先常驻在标签页
-        // 顶部、和页头那颗同时在场的第三颗。
-        if (!profile.id) {
-          mySharesEl.appendChild(
-            E("div", { class: "aurora-store-empty" }, [
-              E("h4", {}, _("Nothing shared yet")),
-              E("p", {}, [
-                document.createTextNode(
-                  _("Publish this router's whole appearance to the store and anyone can apply it in one click. Publishing creates your creator identity automatically."),
-                ),
-              ]),
-              E("div", { class: "row" }, [
-                E(
-                  "button",
-                  {
-                    type: "button",
-                    class: "btn cbi-button-action important",
-                    click: () => {
-                      shareOpen = true;
-                      renderContent();
-                    },
-                  },
-                  _("Publish current configuration"),
-                ),
-                E(
-                  "button",
-                  {
-                    type: "button",
-                    class: "lnk",
-                    click: () => restoreIdentityPrompt(),
-                  },
-                  _("Shared on another router before? Restore my identity"),
-                ),
-              ]),
-            ]),
-          );
-          return;
-        }
-
+        // 没有意图就不摆表单 —— 表单是个重家伙,凭空占满一整页就是原先那种
+        // 冗余(一张劝你发布的卡,底下再跟一张让你发布的面板)。这里只给一块
+        // 路标。按钮是路标,不是发布控件:它把人送回工作台,不在这一页发起
+        // 任何事。两种空态(从没发过 / 全删光了)合成一句话,因为改版之后它们
+        // 要说的下一步完全相同。
         mySharesEl.appendChild(
-          E(
-            "p",
-            { style: "color:var(--text-muted);padding:1.2em 0 0.8em;" },
-            _("Publish your current configuration and it shows up here."),
-          ),
+          E("div", { class: "aurora-store-empty" }, [
+            E("h4", {}, _("Nothing shared yet")),
+            E("p", {}, [
+              document.createTextNode(
+                _("Sharing starts in the design studio: make the appearance what you want there, then publish from that page."),
+              ),
+            ]),
+            E("div", { class: "row" }, [
+              E(
+                "button",
+                {
+                  type: "button",
+                  class: "cbi-button",
+                  click: () => {
+                    window.location.href = L.url("admin/system/aurora/studio");
+                  },
+                },
+                _("Go to the design studio"),
+              ),
+              E(
+                "button",
+                {
+                  type: "button",
+                  class: "lnk",
+                  click: () => restoreIdentityPrompt(),
+                },
+                _("Shared on another router before? Restore my identity"),
+              ),
+            ]),
+          ]),
         );
         return;
       }
@@ -2192,6 +2171,14 @@ return view.extend({
           ]),
           ...myShares.map((item) => buildMyShareRow(item)),
         ]),
+      );
+      // 有作品的人也需要知道下一套从哪儿发 —— 这一页已经没有发布入口了。
+      mySharesEl.appendChild(
+        E(
+          "p",
+          { style: "font-size:0.84em;color:var(--text-subtle);margin:12px 0 0;" },
+          _("Want to publish another one? Set it up in the design studio and publish from there."),
+        ),
       );
     };
 
@@ -2310,7 +2297,23 @@ return view.extend({
         ),
       ]);
 
-    let shareOpen = false;
+    // 意图优先,状态兜底。用户上一秒刚在工作台点了"分享到商店",这句话是他
+    // 亲口说的;跳过来给他一张列表,等于把它丢掉,还得让他自己再找一次入口。
+    // "有没有作品"是历史状态,不该盖掉"他现在要干什么" —— 所以带意图进来
+    // 永远是表单,不判断。没有意图才看状态:没作品给路标,有作品给列表。
+    //
+    // 用 URL 参数而不是 sessionStorage:刷新、回退、收藏行为都可预测。
+    const shareIntent =
+      new URLSearchParams(window.location.search).get("share") === "1";
+    let shareOpen = shareIntent;
+
+    // 空串 = 发布为新的一条;否则是要被这套配置覆盖掉的那条分享的 id。
+    //
+    // 带意图进来又已经有作品时,只给一张空表单会让人发出第二条几乎一样的
+    // 东西 —— 他八成想更新已经发过的那条。而"更新"的语义本来就是"用当前
+    // 配置替换商店里的它",起点同样在工作台,所以它和发布共用同一张表单,
+    // 只差一个目标。
+    let shareTarget = "";
 
     // The panel is rebuilt on every renderContent() -- a keystroke in the
     // search box, or a list fetch landing late -- so the nodes that hold user
@@ -2344,9 +2347,47 @@ return view.extend({
       style: "color:var(--danger);font-weight:600;display:none;margin:0 0 0.6em;",
     });
 
+    // 与 errEl 同理:创建一次,由 buildSharePanel 重新挂载。发布过程中面板会
+    // 被 renderContent 重建,把节点建在构造函数里会让进度在第一次重绘时归零。
+    const progressEl = E("p", {
+      style: "color:var(--text-muted);font-size:0.85em;display:none;margin:0 0 0.6em;",
+    });
+
     const showError = (message) => {
       errEl.textContent = message;
       errEl.style.display = "block";
+      progressEl.style.display = "none";
+    };
+
+    // 复用 ASSET_LABELS 的措辞,免得同一张图在清单里叫"登录背景"、在进度条上
+    // 叫另一个名字。
+    const ASSET_PROGRESS_LABELS = {
+      logo_svg: ASSET_LABELS.logo,
+      favicon_png: ASSET_LABELS.siteIcon,
+      favicon_ico: ASSET_LABELS.siteIcon,
+      pwa_icon_192: ASSET_LABELS.appIcon,
+      pwa_icon_512: ASSET_LABELS.appIcon,
+      login_bg: ASSET_LABELS.loginBg,
+    };
+
+    // 一张 1.2MB 的图在慢上行的线路上要传十几秒,而那段时间里页面上唯一会动
+    // 的东西就是这一行。没有它,等待读起来就是卡死。
+    const renderShareProgress = (info) => {
+      progressEl.style.display = "block";
+      if (info.phase === "begin") {
+        progressEl.textContent = _("Preparing…");
+        return;
+      }
+      if (info.phase === "commit") {
+        progressEl.textContent = _("Finishing…");
+        return;
+      }
+      const label = ASSET_PROGRESS_LABELS[info.kind] || info.kind;
+      const pct = info.total ? Math.round((info.loaded / info.total) * 100) : 0;
+      progressEl.textContent =
+        info.count > 1
+          ? _("Uploading %s… %d%% (%d/%d)").format(label, pct, info.index, info.count)
+          : _("Uploading %s… %d%%").format(label, pct);
     };
 
     const submitBtn = E(
@@ -2395,40 +2436,53 @@ return view.extend({
           submitBtn.disabled = false;
           return;
         }
-        L.resolveDefault(hubApi.callHubShare(name, description), null).then((res) => {
-          if (res && res.result === 0) {
-            // The one moment the warning is worth reading: the user has just
-            // acquired something they can lose.
-            ui.addNotification(
-              null,
-              E(
-                "p",
-                {},
-                keySaved
-                  ? _("Published.")
-                  : _("Published. Your creator identity lives only on this router — back it up so a reflash can't take it."),
-              ),
-              "info",
-            );
-            shareOpen = false;
-            // The button stays disabled until the panel is off screen --
-            // re-enabling it here would leave a live Publish button up for the
-            // whole my-shares round trip, and a second click would post the
-            // same configuration twice. The draft is cleared at the same time
-            // so reopening the panel starts fresh rather than re-offering what
-            // was just published.
-            refreshMyShares().then(() => {
-              nameInput.value = "";
-              descInput.value = "";
-              nicknameInput.value = "";
+        hubApi
+          .publishCurrentConfig({
+            name: name,
+            description: description,
+            targetId: shareTarget,
+            onProgress: renderShareProgress,
+          })
+          .then((res) => {
+            if (res && res.result === 0) {
+              // The one moment the warning is worth reading: the user has just
+              // acquired something they can lose.
+              ui.addNotification(
+                null,
+                E(
+                  "p",
+                  {},
+                  keySaved
+                    ? _("Published.")
+                    : _("Published. Your creator identity lives only on this router — back it up so a reflash can't take it."),
+                ),
+                "info",
+              );
+              shareOpen = false;
+              shareTarget = "";
+              // 意图参数留在地址栏里的话,用户刷新一下又撞回一张空表单 —— 而他
+              // 刚刚才发布完,这一页现在该给他看的是那件作品。
+              if (shareIntent && window.history && window.history.replaceState) {
+                window.history.replaceState({}, "", window.location.pathname);
+              }
+              // The button stays disabled until the panel is off screen --
+              // re-enabling it here would leave a live Publish button up for the
+              // whole my-shares round trip, and a second click would post the
+              // same configuration twice. The draft is cleared at the same time
+              // so reopening the panel starts fresh rather than re-offering what
+              // was just published.
+              refreshMyShares().then(() => {
+                nameInput.value = "";
+                descInput.value = "";
+                nicknameInput.value = "";
+                submitBtn.disabled = false;
+                renderContent();
+              });
+            } else {
               submitBtn.disabled = false;
-              renderContent();
-            });
-          } else {
-            submitBtn.disabled = false;
-            showError(shareErrorMessage(res && res.error));
-          }
-        });
+              showError(shareErrorMessage(res && res.error));
+            }
+          });
       });
     };
 
@@ -2504,6 +2558,61 @@ return view.extend({
       ]);
     };
 
+    // 一件作品都没有时不渲染:零选项的单选组是噪音,而"你还没有作品"这句话
+    // 表单标题已经说了。
+    const buildTargetPicker = () => {
+      if (!myShares.length) return null;
+
+      const row = (value, label, meta) => {
+        const input = E("input", {
+          type: "radio",
+          name: "aurora-share-target",
+          value: value,
+        });
+        input.checked = shareTarget === value;
+        input.addEventListener("change", () => {
+          shareTarget = value;
+          const target = myShares.filter((item) => item.id === value)[0];
+          if (target) {
+            // 选了更新就把那条的现值填回去 —— 否则用户得凭记忆重打一遍
+            // 名字,打错一个字就变成"改名"而不是"更新"。
+            nameInput.value = target.name || "";
+            descInput.value = target.description || "";
+          } else {
+            nameInput.value = "";
+            descInput.value = "";
+          }
+          renderContent();
+        });
+        return E("label", { class: "aurora-store-target-row" }, [
+          input,
+          E("span", { class: "nm" }, [document.createTextNode(label)]),
+          E("span", { class: "mt" }, [document.createTextNode(meta)]),
+        ]);
+      };
+
+      const rows = [
+        row("", _("Publish as a new one"), _("One more piece in the store")),
+      ];
+      myShares.forEach((item) => {
+        rows.push(
+          row(
+            item.id,
+            // 名字来自 hub,是不可信自由文本 —— 走 createTextNode(见 row)。
+            _("Replace “%s”").format(item.name || ""),
+            item.downloads === 1
+              ? _("1 download")
+              : _("%d downloads").format(item.downloads || 0),
+          ),
+        );
+      });
+
+      return E("div", { class: "aurora-store-target" }, [
+        E("div", { class: "hd" }, _("Where this configuration goes")),
+        ...rows,
+      ]);
+    };
+
     const buildSharePanel = () => {
       const field = (label, control) =>
         E("div", { class: "aurora-store-field" }, [
@@ -2513,9 +2622,34 @@ return view.extend({
 
       const manifestTable = buildManifestTable();
 
-      return E("div", { class: "aurora-store-share" }, [
+      // 同一颗按钮,两种承诺。文案必须跟着目标走:"发布"和"覆盖掉商店里那条"
+      // 是两件事,用同一个词会让人误以为只是多发一条,结果盖掉了自己的作品。
+      const targetItem = myShares.filter((item) => item.id === shareTarget)[0];
+      while (submitBtn.firstChild) submitBtn.removeChild(submitBtn.firstChild);
+      submitBtn.appendChild(
+        document.createTextNode(
+          targetItem ? _("Replace “%s”").format(targetItem.name || "") : _("Publish"),
+        ),
+      );
+
+      // 攒数组再返回:一件作品都没有时 buildTargetPicker 返回 null,而 E() 的
+      // 子节点数组里混进 null 会抛错。
+      const children = [];
+      const picker = buildTargetPicker();
+
+      children.push(
         E("div", { class: "aurora-store-share-head" }, [
-          E("h4", { style: "margin:0;" }, _("Publish current configuration")),
+          // Not "Publish current configuration" any more: this is no longer an
+          // entry point that has to name itself, it is the form you already
+          // opened. So the title spends its words on what happens next.
+          E("div", {}, [
+            E("h4", { style: "margin:0;" }, _("Share to the store")),
+            E(
+              "p",
+              { style: "margin:2px 0 0;color:var(--text-muted);font-size:0.84em;" },
+              _("Once published, anyone can find it and apply it in one click. You can update or remove it later."),
+            ),
+          ]),
           E(
             "button",
             {
@@ -2529,6 +2663,11 @@ return view.extend({
             _("Cancel"),
           ),
         ]),
+      );
+
+      if (picker) children.push(picker);
+
+      children.push(
         E("div", { class: "aurora-store-share-cols" }, [
           E("div", { class: "aurora-store-share-prev" }, [
             E("div", { class: "aurora-store-prev" }, [
@@ -2560,9 +2699,13 @@ return view.extend({
             field(_("Name"), nameInput),
             field(_("Description"), descInput),
             buildIdentityField(field),
+            progressEl,
             errEl,
           ]),
         ]),
+      );
+
+      children.push(
         E("h4", { style: "margin:1.2em 0 0.4em;" }, _("What gets shared")),
         manifestTable,
         E(
@@ -2571,7 +2714,9 @@ return view.extend({
           _("Anyone who applies this gets all of it. You can update or remove it later."),
         ),
         E("div", { class: "right", style: "margin-top:1em;" }, [submitBtn]),
-      ]);
+      );
+
+      return E("div", { class: "aurora-store-share" }, children);
     };
 
     // ------------------------------------------------------------------
@@ -2618,35 +2763,17 @@ return view.extend({
       renderContent();
     });
 
-    const shareBtn = E(
-      "button",
-      {
-        type: "button",
-        class: "cbi-button cbi-button-add",
-        click: () => {
-          shareOpen = true;
-          selectTab("mine");
-        },
-      },
-      // Same words as the panel it opens, and the only persistent publish
-      // control on the page -- the tab used to carry a second button whose
-      // sole difference was that the header one switched tabs first.
-      _("Publish current configuration"),
-    );
-
     const headEl = E("div", {}, [
       E("div", { class: "aurora-store-head" }, [
         // No heading here: the tab strip directly above already reads "Theme
         // Marketplace", and this printed the same words again a hand's width
-        // below it. The spacer stays -- it is what pushes the two controls
-        // right now that nothing precedes them.
+        // below it. The spacer stays -- it is what pushes the search box
+        // right now that nothing precedes it.
         //
-        // Pushes search + share to the right on a desktop; the mobile rule
-        // drops it, so the two controls take full rows instead of being
-        // squeezed against a spacer that has nothing left to push.
+        // The publish button that used to sit next to the search box is gone
+        // with the other two: this page no longer starts a publish at all.
         E("span", { class: "sp" }),
         searchInput,
-        shareBtn,
       ]),
       bannerEl,
       tabsEl,
@@ -2775,7 +2902,14 @@ return view.extend({
         push(buildStaleNotice());
         push(buildOnlineGrid(state.tab));
       } else if (state.tab === "mine") {
-        if (shareOpen) push(buildSharePanel());
+        // 发布态独占这一页。原先是顺着往下堆的:塞一张面板,然后照样再画一次
+        // 区块标题和空态引导卡 —— 于是面板已经开着的时候,下面还在劝你"把这
+        // 台路由器的整套外观发布到商店"。目标选择器已经把"你有哪些作品"说清
+        // 楚了,底下再列一遍就是第二遍。
+        if (shareOpen) {
+          push(buildSharePanel());
+          return;
+        }
         const identityCard = buildIdentityCard();
         if (identityCard) {
           push(buildSectionTitle(_("My creator identity"), ""));
@@ -2835,7 +2969,8 @@ return view.extend({
     // 缓存或 null。null 走空态,不是错误态 —— 一台刚装好的路由器本来就没有
     // 已发布的作品,和"拿不到数据"是两回事。
     applyMe(hubApi.meCache.getStale());
-    selectTab("all"); // 末行已 renderContent(),首帧在此成型
+    // 从工作台带着发布意图过来,直接落在"我的分享"上,不必再点一次标签。
+    selectTab(shareIntent ? "mine" : "all"); // 末行已 renderContent(),首帧在此成型
 
     [
       styleEl,

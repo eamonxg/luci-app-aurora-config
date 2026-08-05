@@ -170,20 +170,24 @@ test("gallery view: the store survives a phone", async () => {
 
 test("gallery view: share panel and my-shares management (Task 8)", async () => {
   const src = await readFile(SRC, "utf8");
-  assert.ok(src.includes("callHubShare"), "missing callHubShare usage");
+  // 发布和更新都走 publishCurrentConfig:资产字节由浏览器直传,路由器只发
+  // 几 KB 的 begin/commit。原来的 callHubShare/callHubUpdate 把整张图 base64
+  // 塞进一个请求,uclient-fetch 走 TLS 推不动。
+  assert.ok(src.includes("publishCurrentConfig"), "missing publishCurrentConfig usage");
   assert.ok(src.includes("callHubMe"), "missing callHubMe usage");
-  assert.ok(src.includes("callHubUpdate"), "missing callHubUpdate usage");
   assert.ok(src.includes("callHubDelete"), "missing callHubDelete usage");
   assert.ok(src.includes("confirmDelete"), "missing confirmDelete reuse for delete confirms");
   assert.match(src, /require utils\.asset-upload as assetUpload/);
 });
 
-test("gallery view: updating a share resends the existing name (not id-only)", async () => {
+// 原意保留:更新必须带上那条分享的现有名字,否则 hub 的必填校验会拒掉它。
+// 现在这件事发生在打开表单的那一刻 —— 名字被填进输入框,提交时随之送出。
+test("gallery view: updating a share carries the existing name", async () => {
   const src = await readFile(SRC, "utf8");
   assert.match(
     src,
-    /callHubUpdate\(\s*item\.id,\s*item\.name,/,
-    "callHubUpdate must be called with item.name so the hub PUT's required-name check doesn't reject the update",
+    /const openUpdateForm = \(item\) => \{[\s\S]*?nameInput\.value = item\.name \|\| "";/,
+    "openUpdateForm must seed the name field so the update is not sent nameless",
   );
 });
 
@@ -918,45 +922,52 @@ test("identity card: names the router's creator, and carries back-up / rename / 
   assert.equal(renameSites, 1, "rename must have exactly one entry point");
 });
 
-test("publishing has exactly one persistent entry point", async () => {
+// 这一条原先钉的是"三处入口用同一个词"。三处已经一起删了:发布的起点搬到
+// 主题工作台,商店只负责逛和管。它现在钉的是"零个" —— 同一条回归线,更严。
+test("publishing has no entry point on this page at all", async () => {
   const src = await readFile(SRC, "utf8");
 
-  // 页头按钮复用发布面板的标题措辞 —— 点它打开的面板就叫这个名字。
   assert.ok(
     !src.includes('_("Share My Configuration")'),
     "the header button must stop being a second, differently-worded verb",
   );
 
-  // 常驻的页内按钮没了。剩下三处用同一个词:页头按钮、面板标题、以及空态
-  // 引导卡里那个 —— 引导卡与作品列表互斥,不是第四个常驻入口。
   const publishLabels =
     (src.match(/_\("Publish current configuration"\)/g) || []).length;
-  assert.equal(
-    publishLabels,
-    3,
-    "expected the header button, the panel heading and the empty-state CTA",
-  );
+  assert.equal(publishLabels, 0, "every publish entry point moved to the studio");
 
-  assert.match(src, /shareOpen = true;\s*selectTab\("mine"\);/);
+  // 页头那颗按钮连同它切标签的副作用一起没了。
+  assert.ok(
+    !/shareOpen = true;\s*selectTab\("mine"\);/.test(src),
+    "the header button's tab-switching side effect should be gone with it",
+  );
 });
 
-test("my-shares empty state onboards instead of demanding an import", async () => {
+// 原先这里分两种空态:没身份的给引导卡,有身份零作品的给一句话。改版之后
+// 两者要说的下一步完全相同(去工作台),所以合成一句。引导卡不再是发布入口,
+// 那颗按钮是路标 —— 它把人送走,不在这一页发起任何事。
+test("my-shares empty state points at the studio instead of publishing", async () => {
   const src = await readFile(SRC, "utf8");
 
   assert.ok(src.includes('_("Nothing shared yet")'));
   assert.ok(
     src.includes(
-      '_("Publish this router\'s whole appearance to the store and anyone can apply it in one click. Publishing creates your creator identity automatically.")',
+      '_("Sharing starts in the design studio: make the appearance what you want there, then publish from that page.")',
     ),
   );
   assert.ok(
     src.includes('_("Shared on another router before? Restore my identity")'),
   );
-  assert.ok(src.includes('_("Publish your current configuration and it shows up here.")'));
-
-  // 引导卡只在“连身份都还没有”时出现;已有身份、零作品是另一句话。
-  assert.match(src, /if \(!profile\.id\) \{/);
   assert.match(src, /class: "aurora-store-empty"/);
+
+  // 两种空态合并了:不再按 profile.id 分叉。
+  assert.ok(
+    !/if \(!profile\.id\) \{/.test(src),
+    "the two empty states now say the same next step and were merged",
+  );
+  assert.ok(
+    !src.includes('_("Publish your current configuration and it shows up here.")'),
+  );
 
   // 旧的那句“或者导入创作者密钥”彻底消失,连同两个旧按钮标签。
   assert.ok(
@@ -1014,4 +1025,51 @@ test("gallery: the tab strip names the page, so the head carries no heading", as
   // The spacer is what pushes search and share to the right; without the
   // heading it is the first child, and it still has to be there.
   assert.match(src, /class: "sp"/);
+});
+
+// 三处发布入口(页头按钮、面板标题、空态卡按钮)说的是同一句话,而且面板开着
+// 的时候下面还在劝你开面板。一次删干净:商店从此只干两件事 —— 逛别人的、
+// 管自己的,发布的起点在主题工作台。
+test("marketplace: no publish button anywhere on this page", async () => {
+  const src = await readFile(srcPath("view/aurora/marketplace.js"), "utf8");
+  assert.ok(!/cbi-button-add/.test(src), "the header publish button (and its CSS) should be gone");
+  assert.ok(
+    !/_\("Publish current configuration"\)/.test(src),
+    "the copy that named three separate entry points should be gone",
+  );
+  assert.match(src, /_\("Go to the design studio"\)/);
+});
+
+// 意图优先,状态兜底:用户上一秒刚在工作台点了"分享到商店",这句话不该被
+// "你已经发过东西了"盖掉。
+test("marketplace: intent beats state when deciding what to show", async () => {
+  const src = await readFile(srcPath("view/aurora/marketplace.js"), "utf8");
+  assert.match(src, /URLSearchParams\(window\.location\.search\)/);
+  assert.match(src, /shareIntent/);
+  assert.match(src, /history\.replaceState/);
+});
+
+// 带意图进来又已经有作品时,只给一张空表单会让人发出第二条几乎一样的东西。
+// "更新"的语义本来就是"用当前配置替换商店里的它",起点同样在工作台 ——
+// 所以它和发布共用同一张表单,只差一个目标。
+test("marketplace: an author with works picks new-vs-update before publishing", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(src, /shareTarget/);
+  assert.match(src, /_\("Publish as a new one"\)/);
+  assert.match(src, /_\("Replace “%s”"\)/);
+  assert.match(src, /nameInput\.value = target\.name/);
+  // 列表里的"更新"不再弹确认框,而是跳回同一张表单、那条已选中
+  assert.ok(!/confirmUpdateShare/.test(src), "update now reuses the publish form");
+  assert.match(src, /openUpdateForm/);
+});
+
+// 一张 1.2MB 的图在慢上行的线路上要传十几秒。没有进度就是"卡死"。
+test("marketplace: a multi-second upload shows progress, not a frozen button", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(src, /renderShareProgress/);
+  assert.match(src, /_\("Uploading %s… %d%%"\)/);
+  assert.match(src, /asset_upload_failed/);
+  assert.match(src, /asset_unreadable/);
+  // 进度回调必须真的接上,否则上面那些字一次都不会显示
+  assert.match(src, /onProgress: renderShareProgress/);
 });
