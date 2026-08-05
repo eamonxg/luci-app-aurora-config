@@ -898,6 +898,7 @@ const STORE_CSS =
   "margin:0.4em 0 0;}" +
   ".aurora-store-head h2{margin:0;}" +
   ".aurora-store-head input{max-width:280px;}" +
+  ".aurora-store-head .sp{flex:1;}" +
   ".aurora-store-applied{display:flex;align-items:center;gap:0.6em;flex-wrap:wrap;" +
   "margin-top:0.9em;padding:0.35em 0.4em 0.35em 0.9em;border-radius:0.6em;" +
   "background:var(--brand-subtle,rgba(0,134,191,0.12));font-size:0.9em;}" +
@@ -919,7 +920,12 @@ const STORE_CSS =
   "margin:1.6em 0 0.6em;}" +
   ".aurora-store-section-title h3{margin:0;font-size:0.95em;font-weight:650;}" +
   ".aurora-store-section-title span{font-size:0.8em;color:var(--text-subtle,#888);}" +
-  ".aurora-store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(252px,1fr));" +
+  // min(252px,100%) rather than a bare 252px: auto-fill still lays a 252px
+  // track when the container is narrower than that, and the grid then runs off
+  // the side of a small phone. The min() clamps the track to whatever room
+  // there actually is.
+  ".aurora-store-grid{display:grid;" +
+  "grid-template-columns:repeat(auto-fill,minmax(min(252px,100%),1fr));" +
   "gap:16px;margin-top:0.4em;}" +
   ".aurora-store-card{background:var(--surface,#fff);border:1px solid var(--hairline,rgba(0,0,0,0.12));" +
   "border-radius:13px;overflow:hidden;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s;}" +
@@ -991,8 +997,10 @@ const STORE_CSS =
   ".aurora-store-tile{display:inline-flex;align-items:center;gap:5px;font-size:0.75em;" +
   "color:var(--text-muted,#777);background:var(--surface-sunken,rgba(0,0,0,0.04));" +
   "border:1px solid var(--hairline,rgba(0,0,0,0.08));border-radius:7px;" +
-  "padding:2px 8px 2px 3px;white-space:nowrap;}" +
-  ".aurora-store-tile .g{display:grid;place-items:center;width:20px;height:20px;" +
+  "padding:2px 8px 2px 3px;white-space:nowrap;max-width:100%;}" +
+  ".aurora-store-tile>span:last-child{min-width:0;overflow:hidden;" +
+  "text-overflow:ellipsis;}" +
+  ".aurora-store-tile .g{flex:none;display:grid;place-items:center;width:20px;height:20px;" +
   "border-radius:5px;background:var(--surface,#fff);color:var(--text,#111);" +
   "border:1px solid var(--hairline,rgba(0,0,0,0.08));font-size:0.9em;line-height:1;}" +
   ".aurora-store-sc{list-style:none;margin:0;padding:0;display:grid;gap:1px;" +
@@ -1025,7 +1033,54 @@ const STORE_CSS =
   ".aurora-store-field input,.aurora-store-field textarea{width:100%;}" +
   ".aurora-store-keybar{display:flex;justify-content:space-between;align-items:center;" +
   "gap:1em;flex-wrap:wrap;padding:0.8em 1em;margin:0.8em 0;" +
-  "border:1px solid var(--hairline,rgba(0,0,0,0.12));border-radius:10px;}";
+  "border:1px solid var(--hairline,rgba(0,0,0,0.12));border-radius:10px;}" +
+  // A card's quick-apply button is revealed by hovering the card. A touch
+  // screen never hovers, so on a phone that button was simply unreachable --
+  // the only way to apply from the grid was to open the drawer first. Keyed on
+  // the pointer, not the width: a narrow desktop window still has a mouse.
+  "@media (hover:none){.aurora-store-acts{opacity:1;}}" +
+  // Without this a flick that runs past the end of the drawer's own scroll
+  // keeps going in the page underneath, which then sits at a different offset
+  // when the drawer closes.
+  ".aurora-store-drawer-body{overscroll-behavior:contain;}" +
+  "@media (max-width:600px){" +
+  // Both spacers exist to push a button to the right edge of a wide row.
+  // Once the row wraps they only add a blank line.
+  ".aurora-store-head .sp,.aurora-store-applied .sp{display:none;}" +
+  ".aurora-store-head input{flex:1 1 100%;max-width:none;}" +
+  ".aurora-store-head .cbi-button-add{flex:1 1 100%;}" +
+  // Five tabs do not fit on a phone. Scrolling them sideways is what
+  // LuCI's own .cbi-tabmenu does; wrapping turns a one-line segmented
+  // control into a two-row block that reads like two separate groups.
+  // width:max-content from the base rule still hugs the pills when they do
+  // fit -- max-width:100% is what makes the overflow scroll instead.
+  ".aurora-store-filters{flex-wrap:nowrap;overflow-x:auto;" +
+  "scrollbar-width:none;-ms-overflow-style:none;}" +
+  ".aurora-store-filters::-webkit-scrollbar{display:none;}" +
+  // Basis 100%: the sentence takes the whole first line and the Restore
+  // button drops below it, rather than the two sharing a line that fits
+  // neither -- the button alone is wider than a 320px screen's text column.
+  ".aurora-store-applied .msg{flex:1 1 100%;}" +
+  ".aurora-store-keybar{align-items:flex-start;padding:0.7em 0.8em;}" +
+  ".aurora-store-share{padding:0.9em 1em 1em;}" +
+  ".aurora-store-grid{gap:12px;}" +
+  // The drawer is 92vw here, so its 1.3em gutters cost real reading width.
+  ".aurora-store-panes{padding:0.8em 1em 0;gap:8px;}" +
+  ".aurora-store-drawer-body{padding:0.9em 1em;}" +
+  ".aurora-store-drawer-foot{padding:0.8em 1em;}" +
+  // Still two columns -- the labels are short and stacking would double the
+  // table's height -- but the 18px gutter is room the values need here.
+  ".aurora-store-kv{gap:5px 10px;}" +
+  // 44% of a 300px drawer ellipsised most targets down to nothing, so a
+  // shortcut becomes two lines here: glyph + title + the ↗ marker, then the
+  // target underneath, indented to line up with the title. `order` is what
+  // keeps ↗ next to the title it marks -- it sits after the target in the
+  // DOM, and without it the marker gets pushed onto a third line of its own.
+  ".aurora-store-sc li{flex-wrap:wrap;gap:4px 10px;}" +
+  ".aurora-store-sc .nm{flex:1 1 auto;}" +
+  ".aurora-store-sc .to{order:1;flex:1 1 100%;max-width:100%;" +
+  "padding-left:34px;}" +
+  "}";
 
 return view.extend({
   handleSave: null,
@@ -1036,7 +1091,7 @@ return view.extend({
     // 刻意只留本地来源。presets.json 随包安装,uci.load 走本机 ubus(实测
     // ~90ms)。到 hub 的两个调用移到 render() 之后 —— LuCI 在 load() resolve
     // 前不会进 render(),把一次 205ms RTT / 首连 800ms 的往返放在这里,等于
-    // 让首屏白等它。见 docs/specs/2026-08-05-store-first-paint.md。
+    // 让首屏白等它。
     return Promise.all([
       L.resolveDefault(
         fetch(L.resource("aurora/presets.json")).then((res) =>
@@ -1149,10 +1204,13 @@ return view.extend({
         return;
       }
       bannerEl.className = "aurora-store-applied";
-      bannerEl.appendChild(buildCurrentTick());
+      // Tick and sentence are one flex item, not two. As siblings the tick was
+      // a flex item in its own right, so on a narrow screen the sentence wrapped
+      // to the next line and left a lone ✓ sitting above it.
       bannerEl.appendChild(
-        E("span", {}, [
-          document.createTextNode(_("In use") + " "),
+        E("span", { class: "msg" }, [
+          buildCurrentTick(),
+          document.createTextNode(" " + _("In use") + " "),
           E("strong", {}, [document.createTextNode(appliedName)]),
         ]),
       );
@@ -1620,19 +1678,28 @@ return view.extend({
         _("Delete"),
       );
 
+      // The action cell is `td.cbi-section-actions` wrapping a single <div>,
+      // which is the shape LuCI's own TableSection emits. Under the mobile
+      // breakpoint every theme gives that cell the whole row width and lets
+      // the buttons inside it wrap. It used to be `td center` with
+      // white-space:nowrap, which pinned "Update with current configuration"
+      // and "Delete" onto one unbreakable line: on a 390px phone the row ran
+      // to 748px and Delete sat off the right edge of the screen.
+      //
+      // Deliberately no data-title on the two data cells. Themes hide
+      // `.tr.table-titles` on a phone and reprint the column name from that
+      // attribute, which is worth it when a bare cell would be ambiguous --
+      // here "Nord Midnight" and "128 downloads" already say what they are,
+      // and a "Name"/"Downloads" line above each would only stutter.
       return E("tr", { class: "tr" }, [
         E("td", { class: "td", style: "word-break:break-word;" }, [
           document.createTextNode(item.name || _("Untitled theme")),
         ]),
-        E(
-          "td",
-          { class: "td", style: "color:var(--text-muted);" },
-          [document.createTextNode(formatDownloads(item.downloads))],
-        ),
-        E("td", { class: "td center", style: "white-space:nowrap;" }, [
-          updateBtn,
-          " ",
-          deleteBtn,
+        E("td", { class: "td", style: "color:var(--text-muted);" }, [
+          document.createTextNode(formatDownloads(item.downloads)),
+        ]),
+        E("td", { class: "td cbi-section-actions" }, [
+          E("div", {}, [updateBtn, " ", deleteBtn]),
         ]),
       ]);
     };
@@ -1778,7 +1845,14 @@ return view.extend({
     const KEY_RE = /^[a-f0-9]{64}$/;
 
     const importKeyPrompt = () => {
-      const input = E("textarea", { class: "cbi-input-textarea", rows: 2 });
+      // The share panel's fields get their width from .aurora-store-field; this
+      // one lives in a modal, where a default-sized textarea leaves a 64-hex
+      // key wrapping inside a box narrower than the dialog holding it.
+      const input = E("textarea", {
+        class: "cbi-input-textarea",
+        rows: 2,
+        style: "width:100%;box-sizing:border-box;",
+      });
       const err = E("p", {
         style: "color:var(--danger);font-weight:600;display:none;margin:0.6em 0 0;",
       });
@@ -2010,6 +2084,10 @@ return view.extend({
           E("th", { class: "th" }, _("Content")),
           E("th", { class: "th" }, _("Details")),
         ]),
+        // Same call as buildMyShareRow: no data-title. Every row here is
+        // already a label facing its own value ("Colors" -> "Light and dark,
+        // 62 values"), so reprinting "Content"/"Details" above each of the
+        // eleven rows on a phone is eleven stutters and no information.
         ...shareManifestRows().map((row) =>
           E("tr", { class: "tr" }, [
             E("td", { class: "td" }, [document.createTextNode(row.label)]),
@@ -2346,7 +2424,10 @@ return view.extend({
     const headEl = E("div", {}, [
       E("div", { class: "aurora-store-head" }, [
         titleEl,
-        E("span", { style: "flex:1;" }),
+        // Pushes search + share to the right on a desktop; the mobile rule
+        // drops it, so the two controls take full rows instead of being
+        // squeezed against a spacer that has nothing left to push.
+        E("span", { class: "sp" }),
         searchInput,
         shareBtn,
       ]),

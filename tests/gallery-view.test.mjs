@@ -130,6 +130,43 @@ test("gallery view: apply/restore error copy stays result-only (no mechanism wor
   mechanismLeaks.forEach((re) => assert.ok(!re.test(src), `mechanism word leaked via ${re}`));
 });
 
+test("gallery view: the store survives a phone", async () => {
+  const src = await readFile(SRC, "utf8");
+
+  // 报出来的那个 bug:操作单元格曾经是 `td center` + white-space:nowrap,
+  // "Update with current configuration" 和 "Delete" 被钉在同一行不许断开 ——
+  // 390px 的手机上整行撑到 748px,Delete 掉到屏幕外面去了。
+  //
+  // 改成 LuCI 自己的 td.cbi-section-actions > div:这一层结构 luci-theme-aurora
+  // 和 luci-theme-bootstrap 都认,窄屏下把单元格拉成整行、让里面的按钮换行。
+  // 换句话说这里靠的是原生类名,不是本文件另写一条媒体查询。
+  assert.match(
+    src,
+    /class: "td cbi-section-actions"/,
+    "the my-shares action cell must be a native LuCI section-actions cell",
+  );
+  assert.ok(
+    !/class: "td center", style: "white-space:nowrap;"/.test(src),
+    "the action cell must not pin its buttons to one unbreakable line again",
+  );
+
+  // 卡片上的快捷 Apply 按钮靠 :hover 显形。触摸屏没有 hover —— 手机上那颗
+  // 按钮以前根本按不到,只能先开抽屉。按指针类型判断而不是按宽度:窄窗口的
+  // 桌面浏览器仍然有鼠标。
+  assert.ok(
+    src.includes("@media (hover:none){.aurora-store-acts{opacity:1;}}"),
+    "the card's quick-apply button must be reachable without a hover",
+  );
+
+  // ✓ 和它所在的那句话必须是同一个 flex item。分成两个的时候,窄屏上句子换行
+  // 到第二行,留一个光秃秃的 ✓ 吊在上面。
+  assert.match(
+    src,
+    /E\("span", \{ class: "msg" \}, \[\s*buildCurrentTick\(\),/,
+    "the banner tick must travel inside the sentence it belongs to",
+  );
+});
+
 test("gallery view: share panel and my-shares management (Task 8)", async () => {
   const src = await readFile(SRC, "utf8");
   assert.ok(src.includes("callHubShare"), "missing callHubShare usage");
@@ -535,7 +572,12 @@ test("gallery view: one card builder, two rows of metadata", async () => {
   );
 
   assert.ok(src.includes("minmax(225px,1fr)") === false, "the grid must widen");
-  assert.ok(src.includes("minmax(252px,1fr)"), "grid must be 252px");
+  // 252px 是卡片的目标宽度,min(...,100%) 是它的下限保护:auto-fill 在容器
+  // 比 252px 还窄时照样铺一条 252px 的轨道,网格就从手机屏幕右边溢出去了。
+  assert.ok(
+    src.includes("minmax(min(252px,100%),1fr)"),
+    "grid must be 252px, clamped to the container so it can't overflow a phone",
+  );
   assert.ok(src.includes("aspect-ratio:16/10"), "the preview must gain height");
   // 色点条浮到预览上,卡片正文因此少一整行
   assert.ok(

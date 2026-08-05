@@ -1,5 +1,15 @@
-# Build artifacts
+# macOS
 .DS_Store
+
+# Working notes. Specs, plans and agent scratch describe how a change was
+# arrived at, not what the package is -- they go stale the moment the code
+# moves on, and docs/DEVELOPMENT.md is the one document meant to be read.
+# Kept locally, never committed.
 .superpowers/
+docs/plans/
+docs/specs/
 docs/superpowers/
 memory/
+
+# Local tooling
+node_modules/
