@@ -8,6 +8,7 @@
 import { readdir, readFile, writeFile, mkdir, rm } from "node:fs/promises";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createHash } from "node:crypto";
 import { minify } from "terser";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -74,8 +75,41 @@ async function banner(rel) {
   }
 }
 
+// `__ASSET_HASH(<path>)__` becomes the first 8 hex of that source file's
+// sha256, so a resource we fetch by a URL we build ourselves can carry a
+// version that changes if and only if its contents do.
+//
+// It has to happen here rather than being stamped into the source, because
+// only this script reads every source file. The artifact stays a pure function
+// of the sources, so --check is unaffected.
+//
+// Why it matters: uhttpd dates our installed files Last-Modified: epoch and
+// sends no Cache-Control, so the heuristic freshness a browser computes runs to
+// years -- it will not even revalidate. Resources LuCI `require`s get LuCI's
+// own ?v=; the ones we fetch get this.
+const ASSET_HASH = /__ASSET_HASH\(([^)]+)\)__/g;
+
+async function resolveAssetHashes(code, rel) {
+  const matches = [...code.matchAll(ASSET_HASH)];
+  let out = code;
+  for (const [token, target] of matches) {
+    let contents;
+    try {
+      contents = await readFile(join(SRC, target), "utf8");
+    } catch {
+      throw new Error(`__ASSET_HASH names ${target}, which is not a source`);
+    }
+    const hash = createHash("sha256").update(contents).digest("hex").slice(0, 8);
+    out = out.split(token).join(hash);
+  }
+  return out;
+}
+
 async function build(rel) {
-  const source = await readFile(join(SRC, rel), "utf8");
+  const source = await resolveAssetHashes(
+    await readFile(join(SRC, rel), "utf8"),
+    rel,
+  );
   if (rel.endsWith(".js")) {
     // No sourceMap option at all: terser would otherwise be free to append a
     // sourceMappingURL comment, and the map is not installed on the device.

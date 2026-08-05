@@ -16,6 +16,7 @@
 // Zero dependencies / no build step. Run:  node scripts/gen-presets.mjs
 
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -175,9 +176,24 @@ for (const preset of Object.keys(presets)) {
 // templates, projected into the hub's payload shape; regenerated together so
 // the two can never drift.
 mkdirSync(dirname(SRC_PRESETS), { recursive: true });
-writeFileSync(
-  SRC_PRESETS,
-  JSON.stringify({ presets: browserPresets }, null, 2) + "\n",
-  "utf8",
-);
+const presetsJson = JSON.stringify({ presets: browserPresets }, null, 2) + "\n";
+writeFileSync(SRC_PRESETS, presetsJson, "utf8");
 console.log("gen-presets: wrote .dev/src/resource/aurora/presets.json");
+
+// Stamp a content hash into gallery.js, which appends it as ?v= when fetching
+// the file above. uhttpd dates every static resource at the epoch and sends no
+// Cache-Control, so a browser's heuristic freshness for it runs to years and it
+// never revalidates -- without this stamp, a change here reaches nobody who has
+// already opened the store. Same mechanism sync-tokens.mjs uses for the token
+// engine; tests/builtin-presets.test.mjs checks the two agree.
+const hash = createHash("sha256").update(presetsJson).digest("hex").slice(0, 8);
+const stampLine = `const PRESETS_VERSION = "${hash}";`;
+const galleryPath = resolve(root, ".dev/src/resource/view/aurora/gallery.js");
+const gallery = readFileSync(galleryPath, "utf8").replace(
+  /const PRESETS_VERSION = "[^"]*";/,
+  stampLine,
+);
+if (!gallery.includes(stampLine))
+  throw new Error("PRESETS_VERSION marker not found in gallery.js");
+writeFileSync(galleryPath, gallery, "utf8");
+console.log(`gen-presets: stamped PRESETS_VERSION=${hash} into gallery.js`);

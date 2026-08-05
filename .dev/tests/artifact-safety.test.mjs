@@ -151,3 +151,46 @@ test("no hidden file was shipped", async () => {
   const hidden = all.filter((name) => name.startsWith("."));
   assert.deepEqual(hidden, [], `hidden files must not be installed: ${hidden}`);
 });
+
+// Every resource this package fetches by a URL it builds itself must carry a
+// version, or browsers keep the copy they have: uhttpd dates our installed
+// files at the epoch and sends no Cache-Control, so the heuristic freshness a
+// browser computes runs to years and it never revalidates. This is how the
+// Theme Store spent months rendering built-in cards from a presets.json whose
+// shape had changed underneath it.
+//
+// Resources LuCI itself `require`s are out of scope -- LuCI appends its own
+// ?v=, taken from luci-base's version, which we cannot influence.
+test("self-fetched resources carry a cache-busting version", async () => {
+  const sentinel = /__ASSET_HASH\(/;
+  for (const rel of shipped) {
+    const built = await readFile(join(OUT, rel), "utf8");
+    assert.ok(
+      !sentinel.test(built),
+      `${rel} still contains an unresolved __ASSET_HASH sentinel`,
+    );
+  }
+
+  const theme = await readFile(join(OUT, "view/aurora/theme.js"), "utf8");
+  // The version is the loader's second argument; the "?v=" concatenation lives
+  // inside loadGlobalScript, so assert on both halves.
+  assert.match(
+    theme,
+    /L\.resource\([^)]*\)\+\([^)]*\?"\?v="\+/,
+    "loadGlobalScript no longer appends the version it is given",
+  );
+  for (const asset of ["color.global.js", "tokens.global.js"])
+    assert.match(
+      theme,
+      new RegExp(`"utils/${asset.replace(/\./g, "\\.")}",\\s*"[^"]+"`),
+      `theme.js loads ${asset} without a version argument -- a browser that ` +
+        `already has it will never ask for it again`,
+    );
+
+  const gallery = await readFile(join(OUT, "view/aurora/gallery.js"), "utf8");
+  assert.match(
+    gallery,
+    /aurora\/presets\.json"\)\s*\+\s*"\?v=[^"]+"/,
+    "gallery.js fetches presets.json with no ?v=",
+  );
+});

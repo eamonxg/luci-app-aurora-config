@@ -30,6 +30,23 @@
 
 const SWATCH_KEYS = ["bg", "surface", "text", "brand"];
 
+// Content hash of aurora/presets.json -- stamped by scripts/gen-presets.mjs,
+// checked by tests/builtin-presets.test.mjs. Appended as ?v= below.
+//
+// Without it a browser never refetches this file. uhttpd reports every static
+// resource with Last-Modified at the epoch and sends no Cache-Control, so the
+// heuristic freshness a browser computes from that is on the order of years:
+// it serves its copy without even revalidating. The shape of this file has
+// already changed once (it used to be {light,dark}, not
+// {colors,layout,typography,toolbar}), and a browser holding the old shape
+// renders every built-in card with the fallback palette and a top nav bar --
+// no colours, no sidebar, no font chip, and nothing on screen saying why.
+//
+// LuCI cache-busts the resources it `require`s itself; this fetch is ours, so
+// it has to carry its own stamp. Same reason theme.js appends
+// ?v=TOKENS_ENGINE_VERSION to the token engine.
+const PRESETS_VERSION = "d685cb2b";
+
 // build_share_payload skips assets whose filename is still the factory one --
 // an unmodified slot means the user never customised it, so nothing is
 // uploaded. The manifest must skip exactly the same names, or it would
@@ -1135,8 +1152,8 @@ return view.extend({
     // 让首屏白等它。
     return Promise.all([
       L.resolveDefault(
-        fetch(L.resource("aurora/presets.json")).then((res) =>
-          res.ok ? res.json() : null,
+        fetch(L.resource("aurora/presets.json") + "?v=" + PRESETS_VERSION).then(
+          (res) => (res.ok ? res.json() : null),
         ),
         null,
       ),

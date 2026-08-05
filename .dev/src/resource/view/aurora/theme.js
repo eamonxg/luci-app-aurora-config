@@ -47,10 +47,22 @@ const loadGlobalScript = (src, version) =>
 // Both are requested before either is awaited. The engine is 65KB with no gzip
 // in front of it, so waiting for it to arrive before even asking for the 4KB
 // file that follows costs a whole extra round trip on the settings page.
+// Content hash of the vendored colour library, substituted by
+// scripts/build-js.mjs. The library is vendored by hand and carries no version
+// of its own, and without a ?v= a browser that already has it will never ask
+// again: uhttpd dates our installed files at the epoch and sends no
+// Cache-Control, so its heuristic freshness runs to years. Re-vendoring a
+// newer colorjs would then reach nobody, and the two halves of the colour
+// pipeline -- this library in the browser, the same one in the tokens package
+// at build time -- would quietly disagree about what a hex value is.
+const COLOR_LIBRARY_VERSION = "__ASSET_HASH(utils/color.global.js)__";
+
 const colorLibraryReady = (async () => {
   const pending = [];
   if (typeof Color !== "function")
-    pending.push(loadGlobalScript("utils/color.global.js"));
+    pending.push(
+      loadGlobalScript("utils/color.global.js", COLOR_LIBRARY_VERSION),
+    );
   if (typeof AuroraTokens === "undefined")
     pending.push(
       loadGlobalScript("utils/tokens.global.js", TOKENS_ENGINE_VERSION),

@@ -10,6 +10,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
@@ -363,4 +364,33 @@ test("the Theme Store no longer promises that a preset only repaints", () => {
   // is not fully offline until the woff2 files land.
   assert.match(gallery, /const needsFontDownload = /);
   assert.match(gallery, /const BUNDLED_FONT_IDS = \["default", "system"\]/);
+});
+
+// The shape of presets.json changed once already (151e50a moved it from
+// {light,dark} to {colors,layout,typography,toolbar}), and browsers kept
+// serving the old one for months: uhttpd reports Last-Modified as the epoch
+// and sends no Cache-Control, so a browser's heuristic freshness works out to
+// roughly 5.6 years and it never revalidates. A cached copy of the old shape
+// renders every built-in card with the fallback palette and a top nav bar --
+// no colours, no sidebar, no font chip -- and nothing in the UI says why.
+//
+// So the fetch carries a content hash, the way theme.js does for the token
+// engine. gen-presets.mjs stamps it; this checks the two agree.
+test("the store cache-busts presets.json with a hash of its contents", () => {
+  const data = read(".dev/src/resource/aurora/presets.json");
+  const expected = createHash("sha256").update(data).digest("hex").slice(0, 8);
+
+  const stamped = /const PRESETS_VERSION = "([^"]+)";/.exec(gallery)?.[1];
+  assert.ok(stamped, "gallery.js declares PRESETS_VERSION");
+  assert.equal(
+    stamped,
+    expected,
+    "PRESETS_VERSION is stale -- rerun `pnpm gen-presets`",
+  );
+
+  assert.match(
+    gallery,
+    /L\.resource\("aurora\/presets\.json"\)\s*\+\s*"\?v="\s*\+\s*PRESETS_VERSION/,
+    "the fetch must carry the stamp, or browsers keep the copy they already have",
+  );
 });

@@ -751,6 +751,44 @@ licence banner is intact, no `sourceMappingURL` points at a map the package
 does not install, every `_()` msgid survives byte-for-byte, and no hidden file
 (`.DS_Store`) got installed.
 
+### Cache busting: anything we fetch ourselves needs a `?v=`
+
+uhttpd dates this package's installed files `Last-Modified: Thu, 01 Jan 1970`
+and sends no `Cache-Control`. Browsers then compute heuristic freshness as
+roughly 10% of the file's apparent age — from the epoch, that is years — and
+serve their copy **without even sending `If-None-Match`**. (luci-base and the
+theme carry real dates; only ours are at the epoch.)
+
+That is not theoretical. The Theme Store spent months drawing its built-in
+cards from a `presets.json` whose shape had changed underneath it: against the
+old `{light,dark}` shape, `paletteOf` finds no colours and `navOf` no layout,
+so every card rendered with the fallback palette and a top nav bar. Both fail
+silently, so the page looked deliberate.
+
+Two kinds of URL, and only one is ours:
+
+- **LuCI `require`s it** (`view/aurora/*.js`, everything under `utils/`) —
+  LuCI appends `?v=${env.resource_version}`, parsed from the `luci.js` script
+  tag, i.e. **luci-base's** version. Bumping this package's `PKG_VERSION` does
+  not change it. Nothing here can fix that; a browser picks these up on a hard
+  reload or when luci-base is upgraded.
+- **We build the URL** — then it must carry a version. Three do:
+
+  | Resource | Version | Stamped by |
+  |---|---|---|
+  | `utils/tokens.global.js` | engine version | `sync-tokens.mjs` → `TOKENS_ENGINE_VERSION` |
+  | `aurora/presets.json` | content hash | `gen-presets.mjs` → `PRESETS_VERSION` |
+  | `utils/color.global.js` | content hash | `build-js.mjs` → `__ASSET_HASH(...)__` |
+
+`__ASSET_HASH(<path>)__` in any source is replaced at build time by the first
+8 hex of that file's sha256. Use it for anything vendored that carries no
+version of its own — the URL then changes if and only if the bytes do, so the
+cache stays warm right up until it must not. An unknown path fails the build.
+
+If you add another `fetch()` or script injection for a packaged file, give it a
+version the same way. `artifact-safety.test.mjs` checks the three above and
+that no sentinel survives into an artifact, but it cannot know about a fourth.
+
 ### What it gets wrong
 
 **1. A regex literal after an arrow becomes a division.** jsmin decides a `/`
