@@ -122,6 +122,71 @@ test("gallery view: a finished online apply reloads the page, not just the banne
   );
 });
 
+// 审核和「身份没备份」是两件无关的事。拼成一条 msgid,加一个维度就翻一倍。
+test("gallery view: the publish notice keeps its two dimensions apart", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.ok(
+    src.includes("Published. Its images are queued for review"),
+    "a publish that uploaded images must say they are queued",
+  );
+  assert.ok(
+    !/Published\. Your creator identity/.test(src),
+    "the identity warning must stand alone, not be fused into the Published string",
+  );
+  assert.ok(
+    src.includes("Your creator identity lives only on this router"),
+    "the identity warning must survive as its own msgid",
+  );
+});
+
+// 作者发布完会立刻去商店找自己的作品。审核中的作品不在那儿,而这一行是
+// 唯一能解释「它去哪了」的地方 —— 没有它,发布成功读起来就是发布失败。
+test("gallery view: my-shares explains a review state, and stays silent otherwise", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(src, /const reviewNoteFor\s*=/, "missing the review-note helper");
+  assert.ok(
+    src.includes('status === "pending"'),
+    "a queued share must say it is in review",
+  );
+  assert.ok(
+    src.includes('status === "rejected"'),
+    "a rejected share must say its images were turned down",
+  );
+  // 正常态不出声:helper 必须有一条 return null 的路径,而不是给每种状态都
+  // 造一行字。
+  assert.match(
+    src.slice(src.indexOf("const reviewNoteFor")),
+    /return null;/,
+    "none/approved must render no note at all",
+  );
+  assert.ok(
+    src.includes("reviewNoteFor(item.assets_status)"),
+    "buildMyShareRow must consult the helper",
+  );
+});
+
+// rejectConfig 删掉待审的 assets 行和 R2 对象后把 assets_status 置为
+// 'rejected' —— 那条配置一张图都不剩了,徽章却还在说它带着素材。
+test("gallery view: only assets that cleared review earn the card badge", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.ok(
+    src.includes('item.assets_status === "approved"'),
+    "the card badge must key off approved, not merely non-none",
+  );
+  assert.ok(
+    !/assets_status\s*&&\s*item\.assets_status\s*!==\s*"none"/.test(src),
+    "the non-none badge test would keep badging a rejected config",
+  );
+  assert.ok(
+    src.includes('if (status !== "approved") return null;'),
+    "buildLegacyCardTiles must narrow to approved too",
+  );
+  assert.ok(
+    !/status\s*===\s*"none"\)\s*return null/.test(src),
+    "the old none-only guard must be gone, not merely shadowed",
+  );
+});
+
 test("gallery view: external toolbar URLs are surfaced in plaintext before applying", async () => {
   const src = await readFile(SRC, "utf8");
   assert.match(src, /toolbar/);

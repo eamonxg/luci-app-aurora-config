@@ -254,3 +254,14 @@ test("publishCurrentConfig uploads asset bytes from the browser", async () => {
     "the device token must never appear in browser code",
   );
 });
+
+// 调用方要据此决定发布成功那句话提不提审核 —— 这个数它已经在手里(begun.assets),
+// 为一句文案再往 hub 跑一趟是白跑。
+test("publishCurrentConfig reports how many assets it uploaded", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(
+    src,
+    /result:\s*0,\s*id:\s*done\.id,\s*assets:\s*entries\.length/,
+    "the caller cannot word the review notice without knowing whether anything was uploaded",
+  );
+});

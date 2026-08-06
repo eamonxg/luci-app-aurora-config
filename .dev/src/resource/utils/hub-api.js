@@ -178,10 +178,12 @@ return baseclass.extend({
       const next = () => {
         if (index >= entries.length) {
           report({ phase: "commit" });
+          // assets 是这一趟真正传上去的份数。调用方据此决定要不要提审核 ——
+          // 它已经在手里,不必为一句话再往 hub 跑一趟。
           return L.resolveDefault(this.callHubShareCommit(begun.draft_id), null).then(
             (done) =>
               done && done.result === 0
-                ? { result: 0, id: done.id }
+                ? { result: 0, id: done.id, assets: entries.length }
                 : { result: 1, error: (done && done.error) || "hub_unreachable" },
           );
         }

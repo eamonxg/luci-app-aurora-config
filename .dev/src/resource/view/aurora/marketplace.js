@@ -389,7 +389,7 @@ const buildBuiltinTiles = () =>
 // keeps the coarse tile it always had.
 const buildLegacyCardTiles = (item) => {
   const status = item && item.assets_status;
-  if (!status || status === "none") return null;
+  if (status !== "approved") return null;
   return buildTiles([
     {
       glyph: "◆",
@@ -1630,10 +1630,10 @@ return view.extend({
       right: formatDownloads(item.downloads),
       palette: paletteOf(item),
       opts: previewOpts(item),
+      // 只有 approved 才是「真的带着素材」。pending 已经被商店列表挡在外面,
+      // 而 rejected 的图片已经被删干净了 —— 这两种状态下的徽章都是空头支票。
       badge:
-        item.assets_status && item.assets_status !== "none"
-          ? buildBadge(_("Includes assets"))
-          : null,
+        item.assets_status === "approved" ? buildBadge(_("Includes assets")) : null,
       glyphs: buildCardGlyphs(item),
       current: false,
       open: () => openOnlineDrawer(item.id),
@@ -1719,6 +1719,23 @@ return view.extend({
         });
     };
 
+    // 只在需要作者做点什么、或者需要解释一个反常结果时才出声。none 和
+    // approved 是正常态 —— 给正常态也配一行字,列表就变成一片噪音,真正
+    // 要紧的那两行反而沉进去了。
+    const reviewNoteFor = (status) => {
+      if (status === "pending")
+        return {
+          text: _("In review — appears in the store once its images are approved."),
+          color: "var(--text-muted)",
+        };
+      if (status === "rejected")
+        return {
+          text: _("Images not approved — colours and layout still work. Swap the image, then update."),
+          color: "var(--warning)",
+        };
+      return null;
+    };
+
     const buildMyShareRow = (item) => {
       const updateBtn = E(
         "button",
@@ -1752,10 +1769,24 @@ return view.extend({
       // attribute, which is worth it when a bare cell would be ambiguous --
       // here "Nord Midnight" and "128 downloads" already say what they are,
       // and a "Name"/"Downloads" line above each would only stutter.
+      // 状态挂在名字底下,不占一列:这张表刚在 390px 上修过溢出,第四列会让
+      // 它重演。而状态本来就是在说这一件作品,贴着它的名字最省一次目光移动。
+      const nameCell = E("td", { class: "td", style: "word-break:break-word;" }, [
+        document.createTextNode(item.name || _("Untitled theme")),
+      ]);
+      const note = reviewNoteFor(item.assets_status);
+      if (note) {
+        nameCell.appendChild(
+          E(
+            "div",
+            { style: "margin-top:2px;font-size:0.84em;color:" + note.color + ";" },
+            note.text,
+          ),
+        );
+      }
+
       return E("tr", { class: "tr" }, [
-        E("td", { class: "td", style: "word-break:break-word;" }, [
-          document.createTextNode(item.name || _("Untitled theme")),
-        ]),
+        nameCell,
         E("td", { class: "td", style: "color:var(--text-muted);" }, [
           document.createTextNode(formatDownloads(item.downloads)),
         ]),
@@ -2453,17 +2484,24 @@ return view.extend({
           })
           .then((res) => {
             if (res && res.result === 0) {
-              // The one moment the warning is worth reading: the user has just
-              // acquired something they can lose.
+              // 两句话,两个维度:第一句讲这次发布的结果,第二句讲身份该备份。
+              // 它们互不嵌套 —— 合成一条 msgid 的话,任一边多一个分支就要把
+              // 另一边的每种说法都重写一遍。
+              //
+              // 身份那句仍然只在没备份时出现:这是它唯一值得一读的时刻,用户
+              // 刚刚获得了一件丢得掉的东西。
+              const notice = [
+                res.assets
+                  ? _("Published. Its images are queued for review — it appears in the store once they are approved.")
+                  : _("Published."),
+              ];
+              if (!keySaved)
+                notice.push(
+                  _("Your creator identity lives only on this router — back it up so a reflash can't take it."),
+                );
               ui.addNotification(
                 null,
-                E(
-                  "p",
-                  {},
-                  keySaved
-                    ? _("Published.")
-                    : _("Published. Your creator identity lives only on this router — back it up so a reflash can't take it."),
-                ),
+                notice.map((line) => E("p", {}, line)),
                 "info",
               );
               shareOpen = false;

@@ -1,12 +1,12 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2605
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2651
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:627
 msgid "%d downloads"
 msgstr "%d unduhan"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2271
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2310
 msgid "%d shortcuts"
 msgstr "%d pintasan"
 
@@ -22,12 +22,12 @@ msgstr "(Tidak ada)"
 msgid "(disabled)"
 msgstr "(nonaktif)"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2604
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2650
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:627
 msgid "1 download"
 msgstr "1 unduhan"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2270
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2309
 msgid "1 shortcut"
 msgstr "1 pintasan"
 
@@ -87,7 +87,7 @@ msgstr "Menambahkan sumber pembaruan…"
 msgid "Afterwards you can upgrade Aurora in System → Software, like any other OpenWrt package."
 msgstr "Setelah itu Anda dapat memperbarui Aurora di Sistem → Perangkat Lunak, seperti paket OpenWrt lainnya."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2728
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2774
 msgid "All"
 msgstr "Semua"
 
@@ -95,12 +95,12 @@ msgstr "Semua"
 msgid "Amber Sand"
 msgstr "Pasir Ambar"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1621
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1629
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:763
 msgid "Anonymous"
 msgstr "Anonim"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2714
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2760
 msgid "Anyone who applies this gets all of it. You can update or remove it later."
 msgstr "Siapa pun yang menerapkan ini akan mendapatkan semuanya. Anda bisa memperbarui atau menghapusnya nanti."
 
@@ -124,24 +124,24 @@ msgstr "Ikon Apple Touch"
 msgid "Applied."
 msgstr "Diterapkan."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1425
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1505
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1538
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1567
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1433
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1513
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1546
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1575
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:900
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:915
 msgid "Apply"
 msgstr "Terapkan"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1363
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1371
 msgid "Apply Configuration"
 msgstr "Terapkan konfigurasi"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1396
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1404
 msgid "Apply Preset"
 msgstr "Terapkan Prasetel"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1420
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1428
 msgid "Apply failed: %s"
 msgstr "Gagal menerapkan: %s"
 
@@ -149,7 +149,7 @@ msgstr "Gagal menerapkan: %s"
 msgid "Apply it anyway? Your current settings are backed up first."
 msgstr "Tetap terapkan? Pengaturan Anda saat ini dicadangkan terlebih dahulu."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1400
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1408
 msgid "Apply the '%s' preset now? It is saved immediately and the page reloads. A preset carries a whole look — colors, navigation, spacing, corner radius, content width and fonts. Your shortcuts, logo, icons and login background are left as they are."
 msgstr "Terapkan preset '%s' sekarang? Preset langsung disimpan dan halaman dimuat ulang. Sebuah preset membawa tampilan utuh — warna, navigasi, jarak, radius sudut, lebar konten, dan font. Pintasan, logo, ikon, dan latar belakang login Anda dibiarkan apa adanya."
 
@@ -157,16 +157,16 @@ msgstr "Terapkan preset '%s' sekarang? Preset langsung disimpan dan halaman dimu
 msgid "Apply this configuration now? Your current settings are backed up first."
 msgstr "Terapkan konfigurasi ini sekarang? Pengaturan Anda saat ini dicadangkan terlebih dahulu."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1341
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1373
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1349
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1381
 msgid "Applying"
 msgstr "Menerapkan"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1406
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1414
 msgid "Applying preset..."
 msgstr "Menerapkan prasetel..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1342
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1350
 msgid "Applying this configuration…"
 msgstr "Menerapkan konfigurasi ini…"
 
@@ -175,7 +175,7 @@ msgstr "Menerapkan konfigurasi ini…"
 msgid "Applying timed out. Please try again."
 msgstr "Waktu penerapan habis. Silakan coba lagi."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1405
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1413
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2213
 msgid "Applying..."
 msgstr "Menerapkan..."
@@ -192,19 +192,19 @@ msgstr "Desain Tema Aurora"
 msgid "Automatic"
 msgstr "Otomatis"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1981
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2020
 msgid "Back up identity"
 msgstr "Cadangkan identitas"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2105
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2144
 msgid "Back up the current identity first"
 msgstr "Cadangkan dulu identitas saat ini"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1884
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1923
 msgid "Back up your creator identity"
 msgstr "Cadangkan identitas kreatormu"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1954
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1993
 msgid "Backed up"
 msgstr "Sudah dicadangkan"
 
@@ -264,9 +264,9 @@ msgstr "Permukaan bernuansa merek untuk navigasi aktif dan kondisi terpilih."
 msgid "Branding & Shortcuts"
 msgstr "Merek & Pintasan"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1464
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2729
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2892
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1472
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2775
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2938
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2091
 msgid "Built-in"
 msgstr "Bawaan"
@@ -277,7 +277,7 @@ msgstr "Konten yang disertakan"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:272
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:381
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2663
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2709
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:883
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2204
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2282
@@ -289,11 +289,11 @@ msgstr "Batal"
 msgid "Canvas and panel surfaces that frame the interface."
 msgstr "Permukaan kanvas dan panel yang membingkai antarmuka."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2505
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2551
 msgid "Change your name"
 msgstr "Ubah nama Anda"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2001
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2040
 msgid "Changed routers? Restore your identity"
 msgstr "Ganti router? Pulihkan identitasmu"
 
@@ -313,22 +313,22 @@ msgstr "Pilih warna literal untuk token ini"
 msgid "Choose an uploaded icon for this shortcut"
 msgstr "Pilih ikon yang telah diunggah untuk pintasan ini"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2037
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2076
 msgid "Choose backup file…"
 msgstr "Pilih berkas cadangan…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2409
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2448
 msgid "Choose the name to publish under."
 msgstr "Pilih nama untuk digunakan saat membagikan."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1440
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1516
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1916
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1448
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1524
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1955
 msgid "Close"
 msgstr "Tutup"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1475
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2192
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1483
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2231
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:776
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2600
 msgid "Colors"
@@ -338,7 +338,7 @@ msgstr "Warna"
 msgid "Colors only"
 msgstr "Hanya warna"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2898
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2944
 msgid "Community"
 msgstr "Komunitas"
 
@@ -362,7 +362,7 @@ msgstr "Konfigurasi berhasil diimpor."
 msgid "Confirm Upload"
 msgstr "Konfirmasi Unggah"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2283
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2322
 msgid "Content"
 msgstr "Konten"
 
@@ -370,7 +370,7 @@ msgstr "Konten"
 msgid "Content Max Width"
 msgstr "Lebar Maksimum Konten"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2215
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2254
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:730
 msgid "Content Width"
 msgstr "Lebar konten"
@@ -379,12 +379,12 @@ msgstr "Lebar konten"
 msgid "Control Fill"
 msgstr "Isian kontrol"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1863
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1902
 msgid "Copied"
 msgstr "Tersalin"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1858
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1865
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1897
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1904
 msgid "Copy"
 msgstr "Salin"
 
@@ -397,7 +397,7 @@ msgstr "Radius Sudut"
 msgid "Could not add the update source: %s"
 msgstr "Tidak dapat menambahkan sumber pembaruan: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1876
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1915
 msgid "Couldn't copy. The identity is shown above — select it and copy it manually."
 msgstr "Tidak bisa menyalin. Identitas ditampilkan di atas — pilih dan salin secara manual."
 
@@ -412,11 +412,11 @@ msgstr "Tidak dapat menghubungi toko tema. Silakan coba lagi."
 msgid "Couldn't read one of the images from this router. Try reloading the page."
 msgstr ""
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1813
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1852
 msgid "Couldn't read your identity. Please try again."
 msgstr "Identitasmu tidak bisa dibaca. Coba lagi."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2049
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2088
 msgid "Couldn't restore that identity. Check it and try again."
 msgstr "Identitas itu tidak bisa dipulihkan. Periksa lalu coba lagi."
 
@@ -424,7 +424,7 @@ msgstr "Identitas itu tidak bisa dipulihkan. Periksa lalu coba lagi."
 msgid "Couldn't save that name. Try again."
 msgstr "Nama itu tidak dapat disimpan. Coba lagi."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1995
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2034
 msgid "Created automatically the first time you publish — no sign-up, no password. It decides which configurations in the store are yours, and who can change or remove them. Backing it up saves an identity backup file; import that file after a reflash, or on a new router, and your work comes back to you."
 msgstr "Dibuat otomatis saat kamu pertama kali menerbitkan — tanpa pendaftaran, tanpa kata sandi. Identitas ini menentukan konfigurasi mana di toko yang milikmu, dan siapa yang boleh mengubah atau menghapusnya. Mencadangkannya menyimpan berkas cadangan identitas; impor berkas itu setelah flash ulang, atau di router baru, dan karyamu kembali menjadi milikmu."
 
@@ -483,7 +483,7 @@ msgstr "Latar depan bawaan untuk tajuk, teks isi, ikon, dan nilai formulir."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:159
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:393
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1731
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1756
 msgid "Delete"
 msgstr "Hapus"
 
@@ -503,7 +503,7 @@ msgstr "Hapus Aset Merek"
 msgid "Delete Custom Font"
 msgstr "Hapus Fon Kustom"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1689
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1697
 msgid "Delete Share"
 msgstr "Hapus bagikan"
 
@@ -511,11 +511,11 @@ msgstr "Hapus bagikan"
 msgid "Delete failed: %s"
 msgstr "Gagal menghapus: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1690
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1698
 msgid "Delete this shared configuration from the theme store?"
 msgstr "Hapus konfigurasi yang dibagikan ini dari toko tema?"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1697
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1705
 msgid "Deleted."
 msgstr "Dihapus."
 
@@ -543,7 +543,7 @@ msgstr "Turunan dari warna kanvas, permukaan, dan teks: teks tersamar dan halus,
 msgid "Derived from the status accents: alert, label, and badge backgrounds."
 msgstr "Turunan dari aksen status: latar belakang peringatan, label, dan lencana."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2700
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2746
 msgid "Description"
 msgstr "Deskripsi"
 
@@ -551,7 +551,7 @@ msgstr "Deskripsi"
 msgid "Design Studio"
 msgstr "Studio Desain"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2284
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2323
 msgid "Details"
 msgstr "Detail"
 
@@ -563,11 +563,11 @@ msgstr "Latar belakang redup di belakang dialog modal."
 msgid "Dismiss"
 msgstr "Tutup"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1910
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1949
 msgid "Download backup file"
 msgstr "Unduh berkas cadangan"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2169
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2208
 msgid "Downloads"
 msgstr "Unduhan"
 
@@ -652,7 +652,7 @@ msgstr "Nama berkas (dengan ekstensi)"
 msgid "Fill for form controls: inputs, selects, textareas, and checkboxes."
 msgstr "Warna isian untuk kontrol formulir: input, select, textarea, dan kotak centang."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2382
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2421
 msgid "Finishing…"
 msgstr "Menyelesaikan…"
 
@@ -688,7 +688,7 @@ msgstr "Nama fon, mis. MiSans"
 msgid "Font for code, command output, and the system log viewer."
 msgstr "Font untuk kode, output perintah, dan penampil log sistem."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2221
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2260
 msgid "Fonts"
 msgstr "Font"
 
@@ -704,7 +704,7 @@ msgstr "Dari openwrt.eamonxg.fun; kunci penandatanganan disertakan dalam paket i
 msgid "Full-screen login page background; use a wide image."
 msgstr "Latar belakang halaman login layar penuh; gunakan gambar yang lebar."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2328
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2367
 msgid "Give it a name"
 msgstr "Beri nama"
 
@@ -713,7 +713,7 @@ msgstr "Beri nama"
 msgid "Go to Software"
 msgstr "Buka Perangkat Lunak"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2149
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2188
 msgid "Go to the design studio"
 msgstr "Ke studio desain"
 
@@ -729,7 +729,7 @@ msgstr "Garis Sangat Tipis"
 msgid "Hidden"
 msgstr "Disembunyikan"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1843
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1882
 msgid "Hide"
 msgstr "Sembunyikan"
 
@@ -737,7 +737,7 @@ msgstr "Sembunyikan"
 msgid "Home Screen icon for iOS and iPadOS."
 msgstr "Ikon Layar Utama untuk iOS dan iPadOS."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2730
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2776
 msgid "Hot"
 msgstr "Populer"
 
@@ -757,7 +757,7 @@ msgstr "Isian sorotan untuk tombol utama yang halus dan permukaan terpilih."
 msgid "Hover state for filled primary buttons and high-emphasis controls."
 msgstr "Kondisi sorotan untuk tombol utama yang terisi dan kontrol berpenekanan tinggi."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2695
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2741
 msgid "How it looks in the store"
 msgstr "Tampilannya di etalase"
 
@@ -768,6 +768,10 @@ msgstr "Hipertautan dalam konten halaman, teks bantuan, dan output status."
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3433
 msgid "Icon"
 msgstr "Ikon"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1733
+msgid "Images not approved — colours and layout still work. Swap the image, then update."
+msgstr "Gambar tidak disetujui — warna dan tata letak tetap berfungsi. Ganti gambarnya, lalu perbarui."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2244
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2264
@@ -795,18 +799,22 @@ msgstr "Mengimpor akan menggantikan /etc/config/aurora, menerapkan semua pengatu
 msgid "Importing..."
 msgstr "Mengimpor..."
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1728
+msgid "In review — appears in the store once its images are approved."
+msgstr "Sedang ditinjau — muncul di toko setelah gambarnya disetujui."
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1291
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1445
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1453
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:646
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:649
 msgid "In use"
 msgstr "Sedang dipakai"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2255
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2294
 msgid "Included"
 msgstr "Disertakan"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1627
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1636
 msgid "Includes assets"
 msgstr "Berisi aset"
 
@@ -838,7 +846,7 @@ msgstr "Ekspresi warna tidak valid."
 msgid "Invalid, missing, or cyclic color expression."
 msgstr "Ekspresi warna tidak valid, hilang, atau melingkar."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1894
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1933
 msgid "It exists only on this router. Reflashing without keeping settings erases it."
 msgstr "Kunci ini hanya ada di router ini. Flash ulang tanpa menyimpan pengaturan akan menghapusnya."
 
@@ -858,7 +866,7 @@ msgstr "Sudut sangat membulat"
 msgid "Layout"
 msgstr "Tata Letak"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1477
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1485
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:778
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2601
 msgid "Layout & Typography"
@@ -885,7 +893,7 @@ msgstr "Terang"
 msgid "Light Mode"
 msgstr "Mode Terang"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2192
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2231
 msgid "Light and dark, 62 values"
 msgstr "Terang dan gelap, 62 nilai"
 
@@ -901,12 +909,12 @@ msgstr "Tautan"
 msgid "Links marked ↗ open sites outside your router. You'll be asked to confirm before applying."
 msgstr "Tautan bertanda ↗ membuka situs di luar router Anda. Anda akan diminta konfirmasi sebelum menerapkan."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1374
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1524
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1382
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1532
 msgid "Loading theme details…"
 msgstr "Memuat detail tema…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2842
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2888
 msgid "Loading…"
 msgstr "Memuat…"
 
@@ -969,18 +977,18 @@ msgstr "Rupa Huruf Monospace"
 msgid "Muted Text"
 msgstr "Teks Tersamar"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2732
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2918
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2778
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2964
 msgid "My Shares"
 msgstr "Bagian saya"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2915
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2961
 msgid "My creator identity"
 msgstr "Identitas kreator saya"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:118
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2168
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2699
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2207
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2745
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2820
 msgid "Name"
 msgstr "Nama"
@@ -989,7 +997,7 @@ msgstr "Nama"
 msgid "Name it login-bg.* to use it as the login page background."
 msgstr "Beri nama login-bg.* untuk menjadikannya latar belakang halaman masuk."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2194
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2233
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:724
 msgid "Navigation"
 msgstr "Navigasi"
@@ -1002,7 +1010,7 @@ msgstr "Gaya Navigasi"
 msgid "Navigation, spacing, corner radius, and content width. Takes effect after Save & Apply."
 msgstr "Navigasi, spasi, radius sudut, dan lebar konten. Berlaku setelah Simpan & Terapkan."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2731
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2777
 msgid "New"
 msgstr "Terbaru"
 
@@ -1010,7 +1018,7 @@ msgstr "Terbaru"
 msgid "No brand assets uploaded yet."
 msgstr "Belum ada aset merek yang diunggah."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2863
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2909
 msgid "No configs here yet — go share the first one."
 msgstr "Belum ada konfigurasi — bagikan yang pertama."
 
@@ -1022,7 +1030,7 @@ msgstr "Belum ada fon kustom yang diunggah."
 msgid "No file selected or upload failed"
 msgstr "Tidak ada file yang dipilih atau unggahan gagal"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2862
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2908
 msgid "No themes match your search."
 msgstr "Tidak ada tema yang cocok dengan pencarian Anda."
 
@@ -1030,15 +1038,15 @@ msgstr "Tidak ada tema yang cocok dengan pencarian Anda."
 msgid "None"
 msgstr "Tidak ada"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1954
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1993
 msgid "Not backed up"
 msgstr "Belum dicadangkan"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1945
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1984
 msgid "Not named yet"
 msgstr "Belum diberi nama"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2133
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2172
 msgid "Nothing shared yet"
 msgstr "Belum ada yang dibagikan"
 
@@ -1046,15 +1054,15 @@ msgstr "Belum ada yang dibagikan"
 msgid "On-Brand Text"
 msgstr "Teks Atas Merek"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2650
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2696
 msgid "Once published, anyone can find it and apply it in one click. You can update or remove it later."
 msgstr ""
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2334
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2373
 msgid "One line about where this configuration fits."
 msgstr "Satu kalimat tentang kegunaan konfigurasi ini."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2595
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2641
 msgid "One more piece in the store"
 msgstr ""
 
@@ -1090,16 +1098,16 @@ msgstr "Cadangan PNG ketika favicon SVG tidak didukung."
 msgid "Page canvas behind the header, navigation, content, and login screen."
 msgstr "Kanvas halaman di belakang tajuk, navigasi, konten, dan layar login."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2081
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2120
 msgid "Paste the identity you backed up, or pick the backup file you downloaded. What you shared before comes back under this router."
 msgstr "Tempel identitas yang kamu cadangkan, atau pilih berkas cadangan yang kamu unduh. Apa yang dulu kamu bagikan akan kembali ke router ini."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2516
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2562
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:842
 msgid "Pick a name between 1 and 40 characters."
 msgstr "Pilih nama sepanjang 1 sampai 40 karakter."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2402
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2441
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:839
 msgid "Please enter a name."
 msgstr "Masukkan nama."
@@ -1116,11 +1124,11 @@ msgstr "Menyiapkan Tipografi"
 msgid "Preparing selected typefaces..."
 msgstr "Menyiapkan rupa huruf yang dipilih..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2378
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2417
 msgid "Preparing…"
 msgstr "Menyiapkan…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1413
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1421
 msgid "Preset applied successfully."
 msgstr "Prasetel berhasil diterapkan."
 
@@ -1136,42 +1144,42 @@ msgstr "Ujung Indikator Kemajuan"
 msgid "Progress Start"
 msgstr "Awal Indikator Kemajuan"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2396
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2631
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2435
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2677
 msgid "Publish"
 msgstr "Terbitkan"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2548
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2551
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2594
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2597
 msgid "Publish as"
 msgstr "Bagikan sebagai"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2595
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2641
 msgid "Publish as a new one"
 msgstr ""
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2456
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2496
 msgid "Published."
 msgstr "Diterbitkan."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2457
-msgid "Published. Your creator identity lives only on this router — back it up so a reflash can't take it."
-msgstr "Diterbitkan. Identitas kreatormu hanya ada di router ini — cadangkan agar flash ulang tidak membawanya pergi."
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2495
+msgid "Published. Its images are queued for review — it appears in the store once they are approved."
+msgstr "Diterbitkan. Gambarnya sedang antre ditinjau — akan muncul di toko setelah disetujui."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:249
 msgid "Raised layer for dropdowns, modals, and tooltips."
 msgstr "Lapisan yang ditinggikan untuk dropdown, modal, dan tooltip."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1567
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1575
 msgid "Re-apply"
 msgstr "Terapkan ulang"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1987
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2026
 msgid "Rename"
 msgstr "Ganti nama"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2602
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2631
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2648
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2677
 msgid "Replace “%s”"
 msgstr ""
 
@@ -1210,7 +1218,7 @@ msgid "Resolved preview color - click to pick"
 msgstr "Warna pratinjau yang dihasilkan - klik untuk memilih"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1274
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2111
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2150
 msgid "Restore"
 msgstr "Pulihkan"
 
@@ -1222,15 +1230,15 @@ msgstr "Pulihkan konfigurasi sebelumnya"
 msgid "Restore previous configuration"
 msgstr "Pulihkan konfigurasi sebelumnya"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2112
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2151
 msgid "Restore your creator identity"
 msgstr "Pulihkan identitas kreatormu"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2068
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2107
 msgid "Restored."
 msgstr "Dipulihkan."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2067
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2106
 msgid "Restored. What you shared before is back under this identity."
 msgstr "Dipulihkan. Apa yang dulu kamu bagikan kembali di bawah identitas ini."
 
@@ -1246,7 +1254,7 @@ msgstr "Memulihkan..."
 msgid "Restoring…"
 msgstr "Memulihkan…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2826
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2872
 msgid "Retry"
 msgstr "Coba lagi"
 
@@ -1279,7 +1287,7 @@ msgstr "Rupa Huruf Sans-Serif"
 msgid "Sans-serif and monospace typefaces used across the theme. Pick a curated webfont — downloaded once after saving, from pinned, checksum-verified sources, then served locally — or upload your own .woff2 files."
 msgstr "Fon sans-serif dan monospace yang digunakan di seluruh tema. Pilih webfont pilihan — diunduh sekali setelah disimpan, dari sumber terkunci versi dan terverifikasi checksum, lalu disajikan secara lokal — atau unggah berkas .woff2 Anda sendiri."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2532
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2578
 msgid "Save"
 msgstr "Simpan"
 
@@ -1291,7 +1299,7 @@ msgstr "Nilai yang disimpan atau prasetel"
 msgid "Scrim"
 msgstr "Lapisan Redup"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2759
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2805
 msgid "Search themes or authors…"
 msgstr "Cari tema atau pembuat…"
 
@@ -1303,32 +1311,32 @@ msgstr "Pemisah, pembagi, dan batas input atau kartu."
 msgid "Settings reset successfully."
 msgstr "Pengaturan berhasil diatur ulang."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2207
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2246
 msgid "Shape"
 msgstr "Bentuk"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2646
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2692
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2338
 msgid "Share to the store"
 msgstr "Bagikan ke toko"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2898
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2944
 msgid "Shared by other people"
 msgstr "Dibagikan oleh orang lain"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2158
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2197
 msgid "Shared on another router before? Restore my identity"
 msgstr "Pernah berbagi dari router lain? Pulihkan identitasku"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2136
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2175
 msgid "Sharing starts in the design studio: make the appearance what you want there, then publish from that page."
 msgstr ""
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1473
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1481
 msgid "Ships with the theme and works offline."
 msgstr "Disertakan dengan tema dan berfungsi offline."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2892
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2938
 msgid "Ships with the theme, works offline"
 msgstr "Disertakan dengan tema, berfungsi offline"
 
@@ -1348,8 +1356,8 @@ msgstr "URL Pintasan"
 msgid "Shortcuts %d"
 msgstr "Pintasan %d"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1838
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1849
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1877
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1888
 msgid "Show"
 msgstr "Tampilkan"
 
@@ -1361,7 +1369,7 @@ msgstr "Tampilkan Bilah Alat Pintasan"
 msgid "Show the floating launcher on all pages."
 msgstr "Tampilkan peluncur mengambang di semua halaman."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2881
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2927
 msgid "Showing a saved copy — reconnecting…"
 msgstr "Menampilkan salinan tersimpan — menghubungkan kembali…"
 
@@ -1374,7 +1382,7 @@ msgstr "Ditampilkan"
 msgid "Sidebar"
 msgstr "Bilah Samping"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1969
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2008
 msgid "Signs everything you share. It lives only on this router."
 msgstr "Menandatangani semua yang kamu bagikan. Hanya ada di router ini."
 
@@ -1404,7 +1412,7 @@ msgstr "Slot"
 msgid "Small corners"
 msgstr "Sudut sedikit membulat"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2204
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2243
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:725
 msgid "Spacing"
 msgstr "Jarak"
@@ -1473,7 +1481,7 @@ msgstr "Teks, Tautan & Merek"
 msgid "That description is too long."
 msgstr "Deskripsi terlalu panjang."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2043
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2082
 msgid "That doesn't look like a creator identity."
 msgstr "Itu sepertinya bukan identitas kreator."
 
@@ -1481,7 +1489,7 @@ msgstr "Itu sepertinya bukan identitas kreator."
 msgid "That name is already taken. Try another."
 msgstr "Nama itu sudah dipakai. Coba yang lain."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2343
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2382
 msgid "The name your shares are signed with"
 msgstr "Nama yang tercantum pada bagikan Anda"
 
@@ -1522,11 +1530,11 @@ msgstr "Konfigurasi ini tidak dapat diterapkan."
 msgid "This configuration links to these external sites:"
 msgstr "Konfigurasi ini menautkan ke situs eksternal berikut:"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2509
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2555
 msgid "This name signs everything you have published, including what is already in the store."
 msgstr "Nama ini tercantum pada semua yang Anda bagikan, termasuk yang sudah ada di toko."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1486
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1494
 msgid "This preset uses a downloaded typeface. The router fetches it once after applying; until then the text falls back to the built-in font."
 msgstr "Preset ini memakai font yang perlu diunduh. Router mengunduhnya sekali setelah diterapkan; sampai itu selesai, teks memakai font bawaan."
 
@@ -1534,7 +1542,7 @@ msgstr "Preset ini memakai font yang perlu diunduh. Router mengunduhnya sekali s
 msgid "This replaces your current settings with the ones from just before the last applied configuration."
 msgstr "Ini mengganti pengaturan Anda saat ini dengan pengaturan tepat sebelum konfigurasi terakhir diterapkan."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2097
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2136
 msgid "This router already has shared configurations of its own. Switching to another identity gives them up for good — back up the current identity first if you still want them."
 msgstr "Router ini sudah punya konfigurasi yang dibagikan sendiri. Beralih ke identitas lain melepaskannya selamanya — cadangkan dulu identitas saat ini kalau kamu masih menginginkannya."
 
@@ -1547,7 +1555,7 @@ msgstr ""
 msgid "This share is no longer available."
 msgstr "Bagian ini sudah tidak tersedia."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1888
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1927
 msgid "This text is your identity. Anyone who has it can publish under your name and delete what you have shared — don't post it anywhere public."
 msgstr "Teks ini adalah identitasmu. Siapa pun yang memilikinya bisa menerbitkan atas namamu dan menghapus apa yang kamu bagikan — jangan tempel di tempat umum."
 
@@ -1555,7 +1563,7 @@ msgstr "Teks ini adalah identitasmu. Siapa pun yang memilikinya bisa menerbitkan
 msgid "This theme is no longer available."
 msgstr "Tema ini sudah tidak tersedia."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2267
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2306
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:735
 msgid "Toolbar"
 msgstr "Bilah alat"
@@ -1613,11 +1621,11 @@ msgstr "Tidak dapat memuat %s."
 msgid "Unable to load the Aurora stylesheet."
 msgstr "Tidak dapat memuat stylesheet Aurora."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1513
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1521
 msgid "Unable to load this theme right now. Please try again."
 msgstr "Tidak dapat memuat tema ini sekarang. Silakan coba lagi."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2818
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2864
 msgid "Unable to reach the theme store right now."
 msgstr "Toko tema tidak dapat dihubungi sekarang."
 
@@ -1651,8 +1659,8 @@ msgstr "Kesalahan tidak diketahui"
 msgid "Unsupported file type. Allowed: %s"
 msgstr "Jenis berkas tidak didukung. Diizinkan: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1620
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1749
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1628
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1775
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:759
 msgid "Untitled theme"
 msgstr "Tema tanpa judul"
@@ -1665,7 +1673,7 @@ msgstr "Pembaruan tersedia %s"
 msgid "Update source added"
 msgstr "Sumber pembaruan ditambahkan"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1722
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1747
 msgid "Update with current configuration"
 msgstr "Perbarui dengan konfigurasi saat ini"
 
@@ -1689,11 +1697,11 @@ msgstr "Unggahan gagal (HTTP %s)"
 msgid "Upload failed: %s"
 msgstr "Unggahan gagal: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2390
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2429
 msgid "Uploading %s… %d%%"
 msgstr ""
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2389
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2428
 msgid "Uploading %s… %d%% (%d/%d)"
 msgstr ""
 
@@ -1701,7 +1709,7 @@ msgstr ""
 msgid "Uploading the images failed. Check this computer's internet connection and try again."
 msgstr ""
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2180
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2219
 msgid "Want to publish another one? Set it up in the design studio and publish from there."
 msgstr ""
 
@@ -1713,15 +1721,15 @@ msgstr "Peringatan"
 msgid "Warning Surface"
 msgstr "Permukaan Peringatan"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2709
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2755
 msgid "What gets shared"
 msgstr "Apa yang dibagikan"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1992
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2031
 msgid "What is this? Where did it come from?"
 msgstr "Ini apa? Dari mana asalnya?"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2611
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2657
 msgid "Where this configuration goes"
 msgstr ""
 
@@ -1729,13 +1737,17 @@ msgstr ""
 msgid "Will replace the existing '%s'."
 msgstr "Akan menggantikan berkas '%s' yang sudah ada."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1609
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1617
 msgid "Works offline"
 msgstr "Berfungsi offline"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:848
 msgid "You've published as much as one router may publish today. Try again tomorrow."
 msgstr ""
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2500
+msgid "Your creator identity lives only on this router — back it up so a reflash can't take it."
+msgstr "Identitas kreatormu hanya ada di router ini — cadangkan agar flash ulang tidak membawanya pergi."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:843
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:844
@@ -1748,7 +1760,7 @@ msgstr "Konfigurasi Anda saat ini tidak dapat dibagikan sekarang."
 msgid "Your current settings are backed up before applying, and you can roll back with one click afterwards."
 msgstr "Pengaturan Anda saat ini dicadangkan sebelum diterapkan, dan Anda dapat mengembalikannya dengan satu klik."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1496
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1504
 msgid "Your shortcuts, logo, icons and login background are left exactly as they are."
 msgstr "Pintasan, logo, ikon, dan latar belakang login Anda tetap persis seperti sekarang."
 
