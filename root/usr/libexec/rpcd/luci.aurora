@@ -739,6 +739,137 @@ apply_hub_asset() {  # $1=target_path  $2=sha256  $3=url  $4=kind
 	return 0
 }
 
+# Lands a downloaded custom font as the exact same three files upload_font
+# writes (.woff2 + .meta + .face under FONT_CUSTOM_PATH). That shape is the
+# whole point: every downstream consumer already knows it, so none of them
+# needs a line changed -- write_combined_font_css picks the face up when it
+# scans custom/*.face, write_font_preload matches the stack recorded in .meta,
+# and migrate_font_cache sees the stack still has an owner and leaves
+# struct_font_$slot alone instead of resetting it to default.
+#
+# The family name comes from the struct_font_$slot already committed by
+# validate_and_apply_hub_payload: the payload carries no separate family
+# field, but that stack is exactly what upload_font composed FROM the family,
+# so taking the first entry back out returns the same string.
+#
+# No uci write here, deliberately: struct_font_$slot was set by the config
+# batch, and the asset step must never be able to point typography at a font
+# whose bytes then failed to land.
+apply_hub_font_asset() {  # $1=slot  $2=sha256  $3=url
+	local slot="$1" sha256="$2" url="$3"
+	local stack family slug dest tmp_path backup_dir f
+
+	stack=$(uci -q get "aurora.theme.struct_font_$slot")
+	[ -n "$stack" ] || return 1
+
+	# First family in the stack, unquoted -- same rule as marketplace.js's
+	# firstFontFamily, so the store's "Sans Font" row and this name cannot
+	# disagree.
+	family=$(printf '%s' "$stack" | awk -F',' '{print $1}' \
+		| sed 's/^[[:space:]]*//;s/[[:space:]]*$//;s/^"//;s/"$//')
+	# Same charset gate upload_font applies. The stack itself was already
+	# validated inbound, but this substring gets interpolated into the
+	# @font-face `font-family:` below -- a quote or newline surviving to
+	# there would rewrite the whole stylesheet.
+	case "$family" in
+	""|*[!A-Za-z0-9\ \'-]*) return 1 ;;
+	esac
+	[ "${#family}" -le 64 ] || return 1
+
+	slug=$(printf '%s' "$family" | tr 'A-Z' 'a-z' | sed 's/[^a-z0-9]\{1,\}/-/g;s/^-//;s/-$//')
+	[ -n "$slug" ] || return 1
+
+	mkdir -p "$FONT_CUSTOM_PATH"
+	dest="$FONT_CUSTOM_PATH/${slot}-${slug}.woff2"
+	tmp_path="${dest}.hubtmp"
+
+	rm -f "$tmp_path"
+	fetch_verified "$tmp_path" "$sha256" "$url" "" || {
+		rm -f "$tmp_path"
+		return 1
+	}
+	# The hub checks woff2 magic on the way in, but these bytes arrived over
+	# the network -- not re-checking locally would be outsourcing validation
+	# to the server. Same gate receive_upload applies to a local upload.
+	[ "$(head -c 4 "$tmp_path")" = "wOF2" ] || {
+		rm -f "$tmp_path"
+		return 1
+	}
+
+	# Same posture as apply_hub_asset: only back up when this apply actually
+	# snapshotted the config, so a rollback cannot hand back a font that
+	# belonged to some other store theme.
+	#
+	# Two cases, and the second one matters on small-flash devices: a font
+	# this router already had gets its three files copied aside, while one
+	# that is entirely new leaves a `.new` marker instead. Without that
+	# marker a rollback would restore the old config but leave several MB of
+	# somebody else's typeface sitting in the overlay forever.
+	if [ "$THEME_BACKUP_TAKEN" = "1" ]; then
+		backup_dir="$DEVICE_DIR/pre-hub-fonts"
+		mkdir -p "$backup_dir"
+		if [ -f "$dest" ]; then
+			for f in woff2 meta face; do
+				[ -f "$FONT_CUSTOM_PATH/${slot}-${slug}.$f" ] && \
+					cp -p "$FONT_CUSTOM_PATH/${slot}-${slug}.$f" \
+						"$backup_dir/${slot}-${slug}.$f" 2>/dev/null
+			done
+		else
+			: > "$backup_dir/${slot}-${slug}.new"
+		fi
+	fi
+
+	mv "$tmp_path" "$dest" 2>/dev/null || {
+		rm -f "$tmp_path"
+		return 1
+	}
+	chmod 644 "$dest"
+
+	printf '%s|%s\n' "$family" "$stack" > "$FONT_CUSTOM_PATH/${slot}-${slug}.meta"
+	chmod 644 "$FONT_CUSTOM_PATH/${slot}-${slug}.meta"
+	cat > "$FONT_CUSTOM_PATH/${slot}-${slug}.face" <<FACE
+@font-face {
+  font-display: swap;
+  font-family: "$family";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/luci-static/aurora/fonts/custom/${slot}-${slug}.woff2?v=$(date +%s)") format("woff2");
+}
+FACE
+	chmod 644 "$FONT_CUSTOM_PATH/${slot}-${slug}.face"
+	return 0
+}
+
+# Font half of restore_pre_hub_images (see apply_hub_font_asset's backup
+# step). Two moves, in this order: drop the three files of every font the
+# apply introduced from scratch (`.new` marker), then copy back the ones it
+# overwrote. Dropping first matters -- a font can be both, if an apply
+# replaced one that an even-earlier apply had introduced.
+#
+# The caller re-runs sync_and_cache_fonts_from_uci afterwards, which rebuilds
+# aurora-font.css from whatever is left here, so nothing rewrites CSS itself.
+restore_pre_hub_fonts() {
+	local backup_dir="$DEVICE_DIR/pre-hub-fonts" f base
+
+	[ -d "$backup_dir" ] || return 0
+
+	for f in "$backup_dir"/*.new; do
+		[ -f "$f" ] || continue
+		base="${f##*/}"; base="${base%.new}"
+		rm -f "$FONT_CUSTOM_PATH/${base}.woff2" \
+		      "$FONT_CUSTOM_PATH/${base}.meta" \
+		      "$FONT_CUSTOM_PATH/${base}.face" 2>/dev/null
+	done
+
+	for f in "$backup_dir"/*.woff2 "$backup_dir"/*.meta "$backup_dir"/*.face; do
+		[ -f "$f" ] || continue
+		cp -p "$f" "$FONT_CUSTOM_PATH/${f##*/}" 2>/dev/null
+		chmod 644 "$FONT_CUSTOM_PATH/${f##*/}" 2>/dev/null
+	done
+
+	rm -rf "$backup_dir"
+}
+
 # Restores every image hub_apply_worker backed up (see apply_hub_asset)
 # before overwriting it, copying each back onto its live ICON_PATH filename,
 # then clears the backup directory -- a later restore must not re-apply
@@ -808,21 +939,54 @@ is_valid_font_stack() {
 	printf '%s' "$v" | grep -Eq '^[A-Za-z0-9 ,"'\''-]+$'
 }
 
+# The basename (e.g. "sans-oppo-sans-regular") of the uploaded custom font
+# that struct_font_$slot currently points at, or non-zero when this slot is
+# not backed by one. A roster preset always answers non-zero: its bytes do
+# not travel with the configuration, the receiving end downloads them itself.
+#
+# Both the manifest shown before publishing (hub_local_state) and the actual
+# packing (build_share_payload) ask this one function, so "which font goes
+# out" cannot end up being two different answers -- one on screen and one on
+# the wire.
+shared_custom_font_base() {  # $1=slot
+	local slot="$1" stack meta_file cfamily cstack base
+
+	stack=$(uci -q get "aurora.theme.struct_font_$slot")
+	[ -n "$stack" ] || return 1
+	get_font_preset_by_stack "$slot" "$stack" >/dev/null 2>&1 && return 1
+
+	# Matched on the full stack recorded in .meta, same as write_font_preload
+	# -- never by guessing the filename.
+	for meta_file in "$FONT_CUSTOM_PATH/${slot}-"*.meta; do
+		[ -f "$meta_file" ] || continue
+		IFS='|' read -r cfamily cstack < "$meta_file"
+		[ "$cstack" = "$stack" ] || continue
+		base="${meta_file##*/}"; base="${base%.meta}"
+		[ -f "$FONT_CUSTOM_PATH/${base}.woff2" ] || return 1
+		printf '%s' "$base"
+		return 0
+	done
+
+	return 1
+}
+
 # Assembles the current /etc/config/aurora into the hub's strict payload
 # schema and writes it to $1 (colors/layout/typography/toolbar/assets, no
 # device_token/name -- those are the caller's job). The payload's "assets"
 # entries carry only {kind,sha256,size} per the hub schema; the bytes
 # themselves never pass through here. Which local file backs each kind is
-# written to "$1.files", one "kind<TAB>filename" line each, for hub_share_begin
-# to turn into a /luci-static/aurora/images/ URL the browser fetches and
-# uploads itself. v1 never ships font assets -- typography.font_sans/font_mono
-# are resolve_font_preset_id ids only.
+# written to "$1.files", one "kind<TAB>path" line each (path relative to
+# /luci-static/aurora/), for hub_share_begin to turn into a URL the browser
+# fetches and uploads itself. Uploaded custom fonts ship as font_sans/font_mono
+# assets; roster presets do not -- typography.font_sans/font_mono stay
+# resolve_font_preset_id ids, and the receiving end downloads those itself.
 build_share_payload() {
 	local out_file="$1" files_file="${1}.files"
 	local token prefix key value
 	local sid title url icon enabled tcount trimmed_title tlen
 	local kind fname file sha256 size
 	local font_sans_id font_mono_id struct_font_sans struct_font_mono
+	local slot base
 
 	require_color_token_keys || return 1
 
@@ -968,11 +1132,39 @@ build_share_payload() {
 		json_add_int "size" "$size"
 		json_close_object
 
-		# 只记文件名。字节由浏览器从本机 /luci-static/aurora/images/ 直接读、
-		# 直接 PUT 到 hub —— uclient-fetch 走 TLS 传不动这个量级(实测 512KB
-		# 三次里挂一次、1MB 必断,而同机 curl 传 1.6MB 只要 3.4 秒),而浏览器
-		# fetch 没有这个限制。
-		printf '%s\t%s\n' "$kind" "$fname" >> "$files_file"
+		# 只记路径,相对 /luci-static/aurora/。字节由浏览器从本机直接读、直接
+		# PUT 到 hub —— uclient-fetch 走 TLS 传不动这个量级(实测 512KB 三次
+		# 里挂一次、1MB 必断,而同机 curl 传 1.6MB 只要 3.4 秒),而浏览器 fetch
+		# 没有这个限制。图片在 images/,字体在 fonts/custom/,所以这一列必须带
+		# 上目录 —— hub_share_begin 曾经把 images/ 前缀写死在拼 URL 那一步。
+		printf '%s\timages/%s\n' "$kind" "$fname" >> "$files_file"
+	done
+
+	# 自定义字体跟着配置走。struct_font_* 里那个族名只存在于上传它的那台路由器
+	# 上,只发字体栈不发字节,收到的人就会静默回退到栈尾的 Lato —— 配色布局全
+	# 对、字体没变,而商店详情页还明明白白写着那个字体名。
+	#
+	# 名册预设(geist-sans 等)刻意不上传:接收端的 sync_and_cache_fonts_from_uci
+	# 会自己从固定源下载并校验,再传一份既浪费带宽也绕开了那份校验。
+	for slot in sans mono; do
+		base=$(shared_custom_font_base "$slot") || continue
+
+		file="$FONT_CUSTOM_PATH/${base}.woff2"
+		sha256=$(sha256sum "$file" 2>/dev/null | cut -d' ' -f1)
+		[ -n "$sha256" ] || continue
+		size=$(wc -c < "$file")
+		# 超限的字体整份跳过,而不是让 hub 拒掉整次分享 —— 与上面图片和
+		# toolbar 那两处「越界的那一项不发,其余照发」同一个姿态。上限与
+		# hub 的 FONT_ASSET_LIMIT 同为 8 MiB。
+		[ "$size" -gt 0 ] && [ "$size" -le "$MAX_UPLOAD" ] || continue
+
+		json_add_object ""
+		json_add_string "kind" "font_$slot"
+		json_add_string "sha256" "$sha256"
+		json_add_int "size" "$size"
+		json_close_object
+
+		printf '%s\tfonts/custom/%s.woff2\n' "font_$slot" "$base" >> "$files_file"
 	done
 	json_close_array
 
@@ -1316,9 +1508,20 @@ hub_apply_worker() {
 			if ! has_control_char "$a_sha256" \
 				&& printf '%s' "$a_sha256" | grep -Eq '^[0-9a-fA-F]{64}$' \
 				&& [ -n "$a_url" ]; then
-				target=$(hub_asset_target_name "$a_kind" "$a_sha256" "$a_url") && {
-					apply_hub_asset "$ICON_PATH/$target" "$a_sha256" "$HUB_BASE$a_url" "$a_kind"
-				}
+				# Fonts land as a three-file set under FONT_CUSTOM_PATH and
+				# set no uci option of their own, so they take their own
+				# path rather than being forced through the image shape.
+				case "$a_kind" in
+				font_sans|font_mono)
+					apply_hub_font_asset "${a_kind#font_}" "$a_sha256" \
+						"$HUB_BASE$a_url"
+					;;
+				*)
+					target=$(hub_asset_target_name "$a_kind" "$a_sha256" "$a_url") && {
+						apply_hub_asset "$ICON_PATH/$target" "$a_sha256" "$HUB_BASE$a_url" "$a_kind"
+					}
+					;;
+				esac
 			fi
 			asset_i=$((asset_i + 1))
 		done
@@ -2749,6 +2952,20 @@ MANIFEST
 		else
 			json_add_boolean "modified" 0
 		fi
+		# 会随这份配置一起发出去的自定义字体。发布面板拿它显示体积和版权
+		# 声明 —— 问的是 build_share_payload 打包时问的同一个函数,所以屏幕
+		# 上说要发什么,线路上发的就是什么。名册预设不在其中:它们的字节不走
+		# 这条路。
+		json_add_array "shared_fonts"
+		for slot in sans mono; do
+			base=$(shared_custom_font_base "$slot") || continue
+			json_add_object ""
+			json_add_string "slot" "$slot"
+			json_add_string "family" "$(cut -d'|' -f1 "$FONT_CUSTOM_PATH/${base}.meta")"
+			json_add_int "size" "$(wc -c < "$FONT_CUSTOM_PATH/${base}.woff2")"
+			json_close_object
+		done
+		json_close_array
 		# 备份文件不存在时整个字段不发出,前端读到 undefined —— 与「没有我的
 		# 配置可回去」是同一件事。
 		if [ -f "$DEVICE_DIR/pre-hub-backup.conf" ]; then
@@ -2764,6 +2981,7 @@ MANIFEST
 			cp "$DEVICE_DIR/pre-hub-backup.conf" "$CONFIG_FILE"
 			chmod 644 "$CONFIG_FILE"
 			restore_pre_hub_images
+			restore_pre_hub_fonts
 			# 回滚目标的字体缓存可能已经被它之后那次 apply 清掉了
 			# (prepare_font_slot 换预设时会 cleanup_custom_fonts),所以这里
 			# 同样要重新取,不能只按现存缓存重写 CSS。
@@ -2883,7 +3101,7 @@ MANIFEST
 				[ -n "$a_fname" ] || continue
 				json_add_object ""
 				json_add_string "kind" "$a_kind"
-				json_add_string "src" "/luci-static/aurora/images/$a_fname"
+				json_add_string "src" "/luci-static/aurora/$a_fname"
 				json_add_string "url" "$a_url"
 				json_add_string "ticket" "$a_ticket"
 				json_close_object

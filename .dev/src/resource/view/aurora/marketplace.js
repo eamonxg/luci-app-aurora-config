@@ -785,6 +785,59 @@ const buildDetailBody = (item) => {
   const bundled = buildBundledTiles(item);
   if (bundled) children.push(buildDetailHeading(_("Bundled content")), bundled);
 
+  // 字体是唯一一种应用后会长期占着路由器可写空间的资产。图片按槽位覆盖、
+  // 几十上百 KB;而一份覆盖中文的字体动辄好几 MB,在小 flash 设备上这就是
+  // "要不要应用"的决定性信息。所以它不混在 tiles 里,单独说,带确切体积、
+  // 存放位置,以及固件升级后不保留这件事。
+  const fontAssets = (Array.isArray(item.assets) ? item.assets : []).filter(
+    (asset) =>
+      asset && (asset.kind === "font_sans" || asset.kind === "font_mono"),
+  );
+
+  if (fontAssets.length)
+    children.push(
+      E(
+        "p",
+        { class: "aurora-store-dt-foot" },
+        _("Includes %s of font files. They are stored in the router's writable partition, which is shared with installed packages — on devices with little flash, check the free space first. Fonts are not kept across a firmware upgrade and have to be applied again.").format(
+          assetUpload.formatSize(
+            fontAssets.reduce((sum, asset) => sum + (Number(asset.size) || 0), 0),
+          ),
+        ),
+      ),
+      // 版权那句在这里换了个方向:发布面板问的是「你有权发吗」,而站在使用者
+      // 一边,能说的只有「这份字体不是商店的,授权状态没人核实过」。说得比这
+      // 更满就是替上传者担保。
+      E(
+        "p",
+        { class: "aurora-store-dt-foot" },
+        _("The font file comes from whoever shared this theme; the store does not verify its licence."),
+      ),
+    );
+
+  // 名册字体走的是另一条路:字节不随配置走,路由器应用后自己去下载。一份配置
+  // 完全可能一个槽位带着字体文件、另一个槽位用名册字体,所以这两句各判各的 ——
+  // 只是那个已经带了文件的槽位不该再被算进"待下载"。
+  const fontAssetKinds = fontAssets.map((asset) => asset.kind);
+  if (
+    ["font_sans", "font_mono"].some(
+      (key) =>
+        fontAssetKinds.indexOf(key) === -1 &&
+        typeof typography[key] === "string" &&
+        typography[key] &&
+        BUNDLED_FONT_IDS.indexOf(typography[key]) === -1,
+    )
+  )
+    children.push(
+      E(
+        "p",
+        { class: "aurora-store-dt-foot" },
+        _(
+          "This theme uses a downloaded typeface. The router fetches it once after applying; until then the text falls back to the built-in font.",
+        ),
+      ),
+    );
+
   children.push(
     E(
       "p",
@@ -1018,6 +1071,9 @@ const STORE_CSS =
   ".aurora-store-pal-row .l{font-size:0.72em;color:var(--text-subtle,#888);" +
   "width:2.6em;flex:none;}" +
   ".aurora-store-dt-foot{color:var(--text-muted,#777);font-size:0.8em;margin-top:1.4em;}" +
+  ".aurora-store-license-note{margin-top:0.8em;padding:0.7em 0.9em;border-radius:6px;" +
+  "background:var(--warning-surface,rgba(255,180,0,0.08));" +
+  "color:var(--text-muted,#777);font-size:0.8em;line-height:1.6;}" +
   ".aurora-store-drawer-foot{flex:none;padding:0.9em 1.3em;display:flex;gap:0.6em;" +
   "border-top:1px solid var(--hairline,rgba(0,0,0,0.1));}" +
   ".aurora-store-drawer-foot .apply{flex:1;}" +
@@ -1205,6 +1261,10 @@ return view.extend({
       // by the publish panel alone -- the preview and manifest of what YOUR
       // configuration would look like in the store.
       navType: uci.get("aurora", "theme", "nav_type") || "mega-menu",
+      // 会随这份配置一起上传的自定义字体([{slot,family,size}])。rpcd 用的是
+      // build_share_payload 打包时的同一个判断,所以发布面板上写着要发什么,
+      // 线路上发的就是什么。名册预设不在其中 —— 接收端自己去下载。
+      sharedFonts: (localState && localState.shared_fonts) || [],
     }));
   },
 
@@ -1216,6 +1276,7 @@ return view.extend({
     const modified = loadData.modified;
     const backupPreview = loadData.backupPreview;
     const currentNav = loadData.navType;
+    const sharedFonts = loadData.sharedFonts;
 
     const isCurrentBuiltin = (preset) =>
       !modified && activeSource === "builtin:" + preset.id;
@@ -2335,6 +2396,19 @@ return view.extend({
           detail: mono ? family + " · " + mono : family,
         });
 
+      // 上传的字体文件本身也要单独列一行。上面那行只是字体的名字 —— 而这
+      // 一行说的是"这份 woff2 会被传上去",带着体积,因为它决定了别人要不要
+      // 在自己的路由器上腾出这么多空间。
+      sharedFonts.forEach((font) =>
+        rows.push({
+          label:
+            font.slot === "mono" ? _("Mono Font File") : _("Sans Font File"),
+          detail: _("Uploaded with the theme, %s").format(
+            assetUpload.formatSize(font.size),
+          ),
+        }),
+      );
+
       // The same five image slots build_share_payload walks, read by name so
       // the keys stay next to the labels they produce. Two slots share the
       // "Site Icon" label and two share "App Icon", so the list is
@@ -2833,6 +2907,21 @@ return view.extend({
           { style: "color:var(--text-muted);font-size:0.8em;margin-top:0.8em;" },
           _("Anyone who applies this gets all of it. You can update or remove it later."),
         ),
+      );
+
+      // 只在真的要发字体文件时才出现。字体和图标不是一回事:一个自己画的
+      // logo 是自己的,而一份字体绝大多数情况下是别人的作品,多数商业授权
+      // 明确不允许再分发。这句话必须在按下发布之前就在眼前,不能藏进条款。
+      if (sharedFonts.length)
+        children.push(
+          E(
+            "p",
+            { class: "aurora-store-license-note" },
+            _("This share includes your uploaded font file. Please make sure you have the right to redistribute it — most commercial font licences do not allow it. Configurations reported for infringement are taken down."),
+          ),
+        );
+
+      children.push(
         E("div", { class: "right", style: "margin-top:1em;" }, [submitBtn]),
       );
 

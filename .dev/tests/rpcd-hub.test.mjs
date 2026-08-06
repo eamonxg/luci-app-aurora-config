@@ -770,12 +770,45 @@ test("docs: the marketplace method table stays in step with the acl", () => {
 
 // 浏览器直传之后,路由器不再需要把 1.2MB 的图 base64 塞进 JSON —— 实测
 // uclient-fetch 走 TLS 推不动那么大的 body(512KB 三次挂一次,1MB 必断)。
-// 它只需要告诉浏览器每个 kind 对应哪个本机文件名。
-test("build_share_payload: emits a filename sidecar, not base64", () => {
+// 它只需要告诉浏览器每个 kind 对应哪个本机文件。
+//
+// 第二列是相对 /luci-static/aurora/ 的路径而不是裸文件名:图片在 images/,
+// 字体在 fonts/custom/,而 hub_share_begin 只会给这一列加前缀。
+test("build_share_payload: emits a path sidecar, not base64", () => {
   assert.match(rpcd, /local out_file="\$1" files_file="\$\{1\}\.files"/);
-  assert.match(rpcd, /printf '%s\\t%s\\n' "\$kind" "\$fname" >> "\$files_file"/);
+  assert.match(rpcd, /printf '%s\\timages\/%s\\n' "\$kind" "\$fname" >> "\$files_file"/);
+  assert.match(
+    rpcd,
+    /printf '%s\\tfonts\/custom\/%s\.woff2\\n' "font_\$slot" "\$base" >> "\$files_file"/,
+  );
+  assert.match(rpcd, /json_add_string "src" "\/luci-static\/aurora\/\$a_fname"/);
   assert.ok(!/base64 -w0/.test(rpcd), "base64 encoding should be gone");
   assert.ok(!/data_b64/.test(rpcd), "data_b64 should be gone from the rpcd script");
+});
+
+// 分享一份用了自定义字体的配置,却只发字体栈不发字节 —— 收到的人那台路由器上
+// 根本没有那个字体族,浏览器静默回退到栈尾的 Lato:配色布局全对、字体没变,而
+// 商店详情页还明明白白写着那个字体名。真机上抓到过这个现场(struct_font_sans
+// 指着 "OPPO Sans Regular",aurora-font.css 里根本没有它的 @font-face)。
+test("build_share_payload: uploaded custom fonts travel with the config", () => {
+  assert.match(rpcd, /json_add_string "kind" "font_\$slot"/);
+  // 名册预设不上传:接收端 sync_and_cache_fonts_from_uci 自己从固定源下载
+  // 并校验,再传一份既浪费带宽也绕开了那份校验。
+  assert.match(
+    rpcd,
+    /shared_custom_font_base\(\)[\s\S]*?get_font_preset_by_stack "\$slot" "\$stack" >\/dev\/null 2>&1 && return 1/,
+  );
+});
+
+// 界面上说要发哪一份字体,和线路上真正打包哪一份,必须是同一个判断 —— 两处
+// 各写一遍迟早漂移成"清单里写着、实际没发"。
+test("the share manifest and the packer ask the same function", () => {
+  const callers = rpcd.match(/shared_custom_font_base "\$slot"/g) || [];
+  assert.ok(
+    callers.length >= 2,
+    "both build_share_payload and hub_local_state should call it",
+  );
+  assert.match(rpcd, /json_add_array "shared_fonts"/);
 });
 
 // 一律报 hub_unreachable 是"发布失败看起来像商店挂了"的全部原因:-q 把

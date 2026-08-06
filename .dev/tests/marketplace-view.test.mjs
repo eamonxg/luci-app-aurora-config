@@ -525,8 +525,41 @@ test("gallery view: sharing says what gets shared, inline rather than in a modal
   // 清单来自本机 uci,不是新的 rpcd 调用
   assert.match(src, /uci\.get\("aurora", "theme", "logo_svg"\)/);
   assert.match(src, /const loginBgFilename = /);
-  // 体积是机制信息,不进界面
-  assert.ok(!/KB|bytes|filesize/i.test(src), "no byte counts in the UI");
+  // 图片体积仍然是机制信息:一张 logo 多大改变不了任何人的决定,写出来只是噪音。
+  // 它们照旧只说"Included"。
+  assert.match(src, /rows\.push\(\{ label: label, detail: _\("Included"\) \}\)/);
+});
+
+// 字体是这条规则唯一的例外,而且是被真实后果逼出来的:一份覆盖中文的 woff2
+// 动辄好几 MB,落在与软件包共用的可写分区上,在小 flash 设备上这就是"能不能
+// 应用"本身。不写体积,用户要到刷不动包的时候才知道。
+test("gallery view: font assets are the one place a size belongs", async () => {
+  const src = await readFile(SRC, "utf8");
+  // 发布侧:我要发出去的这份字体有多大。
+  assert.match(src, /sharedFonts\.forEach\(/);
+  assert.match(src, /_\("Uploaded with the theme, %s"\)\.format\(/);
+  // 使用侧:我要接下来的这份字体有多大,存在哪,升级后还在不在。
+  assert.match(src, /asset\.kind === "font_sans" \|\| asset\.kind === "font_mono"/);
+  assert.match(src, /Includes %s of font files/);
+  assert.match(src, /writable partition/);
+  assert.match(src, /firmware upgrade/);
+});
+
+// 字体和图标不是一回事:自己画的 logo 是自己的,而一份字体绝大多数情况下是
+// 别人的作品,多数商业授权明确不允许再分发。这句话必须在按下发布之前就在
+// 眼前 —— 而且只在真的要发字体时才出现,否则它就成了人人都学会跳过的噪音。
+test("gallery view: publishing a font asks about redistribution rights", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(src, /if \(sharedFonts\.length\)/);
+  assert.match(src, /right to redistribute it/);
+  assert.match(src, /commercial font licences do not allow it/);
+});
+
+// 版权这件事两边都要说,但方向相反:发布面板问「你有权发吗」,详情抽屉只能
+// 说「这不是商店的字体,授权没人核实过」—— 说得更满就是替上传者担保。
+test("gallery view: the drawer says the licence is unverified", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(src, /does not verify its licence/);
 });
 
 test("gallery view: a re-render must not destroy a half-typed share", async () => {

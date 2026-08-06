@@ -871,6 +871,22 @@
     "zh_Hans": "下载备份文件",
     "zh_Hant": "下載備份檔案"
   },
+  "File is %s, exceeding the 8MB limit.": {
+    "de": "Datei ist %s und überschreitet das Limit von 8 MB.",
+    "es": "El archivo ocupa %s y supera el límite de 8 MB.",
+    "fr": "Le fichier fait %s et dépasse la limite de 8 Mo.",
+    "id": "Berkas berukuran %s, melebihi batas 8 MB.",
+    "it": "Il file è di %s e supera il limite di 8 MB.",
+    "ja": "ファイルは %s で、上限の 8MB を超えています。",
+    "ko": "파일 크기가 %s로 8MB 제한을 초과합니다.",
+    "nl": "Bestand is %s en overschrijdt de limiet van 8 MB.",
+    "pl": "Plik ma %s i przekracza limit 8 MB.",
+    "ru": "Файл занимает %s, что превышает лимит 8 МБ.",
+    "tr": "Dosya %s boyutunda ve 8 MB sınırını aşıyor.",
+    "uk": "Файл займає %s, що перевищує ліміт 8 МБ.",
+    "zh_Hans": "文件为 %s，超过 8MB 的上限。",
+    "zh_Hant": "檔案為 %s，超過 8MB 的上限。"
+  },
   "Finishing…": {
     "zh_Hans": "收尾中…",
     "zh_Hant": "收尾中…",
@@ -1159,6 +1175,22 @@
     "zh_Hans": "包含",
     "zh_Hant": "包含"
   },
+  "Includes %s of font files. They are stored in the router's writable partition, which is shared with installed packages — on devices with little flash, check the free space first. Fonts are not kept across a firmware upgrade and have to be applied again.": {
+    "de": "Enthält %s an Schriftdateien. Sie liegen auf der beschreibbaren Partition des Routers, die sich den Platz mit installierten Paketen teilt — prüfe bei Geräten mit wenig Flash zuerst den freien Speicher. Schriften überstehen ein Firmware-Update nicht und müssen danach erneut angewendet werden.",
+    "es": "Incluye %s de archivos de fuente. Se guardan en la partición escribible del router, compartida con los paquetes instalados: en dispositivos con poca flash, comprueba antes el espacio libre. Las fuentes no se conservan al actualizar el firmware y hay que volver a aplicarlas.",
+    "fr": "Comprend %s de fichiers de police. Ils sont stockés sur la partition inscriptible du routeur, partagée avec les paquets installés — sur les appareils à faible mémoire flash, vérifiez d'abord l'espace libre. Les polices ne survivent pas à une mise à jour du firmware et doivent être réappliquées.",
+    "id": "Menyertakan %s berkas font. Berkas disimpan di partisi yang dapat ditulis pada router, yang dipakai bersama paket terpasang — pada perangkat dengan flash kecil, periksa dulu sisa ruangnya. Font tidak bertahan setelah pembaruan firmware dan harus diterapkan ulang.",
+    "it": "Include %s di file dei caratteri. Vengono salvati nella partizione scrivibile del router, condivisa con i pacchetti installati: sui dispositivi con poca flash controlla prima lo spazio libero. I caratteri non sopravvivono a un aggiornamento del firmware e vanno riapplicati.",
+    "ja": "%s のフォントファイルを含みます。ルーターの書き込み可能領域に保存され、その領域はインストール済みパッケージと共用です — フラッシュの少ない機器では先に空き容量を確認してください。フォントはファームウェア更新では引き継がれず、再度適用が必要です。",
+    "ko": "%s의 글꼴 파일이 포함됩니다. 공유기의 쓰기 가능 파티션에 저장되며, 이 공간은 설치된 패키지와 함께 씁니다 — 플래시가 작은 기기에서는 남은 공간을 먼저 확인하세요. 글꼴은 펌웨어 업그레이드 후에는 남지 않으므로 다시 적용해야 합니다.",
+    "nl": "Bevat %s aan lettertypebestanden. Ze staan op de beschrijfbare partitie van de router, die gedeeld wordt met geïnstalleerde pakketten — controleer op apparaten met weinig flash eerst de vrije ruimte. Lettertypen blijven niet behouden bij een firmware-update en moeten opnieuw worden toegepast.",
+    "pl": "Zawiera %s plików czcionek. Są przechowywane na zapisywalnej partycji routera, współdzielonej z zainstalowanymi pakietami — na urządzeniach z małą pamięcią flash sprawdź najpierw wolne miejsce. Czcionki nie przetrwają aktualizacji firmware'u i trzeba je zastosować ponownie.",
+    "ru": "Включает %s файлов шрифтов. Они хранятся в записываемом разделе роутера, который делит место с установленными пакетами — на устройствах с малым объёмом flash сначала проверьте свободное место. Шрифты не сохраняются при обновлении прошивки, их придётся применить заново.",
+    "tr": "%s yazı tipi dosyası içerir. Dosyalar yönlendiricinin yazılabilir bölümünde tutulur ve bu alan kurulu paketlerle paylaşılır — flash belleği az olan cihazlarda önce boş alanı kontrol edin. Yazı tipleri bellenim güncellemesinden sonra kalmaz, yeniden uygulanmaları gerekir.",
+    "uk": "Містить %s файлів шрифтів. Вони зберігаються в записуваному розділі маршрутизатора, який ділить місце зі встановленими пакунками — на пристроях із малим обсягом flash спершу перевірте вільне місце. Шрифти не зберігаються після оновлення прошивки, їх доведеться застосувати знову.",
+    "zh_Hans": "包含 %s 的字体文件。字体存放在路由器的可写分区，与已安装的软件包共用空间——闪存较小的设备请先确认剩余空间。固件升级后字体不会保留，需要重新应用。",
+    "zh_Hant": "包含 %s 的字型檔。字型存放在路由器的可寫分割區，與已安裝的套件共用空間——快閃記憶體較小的裝置請先確認剩餘空間。韌體升級後字型不會保留，需要重新套用。"
+  },
   "Includes custom content": {
     "de": "Enthält eigene Inhalte",
     "es": "Incluye contenido personalizado",
@@ -1302,6 +1334,22 @@
     "uk": "Мої",
     "zh_Hans": "我的",
     "zh_Hant": "我的"
+  },
+  "Mono Font File": {
+    "de": "Schriftdatei (Mono)",
+    "es": "Archivo de fuente monoespaciada",
+    "fr": "Fichier de police monospace",
+    "id": "Berkas font monospace",
+    "it": "File del carattere monospaziato",
+    "ja": "等幅フォントファイル",
+    "ko": "고정폭 글꼴 파일",
+    "nl": "Monospace-lettertypebestand",
+    "pl": "Plik czcionki o stałej szerokości",
+    "ru": "Файл моноширинного шрифта",
+    "tr": "Eş aralıklı yazı tipi dosyası",
+    "uk": "Файл моноширинного шрифту",
+    "zh_Hans": "等宽字体文件",
+    "zh_Hant": "等寬字型檔"
   },
   "My Shares": {
     "de": "Meine Freigaben",
@@ -1486,6 +1534,22 @@
   "One more piece in the store": {
     "zh_Hans": "商店里多一件作品",
     "zh_Hant": "商店裡多一件作品"
+  },
+  "Only .woff2 files up to 8MB are accepted.": {
+    "de": "Es werden nur .woff2-Dateien bis 8 MB akzeptiert.",
+    "es": "Solo se aceptan archivos .woff2 de hasta 8 MB.",
+    "fr": "Seuls les fichiers .woff2 jusqu'à 8 Mo sont acceptés.",
+    "id": "Hanya berkas .woff2 hingga 8 MB yang diterima.",
+    "it": "Sono accettati solo file .woff2 fino a 8 MB.",
+    "ja": "8MB までの .woff2 ファイルのみ使用できます。",
+    "ko": "8MB 이하의 .woff2 파일만 사용할 수 있습니다.",
+    "nl": "Alleen .woff2-bestanden tot 8 MB worden geaccepteerd.",
+    "pl": "Akceptowane są tylko pliki .woff2 do 8 MB.",
+    "ru": "Принимаются только файлы .woff2 размером до 8 МБ.",
+    "tr": "Yalnızca 8 MB'a kadar .woff2 dosyaları kabul edilir.",
+    "uk": "Приймаються лише файли .woff2 розміром до 8 МБ.",
+    "zh_Hans": "仅接受 8MB 以内的 .woff2 文件。",
+    "zh_Hant": "僅接受 8MB 以內的 .woff2 檔案。"
   },
   "Open this configuration to see everything it carries.": {
     "de": "Öffnen Sie diese Konfiguration, um alles zu sehen, was sie enthält.",
@@ -1831,6 +1895,22 @@
     "zh_Hans": "圆角",
     "zh_Hant": "圓角"
   },
+  "Sans Font File": {
+    "de": "Schriftdatei (Sans)",
+    "es": "Archivo de fuente sans",
+    "fr": "Fichier de police sans",
+    "id": "Berkas font sans",
+    "it": "File del carattere sans",
+    "ja": "Sans フォントファイル",
+    "ko": "산세리프 글꼴 파일",
+    "nl": "Sans-lettertypebestand",
+    "pl": "Plik czcionki bezszeryfowej",
+    "ru": "Файл шрифта без засечек",
+    "tr": "Sans yazı tipi dosyası",
+    "uk": "Файл шрифту без засічок",
+    "zh_Hans": "无衬线字体文件",
+    "zh_Hant": "無襯線字型檔"
+  },
   "Save": {
     "de": "Speichern",
     "es": "Guardar",
@@ -2123,6 +2203,22 @@
     "zh_Hans": "这个名字已经被占用了，换一个。",
     "zh_Hant": "這個名稱已經被占用了，換一個。"
   },
+  "The font file comes from whoever shared this theme; the store does not verify its licence.": {
+    "de": "Die Schriftdatei stammt von der Person, die dieses Theme geteilt hat; der Store prüft ihre Lizenz nicht.",
+    "es": "El archivo de fuente proviene de quien compartió este tema; la tienda no verifica su licencia.",
+    "fr": "Le fichier de police provient de la personne qui a partagé ce thème ; la boutique ne vérifie pas sa licence.",
+    "id": "Berkas font berasal dari orang yang membagikan tema ini; toko tidak memverifikasi lisensinya.",
+    "it": "Il file del carattere proviene da chi ha condiviso questo tema; lo store non ne verifica la licenza.",
+    "ja": "フォントファイルはこのテーマを共有した人によるものです。ストアはそのライセンスを確認していません。",
+    "ko": "글꼴 파일은 이 테마를 공유한 사람이 올린 것으로, 스토어는 라이선스를 확인하지 않습니다.",
+    "nl": "Het lettertypebestand komt van degene die dit thema heeft gedeeld; de store controleert de licentie niet.",
+    "pl": "Plik czcionki pochodzi od osoby, która udostępniła ten motyw; sklep nie weryfikuje jego licencji.",
+    "ru": "Файл шрифта загружен тем, кто поделился этой темой; магазин не проверяет его лицензию.",
+    "tr": "Yazı tipi dosyası bu temayı paylaşan kişiden gelir; mağaza lisansını doğrulamaz.",
+    "uk": "Файл шрифту завантажив той, хто поділився цією темою; крамниця не перевіряє його ліцензію.",
+    "zh_Hans": "字体文件来自分享这份主题的人，商店不核实它的授权状态。",
+    "zh_Hant": "字型檔來自分享這份佈景主題的人，商店不核實它的授權狀態。"
+  },
   "The look this router is wearing right now.": {
     "de": "Das Aussehen, das dieser Router gerade trägt.",
     "es": "El aspecto que este router lleva ahora mismo.",
@@ -2339,6 +2435,22 @@
     "zh_Hans": "这条分享属于另一个身份。",
     "zh_Hant": "這條分享屬於另一個身分。"
   },
+  "This share includes your uploaded font file. Please make sure you have the right to redistribute it — most commercial font licences do not allow it. Configurations reported for infringement are taken down.": {
+    "de": "Diese Freigabe enthält die von dir hochgeladene Schriftdatei. Stelle sicher, dass du sie weitergeben darfst — die meisten kommerziellen Schriftlizenzen erlauben das nicht. Bei gemeldeten Rechtsverletzungen wird die Konfiguration entfernt.",
+    "es": "Esta publicación incluye el archivo de fuente que subiste. Asegúrate de tener derecho a redistribuirlo: la mayoría de las licencias comerciales de fuentes no lo permiten. Las configuraciones denunciadas por infracción se retiran.",
+    "fr": "Ce partage inclut le fichier de police que vous avez envoyé. Assurez-vous d'avoir le droit de le redistribuer — la plupart des licences de polices commerciales l'interdisent. Les configurations signalées pour contrefaçon sont retirées.",
+    "id": "Bagikan ini menyertakan berkas font yang Anda unggah. Pastikan Anda berhak mendistribusikannya kembali — sebagian besar lisensi font komersial melarangnya. Konfigurasi yang dilaporkan melanggar akan diturunkan.",
+    "it": "Questa condivisione include il file del carattere che hai caricato. Assicurati di avere il diritto di ridistribuirlo: la maggior parte delle licenze commerciali non lo consente. Le configurazioni segnalate per violazione vengono rimosse.",
+    "ja": "この共有にはアップロードしたフォントファイルが含まれます。再配布する権利があるか確認してください — 商用フォントのライセンスの多くは再配布を認めていません。権利侵害の報告があった構成は公開停止となります。",
+    "ko": "이 공유에는 업로드한 글꼴 파일이 포함됩니다. 재배포할 권리가 있는지 확인하세요 — 대부분의 상용 글꼴 라이선스는 재배포를 허용하지 않습니다. 침해 신고가 접수된 구성은 내려갑니다.",
+    "nl": "Deze deling bevat het lettertypebestand dat je hebt geüpload. Zorg dat je het mag verspreiden — de meeste commerciële lettertypelicenties staan dat niet toe. Configuraties waarover een inbreukmelding binnenkomt worden verwijderd.",
+    "pl": "To udostępnienie zawiera przesłany przez Ciebie plik czcionki. Upewnij się, że masz prawo go rozpowszechniać — większość komercyjnych licencji na czcionki tego zabrania. Konfiguracje zgłoszone za naruszenie są usuwane.",
+    "ru": "В эту публикацию входит загруженный вами файл шрифта. Убедитесь, что у вас есть право на его распространение — большинство коммерческих лицензий на шрифты этого не допускают. Конфигурации, на которые поступила жалоба о нарушении, снимаются с публикации.",
+    "tr": "Bu paylaşım yüklediğiniz yazı tipi dosyasını içerir. Onu yeniden dağıtma hakkınız olduğundan emin olun — çoğu ticari yazı tipi lisansı buna izin vermez. İhlal bildirimi yapılan yapılandırmalar yayından kaldırılır.",
+    "uk": "У цю публікацію входить завантажений вами файл шрифту. Переконайтеся, що маєте право на його поширення — більшість комерційних ліцензій на шрифти цього не дозволяють. Конфігурації, на які надійшла скарга про порушення, знімаються з публікації.",
+    "zh_Hans": "这次分享包含你上传的字体文件。请确认你有权再分发它——多数商业字体授权并不允许。收到侵权举报的配置会被下架。",
+    "zh_Hant": "這次分享包含你上傳的字型檔。請確認你有權再散布它——多數商業字型授權並不允許。收到侵權檢舉的設定會被下架。"
+  },
   "This text is your identity. Anyone who has it can publish under your name and delete what you have shared — don't post it anywhere public.": {
     "de": "Dieser Text ist deine Identität. Wer ihn hat, kann unter deinem Namen veröffentlichen und löschen, was du geteilt hast – poste ihn nirgendwo öffentlich.",
     "es": "Este texto es tu identidad. Quien lo tenga puede publicar con tu nombre y borrar lo que has compartido: no lo publiques en ningún sitio público.",
@@ -2354,6 +2466,22 @@
     "uk": "Цей текст — ваша особистість. Будь-хто, хто його має, може публікувати від вашого імені та видаляти те, чим ви поділилися. Не викладайте його в загальний доступ.",
     "zh_Hans": "这串文字就是你的身份。拿到它的人可以用你的名字发布，也能删掉你已分享的作品 —— 别贴到公开的地方。",
     "zh_Hant": "這串文字就是你的身分。拿到它的人可以用你的名字發布，也能刪掉你已分享的作品 —— 別貼到公開的地方。"
+  },
+  "This theme uses a downloaded typeface. The router fetches it once after applying; until then the text falls back to the built-in font.": {
+    "de": "Dieses Theme verwendet eine Schrift zum Herunterladen. Der Router lädt sie nach dem Anwenden einmalig; bis dahin wird die integrierte Schrift angezeigt.",
+    "es": "Este tema usa una tipografía que se descarga. El router la obtiene una vez tras aplicarlo; hasta entonces el texto usa la fuente integrada.",
+    "fr": "Ce thème utilise une police à télécharger. Le routeur la récupère une seule fois après l'application ; en attendant, le texte utilise la police intégrée.",
+    "id": "Tema ini memakai font yang perlu diunduh. Router mengunduhnya sekali setelah diterapkan; sampai itu selesai, teks memakai font bawaan.",
+    "it": "Questo tema usa un carattere da scaricare. Il router lo scarica una volta dopo l'applicazione; fino ad allora il testo usa il font integrato.",
+    "ja": "このテーマはダウンロードが必要なフォントを使用します。適用後にルーターが一度だけ取得し、それまでは組み込みフォントで表示されます。",
+    "ko": "이 테마는 내려받아야 하는 글꼴을 사용합니다. 적용 후 공유기가 한 번 내려받으며, 그전까지는 내장 글꼴로 표시됩니다.",
+    "nl": "Dit thema gebruikt een lettertype dat gedownload moet worden. De router haalt het na het toepassen eenmalig op; tot die tijd wordt het ingebouwde lettertype getoond.",
+    "pl": "Ten motyw używa czcionki pobieranej z sieci. Router pobierze ją raz po zastosowaniu; do tego czasu tekst korzysta z czcionki wbudowanej.",
+    "ru": "Эта тема использует загружаемый шрифт. Роутер скачает его один раз после применения; до этого текст отображается встроенным шрифтом.",
+    "tr": "Bu tema indirilen bir yazı tipi kullanır. Yönlendirici uyguladıktan sonra onu bir kez indirir; o ana kadar metin yerleşik yazı tipiyle görünür.",
+    "uk": "Ця тема використовує шрифт, який завантажується. Маршрутизатор завантажить його один раз після застосування; доти текст показується вбудованим шрифтом.",
+    "zh_Hans": "此主题使用需要下载的字体。应用后路由器会下载一次，在那之前文字会先用内置字体显示。",
+    "zh_Hant": "此佈景主題使用需要下載的字型。套用後路由器會下載一次，在那之前文字會先以內建字型顯示。"
   },
   "Toolbar %d": {
     "de": "Werkzeugleiste %d",
@@ -2434,6 +2562,22 @@
     "uk": "Для оновлення Aurora потрібне її джерело оновлень. Після додавання оновлення виконуються в розділі Система → Програми, як і для будь-якого пакунка OpenWrt.",
     "zh_Hans": "升级 Aurora 需要先添加更新源。添加后，就能在「系统 → 软件包」里升级，和其他 OpenWrt 软件一样。",
     "zh_Hant": "升級 Aurora 需要先新增更新來源。新增後，就能在「系統 → 軟體套件」裡升級，和其他 OpenWrt 軟體一樣。"
+  },
+  "Uploaded with the theme, %s": {
+    "de": "Wird mit dem Theme hochgeladen, %s",
+    "es": "Se sube junto con el tema, %s",
+    "fr": "Envoyé avec le thème, %s",
+    "id": "Diunggah bersama tema, %s",
+    "it": "Caricato insieme al tema, %s",
+    "ja": "テーマと一緒にアップロード、%s",
+    "ko": "테마와 함께 업로드됨, %s",
+    "nl": "Wordt met het thema geüpload, %s",
+    "pl": "Przesyłany razem z motywem, %s",
+    "ru": "Загружается вместе с темой, %s",
+    "tr": "Temayla birlikte yüklenir, %s",
+    "uk": "Завантажується разом із темою, %s",
+    "zh_Hans": "随主题一起上传，%s",
+    "zh_Hant": "隨佈景主題一起上傳，%s"
   },
   "Uploading %s… %d%%": {
     "zh_Hans": "正在上传%s… %d%%",
