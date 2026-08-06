@@ -136,6 +136,13 @@ return baseclass.extend({
     method: "hub_restore_backup",
   }),
 
+  // 纯本地:回答「路由器现在穿的是哪一套、还是不是那一套、被盖掉的那套长什么
+  // 样」。不走 hub,所以不进上面那套缓存 —— 它便宜到可以每次开页面都问一遍。
+  callHubLocalState: rpc.declare({
+    object: "luci.aurora",
+    method: "hub_local_state",
+  }),
+
   // 三段式发布的两端。中间那段(资产字节)由 publishCurrentConfig 用浏览器
   // 直接 PUT 到 hub —— 见下。target_id 为空串是新发布、非空是更新那一条,
   // 所以"更新分享"不需要自己的一套方法:它跟发布本来就是同一件事,只差目标。

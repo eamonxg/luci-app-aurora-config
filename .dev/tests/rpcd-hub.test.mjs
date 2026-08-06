@@ -163,9 +163,14 @@ test("rpcd script: apply_hub_asset points the matching uci option at the applied
   assert.match(body, /struct_login_bg="url\('\/luci-static\/aurora\/images\/\$\{target_path##\*\/\}'\)"/);
 });
 
-test("rpcd script: hub_apply_worker clears any prior apply's image backups before taking a new one (single-slot snapshot)", () => {
+// 单槽位快照现在住在 backup_if_mine 里,worker 只是调用它 —— 因为清空上一次的
+// 图片备份和拍这次的配置快照必须同进同退:只做一半,回滚就会交还一份配置配着
+// 另一套图片。
+test("rpcd script: the single-slot snapshot clears any prior apply's image backups before taking a new one", () => {
   const workerBody = extractFunctionBody(rpcd, "hub_apply_worker");
-  assert.match(workerBody, /rm -rf "\$DEVICE_DIR\/pre-hub-images"/);
+  assert.match(workerBody, /backup_if_mine/);
+  const backupBody = extractFunctionBody(rpcd, "backup_if_mine");
+  assert.match(backupBody, /rm -rf "\$DEVICE_DIR\/pre-hub-images"/);
 });
 
 test("rpcd script: hub_restore_backup restores backed-up images alongside /etc/config/aurora", () => {

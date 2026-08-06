@@ -110,6 +110,94 @@ normalize_preset_name() {
 	esac
 }
 
+# 当前配置「长什么样」的指纹。取的键与两条 apply 路径写入的集合完全一致,
+# 因此刚应用完必然相等,用户一改就不等 —— 这就是商店判断「钩子该落在哪张卡
+# 上」的全部依据。不需要任何脏标志位,也就与 studio.js 完全解耦:工作室、
+# import_config、手动 uci set、保留配置升级,任何一条路径改了外观都会被发现。
+#
+# 排序是必须的:uci show 不保证输出顺序,两份内容相同、顺序不同的配置若哈希
+# 不同,每次 apply 之后立刻就会读回「已修改」。
+#
+# 资产选项(logo_svg/favicon_*/pwa_icon_*/struct_login_bg)刻意不取:它们存的是
+# 文件名而不是字节,换一张图片文件名往往原封不动,哈希它只会给出虚假的确定性。
+# 簿记项(active_*/hub_applied/icon_cache_version/hub_key_saved)也不取:它们每次
+# apply 都变,取了就没有任何配置能等于自己。
+theme_fingerprint() {
+	uci -q show aurora.theme 2>/dev/null \
+		| sed -n 's/^aurora\.theme\.//p' \
+		| grep -E '^(light_|dark_|nav_type=|struct_font_sans=|struct_font_mono=|struct_spacing=|struct_radius_base=|struct_content_width_centered=|toolbar_enabled=)' \
+		| sort \
+		| md5sum \
+		| cut -d' ' -f1
+}
+
+# 「当前外观是我自己的吗」。返回 0 = 是。
+#
+# 没有记录指纹时也判为「是」:那要么是本特性上线前就带着 hub_applied 的老配置
+# (见 ensure_active_source),要么是有人手改过 uci —— 两种情况下这份配置都不对应
+# 商店里的任何一张卡,把它当成用户自己的东西是唯一安全的答案:它会被备份,不会
+# 被无声盖掉。
+theme_modified() {
+	local recorded
+	recorded=$(uci -q get aurora.theme.active_fingerprint)
+	[ -n "$recorded" ] || return 0
+	[ "$recorded" != "$(theme_fingerprint)" ]
+}
+
+# 把老配置迁到单一真相 active_source 上。幂等:有值即返回。
+#
+# 三种取值:builtin:<preset-id> / hub:<hub-id> / mine。
+# hub_applied 只存名字不存 id,反查不到商店条目,所以带 hub_applied 的老配置一律
+# 降级成 mine 并清空指纹 —— 它会显示为「我的配置」并持有钩子。这是正确的降级
+# 而不是丢失:那份配置确实不对应任何一张卡,而它自己完好无损。
+ensure_active_source() {
+	local preset
+
+	[ -z "$(uci -q get aurora.theme.active_source)" ] || return 0
+
+	if [ -n "$(uci -q get aurora.theme.hub_applied)" ]; then
+		uci -q set "aurora.theme.active_source=mine"
+		uci -q set "aurora.theme.active_fingerprint="
+	else
+		preset=$(normalize_preset_name "$(uci -q get aurora.theme.active_preset)")
+		uci -q set "aurora.theme.active_source=builtin:$preset"
+		uci -q set "aurora.theme.active_fingerprint=$(theme_fingerprint)"
+	fi
+	uci -q commit aurora
+}
+
+# 只在当前配置属于「我的」时才留底。
+#
+# 用一个商店主题盖掉另一个商店主题不需要快照:被盖掉的那个还是列表里的一张卡,
+# 点一下就回来了。这正是「我的配置」那个单槽位能一直握着你自己那份工作的原因
+# —— 你可以在商店里连点五个主题试看,它一次都不会被冲掉。
+#
+# THEME_BACKUP_TAKEN 是给 apply_hub_asset 看的。它在覆盖每张图片前会把原图备份
+# 到 pre-hub-images/,可这次 apply 若没有拍配置快照,那些原图属于**上一个主题**
+# 而不属于备份里那份配置 —— 让它写下去,回滚就会交还一份穿着别人 logo 的配置。
+backup_if_mine() {
+	THEME_BACKUP_TAKEN=0
+	theme_modified || return 0
+
+	mkdir -p "$DEVICE_DIR"
+	cp "$CONFIG_FILE" "$DEVICE_DIR/pre-hub-backup.conf" 2>/dev/null || return 0
+	chmod 644 "$DEVICE_DIR/pre-hub-backup.conf" 2>/dev/null
+	# 单槽位:丢掉更早那次 apply 备份的图片,这次 apply 才好备份自己的。
+	rm -rf "$DEVICE_DIR/pre-hub-images"
+	THEME_BACKUP_TAKEN=1
+}
+
+# 记录「这套外观是从哪张卡来的」,外加它此刻的指纹。之后任何一次改动都会让指纹
+# 对不上,商店就知道钩子该从那张卡挪到「我的配置」上。
+#
+# 必须在全部外观写入(含资产那次独立 commit)之后调用:指纹抢在前面算,刚应用完的
+# 主题立刻就会读回「已修改」。
+record_active_source() {  # $1=builtin:<id> | hub:<id>
+	uci -q set "aurora.theme.active_source=$1"
+	uci -q set "aurora.theme.active_fingerprint=$(theme_fingerprint)"
+	uci -q commit aurora
+}
+
 resolve_preset_path() {
 	case "$(normalize_preset_name "$1")" in
 	default) echo "$DEFAULT_TEMPLATE" ;;
@@ -627,7 +715,10 @@ apply_hub_asset() {  # $1=target_path  $2=sha256  $3=url  $4=kind
 		return 1
 	}
 
-	if [ -f "$target_path" ]; then
+	# 只在这次 apply 真的拍了配置快照时才备份原图 —— 见 backup_if_mine。没拍
+	# 快照就说明被覆盖的是另一个商店主题,那些原图不属于备份里那份配置,写下去
+	# 会让回滚交还一份穿着别人 logo 的配置。
+	if [ -f "$target_path" ] && [ "$THEME_BACKUP_TAKEN" = "1" ]; then
 		mkdir -p "$backup_dir"
 		cp -p "$target_path" "$backup_dir/${target_path##*/}" 2>/dev/null
 	fi
@@ -1157,8 +1248,8 @@ validate_and_apply_hub_payload() {
 }
 
 # Async apply worker (forked by the hub_apply handler): ①ensure_device_identity
-# ②snapshot the current config (single slot, most recent apply only)
-# ③fetch the hub payload ④validate+apply locally (no server trust)
+# ②snapshot the current config, but only when it is the user's own -- see
+# backup_if_mine ③fetch the hub payload ④validate+apply locally (no server trust)
 # ⑤fetch+verify assets, best-effort ⑥resync derived font CSS ⑦fire-and-forget
 # download-count ping. Every step updates the job status file so the
 # frontend can poll get_hub_status.
@@ -1170,12 +1261,8 @@ hub_apply_worker() {
 	ensure_device_identity
 
 	write_hub_job_status "$job_id" "running" "backup" ""
-	mkdir -p "$DEVICE_DIR"
-	cp "$CONFIG_FILE" "$DEVICE_DIR/pre-hub-backup.conf" 2>/dev/null
-	chmod 644 "$DEVICE_DIR/pre-hub-backup.conf" 2>/dev/null
-	# Single-slot snapshot (most recent apply only): drop any images backed
-	# up by an earlier apply before this one starts backing up its own.
-	rm -rf "$DEVICE_DIR/pre-hub-images"
+	ensure_active_source
+	backup_if_mine
 
 	write_hub_job_status "$job_id" "running" "fetch" ""
 	body=$(hub_http_get "/api/v1/themes/aurora/configs/$id")
@@ -1246,6 +1333,9 @@ hub_apply_worker() {
 	# 就是"配色应用了、字体没应用"。apply_theme_preset 一直用的就是这个。
 	sync_and_cache_fonts_from_uci
 	update_icon_cache_timestamp
+	# 排在资产之后:资产是在色值那批 uci batch 之后单独 commit 的,指纹抢在前面
+	# 算,刚应用完的主题立刻就会读回「已修改」。
+	record_active_source "hub:$id"
 	write_hub_job_status "$job_id" "done" "finalize" ""
 
 	tmpfile=$(mktemp)
@@ -1962,6 +2052,51 @@ json_add_icons() {
 	json_close_object
 }
 
+# 把一份存下来的 /etc/config/aurora 投影成与 presets.json 行相同的 preview 形状。
+# 前端于是用 paletteOf/navOf/tileEntriesFor 读它 —— 和读内置预设、读 hub 列表行
+# 用的是同一套访问器。三种卡,一套访问器,同一个外观不可能被画成两个样子。
+json_add_config_preview() {  # $1=一份存下来的 aurora 配置文件
+	local conf="$1" dir line key value v
+	[ -f "$conf" ] || return 1
+	dir=$(mktemp -d /tmp/aurora_preview.XXXXXX) || return 1
+	cp "$conf" "$dir/aurora" 2>/dev/null || { rm -rf "$dir"; return 1; }
+
+	json_add_object "colors"
+	# 色值是十六进制字面量,不含空白,所以在这里用不带引号的词分割是安全的 ——
+	# 而这样循环体才留在**本** shell 里。写成 `... | while read` 的话循环体会在
+	# 子 shell 中执行,每一次 json_add_string 都会随它退出而丢光。
+	#
+	# 两条 -e 而不是一条 \(light\|dark\):BRE 里的交替是 GNU 扩展,busybox sed
+	# 认,可这个函数是切片出来在开发机上跑测试的,BSD sed 不认。
+	for line in $(uci -c "$dir" -q show aurora.theme 2>/dev/null \
+		| sed -n -e "s/^aurora\.theme\.\(light_[^=]*\)='\(.*\)'\$/\1=\2/p" \
+			-e "s/^aurora\.theme\.\(dark_[^=]*\)='\(.*\)'\$/\1=\2/p"); do
+		key=${line%%=*}
+		value=${line#*=}
+		json_add_string "$key" "$value"
+	done
+	json_close_object
+
+	json_add_object "layout"
+	for key in nav_type struct_spacing struct_radius_base \
+		struct_content_width_centered toolbar_enabled; do
+		v=$(uci -c "$dir" -q get "aurora.theme.$key")
+		json_add_string "$key" "$v"
+	done
+	json_close_object
+
+	# 字体栈里有空格,必须一个一个 get,不能走上面那种词分割。
+	json_add_object "typography"
+	v=$(uci -c "$dir" -q get aurora.theme.struct_font_sans)
+	json_add_string "struct_font_sans" "$v"
+	v=$(uci -c "$dir" -q get aurora.theme.struct_font_mono)
+	json_add_string "struct_font_mono" "$v"
+	json_close_object
+
+	rm -rf "$dir"
+	return 0
+}
+
 json_add_theme_preset_snapshot() {
 	local name="$1" template key value
 
@@ -2077,6 +2212,7 @@ case "$1" in
 		json_add_string "job_id" "job_id"
 	json_close_object
 	json_add_object "hub_restore_backup"; json_close_object
+	json_add_object "hub_local_state"; json_close_object
 	json_add_object "hub_share_begin"
 		json_add_string "name" "name"
 		json_add_string "description" "description"
@@ -2323,6 +2459,12 @@ FACE
 			exit 0
 		fi
 
+		# 内置预设从前完全不做备份。现在它和 hub 走同一条闸门:你自己调出来
+		# 的配置,不管被哪一类主题盖掉,都留得下来 —— 它是「我的配置」那张卡
+		# 的内容,回滚就是把它点回来。
+		ensure_active_source
+		backup_if_mine
+
 		# Stage the whole preset in one `uci batch`: drop the existing color
 		# options, write the snapshot, then update the preset bookkeeping --
 		# replacing what used to be ~180 individual uci invocations.
@@ -2333,10 +2475,13 @@ FACE
 		# first: unlike the colour keys they are a fixed, always-present set,
 		# and every one of them is in the snapshot.
 		#
-		# toolbar_item sections are deliberately left alone. They hold
-		# shortcuts the user wrote, and this path -- unlike hub_apply_worker --
-		# takes no pre-apply backup, so replacing them would destroy data with
-		# no way back. A preset only carries the toolbar_enabled switch.
+		# toolbar_item sections are deliberately left alone. A preset carries
+		# the toolbar_enabled switch and nothing else -- the shortcuts
+		# themselves are the user's own content, not part of a look. (This
+		# path does take a pre-apply backup now, via backup_if_mine; the
+		# reason to leave them alone is simply that a preset has nothing to
+		# put there.) They are excluded from theme_fingerprint for the same
+		# reason: adding a shortcut must not read as "you changed the theme".
 		#
 		# Values MUST be single-quoted: `uci batch` parses each line as a
 		# shell-like command and treats a bare `#` as a comment, so an
@@ -2366,6 +2511,9 @@ FACE
 		# whatever woff2 files it names in the background, or the page that
 		# reloads in a moment renders the fallback family instead.
 		sync_and_cache_fonts_from_uci
+		# $name 已经过 normalize_preset_name(见本分支开头),与商店里那张卡的
+		# id 一一对应。
+		record_active_source "builtin:$name"
 		echo '{ "result": 0 }'
 		;;
 
@@ -2583,6 +2731,32 @@ MANIFEST
 			json_add_string "error" "job_not_found"
 			json_dump; json_cleanup
 		fi
+		;;
+
+	"hub_local_state")
+		# 纯本地:不碰网络。商店页把它放进 load() 的 Promise.all,ubus + fork
+		# 整份脚本实测约 0.09s(见 docs/specs/2026-08-05-store-first-paint.md),
+		# 不会挡住首屏。
+		#
+		# 三个答案对应界面上的三件事:钩子该落在哪张卡(active_source)、当前外观
+		# 还等不等于那张卡(modified)、以及被盖掉的那份自己长什么样(backup)。
+		ensure_active_source
+		json_init
+		json_add_int "result" 0
+		json_add_string "active_source" "$(uci -q get aurora.theme.active_source)"
+		if theme_modified; then
+			json_add_boolean "modified" 1
+		else
+			json_add_boolean "modified" 0
+		fi
+		# 备份文件不存在时整个字段不发出,前端读到 undefined —— 与「没有我的
+		# 配置可回去」是同一件事。
+		if [ -f "$DEVICE_DIR/pre-hub-backup.conf" ]; then
+			json_add_object "backup"
+			json_add_config_preview "$DEVICE_DIR/pre-hub-backup.conf"
+			json_close_object
+		fi
+		json_dump; json_cleanup
 		;;
 
 	"hub_restore_backup")

@@ -977,11 +977,6 @@ msgstr "等寬字型"
 msgid "Muted Text"
 msgstr "柔和文字"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2778
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2964
-msgid "My Shares"
-msgstr "我的分享"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2961
 msgid "My creator identity"
 msgstr "我的創作者身分"
@@ -1221,14 +1216,6 @@ msgstr "解析後的預覽顏色 - 點擊進行選擇"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2150
 msgid "Restore"
 msgstr "還原"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1250
-msgid "Restore Previous Configuration"
-msgstr "還原先前的設定"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1300
-msgid "Restore previous configuration"
-msgstr "還原先前的設定"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2151
 msgid "Restore your creator identity"
@@ -1538,10 +1525,6 @@ msgstr "這個名稱會署在你發布過的所有東西上，包括商店裡已
 msgid "This preset uses a downloaded typeface. The router fetches it once after applying; until then the text falls back to the built-in font."
 msgstr "此預設組使用需要下載的字型。套用後路由器會下載一次，在那之前文字會先以內建字型顯示。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1254
-msgid "This replaces your current settings with the ones from just before the last applied configuration."
-msgstr "將目前設定還原為上次套用設定之前的狀態。"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2136
 msgid "This router already has shared configurations of its own. Switching to another identity gives them up for good — back up the current identity first if you still want them."
 msgstr "這台路由器已經有自己的作品。換成別的身分會永久放棄它們 —— 還想要就先備份目前身分。"
@@ -1771,3 +1754,35 @@ msgstr "例如：網路介面"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3013
 msgid "unknown error"
 msgstr "未知錯誤"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:0
+msgid "My configuration"
+msgstr "我的設定"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:0
+msgid "Mine"
+msgstr "我的"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:0
+msgid "On this router only"
+msgstr "僅存在於這台路由器"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:0
+msgid "Not in use"
+msgstr "未在使用"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:0
+msgid "Apply My Configuration"
+msgstr "套用我的設定"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:0
+msgid "This puts back the look you had before applying a theme from the store."
+msgstr "這會把你在商店中套用主題之前的樣子放回來。"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:0
+msgid "The look this router is wearing right now."
+msgstr "這台路由器目前的樣子。"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:0
+msgid "How this router looked before you applied a theme from the store."
+msgstr "你在商店中套用主題之前,這台路由器的樣子。"

@@ -570,8 +570,9 @@ a blank swatch.
 | `hub_delete(id)` | Unpublish share `id` |
 | `hub_export_key` | Read `device.key` back out so a creator identity can be moved to another router |
 | `hub_import_key(key)` | Adopt an exported identity, taking over the shares it owns |
+| `hub_local_state` | What the router is actually wearing: `active_source` (which card the look came from), `modified` (whether it still equals that card), and `backup` (the look it had before, projected into the same preview shape a presets.json row carries). Local only — no hub round trip |
 | `hub_me` | One request for both halves of the answer: who this router publishes as, and what it has published |
-| `hub_restore_backup` | Roll back to the single most recent pre-apply snapshot |
+| `hub_restore_backup` | Put back the single most recent pre-apply snapshot. Reached from the "My configuration" card, not from a button of its own |
 | `hub_set_nickname(nickname)` | Set the creator name the hub shows on this device's shares |
 | `hub_share_begin(name, description, target_id)` | Open a publish draft on the hub and return one upload ticket per asset, plus the local `/luci-static/` URL backing each. `target_id` empty publishes a new entry, non-empty replaces that share |
 | `hub_share_commit(draft_id)` | Claim a draft whose assets the browser has finished uploading, turning it into a config (or an update) |
