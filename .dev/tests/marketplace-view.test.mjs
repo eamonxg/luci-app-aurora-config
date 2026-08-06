@@ -106,6 +106,22 @@ test("gallery view: apply flow calls hub_apply and polls get_hub_status like pol
   assert.match(src, /1500/, "missing 1.5s poll interval");
 });
 
+// header.ut renders the whole look server-side -- it readfile()s the font CSS
+// into the document and stamps every image URL with icon_cache_version -- so
+// all of it is evaluated once, at document load. Updating the banner in place
+// leaves the user looking at the theme they just replaced.
+test("gallery view: a finished online apply reloads the page, not just the banner", async () => {
+  const src = await readFile(SRC, "utf8");
+  const doneBranch = src.match(
+    /status\.state === "done"\)\s*\{([\s\S]*?)\}\s*else if/,
+  );
+  assert.ok(doneBranch, "missing the done branch of the apply poll");
+  assert.ok(
+    doneBranch[1].includes("window.location.reload"),
+    "a completed apply must reload -- otherwise the page still shows the previous theme",
+  );
+});
+
 test("gallery view: external toolbar URLs are surfaced in plaintext before applying", async () => {
   const src = await readFile(SRC, "utf8");
   assert.match(src, /toolbar/);

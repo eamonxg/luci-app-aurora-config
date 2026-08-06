@@ -219,6 +219,35 @@ test("rpcd script: hub_apply_worker selects assets at the flat body's root (not 
   assert.match(workerBody, /json_load\s+"\$body"\s+2>\/dev\/null\s*\n\s*if json_select assets 2>\/dev\/null; then/);
 });
 
+// A shared configuration names a font preset this router has very likely never
+// downloaded. sync_font_css_from_uci only rewrites the CSS from whatever woff2
+// files are already cached, and every font stack ends in a built-in family, so
+// the missing webfont never fails loudly -- it silently renders as Lato and the
+// applied theme looks like only its colours arrived. Every path that swaps the
+// whole config for one from elsewhere has to fetch the files too.
+test("rpcd script: config-replacing paths cache the fonts they name, not just rewrite the CSS", () => {
+  const workerBody = extractFunctionBody(rpcd, "hub_apply_worker");
+  assert.match(workerBody, /^\s*sync_and_cache_fonts_from_uci\s*$/m);
+  assert.ok(
+    !/^\s*sync_font_css_from_uci\s*$/m.test(workerBody),
+    "hub_apply_worker must not stop at the cache-only resync",
+  );
+
+  // import_config and hub_restore_backup replace the config the same way:
+  // an imported file comes from another device, and a rollback target's font
+  // cache may already have been cleaned up by the apply it is undoing.
+  ["import_config", "hub_restore_backup"].forEach((handler) => {
+    const start = rpcd.indexOf(`"${handler}")`);
+    assert.ok(start >= 0, `${handler} handler should exist`);
+    const branch = rpcd.slice(start, start + 1200);
+    assert.match(
+      branch,
+      /sync_and_cache_fonts_from_uci/,
+      `${handler} must fetch the fonts its new config names`,
+    );
+  });
+});
+
 test("acl: hub_apply and hub_restore_backup granted under write.ubus, get_hub_status under read.ubus", () => {
   const acljson = JSON.parse(acl);
   const writeMethods = acljson["luci-app-aurora"].write.ubus["luci.aurora"];

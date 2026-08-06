@@ -1240,7 +1240,11 @@ hub_apply_worker() {
 	json_cleanup
 
 	write_hub_job_status "$job_id" "running" "finalize" ""
-	sync_font_css_from_uci
+	# 必须是 _and_cache_ 那个:分享带来的字体多半是这台路由器从没下载过的
+	# 预设,而 sync_font_css_from_uci 只按已有缓存重写 CSS —— 没有 .face 就
+	# 不写 @font-face,字体栈又总以内置族收尾,于是静默回退成 Lato,看起来
+	# 就是"配色应用了、字体没应用"。apply_theme_preset 一直用的就是这个。
+	sync_and_cache_fonts_from_uci
 	update_icon_cache_timestamp
 	write_hub_job_status "$job_id" "done" "finalize" ""
 
@@ -2392,7 +2396,9 @@ FACE
 				&& validate_import_color_options; then
 				cp "$IMPORT_CONFIG_TMP" "$CONFIG_FILE"
 				chmod 644 "$CONFIG_FILE"
-				sync_font_css_from_uci
+				# 同 hub_apply_worker:导入的配置来自别的设备,它选的字体这台
+				# 机器未必下载过,只重写 CSS 会静默回退。
+				sync_and_cache_fonts_from_uci
 				update_icon_cache_timestamp
 				rm -f "$IMPORT_CONFIG_TMP"
 				echo '{ "result": 0 }'
@@ -2584,7 +2590,10 @@ MANIFEST
 			cp "$DEVICE_DIR/pre-hub-backup.conf" "$CONFIG_FILE"
 			chmod 644 "$CONFIG_FILE"
 			restore_pre_hub_images
-			sync_font_css_from_uci
+			# 回滚目标的字体缓存可能已经被它之后那次 apply 清掉了
+			# (prepare_font_slot 换预设时会 cleanup_custom_fonts),所以这里
+			# 同样要重新取,不能只按现存缓存重写 CSS。
+			sync_and_cache_fonts_from_uci
 			update_icon_cache_timestamp
 			echo '{ "result": 0 }'
 		else

@@ -1323,6 +1323,14 @@ return view.extend({
             appliedName = name;
             renderBanner();
             ui.addNotification(null, E("p", {}, _("Applied.")), "info");
+            // 应用完必须重新加载,否则画面和应用前一模一样,只有横幅变了 ——
+            // 颜色、字体、图片全是 header.ut 在服务端渲染进文档的(字体 CSS
+            // 用 readfile 内联,图片靠 icon_cache_version 打戳),都只在文档
+            // 加载时求值一次。内置预设和回滚两条路径一直都这么收尾。
+            //
+            // 横幅照旧先更新:重新加载不是同步的,在新文档到达之前用户看到
+            // 的还是这一份 DOM。
+            window.location.reload();
           } else if (status && status.state === "error") {
             ui.hideModal();
             ui.addNotification(
