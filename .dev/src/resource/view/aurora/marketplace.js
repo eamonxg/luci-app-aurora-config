@@ -920,12 +920,20 @@ const buildExternalUrlConfirm = (urls, onConfirm) => [
 // non-Aurora themes (every var() carries a fallback). Static string only.
 
 const STORE_CSS =
-  ".aurora-store-head{display:flex;gap:0.8em;align-items:flex-end;flex-wrap:wrap;" +
-  "margin:0.4em 0 0;}" +
-  ".aurora-store-head input{max-width:280px;}" +
+  // One row: tab strip on the left, search box against the right edge, the
+  // spacer eating everything between. It used to be two rows -- a row that
+  // held nothing but the spacer and the search box, then the tabs beneath --
+  // which spent a whole line of vertical space on blank pixels.
+  // align-items:center rather than flex-end: the pill group and the input are
+  // different heights, and their baselines are not what should line up.
+  ".aurora-store-head{display:flex;gap:0.8em;align-items:center;flex-wrap:wrap;" +
+  "margin:0.9em 0 0;}" +
+  ".aurora-store-head input{flex:0 1 280px;min-width:0;}" +
   ".aurora-store-head .sp{flex:1;}" +
   ".aurora-store-tick{color:var(--brand,#0086bf);font-size:0.85em;}" +
-  ".aurora-store-filters{display:flex;gap:2px;flex-wrap:wrap;margin-top:0.9em;" +
+  // No margin-top here: the row above owns the spacing now, and a margin on
+  // one flex item would push it off-center from the search box.
+  ".aurora-store-filters{display:flex;gap:2px;flex-wrap:wrap;" +
   "padding:3px;width:max-content;max-width:100%;border-radius:10px;" +
   "background:var(--surface-sunken,rgba(0,0,0,0.04));" +
   "border:1px solid var(--hairline,rgba(0,0,0,0.1));}" +
@@ -1122,7 +1130,11 @@ const STORE_CSS =
   // The spacer exists to push the search box to the right edge of a wide
   // row. Once the row wraps it only adds a blank line.
   ".aurora-store-head .sp{display:none;}" +
-  ".aurora-store-head input{flex:1 1 100%;max-width:none;}" +
+  // Tabs and a 280px input do not share a phone-width line. Dropping the
+  // spacer and letting the input claim a full basis wraps it onto its own
+  // row under the tabs -- the same two-row shape as before, minus the row
+  // that held nothing.
+  ".aurora-store-head input{flex:1 1 100%;}" +
   // Five tabs do not fit on a phone. Scrolling them sideways is what
   // LuCI's own .cbi-tabmenu does; wrapping turns a one-line segmented
   // control into a two-row block that reads like two separate groups.
@@ -2877,19 +2889,20 @@ return view.extend({
       renderContent();
     });
 
-    const headEl = E("div", {}, [
-      E("div", { class: "aurora-store-head" }, [
-        // No heading here: the tab strip directly above already reads "Theme
-        // Marketplace", and this printed the same words again a hand's width
-        // below it. The spacer stays -- it is what pushes the search box
-        // right now that nothing precedes it.
-        //
-        // The publish button that used to sit next to the search box is gone
-        // with the other two: this page no longer starts a publish at all.
-        E("span", { class: "sp" }),
-        searchInput,
-      ]),
+    // Tabs and search share one row. They were stacked, and because nothing
+    // sat to the left of the search box its row was a band of empty pixels
+    // running the full width of the page -- the spacer was the only thing in
+    // it. Now the spacer earns its keep: it is what holds the search box
+    // against the right edge with the tab strip on the left.
+    //
+    // No heading here: the tab strip directly above already reads "Theme
+    // Marketplace", and this printed the same words again a hand's width
+    // below it. The publish button that used to sit next to the search box is
+    // gone with the other two: this page no longer starts a publish at all.
+    const headEl = E("div", { class: "aurora-store-head" }, [
       tabsEl,
+      E("span", { class: "sp" }),
+      searchInput,
     ]);
 
     // ------------------------------------------------------------------

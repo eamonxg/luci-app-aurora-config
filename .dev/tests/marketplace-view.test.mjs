@@ -476,7 +476,7 @@ test("gallery view: only a hub without preview degrades to assets_status", async
 // 问题所在。标签那一半是有意反转的:下划线选中态在深色主题下读作"没有",
 // 一块有底色的实心分段在任何主题色下都成立。
 // 见 docs/specs/2026-08-04-theme-store-visual-redesign.md 的"明确反转"一节。
-test("gallery view: a two-row header with a segmented filter row", async () => {
+test("gallery view: a one-row header with a segmented filter row", async () => {
   const src = await readFile(SRC, "utf8");
   assert.match(src, /class: "cbi-input-text"/, "search must stay a standard LuCI input");
   assert.ok(!src.includes("🔍"), "emoji glyph must go");
@@ -499,6 +499,19 @@ test("gallery view: a two-row header with a segmented filter row", async () => {
   );
   assert.match(src, /const buildSectionTitle = /, "section subtitle builder missing");
   assert.match(src, /const renderTabLabel = /, "tab label/count builder missing");
+
+  // 一行,不是两行:tabs、弹性间隔、搜索框是同一个 .aurora-store-head 的三个
+  // 子元素。之前搜索框自己占一行,而它左边什么都没有,那一整条就是空白。
+  assert.match(
+    src,
+    /const headEl = E\(\s*"div",\s*\{ class: "aurora-store-head" \},\s*\[\s*tabsEl,\s*E\("span", \{ class: "sp" \}\),\s*searchInput,/,
+    "tabs, spacer and search must sit in one .aurora-store-head row, in that order",
+  );
+  // margin-top 会把胶囊组从搜索框的中线上推开 —— 行距归 .aurora-store-head 管。
+  assert.ok(
+    !/\.aurora-store-filters\{[^}]*margin-top/.test(src),
+    "the filter pills must not carry their own top margin inside the shared row",
+  );
 });
 
 test("gallery view: sharing says what gets shared, inline rather than in a modal", async () => {
