@@ -3276,6 +3276,8 @@ return view.extend({
         topbar.textContent = "☰ OpenWrt";
         parts.push(scrim, canvas, card, topbar);
       } else {
+        scrim = layer("inset:0;background:var(--bg);opacity:0;");
+        parts.push(scrim);
         loginCard = layer(
           "left:27%;right:27%;top:22%;bottom:22%;border-radius:10px;" +
             "background:var(--surface);border:1px solid var(--hairline);" +
@@ -3314,14 +3316,21 @@ return view.extend({
           hint.style.display = url ? "none" : "flex";
         },
         setVals(v) {
-          if (previewKind !== "admin") return;
           scrim.style.opacity = String(v.scrim / 100);
-          topbar.style.background =
-            "color-mix(in srgb, var(--bg) " + v.alpha + "%, transparent)";
-          topbar.style.backdropFilter = topbar.style.webkitBackdropFilter =
-            "blur(" + v.blur + "px) saturate(150%)";
-          card.style.background =
+          if (previewKind === "admin") {
+            topbar.style.background =
+              "color-mix(in srgb, var(--bg) " + v.alpha + "%, transparent)";
+            topbar.style.backdropFilter = topbar.style.webkitBackdropFilter =
+              "blur(" + v.blur + "px) saturate(150%)";
+            card.style.background =
+              "color-mix(in srgb, var(--surface) " + v.alpha + "%, transparent)";
+            return;
+          }
+          loginCard.style.background =
             "color-mix(in srgb, var(--surface) " + v.alpha + "%, transparent)";
+          loginCard.style.backdropFilter =
+            loginCard.style.webkitBackdropFilter =
+              "blur(" + v.blur + "px) saturate(150%)";
         },
       };
     };
@@ -3471,13 +3480,23 @@ return view.extend({
           const vals = {};
           const hiddenInput = (tkey) =>
             document.querySelector('[name="cbid.aurora.theme.' + tkey + '"]');
+          // 角色由键名后缀推断(_alpha/_blur/_scrim),login/main 两组键共用
+          // 同一段预览联动;无滑杆的实例落到中性默认(不透明、无模糊、无遮罩)。
+          const roleVals = () => {
+            const out = { alpha: 100, blur: 0, scrim: 0 };
+            (tunables || []).forEach(([tkey, , , , , def]) => {
+              const role = tkey.endsWith("_alpha")
+                ? "alpha"
+                : tkey.endsWith("_blur")
+                  ? "blur"
+                  : "scrim";
+              out[role] = vals[tkey] !== undefined ? vals[tkey] : +def;
+            });
+            return out;
+          };
           const refresh = () => {
             preview.setImage(urlOf(select && select.value));
-            preview.setVals({
-              alpha: vals.struct_main_bg_alpha || 67,
-              blur: vals.struct_main_bg_blur >= 0 ? vals.struct_main_bg_blur : 20,
-              scrim: vals.struct_main_bg_scrim >= 0 ? vals.struct_main_bg_scrim : 20,
-            });
+            preview.setVals(roleVals());
           };
 
           (tunables || []).forEach(([tkey, tlabel, unit, min, max, def]) => {
@@ -3616,6 +3635,14 @@ return view.extend({
       label: _("Login Background"),
       description: _("Full-screen login page background; use a wide image."),
       previewKind: "login",
+      tunables: [
+        ["struct_login_bg_alpha", _("Background Surface Opacity"), "%", 50, 100, "100",
+          _("How opaque the login card stays over the image (50-100%). Empty = 100.")],
+        ["struct_login_bg_blur", _("Background Chrome Blur"), "px", 0, 40, "0",
+          _("Frosted-glass blur of the login card (0-40px). Empty = 0.")],
+        ["struct_login_bg_scrim", _("Background Scrim Strength"), "%", 0, 70, "0",
+          _("How much the login backdrop is washed toward the page color (0-70%). Empty = 0.")],
+      ],
     });
 
     addBackgroundOption(bgSubsection, {

@@ -134,7 +134,7 @@ normalize_preset_name() {
 theme_fingerprint() {
 	uci -q show aurora.theme 2>/dev/null \
 		| sed -n 's/^aurora\.theme\.//p' \
-		| grep -E '^(light_|dark_|nav_type=|struct_font_sans=|struct_font_mono=|struct_spacing=|struct_radius_base=|struct_content_width_centered=|toolbar_enabled=|struct_main_bg_alpha=|struct_main_bg_blur=|struct_main_bg_scrim=)' \
+		| grep -E '^(light_|dark_|nav_type=|struct_font_sans=|struct_font_mono=|struct_spacing=|struct_radius_base=|struct_content_width_centered=|toolbar_enabled=|struct_main_bg_alpha=|struct_main_bg_blur=|struct_main_bg_scrim=|struct_login_bg_alpha=|struct_login_bg_blur=|struct_login_bg_scrim=)' \
 		| sort \
 		| md5sum \
 		| cut -d' ' -f1
@@ -1148,13 +1148,13 @@ is_valid_font_stack() {
 is_valid_main_bg_value() {  # $1=key  $2=value
 	local n
 	case "$1" in
-	struct_main_bg_alpha)
+	struct_main_bg_alpha|struct_login_bg_alpha)
 		printf '%s' "$2" | grep -Eq '^[0-9]{1,3}%$' || return 1
 		n="${2%\%}"; [ "$n" -ge 50 ] && [ "$n" -le 100 ] ;;
-	struct_main_bg_blur)
+	struct_main_bg_blur|struct_login_bg_blur)
 		printf '%s' "$2" | grep -Eq '^[0-9]{1,3}px$' || return 1
 		n="${2%px}"; [ "$n" -ge 0 ] && [ "$n" -le 40 ] ;;
-	struct_main_bg_scrim)
+	struct_main_bg_scrim|struct_login_bg_scrim)
 		printf '%s' "$2" | grep -Eq '^[0-9]{1,3}%$' || return 1
 		n="${2%\%}"; [ "$n" -ge 0 ] && [ "$n" -le 70 ] ;;
 	*) return 1 ;;
@@ -1414,7 +1414,7 @@ build_share_payload() {
 	json_add_string "toolbar_enabled" "$(uci -q get aurora.theme.toolbar_enabled)"
 	# 主背景的三个可选键:没设就不发(接收端走 CSS fallback 默认),越界也不发
 	# —— 同字体栈的回退姿势,绝不让一个手改出界的值拒掉整次分享。
-	for key in struct_main_bg_alpha struct_main_bg_blur struct_main_bg_scrim; do
+	for key in struct_main_bg_alpha struct_main_bg_blur struct_main_bg_scrim struct_login_bg_alpha struct_login_bg_blur struct_login_bg_scrim; do
 		value=$(uci -q get "aurora.theme.$key")
 		[ -n "$value" ] && is_valid_main_bg_value "$key" "$value" \
 			&& json_add_string "$key" "$value"
@@ -1744,7 +1744,7 @@ validate_and_apply_hub_payload() {
 	# 主背景的三个可选参数:带则校验后写入(越界拒掉整单,同其它 layout 键),
 	# 缺则删 —— 它们是被应用外观的一部分,作者没调过就该回到 CSS fallback 默认;
 	# struct_main_bg 本体(资产)不在此列,沿 login_bg 的粘性语义由资产步处理。
-	for key in struct_main_bg_alpha struct_main_bg_blur struct_main_bg_scrim; do
+	for key in struct_main_bg_alpha struct_main_bg_blur struct_main_bg_scrim struct_login_bg_alpha struct_login_bg_blur struct_login_bg_scrim; do
 		value=""
 		json_get_var value "$key" 2>/dev/null
 		if [ -n "$value" ]; then

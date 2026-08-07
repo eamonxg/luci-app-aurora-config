@@ -18,11 +18,11 @@ msgstr "%d nie zostaną udostępnione — z motywem podróżują tylko pliki PNG
 msgid "%d shortcuts"
 msgstr "%d skrótów"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3767
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3799
 msgid "(No icons uploaded)"
 msgstr "(Nie przesłano żadnych ikon)"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3665
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3697
 msgid "(None)"
 msgstr "(Brak)"
 
@@ -39,11 +39,11 @@ msgstr "1 pobranie"
 msgid "1 shortcut"
 msgstr "1 skrót"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3689
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3721
 msgid "192×192 icon for the installable web app manifest."
 msgstr "Ikona 192×192 dla manifestu instalowalnej aplikacji webowej."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3695
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3727
 msgid "512×512 icon for the installable web app manifest."
 msgstr "Ikona 512×512 dla manifestu instalowalnej aplikacji webowej."
 
@@ -75,7 +75,7 @@ msgstr "Akcenty dla powiadomień, walidacji i informacji zwrotnych o stanie."
 msgid "Add"
 msgstr "Dodaj"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3738
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3770
 msgid "Add shortcuts, assign icons, and drag rows to reorder them."
 msgstr "Dodawaj skróty, przypisuj ikony i przeciągaj wiersze, aby zmienić ich kolejność."
 
@@ -116,15 +116,15 @@ msgstr "Każdy, kto to zastosuje, otrzyma wszystko powyżej. Możesz to późnie
 msgid "App Icon"
 msgstr "Ikona aplikacji"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3687
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3719
 msgid "App Icon 192×192"
 msgstr "Ikona aplikacji 192×192"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3693
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3725
 msgid "App Icon 512×512"
 msgstr "Ikona aplikacji 512×512"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3681
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3713
 msgid "Apple Touch Icon"
 msgstr "Ikona Apple Touch"
 
@@ -200,7 +200,7 @@ msgstr "Stosowanie..."
 msgid "Applying…"
 msgstr "Stosowanie…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3645
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3677
 msgid "Assign uploaded images to icons, favicons, and PWA metadata. Saved on Save or Save & Apply."
 msgstr "Przypisz przesłane obrazy do ikon, favicon i metadanych PWA. Zapisywane przy Zapisz lub Zapisz i zastosuj."
 
@@ -232,15 +232,18 @@ msgstr "Kopia zapasowa zrobiona"
 msgid "Background"
 msgstr "Tło"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3428
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3641
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3660
 msgid "Background Chrome Blur"
 msgstr "Rozmycie pasków"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3430
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3643
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3662
 msgid "Background Scrim Strength"
 msgstr "Siła przyciemnienia tła"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3426
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3639
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3658
 msgid "Background Surface Opacity"
 msgstr "Nieprzezroczystość powierzchni"
 
@@ -276,7 +279,7 @@ msgstr "Bazowa powierzchnia dla paneli, kart, formularzy, tabel i neutralnych el
 msgid "Brand"
 msgstr "Marka"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3443
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3047
 msgid "Brand Asset Library"
 msgstr "Bibliotek zasobów marki"
 
@@ -337,7 +340,7 @@ msgstr "Sprawdzanie pliku…"
 msgid "Choose a literal color for this token"
 msgstr "Wybierz dosłowny kolor dla tego tokenu"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3770
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3802
 msgid "Choose an uploaded icon for this shortcut"
 msgstr "Wybierz przesłaną ikonę dla tego skrótu"
 
@@ -520,7 +523,7 @@ msgstr "Domyślny kolor pierwszego planu dla nagłówków, tekstu głównego, ik
 msgid "Delete"
 msgstr "Usuń"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3500
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3104
 msgid "Delete '%s' from /www/luci-static/aurora/images/? Theme settings that reference it may need updating."
 msgstr "Usunąć '%s' z /www/luci-static/aurora/images/? Ustawienia motywu odwołujące się do tego pliku mogą wymagać aktualizacji."
 
@@ -528,7 +531,7 @@ msgstr "Usunąć '%s' z /www/luci-static/aurora/images/? Ustawienia motywu odwo�
 msgid "Delete '%s'? The interface will fall back to the default typeface."
 msgstr "Usunąć „%s”? Interfejs wróci do domyślnej czcionki."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3499
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3103
 msgid "Delete Brand Asset"
 msgstr "Usuń zasób marki"
 
@@ -552,11 +555,11 @@ msgstr "Usunąć tę udostępnioną konfigurację ze sklepu z motywami?"
 msgid "Deleted."
 msgstr "Usunięto."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3513
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3117
 msgid "Deleted: %s"
 msgstr "Usunięto: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3505
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3109
 msgid "Deleting…"
 msgstr "Usuwanie…"
 
@@ -610,7 +613,7 @@ msgstr "Pobrania"
 msgid "Drop a .woff2 font here, or click to browse"
 msgstr "Przeciągnij tutaj czcionkę .woff2 lub kliknij, aby wybrać"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3542
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3146
 msgid "Drop image asset here, or click to browse"
 msgstr "Upuść plik obrazu tutaj lub kliknij, aby przeglądać"
 
@@ -619,19 +622,19 @@ msgstr "Upuść plik obrazu tutaj lub kliknij, aby przeglądać"
 msgid "Dropdown"
 msgstr "Menu rozwijane"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3747
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3779
 msgid "Enabled"
 msgstr "Włączone"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3762
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3794
 msgid "Enter a LuCI shortcut URL"
 msgstr "Wprowadź adres URL skrótu LuCI"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3145
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3355
 msgid "Enter a number between %d and %d"
 msgstr "Wpisz liczbę od %d do %d"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3756
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3788
 msgid "Enter a shortcut label"
 msgstr "Wprowadź etykietę skrótu"
 
@@ -659,7 +662,7 @@ msgstr "Eksport nie powiódł się"
 msgid "Export failed: %s"
 msgstr "Eksport nie powiódł się: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3521
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3125
 msgid "Failed to delete: %s"
 msgstr "Nie udało się usunąć: %s"
 
@@ -667,11 +670,11 @@ msgstr "Nie udało się usunąć: %s"
 msgid "Faint Hover"
 msgstr "Subtelne najechanie"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3671
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3703
 msgid "Favicon (ICO / Legacy)"
 msgstr "Favicon (ICO / Przestarzały)"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3660
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3692
 msgid "Favicon (PNG)"
 msgstr "Favicon (PNG)"
 
@@ -683,7 +686,7 @@ msgstr "Pola akceptują formaty #hex, rgb(), hsl(), lab() i oklch(). Próbnik uz
 msgid "File is %s, exceeding the 8MB limit."
 msgstr "Plik ma %s i przekracza limit 8 MB."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3593
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3197
 msgid "Filename (with extension)"
 msgstr "Nazwa pliku (z rozszerzeniem)"
 
@@ -695,7 +698,7 @@ msgstr "Wypełnienie kontrolek formularza: pola tekstowe, listy wyboru, obszary 
 msgid "Finishing…"
 msgstr "Kończenie…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3717
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3749
 msgid "Floating shortcut launcher shown along the right edge of the interface."
 msgstr "Pływający panel skrótów wyświetlany wzdłuż prawej krawędzi interfejsu."
 
@@ -739,15 +742,19 @@ msgstr "Elementy pierwszego planu, hiperłącza, kolor marki i jej tekst kontras
 msgid "From openwrt.eamonxg.fun; the signing key ships with this package."
 msgstr "Z openwrt.eamonxg.fun; klucz podpisujący jest dołączony do tego pakietu."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3429
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3642
+msgid "Frosted-glass blur of the login card (0-40px). Empty = 0."
+msgstr "Rozmycie z efektem szronu karty logowania (0-40px). Puste = 0."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3661
 msgid "Frosted-glass blur of the top and side bars (0-40px). Empty = 20."
 msgstr "Rozmycie z efektem szronu górnego i bocznego paska (0-40px). Puste = 20."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3421
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3652
 msgid "Full-screen admin interface background with frosted bars; needs a luci-theme-aurora build that supports it."
 msgstr "Pełnoekranowe tło interfejsu administracyjnego z paskami z efektem szronu; wymaga wersji luci-theme-aurora z obsługą tej funkcji."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3413
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3636
 msgid "Full-screen login page background; use a wide image."
 msgstr "Pełnoekranowe tło strony logowania; użyj szerokiego obrazu."
 
@@ -776,7 +783,7 @@ msgstr "Ukryty"
 msgid "Hide"
 msgstr "Ukryj"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3683
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3715
 msgid "Home Screen icon for iOS and iPadOS."
 msgstr "Ikona ekranu głównego dla iOS i iPadOS."
 
@@ -804,13 +811,21 @@ msgstr "Stan najechania dla wypełnionych przycisków głównych i elementów o 
 msgid "How it looks in the store"
 msgstr "Jak będzie wyglądać w sklepie"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3431
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3663
 msgid "How much the backdrop is washed toward the page color (0-70%). Empty = 20."
 msgstr "Jak mocno tło jest tonowane w stronę koloru strony (0-70%). Puste = 20."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3427
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3644
+msgid "How much the login backdrop is washed toward the page color (0-70%). Empty = 0."
+msgstr "Jak mocno tło logowania jest tonowane w stronę koloru strony (0-70%). Puste = 0."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3659
 msgid "How opaque cards and bars stay over the background image (50-100%). Empty = 67."
 msgstr "Jak nieprzezroczyste pozostają karty i paski nad obrazem tła (50-100%). Puste = 67."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3640
+msgid "How opaque the login card stays over the image (50-100%). Empty = 100."
+msgstr "Jak nieprzezroczysta pozostaje karta logowania nad obrazem (50-100%). Puste = 100."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1719
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1994
@@ -821,7 +836,7 @@ msgstr "Tak wyglądał ten router, zanim zastosowałeś motyw ze sklepu."
 msgid "Hyperlinks in page content, help text, and status output."
 msgstr "Hiperłącza w zawartości strony, tekście pomocy i danych wyjściowych stanu."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3764
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3796
 msgid "Icon"
 msgstr "Ikona"
 
@@ -915,7 +930,7 @@ msgstr "Niepoprawne, brakujące lub zapętlone wyrażenie koloru."
 msgid "It exists only on this router. Reflashing without keeping settings erases it."
 msgstr "Istnieje tylko na tym routerze. Ponowne wgranie firmware bez zachowania ustawień go usunie."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3543
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3147
 msgid "JPG · PNG · WebP · AVIF · SVG · GIF · ICO"
 msgstr "JPG · PNG · WebP · AVIF · SVG · GIF · ICO"
 
@@ -946,7 +961,7 @@ msgstr "Wzór układu dla głównego menu nawigacji."
 msgid "Leading color for progress meters."
 msgstr "Kolor wiodący dla wskaźników postępu."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3673
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3705
 msgid "Legacy ICO favicon fallback."
 msgstr "Alternatywny favicon ICO (przestarzały)."
 
@@ -985,7 +1000,7 @@ msgid "Loading…"
 msgstr "Wczytywanie…"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:347
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3412
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3635
 msgid "Login Background"
 msgstr "Tło logowania"
 
@@ -993,7 +1008,7 @@ msgstr "Tło logowania"
 msgid "Logo"
 msgstr "Logo"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3651
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3683
 msgid "Logo (SVG)"
 msgstr "Logo (SVG)"
 
@@ -1002,7 +1017,7 @@ msgid "Low-emphasis text for small labels, placeholders, and disabled hints."
 msgstr "Tekst o niskim znaczeniu dla małych etykiet, symboli zastępczych i wyłączonych podpowiedzi."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:348
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3420
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3651
 msgid "Main Background"
 msgstr "Tło główne"
 
@@ -1075,7 +1090,7 @@ msgstr "Moja konfiguracja"
 msgid "Name"
 msgstr "Nazwa"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3586
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3190
 msgid "Name it login-bg.* to use it as the login page background."
 msgstr "Nazwij go login-bg.*, aby użyć go jako tła strony logowania."
 
@@ -1096,11 +1111,11 @@ msgstr "Nawigacja, odstępy, promień zaokrąglenia rogów i szerokość zawarto
 msgid "New"
 msgstr "Nowe"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3055
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3256
 msgid "No background selected"
 msgstr "Nie wybrano tła"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3533
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3137
 msgid "No brand assets uploaded yet."
 msgstr "Nie przesłano jeszcze żadnych zasobów marki."
 
@@ -1120,7 +1135,7 @@ msgstr "Nie wybrano pliku lub przesyłanie nie powiodło się"
 msgid "No themes match your search."
 msgstr "Żaden motyw nie pasuje do wyszukiwania."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3169
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3379
 msgid "None"
 msgstr "Brak"
 
@@ -1187,11 +1202,11 @@ msgstr "Akcenty statusu operacyjnego"
 msgid "Overlay Surface"
 msgstr "Powierzchnia nakładki"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3662
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3694
 msgid "PNG fallback when SVG favicons are unsupported."
 msgstr "Alternatywny format PNG, gdy ikony favicon SVG nie są obsługiwane."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3402
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3625
 msgid "Page Backgrounds"
 msgstr "Tła stron"
 
@@ -1208,7 +1223,7 @@ msgstr "Wklej tożsamość, której kopię zapisałeś, albo wybierz pobrany pli
 msgid "Pick a name between 1 and 40 characters."
 msgstr "Wybierz nazwę o długości od 1 do 40 znaków."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3403
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3626
 msgid "Pick wallpapers for the login page and the admin interface. Drag the sliders and watch the live preview; Save & Apply makes it real."
 msgstr "Wybierz tapety dla strony logowania i interfejsu administracyjnego. Przeciągaj suwaki i obserwuj podgląd na żywo; Zapisz i zastosuj wprowadza zmiany."
 
@@ -1217,7 +1232,7 @@ msgstr "Wybierz tapety dla strony logowania i interfejsu administracyjnego. Prze
 msgid "Please enter a name."
 msgstr "Podaj nazwę."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3506
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3110
 msgid "Please wait…"
 msgstr "Proszę czekać…"
 
@@ -1306,7 +1321,7 @@ msgstr "Zresetuj /etc/config/aurora do spakowanego presetu Domyślnego — kolor
 msgid "Reset All Aurora Settings"
 msgstr "Zresetuj wszystkie ustawienia Aurora"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3356
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3579
 msgid "Reset to defaults"
 msgstr "Przywróć domyślne"
 
@@ -1358,7 +1373,7 @@ msgstr "Ponów"
 msgid "Rounded corners"
 msgstr "Zaokrąglone rogi"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3652
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3684
 msgid "SVG mark for the browser tab and login page."
 msgstr "Znak SVG dla karty przeglądarki i strony logowania."
 
@@ -1439,15 +1454,15 @@ msgstr "Dołączone do motywu, działa offline"
 msgid "Shortcut Icons"
 msgstr "Ikony skrótów"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3752
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3784
 msgid "Shortcut Label"
 msgstr "Etykieta skrótu"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3716
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3748
 msgid "Shortcut Toolbar"
 msgstr "Pasek narzędzi skrótów"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3758
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3790
 msgid "Shortcut URL"
 msgstr "Adres URL skrótu"
 
@@ -1460,11 +1475,11 @@ msgstr "Skróty %d"
 msgid "Show"
 msgstr "Pokaż"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3726
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3758
 msgid "Show Shortcut Toolbar"
 msgstr "Pokaż pasek narzędzi skrótów"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3728
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3760
 msgid "Show the floating launcher on all pages."
 msgstr "Pokazuj pływający panel uruchamiania na wszystkich stronach."
 
@@ -1485,7 +1500,7 @@ msgstr "Pasek boczny"
 msgid "Signs everything you share. It lives only on this router."
 msgstr "Podpisuje wszystko, co udostępniasz. Istnieje tylko na tym routerze."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3644
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3676
 msgid "Site Branding"
 msgstr "Branding witryny"
 
@@ -1696,7 +1711,7 @@ msgstr "Pasek narzędzi"
 msgid "Toolbar %d"
 msgstr "Pasek narzędzi %d"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3737
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3769
 msgid "Toolbar Shortcuts"
 msgstr "Skróty paska narzędzi"
 
@@ -1705,7 +1720,7 @@ msgid "Trailing color for progress meters."
 msgstr "Kolor końcowy dla wskaźników postępu."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:91
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3532
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3136
 msgid "Type"
 msgstr "Typ"
 
@@ -1771,8 +1786,8 @@ msgstr "Nie można teraz zaktualizować tego udostępnienia."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2766
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2843
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3214
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3628
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3232
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3426
 msgid "Unknown"
 msgstr "Nieznany"
 
@@ -1806,7 +1821,7 @@ msgstr "Zaktualizuj bieżącą konfiguracją"
 msgid "Upgrading Aurora needs its update source. Once added, upgrades happen in System → Software like any other OpenWrt package."
 msgstr "Aktualizacja Aurory wymaga jej źródła aktualizacji. Po dodaniu aktualizacje odbywają się w System → Oprogramowanie, jak w przypadku każdego pakietu OpenWrt."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3444
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3048
 msgid "Upload and manage images for icons, favicons, PWA assets, and page backgrounds. Files are stored in <code>/www/luci-static/aurora/images/</code>."
 msgstr "Przesyłaj obrazy dla ikon, favicon, zasobów PWA i teł stron oraz zarządzaj nimi. Pliki są przechowywane w <code>/www/luci-static/aurora/images/</code>."
 
@@ -1819,11 +1834,11 @@ msgid "Upload failed (HTTP %s)"
 msgstr "Przesyłanie nie powiodło się (HTTP %s)"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:340
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3220
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3432
 msgid "Upload failed: %s"
 msgstr "Przesyłanie nie powiodło się: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3257
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3469
 msgid "Upload image"
 msgstr "Prześlij obraz"
 
@@ -1863,7 +1878,7 @@ msgstr "Co to jest? Skąd się wzięło?"
 msgid "Where this configuration goes"
 msgstr "Dokąd trafia ta konfiguracja"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3569
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3173
 msgid "Will replace the existing '%s'."
 msgstr "Zastąpi istniejący plik „%s”."
 
@@ -1894,7 +1909,7 @@ msgstr "Przed zastosowaniem bieżące ustawienia są zapisywane w kopii, a potem
 msgid "Your shortcuts, logo, icons and login background are left exactly as they are."
 msgstr "Twoje skróty, logo, ikony i tło logowania pozostają dokładnie takie same."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3754
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3786
 msgid "e.g., Network Interfaces"
 msgstr "np. Interfejsy sieciowe"
 

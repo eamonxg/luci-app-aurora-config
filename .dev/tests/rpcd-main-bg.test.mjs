@@ -45,6 +45,12 @@ const boundsCases = [
   ["struct_main_bg_scrim", "70%", true],
   ["struct_main_bg_scrim", "71%", false],
   ["struct_main_bg_scrim", "-1%", false],
+  ["struct_login_bg_alpha", "100%", true],
+  ["struct_login_bg_alpha", "49%", false],
+  ["struct_login_bg_blur", "0px", true],
+  ["struct_login_bg_blur", "41px", false],
+  ["struct_login_bg_scrim", "0%", true],
+  ["struct_login_bg_scrim", "71%", false],
 ];
 
 test("is_valid_main_bg_value enforces the hub's bounds on both ends", () => {
@@ -129,13 +135,13 @@ test("build_share_payload ships main_bg and the three tunables", () => {
   const fn = slice("build_share_payload");
   assert.match(fn, /for kind in logo_svg .* login_bg main_bg; do/);
   // 三键循环 + 界内才发(越界静默缺席,同字体栈回退姿势)
-  assert.match(fn, /for key in struct_main_bg_alpha struct_main_bg_blur struct_main_bg_scrim; do/);
+  assert.match(fn, /for key in struct_main_bg_alpha struct_main_bg_blur struct_main_bg_scrim struct_login_bg_alpha struct_login_bg_blur struct_login_bg_scrim; do/);
   assert.match(fn, /is_valid_main_bg_value "\$key" "\$value"/);
 });
 
 test("validate_and_apply writes the tunables when present and deletes them when absent", () => {
   const fn = slice("validate_and_apply_hub_payload");
-  assert.match(fn, /for key in struct_main_bg_alpha struct_main_bg_blur struct_main_bg_scrim; do/);
+  assert.match(fn, /for key in struct_main_bg_alpha struct_main_bg_blur struct_main_bg_scrim struct_login_bg_alpha struct_login_bg_blur struct_login_bg_scrim; do/);
   // 带则校验后写(越界拒整单),缺则删(回 CSS fallback 默认)
   assert.match(fn, /is_valid_main_bg_value "\$key" "\$value" \|\| \{ rm -f "\$batch_file"; return 1; \}/);
   assert.match(fn, /printf "delete aurora\.theme\.%s\\n" "\$key"/);
@@ -165,6 +171,8 @@ test("the three tunables enter the theme fingerprint; the filename key stays out
   assert.match(fn, /struct_main_bg_alpha=/);
   assert.match(fn, /struct_main_bg_blur=/);
   assert.match(fn, /struct_main_bg_scrim=/);
+  assert.match(fn, /struct_login_bg_alpha=/);
+  assert.match(fn, /struct_login_bg_scrim=/);
   // struct_main_bg=(文件名)绝不能进指纹——匹配到 alpha/blur/scrim 之外的
   // 裸 struct_main_bg= 即失败
   assert.doesNotMatch(fn, /struct_main_bg=(?!alpha|blur|scrim)/);

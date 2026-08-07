@@ -18,11 +18,11 @@ msgstr "%d paylaşılmıyor — bir temayla yalnızca %s altındaki PNG ve SVG d
 msgid "%d shortcuts"
 msgstr "%d kısayol"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3767
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3799
 msgid "(No icons uploaded)"
 msgstr "(Hiçbir simge yüklenmedi)"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3665
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3697
 msgid "(None)"
 msgstr "(Yok)"
 
@@ -39,11 +39,11 @@ msgstr "1 indirme"
 msgid "1 shortcut"
 msgstr "1 kısayol"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3689
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3721
 msgid "192×192 icon for the installable web app manifest."
 msgstr "Yüklenebilir web uygulaması manifesti için 192×192 boyutunda simge."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3695
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3727
 msgid "512×512 icon for the installable web app manifest."
 msgstr "Yüklenebilir web uygulaması manifesti için 512×512 boyutunda simge."
 
@@ -75,7 +75,7 @@ msgstr "Bildirimler, doğrulama ve durum geri bildirimleri için vurgu renkleri.
 msgid "Add"
 msgstr "Ekle"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3738
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3770
 msgid "Add shortcuts, assign icons, and drag rows to reorder them."
 msgstr "Kısayollar ekleyin, simgeler atayın ve satırları yeniden sıralamak için sürükleyin."
 
@@ -116,15 +116,15 @@ msgstr "Bunu uygulayan herkes hepsini alır. Daha sonra güncelleyebilir veya ka
 msgid "App Icon"
 msgstr "Uygulama simgesi"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3687
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3719
 msgid "App Icon 192×192"
 msgstr "Uygulama Simgesi 192×192"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3693
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3725
 msgid "App Icon 512×512"
 msgstr "Uygulama Simgesi 512×512"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3681
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3713
 msgid "Apple Touch Icon"
 msgstr "Apple Touch Simgesi"
 
@@ -200,7 +200,7 @@ msgstr "Uygulanıyor..."
 msgid "Applying…"
 msgstr "Uygulanıyor…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3645
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3677
 msgid "Assign uploaded images to icons, favicons, and PWA metadata. Saved on Save or Save & Apply."
 msgstr "Yüklenen görselleri simgelere, favicon'lara ve PWA meta verilerine atayın. Kaydet veya Kaydet ve Uygula ile kaydedilir."
 
@@ -232,15 +232,18 @@ msgstr "Yedeklendi"
 msgid "Background"
 msgstr "Arka Plan"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3428
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3641
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3660
 msgid "Background Chrome Blur"
 msgstr "Çubuk Bulanıklığı"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3430
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3643
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3662
 msgid "Background Scrim Strength"
 msgstr "Arka Plan Perdesi Yoğunluğu"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3426
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3639
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3658
 msgid "Background Surface Opacity"
 msgstr "Yüzey Opaklığı"
 
@@ -276,7 +279,7 @@ msgstr "Paneller, kartlar, formlar, tablolar ve nötr kontroller için temel yü
 msgid "Brand"
 msgstr "Marka"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3443
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3047
 msgid "Brand Asset Library"
 msgstr "Marka Varlıkları Kütüphanesi"
 
@@ -337,7 +340,7 @@ msgstr "Dosya kontrol ediliyor…"
 msgid "Choose a literal color for this token"
 msgstr "Bu token için tam bir renk seçin"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3770
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3802
 msgid "Choose an uploaded icon for this shortcut"
 msgstr "Bu kısayol için yüklenmiş bir simge seçin"
 
@@ -520,7 +523,7 @@ msgstr "Başlıklar, gövde metni, simgeler ve form değerleri için varsayılan
 msgid "Delete"
 msgstr "Sil"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3500
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3104
 msgid "Delete '%s' from /www/luci-static/aurora/images/? Theme settings that reference it may need updating."
 msgstr "'%s' dosyası /www/luci-static/aurora/images/? dizininden silinsin mi? Buna atıfta bulunan tema ayarlarının güncellenmesi gerekebilir."
 
@@ -528,7 +531,7 @@ msgstr "'%s' dosyası /www/luci-static/aurora/images/? dizininden silinsin mi? B
 msgid "Delete '%s'? The interface will fall back to the default typeface."
 msgstr "“%s” silinsin mi? Arayüz varsayılan yazı tipine döner."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3499
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3103
 msgid "Delete Brand Asset"
 msgstr "Marka Varlığını Sil"
 
@@ -552,11 +555,11 @@ msgstr "Bu paylaşılan yapılandırma tema mağazasından silinsin mi?"
 msgid "Deleted."
 msgstr "Silindi."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3513
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3117
 msgid "Deleted: %s"
 msgstr "Silindi: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3505
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3109
 msgid "Deleting…"
 msgstr "Siliniyor…"
 
@@ -610,7 +613,7 @@ msgstr "İndirmeler"
 msgid "Drop a .woff2 font here, or click to browse"
 msgstr ".woff2 yazı tipini buraya sürükleyin veya seçmek için tıklayın"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3542
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3146
 msgid "Drop image asset here, or click to browse"
 msgstr "Görsel varlığını buraya bırakın veya göz atmak için tıklayın"
 
@@ -619,19 +622,19 @@ msgstr "Görsel varlığını buraya bırakın veya göz atmak için tıklayın"
 msgid "Dropdown"
 msgstr "Açılır Menü"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3747
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3779
 msgid "Enabled"
 msgstr "Etkinleştirildi"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3762
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3794
 msgid "Enter a LuCI shortcut URL"
 msgstr "Bir LuCI kısayol URL'si girin"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3145
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3355
 msgid "Enter a number between %d and %d"
 msgstr "%d ile %d arasında bir sayı girin"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3756
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3788
 msgid "Enter a shortcut label"
 msgstr "Bir kısayol etiketi girin"
 
@@ -659,7 +662,7 @@ msgstr "Dışa aktarma başarısız oldu"
 msgid "Export failed: %s"
 msgstr "Dışa aktarma başarısız oldu: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3521
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3125
 msgid "Failed to delete: %s"
 msgstr "Silme başarısız oldu: %s"
 
@@ -667,11 +670,11 @@ msgstr "Silme başarısız oldu: %s"
 msgid "Faint Hover"
 msgstr "Hafif Üzerine Gelme"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3671
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3703
 msgid "Favicon (ICO / Legacy)"
 msgstr "Favicon (ICO / Eski Tip)"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3660
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3692
 msgid "Favicon (PNG)"
 msgstr "Favicon (PNG)"
 
@@ -683,7 +686,7 @@ msgstr "Alanlar #hex, rgb(), hsl(), lab() ve oklch() formatlarını kabul eder. 
 msgid "File is %s, exceeding the 8MB limit."
 msgstr "Dosya %s boyutunda ve 8 MB sınırını aşıyor."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3593
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3197
 msgid "Filename (with extension)"
 msgstr "Dosya adı (uzantı dahil)"
 
@@ -695,7 +698,7 @@ msgstr "Form denetimlerinin dolgusu: girişler, seçimler, metin alanları ve on
 msgid "Finishing…"
 msgstr "Tamamlanıyor…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3717
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3749
 msgid "Floating shortcut launcher shown along the right edge of the interface."
 msgstr "Arayüzün sağ kenarında gösterilen yüzen kısayol başlatıcı."
 
@@ -739,15 +742,19 @@ msgstr "Ön planlar, köprüler, marka rengi ve bunun kontrast metni."
 msgid "From openwrt.eamonxg.fun; the signing key ships with this package."
 msgstr "openwrt.eamonxg.fun adresinden; imzalama anahtarı bu pakete dâhildir."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3429
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3642
+msgid "Frosted-glass blur of the login card (0-40px). Empty = 0."
+msgstr "Giriş kartının buzlu cam bulanıklığı (0-40px). Boş = 0."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3661
 msgid "Frosted-glass blur of the top and side bars (0-40px). Empty = 20."
 msgstr "Üst ve yan çubukların buzlu cam bulanıklığı (0-40px). Boş = 20."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3421
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3652
 msgid "Full-screen admin interface background with frosted bars; needs a luci-theme-aurora build that supports it."
 msgstr "Üst ve yan çubuklarda buzlu cam efektiyle tam ekran yönetim arayüzü arka planı; bunu destekleyen bir luci-theme-aurora sürümü gerektirir."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3413
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3636
 msgid "Full-screen login page background; use a wide image."
 msgstr "Tam ekran giriş sayfası arka planı; geniş bir görsel kullanın."
 
@@ -776,7 +783,7 @@ msgstr "Gizli"
 msgid "Hide"
 msgstr "Gizle"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3683
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3715
 msgid "Home Screen icon for iOS and iPadOS."
 msgstr "iOS ve iPadOS için Ana Ekran simgesi."
 
@@ -804,13 +811,21 @@ msgstr "Dolu birincil düğmeler ve yüksek vurgulu kontroller için üzerine ge
 msgid "How it looks in the store"
 msgstr "Mağazada nasıl görünecek"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3431
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3663
 msgid "How much the backdrop is washed toward the page color (0-70%). Empty = 20."
 msgstr "Arka planın sayfa rengine doğru ne kadar soluklaştırılacağı (0-70%). Boş = 20."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3427
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3644
+msgid "How much the login backdrop is washed toward the page color (0-70%). Empty = 0."
+msgstr "Giriş arka planının sayfa rengine doğru ne kadar soluklaştırılacağı (0-70%). Boş = 0."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3659
 msgid "How opaque cards and bars stay over the background image (50-100%). Empty = 67."
 msgstr "Kartların ve çubukların arka plan görüntüsü üzerindeki opaklığı (50-100%). Boş = 67."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3640
+msgid "How opaque the login card stays over the image (50-100%). Empty = 100."
+msgstr "Giriş kartının görüntü üzerindeki opaklığı (50-100%). Boş = 100."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1719
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1994
@@ -821,7 +836,7 @@ msgstr "Mağazadan bir tema uygulamadan önce bu yönlendirici böyle görünüy
 msgid "Hyperlinks in page content, help text, and status output."
 msgstr "Sayfa içeriği, yardım metni ve durum çıktısındaki köprüler."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3764
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3796
 msgid "Icon"
 msgstr "Simge"
 
@@ -915,7 +930,7 @@ msgstr "Geçersiz, eksik veya döngüsel renk ifadesi."
 msgid "It exists only on this router. Reflashing without keeping settings erases it."
 msgstr "Yalnızca bu yönlendiricide bulunur. Ayarları korumadan yeniden yüklemek onu siler."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3543
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3147
 msgid "JPG · PNG · WebP · AVIF · SVG · GIF · ICO"
 msgstr "JPG · PNG · WebP · AVIF · SVG · GIF · ICO"
 
@@ -946,7 +961,7 @@ msgstr "Birincil navigasyon menüsü için düzen şablonu."
 msgid "Leading color for progress meters."
 msgstr "İlerleme ölçerler için öncü renk."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3673
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3705
 msgid "Legacy ICO favicon fallback."
 msgstr "Eski tip ICO favicon yedeği."
 
@@ -985,7 +1000,7 @@ msgid "Loading…"
 msgstr "Yükleniyor…"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:347
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3412
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3635
 msgid "Login Background"
 msgstr "Giriş Arka Planı"
 
@@ -993,7 +1008,7 @@ msgstr "Giriş Arka Planı"
 msgid "Logo"
 msgstr "Logo"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3651
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3683
 msgid "Logo (SVG)"
 msgstr "Logo (SVG)"
 
@@ -1002,7 +1017,7 @@ msgid "Low-emphasis text for small labels, placeholders, and disabled hints."
 msgstr "Küçük etiketler, yer tutucular ve devre dışı bırakılmış ipuçları için düşük vurgulu metin."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:348
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3420
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3651
 msgid "Main Background"
 msgstr "Ana Arka Plan"
 
@@ -1075,7 +1090,7 @@ msgstr "Yapılandırmam"
 msgid "Name"
 msgstr "Ad"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3586
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3190
 msgid "Name it login-bg.* to use it as the login page background."
 msgstr "Giriş sayfası arka planı olarak kullanmak için login-bg.* olarak adlandırın."
 
@@ -1096,11 +1111,11 @@ msgstr "Navigasyon, boşluklar, köşe yarıçapı ve içerik genişliği. Kayde
 msgid "New"
 msgstr "Yeni"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3055
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3256
 msgid "No background selected"
 msgstr "Arka plan seçilmedi"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3533
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3137
 msgid "No brand assets uploaded yet."
 msgstr "Henüz hiçbir marka varlığı yüklenmedi."
 
@@ -1120,7 +1135,7 @@ msgstr "Dosya seçilmedi veya yükleme başarısız oldu"
 msgid "No themes match your search."
 msgstr "Aramanızla eşleşen tema yok."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3169
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3379
 msgid "None"
 msgstr "Yok"
 
@@ -1187,11 +1202,11 @@ msgstr "Operasyonel Durum Vurguları"
 msgid "Overlay Surface"
 msgstr "Katman Yüzeyi"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3662
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3694
 msgid "PNG fallback when SVG favicons are unsupported."
 msgstr "SVG favicon'ların desteklenmediği durumlar için PNG yedeği."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3402
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3625
 msgid "Page Backgrounds"
 msgstr "Sayfa Arka Planları"
 
@@ -1208,7 +1223,7 @@ msgstr "Yedeklediğin kimliği yapıştır ya da indirdiğin yedek dosyasını s
 msgid "Pick a name between 1 and 40 characters."
 msgstr "1 ile 40 karakter arasında bir ad seçin."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3403
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3626
 msgid "Pick wallpapers for the login page and the admin interface. Drag the sliders and watch the live preview; Save & Apply makes it real."
 msgstr "Giriş sayfası ve yönetim arayüzü için duvar kağıtları seçin. Kaydırıcıları sürükleyip canlı önizlemeyi izleyin; Kaydet ve Uygula ile etkinleşir."
 
@@ -1217,7 +1232,7 @@ msgstr "Giriş sayfası ve yönetim arayüzü için duvar kağıtları seçin. K
 msgid "Please enter a name."
 msgstr "Lütfen bir ad girin."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3506
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3110
 msgid "Please wait…"
 msgstr "Lütfen bekleyin…"
 
@@ -1306,7 +1321,7 @@ msgstr "Anakart üzerindeki /etc/config/aurora dosyasını paket içeriğindeki 
 msgid "Reset All Aurora Settings"
 msgstr "Tüm Aurora Ayarlarını Sıfırla"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3356
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3579
 msgid "Reset to defaults"
 msgstr "Varsayılanlara sıfırla"
 
@@ -1358,7 +1373,7 @@ msgstr "Tekrar dene"
 msgid "Rounded corners"
 msgstr "Yuvarlak köşeler"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3652
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3684
 msgid "SVG mark for the browser tab and login page."
 msgstr "Tarayıcı sekmesi ve giriş sayfası için SVG işareti."
 
@@ -1439,15 +1454,15 @@ msgstr "Temayla birlikte gelir, çevrimdışı çalışır"
 msgid "Shortcut Icons"
 msgstr "Kısayol simgeleri"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3752
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3784
 msgid "Shortcut Label"
 msgstr "Kısayol Etiketi"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3716
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3748
 msgid "Shortcut Toolbar"
 msgstr "Kısayol Araç Çubuğu"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3758
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3790
 msgid "Shortcut URL"
 msgstr "Kısayol URL'si"
 
@@ -1460,11 +1475,11 @@ msgstr "Kısayollar %d"
 msgid "Show"
 msgstr "Göster"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3726
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3758
 msgid "Show Shortcut Toolbar"
 msgstr "Kısayol Araç Çubuğunu Göster"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3728
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3760
 msgid "Show the floating launcher on all pages."
 msgstr "Yüzen başlatıcıyı tüm sayfalarda göster."
 
@@ -1485,7 +1500,7 @@ msgstr "Kenar Çubuğu"
 msgid "Signs everything you share. It lives only on this router."
 msgstr "Paylaştığın her şeyi imzalar. Yalnızca bu yönlendiricide bulunur."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3644
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3676
 msgid "Site Branding"
 msgstr "Site Markalaması"
 
@@ -1696,7 +1711,7 @@ msgstr "Araç çubuğu"
 msgid "Toolbar %d"
 msgstr "Araç çubuğu %d"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3737
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3769
 msgid "Toolbar Shortcuts"
 msgstr "Araç Çubuğu Kısayolları"
 
@@ -1705,7 +1720,7 @@ msgid "Trailing color for progress meters."
 msgstr "İlerleme ölçerler için takip eden (arka) renk."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:91
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3532
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3136
 msgid "Type"
 msgstr "Tür"
 
@@ -1771,8 +1786,8 @@ msgstr "Bu paylaşım şu anda güncellenemiyor."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2766
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2843
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3214
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3628
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3232
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3426
 msgid "Unknown"
 msgstr "Bilinmeyen"
 
@@ -1806,7 +1821,7 @@ msgstr "Mevcut yapılandırmayla güncelle"
 msgid "Upgrading Aurora needs its update source. Once added, upgrades happen in System → Software like any other OpenWrt package."
 msgstr "Aurora'yı güncellemek için güncelleme kaynağı gerekir. Eklendikten sonra güncellemeler, diğer OpenWrt paketleri gibi Sistem → Yazılım üzerinden yapılır."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3444
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3048
 msgid "Upload and manage images for icons, favicons, PWA assets, and page backgrounds. Files are stored in <code>/www/luci-static/aurora/images/</code>."
 msgstr "Simgeler, favicon'lar, PWA varlıkları ve sayfa arka planları için görselleri yükleyin ve yönetin. Dosyalar <code>/www/luci-static/aurora/images/</code> içinde saklanır."
 
@@ -1819,11 +1834,11 @@ msgid "Upload failed (HTTP %s)"
 msgstr "Yükleme başarısız oldu (HTTP %s)"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:340
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3220
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3432
 msgid "Upload failed: %s"
 msgstr "Yükleme başarısız oldu: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3257
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3469
 msgid "Upload image"
 msgstr "Görsel yükle"
 
@@ -1863,7 +1878,7 @@ msgstr "Bu nedir? Nereden geldi?"
 msgid "Where this configuration goes"
 msgstr "Bu yapılandırma nereye gidiyor"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3569
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3173
 msgid "Will replace the existing '%s'."
 msgstr "Mevcut “%s” dosyasının yerini alacak."
 
@@ -1894,7 +1909,7 @@ msgstr "Uygulamadan önce mevcut ayarlarınız yedeklenir; sonrasında tek tıkl
 msgid "Your shortcuts, logo, icons and login background are left exactly as they are."
 msgstr "Kısayollarınız, logonuz, simgeleriniz ve giriş arka planınız aynen kalır."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3754
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3786
 msgid "e.g., Network Interfaces"
 msgstr "örn., Ağ Arayüzleri"
 
