@@ -1,12 +1,20 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2796
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:627
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2962
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:721
 msgid "%d downloads"
 msgstr "%d 回ダウンロード"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2455
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2602
+msgid "%d included, %s"
+msgstr "%d 個を含む、%s"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2612
+msgid "%d not shared — only PNG and SVG under %s travel with a theme"
+msgstr "%d 個は共有されません — テーマと一緒に送れるのは %s 未満の PNG と SVG だけです"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2586
 msgid "%d shortcuts"
 msgstr "%d 件のショートカット"
 
@@ -18,16 +26,16 @@ msgstr "(アイコンがアップロードされていません)"
 msgid "(None)"
 msgstr "(なし)"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:577
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:664
 msgid "(disabled)"
 msgstr "（無効）"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2795
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:627
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2961
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:721
 msgid "1 download"
 msgstr "1 回ダウンロード"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2454
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2585
 msgid "1 shortcut"
 msgstr "ショートカット 1 件"
 
@@ -87,24 +95,24 @@ msgstr "更新元を追加しています…"
 msgid "Afterwards you can upgrade Aurora in System → Software, like any other OpenWrt package."
 msgstr "その後は、他の OpenWrt パッケージと同じように システム → ソフトウェア から Aurora を更新できます。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2940
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3100
 msgid "All"
 msgstr "すべて"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:145
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:160
 msgid "Amber Sand"
 msgstr "アンバーサンド"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1703
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:763
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1824
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:857
 msgid "Anonymous"
 msgstr "匿名"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2905
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3071
 msgid "Anyone who applies this gets all of it. You can update or remove it later."
 msgstr "これを適用した人は、上記すべてを受け取ります。後から更新したり削除したりできます。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:315
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:344
 msgid "App Icon"
 msgstr "アプリアイコン"
 
@@ -120,74 +128,74 @@ msgstr "アプリアイコン 512×512"
 msgid "Apple Touch Icon"
 msgstr "Apple Touch アイコン"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1373
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1494
 msgid "Applied."
 msgstr "適用しました。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1351
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1481
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1561
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1587
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1620
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1649
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:953
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:968
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1063
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1078
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1472
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1602
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1682
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1708
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1741
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1770
 msgid "Apply"
 msgstr "適用"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1419
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1540
 msgid "Apply Configuration"
 msgstr "設定を適用"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1327
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1448
 msgid "Apply My Configuration"
 msgstr "自分の設定を適用"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1452
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1573
 msgid "Apply Preset"
 msgstr "プリセットを適用"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1476
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1597
 msgid "Apply failed: %s"
 msgstr "適用に失敗しました: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:966
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1076
 msgid "Apply it anyway? Your current settings are backed up first."
 msgstr "それでも適用しますか？現在の設定は先にバックアップされます。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1456
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1577
 msgid "Apply the '%s' preset now? It is saved immediately and the page reloads. A preset carries a whole look — colors, navigation, spacing, corner radius, content width and fonts. Your shortcuts, logo, icons and login background are left as they are."
 msgstr "プリセット「%s」を今すぐ適用しますか？すぐに保存され、ページが再読み込みされます。プリセットは外観一式（カラー、ナビゲーション、間隔、角丸の半径、コンテンツ幅、フォント）を設定します。ショートカット、ロゴ、アイコン、ログイン背景はそのまま残ります。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:949
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1059
 msgid "Apply this configuration now? Your current settings are backed up first."
 msgstr "この設定を今すぐ適用しますか？現在の設定は先にバックアップされます。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1336
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1397
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1429
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1457
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1518
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1550
 msgid "Applying"
 msgstr "適用中"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1462
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1583
 msgid "Applying preset..."
 msgstr "プリセットを適用中..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1398
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1519
 msgid "Applying this configuration…"
 msgstr "設定を適用しています…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1363
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:877
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1484
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:987
 msgid "Applying timed out. Please try again."
 msgstr "適用がタイムアウトしました。もう一度お試しください。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1461
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1582
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2213
 msgid "Applying..."
 msgstr "適用中..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1337
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1458
 msgid "Applying…"
 msgstr "適用中…"
 
@@ -203,19 +211,19 @@ msgstr "Aurora テーマデザイン"
 msgid "Automatic"
 msgstr "自動"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2152
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2273
 msgid "Back up identity"
 msgstr "身元をバックアップ"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2276
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2397
 msgid "Back up the current identity first"
 msgstr "先に現在の身元をバックアップ"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2055
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2176
 msgid "Back up your creator identity"
 msgstr "作成者としての身元をバックアップ"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2125
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2246
 msgid "Backed up"
 msgstr "バックアップ済み"
 
@@ -275,21 +283,21 @@ msgstr "アクティブなナビゲーションおよび選択された状態の
 msgid "Branding & Shortcuts"
 msgstr "ブランディングとショートカット"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1520
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2941
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3120
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1641
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3101
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3280
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2091
 msgid "Built-in"
 msgstr "組み込み"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:786
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:880
 msgid "Bundled content"
 msgstr "同梱コンテンツ"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:272
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:381
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2854
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:936
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1046
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3020
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2204
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2282
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2564
@@ -300,11 +308,11 @@ msgstr "キャンセル"
 msgid "Canvas and panel surfaces that frame the interface."
 msgstr "インターフェースを構成するキャンバスおよびパネルのサーフェス。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2696
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2862
 msgid "Change your name"
 msgstr "名前を変更"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2172
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2293
 msgid "Changed routers? Restore your identity"
 msgstr "ルーターを変えた？ 身元を復元"
 
@@ -324,33 +332,33 @@ msgstr "このトークンの具体的な色を選択してください"
 msgid "Choose an uploaded icon for this shortcut"
 msgstr "このショートカット用にアップロードされたアイコンを選択してください"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2208
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2329
 msgid "Choose backup file…"
 msgstr "バックアップファイルを選択…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2593
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2759
 msgid "Choose the name to publish under."
 msgstr "公開に使う名前を選んでください。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1496
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1598
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2087
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1617
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1719
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2208
 msgid "Close"
 msgstr "閉じる"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1531
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1582
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2363
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:776
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1652
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1703
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2484
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:870
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2600
 msgid "Colors"
 msgstr "カラー"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:381
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:416
 msgid "Colors only"
 msgstr "カラーのみ"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3126
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3286
 msgid "Community"
 msgstr "コミュニティ"
 
@@ -374,7 +382,7 @@ msgstr "設定が正常にインポートされました。"
 msgid "Confirm Upload"
 msgstr "アップロードを確定"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2467
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2627
 msgid "Content"
 msgstr "内容"
 
@@ -382,8 +390,8 @@ msgstr "内容"
 msgid "Content Max Width"
 msgstr "コンテンツの最大幅"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2386
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:730
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2507
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:824
 msgid "Content Width"
 msgstr "コンテンツ幅"
 
@@ -391,16 +399,16 @@ msgstr "コンテンツ幅"
 msgid "Control Fill"
 msgstr "コントロールの塗り"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2034
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2155
 msgid "Copied"
 msgstr "コピーしました"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2029
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2036
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2150
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2157
 msgid "Copy"
 msgstr "コピー"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:726
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:820
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2667
 msgid "Corner Radius"
 msgstr "角丸の半径"
@@ -409,34 +417,34 @@ msgstr "角丸の半径"
 msgid "Could not add the update source: %s"
 msgstr "更新元を追加できませんでした: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2047
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2168
 msgid "Couldn't copy. The identity is shown above — select it and copy it manually."
 msgstr "コピーできませんでした。身元を上に表示しました。選択して手動でコピーしてください。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:875
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:898
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:920
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:928
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1008
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1030
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1038
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:985
 msgid "Couldn't reach the theme store. Please try again."
 msgstr "テーマストアに接続できませんでした。もう一度お試しください。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:905
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1015
 msgid "Couldn't read one of the images from this router. Try reloading the page."
-msgstr ""
+msgstr "ルーターから画像を一つ読み取れませんでした。ページを再読み込みしてやり直してください。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1984
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2105
 msgid "Couldn't read your identity. Please try again."
 msgstr "身元を読み取れませんでした。もう一度お試しください。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2220
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2341
 msgid "Couldn't restore that identity. Check it and try again."
 msgstr "その身元は復元できませんでした。確認してもう一度お試しください。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:914
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1024
 msgid "Couldn't save that name. Try again."
 msgstr "その名前を保存できませんでした。もう一度お試しください。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2166
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2287
 msgid "Created automatically the first time you publish — no sign-up, no password. It decides which configurations in the store are yours, and who can change or remove them. Backing it up saves an identity backup file; import that file after a reflash, or on a new router, and your work comes back to you."
 msgstr "初めて公開したときに自動で作られます。登録もパスワードも不要です。ストア内のどの設定があなたのものか、誰が変更・削除できるかを決めるのがこれです。バックアップすると身元バックアップファイルが保存されます。再フラッシュ後や新しいルーターでそのファイルを読み込めば、作品が手元に戻ります。"
 
@@ -448,19 +456,19 @@ msgstr "カスタム"
 msgid "Custom Fonts"
 msgstr "カスタムフォント"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:475
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:513
 msgid "Custom app icons"
 msgstr "アプリ独自のアイコン"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:459
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:495
 msgid "Custom login page background"
 msgstr "ログインページ用のカスタム背景"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:451
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:486
 msgid "Custom logo"
 msgstr "カスタムロゴ"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:467
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:504
 msgid "Custom site icons"
 msgstr "サイト独自のアイコン"
 
@@ -476,8 +484,8 @@ msgstr "危険サーフェス"
 msgid "Danger Surface Hover"
 msgstr "危険サーフェス（ホバー）"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:289
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:707
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:318
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:801
 msgid "Dark"
 msgstr "ダーク"
 
@@ -485,7 +493,7 @@ msgstr "ダーク"
 msgid "Dark Mode"
 msgstr "ダークモード"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:142
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:157
 msgid "Default"
 msgstr "デフォルト"
 
@@ -495,7 +503,7 @@ msgstr "見出し、本文テキスト、アイコン、およびフォーム値
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:159
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:393
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1888
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2009
 msgid "Delete"
 msgstr "削除"
 
@@ -515,7 +523,7 @@ msgstr "ブランドアセットを削除"
 msgid "Delete Custom Font"
 msgstr "カスタムフォントを削除"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1829
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1950
 msgid "Delete Share"
 msgstr "共有を削除"
 
@@ -523,11 +531,11 @@ msgstr "共有を削除"
 msgid "Delete failed: %s"
 msgstr "削除に失敗しました: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1830
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1951
 msgid "Delete this shared configuration from the theme store?"
 msgstr "この共有設定をテーマストアから削除しますか？"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1837
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1958
 msgid "Deleted."
 msgstr "削除しました。"
 
@@ -555,7 +563,7 @@ msgstr "キャンバス、サーフェス、およびテキストの色から派
 msgid "Derived from the status accents: alert, label, and badge backgrounds."
 msgstr "ステータスアクセントから派生：アラート、ラベル、およびバッジの背景。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2891
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3057
 msgid "Description"
 msgstr "説明"
 
@@ -563,7 +571,7 @@ msgstr "説明"
 msgid "Design Studio"
 msgstr "デザインスタジオ"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2468
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2628
 msgid "Details"
 msgstr "詳細"
 
@@ -575,11 +583,11 @@ msgstr "モダルダイアログの背後にある調光バックドロップ。
 msgid "Dismiss"
 msgstr "閉じる"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2081
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2202
 msgid "Download backup file"
 msgstr "バックアップファイルをダウンロード"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2340
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2461
 msgid "Downloads"
 msgstr "ダウンロード"
 
@@ -591,7 +599,7 @@ msgstr ".woff2 フォントをここにドラッグするか、クリックし�
 msgid "Drop image asset here, or click to browse"
 msgstr "ここに画像アセットをドロップするか、クリックして参照してください"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:134
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:149
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2640
 msgid "Dropdown"
 msgstr "ドロップダウン"
@@ -664,7 +672,7 @@ msgstr "ファイル名(拡張子を含む)"
 msgid "Fill for form controls: inputs, selects, textareas, and checkboxes."
 msgstr "フォームコントロール(入力欄、セレクト、テキストエリア、チェックボックス)の背景色。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2566
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2732
 msgid "Finishing…"
 msgstr "仕上げ中…"
 
@@ -672,7 +680,7 @@ msgstr "仕上げ中…"
 msgid "Floating shortcut launcher shown along the right edge of the interface."
 msgstr "インターフェースの右端に表示されるフローティングショートカットランチャー。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:483
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:522
 msgid "Floating toolbar shortcuts"
 msgstr "フローティングツールバーのショートカット"
 
@@ -700,7 +708,7 @@ msgstr "フォント名（例: MiSans）"
 msgid "Font for code, command output, and the system log viewer."
 msgstr "コード、コマンド出力、およびシステムログビューア用のフォント。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2392
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2513
 msgid "Fonts"
 msgstr "フォント"
 
@@ -716,7 +724,7 @@ msgstr "openwrt.eamonxg.fun から取得します。署名鍵は本パッケー�
 msgid "Full-screen login page background; use a wide image."
 msgstr "フルスクリーンのログインページ背景。幅の広い画像を使用してください。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2512
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2672
 msgid "Give it a name"
 msgstr "名前を付ける"
 
@@ -725,7 +733,7 @@ msgstr "名前を付ける"
 msgid "Go to Software"
 msgstr "ソフトウェアへ"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2320
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2441
 msgid "Go to the design studio"
 msgstr "デザインスタジオへ"
 
@@ -737,11 +745,11 @@ msgstr "Aurora テーマ設定へのアクセス権を付与"
 msgid "Hairline"
 msgstr "ヘアライン"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:717
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:811
 msgid "Hidden"
 msgstr "非表示"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2014
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2135
 msgid "Hide"
 msgstr "隠す"
 
@@ -749,7 +757,7 @@ msgstr "隠す"
 msgid "Home Screen icon for iOS and iPadOS."
 msgstr "iOS および iPadOS 用のホーム画面アイコン。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2942
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3102
 msgid "Hot"
 msgstr "人気"
 
@@ -769,11 +777,11 @@ msgstr "控えめなプライマリボタンおよび選択されたサーフェ
 msgid "Hover state for filled primary buttons and high-emphasis controls."
 msgstr "塗りつぶされたプライマリボタンおよび強調度の高いコントロールのホバー状態。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2886
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3052
 msgid "How it looks in the store"
 msgstr "ストアでの見え方"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1578
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1699
 msgid "How this router looked before you applied a theme from the store."
 msgstr "ストアのテーマを適用する前の、このルーターの見た目です。"
 
@@ -785,9 +793,13 @@ msgstr "ページコンテンツ、ヘルプテキスト、およびステータ
 msgid "Icon"
 msgstr "アイコン"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1865
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1986
 msgid "Images not approved — colours and layout still work. Swap the image, then update."
 msgstr "画像は承認されませんでした — 配色とレイアウトはそのまま使えます。画像を差し替えて更新してください。"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:894
+msgid "Images: %s in total."
+msgstr "画像：合計 %s。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2244
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2264
@@ -815,30 +827,30 @@ msgstr "インポートすると /etc/config/aurora が置き換わり、すべ�
 msgid "Importing..."
 msgstr "インポート中..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1860
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1981
 msgid "In review — appears in the store once its images are approved."
 msgstr "審査中 — 画像が承認されるとストアに表示されます。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1501
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1758
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:646
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:649
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1622
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1879
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:740
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:743
 msgid "In use"
 msgstr "使用中"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2439
-msgid "Included"
-msgstr "含む"
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2569
+msgid "Included, %s"
+msgstr "含む、%s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:802
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:912
 msgid "Includes %s of font files. They are stored in the router's writable partition, which is shared with installed packages — on devices with little flash, check the free space first. Fonts are not kept across a firmware upgrade and have to be applied again."
 msgstr "%s のフォントファイルを含みます。ルーターの書き込み可能領域に保存され、その領域はインストール済みパッケージと共用です — フラッシュの少ない機器では先に空き容量を確認してください。フォントはファームウェア更新では引き継がれず、再度適用が必要です。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1710
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1831
 msgid "Includes assets"
 msgstr "素材あり"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:396
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:431
 msgid "Includes custom content"
 msgstr "カスタム要素を含む"
 
@@ -866,7 +878,7 @@ msgstr "無効なカラー表現です。"
 msgid "Invalid, missing, or cyclic color expression."
 msgstr "カラー表現が無効、欠落、または循環しています。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2065
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2186
 msgid "It exists only on this router. Reflashing without keeping settings erases it."
 msgstr "このルーターにしか存在しません。設定を残さずに再フラッシュすると消えます。"
 
@@ -878,7 +890,7 @@ msgstr "JPG · PNG · WebP · AVIF · SVG · GIF · ICO"
 msgid "Keep custom font files as small as possible, as they are stored in the router's limited flash storage."
 msgstr "カスタムフォントのファイルは、ルーターの限られたフラッシュストレージに保存されるため、できるだけ小さくしてください。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:334
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:363
 msgid "Large corners"
 msgstr "大きな角丸"
 
@@ -886,9 +898,9 @@ msgstr "大きな角丸"
 msgid "Layout"
 msgstr "レイアウト"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1533
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1584
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:778
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1654
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1705
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:872
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2601
 msgid "Layout & Typography"
 msgstr "レイアウトとタイポグラフィ"
@@ -905,8 +917,8 @@ msgstr "プログレスメーターの開始側の色。"
 msgid "Legacy ICO favicon fallback."
 msgstr "レガシー ICO ファビコンのフォールバック。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:288
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:706
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:317
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:800
 msgid "Light"
 msgstr "ライト"
 
@@ -914,7 +926,7 @@ msgstr "ライト"
 msgid "Light Mode"
 msgstr "ライトモード"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2363
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2484
 msgid "Light and dark, 62 values"
 msgstr "ライト/ダーク、62 項目"
 
@@ -926,25 +938,25 @@ msgstr "展開されたメガメニューの背後にあるライトなバック
 msgid "Link"
 msgstr "リンク"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:616
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:710
 msgid "Links marked ↗ open sites outside your router. You'll be asked to confirm before applying."
 msgstr "↗ の付いたリンクはルーター外のサイトを開きます。適用前に確認を求められます。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1430
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1606
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1551
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1727
 msgid "Loading theme details…"
 msgstr "テーマの詳細を読み込んでいます…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3060
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3220
 msgid "Loading…"
 msgstr "読み込み中…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:316
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:345
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3316
 msgid "Login Background"
 msgstr "ログイン背景"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:313
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:342
 msgid "Logo"
 msgstr "ロゴ"
 
@@ -964,7 +976,7 @@ msgstr "中央に配置されるコンテンツエリアの最大幅。"
 msgid "Medium-emphasis text for helper copy, metadata, and summaries."
 msgstr "ヘルプ文、メタデータ、およびサマリー用の強調度が中程度のテキスト。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:133
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:148
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2639
 msgid "Mega Menu"
 msgstr "メガメニュー"
@@ -977,20 +989,20 @@ msgstr "メガメニューの背景"
 msgid "Mega Menu Scrim"
 msgstr "メガメニューのスクリム"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2948
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3112
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3108
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3272
 msgid "Mine"
 msgstr "自分"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:734
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:828
 msgid "Mono Font"
 msgstr "等幅フォント"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2402
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2523
 msgid "Mono Font File"
 msgstr "等幅フォントファイル"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:143
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:158
 msgid "Monochrome"
 msgstr "モノクローム"
 
@@ -1007,22 +1019,22 @@ msgstr "等幅（モノスペース）書体"
 msgid "Muted Text"
 msgstr "ミュート（控えめな）テキスト"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3146
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3306
 msgid "My Shares"
 msgstr "自分の共有"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1571
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1756
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1692
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1877
 msgid "My configuration"
 msgstr "自分の設定"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3143
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3303
 msgid "My creator identity"
 msgstr "作成者としての自分"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:118
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2339
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2890
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2460
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3056
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2820
 msgid "Name"
 msgstr "名前"
@@ -1031,8 +1043,8 @@ msgstr "名前"
 msgid "Name it login-bg.* to use it as the login page background."
 msgstr "login-bg.* という名前にすると、ログインページの背景として使用されます。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2365
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:724
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2486
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:818
 msgid "Navigation"
 msgstr "ナビゲーション"
 
@@ -1044,7 +1056,7 @@ msgstr "ナビゲーションスタイル"
 msgid "Navigation, spacing, corner radius, and content width. Takes effect after Save & Apply."
 msgstr "ナビゲーション、余白、角丸の半径、およびコンテンツ幅。「保存して適用」の後に有効になります。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2943
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3103
 msgid "New"
 msgstr "新着"
 
@@ -1052,7 +1064,7 @@ msgstr "新着"
 msgid "No brand assets uploaded yet."
 msgstr "ブランドアセットはまだアップロードされていません。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3081
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3241
 msgid "No configs here yet — go share the first one."
 msgstr "まだ設定がありません。最初の共有をしてみましょう。"
 
@@ -1064,7 +1076,7 @@ msgstr "カスタムフォントはアップロードされていません。"
 msgid "No file selected or upload failed"
 msgstr "ファイルが選択されていないか、アップロードに失敗しました"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3080
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3240
 msgid "No themes match your search."
 msgstr "検索に一致するテーマがありません。"
 
@@ -1072,24 +1084,24 @@ msgstr "検索に一致するテーマがありません。"
 msgid "None"
 msgstr "なし"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2125
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2246
 msgid "Not backed up"
 msgstr "未バックアップ"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1758
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1879
 msgid "Not in use"
 msgstr "未使用"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2116
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2237
 msgid "Not named yet"
 msgstr "名前未設定"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2304
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2425
 msgid "Nothing shared yet"
 msgstr "まだ何も共有していません"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1757
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3112
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1878
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3272
 msgid "On this router only"
 msgstr "このルーターだけにあります"
 
@@ -1097,17 +1109,17 @@ msgstr "このルーターだけにあります"
 msgid "On-Brand Text"
 msgstr "ブランドカラー上のテキスト"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2841
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3007
 msgid "Once published, anyone can find it and apply it in one click. You can update or remove it later."
-msgstr ""
+msgstr "公開すると誰でも見つけてワンクリックで適用できます。あとから更新も削除もできます。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2518
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2678
 msgid "One line about where this configuration fits."
 msgstr "このコンフィグが向いている場面を一言で。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2786
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2952
 msgid "One more piece in the store"
-msgstr ""
+msgstr "ストアに作品がもう一つ"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2798
 msgid "Only .woff2 files up to 8MB are accepted."
@@ -1117,11 +1129,11 @@ msgstr "8MB までの .woff2 ファイルのみ使用できます。"
 msgid "Opaque surface for the expanded mega menu and its header."
 msgstr "展開されたメガメニューとそのヘッダーのための不透明なサーフェス。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:397
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:432
 msgid "Open this configuration to see everything it carries."
 msgstr "このコンフィグを開くと、含まれる内容がすべて確認できます。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:586
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:675
 msgid "Opens an external site"
 msgstr "外部サイトを開きます"
 
@@ -1141,17 +1153,17 @@ msgstr "SVGファビコンがサポートされていない場合のPNGフォー
 msgid "Page canvas behind the header, navigation, content, and login screen."
 msgstr "ヘッダー、ナビゲーション、コンテンツ、およびログイン画面の背後にあるページキャンバス。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2252
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2373
 msgid "Paste the identity you backed up, or pick the backup file you downloaded. What you shared before comes back under this router."
 msgstr "バックアップした身元を貼り付けるか、ダウンロードしたバックアップファイルを選んでください。以前共有したものがこのルーターに戻ります。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2707
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:895
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1005
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2873
 msgid "Pick a name between 1 and 40 characters."
 msgstr "1〜40文字の名前にしてください。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2586
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:892
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1002
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2752
 msgid "Please enter a name."
 msgstr "名前を入力してください。"
 
@@ -1167,11 +1179,11 @@ msgstr "タイポグラフィを準備中"
 msgid "Preparing selected typefaces..."
 msgstr "選択された書体を準備中..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2562
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2728
 msgid "Preparing…"
 msgstr "準備中…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1469
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1590
 msgid "Preset applied successfully."
 msgstr "プリセットが正常に適用されました。"
 
@@ -1187,25 +1199,25 @@ msgstr "プログレス終了側"
 msgid "Progress Start"
 msgstr "プログレス開始側"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2580
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2822
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2746
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2988
 msgid "Publish"
 msgstr "公開"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2739
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2742
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2905
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2908
 msgid "Publish as"
 msgstr "公開名"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2786
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2952
 msgid "Publish as a new one"
-msgstr ""
+msgstr "新しいものとして公開"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2641
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2807
 msgid "Published."
 msgstr "公開しました。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2640
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2806
 msgid "Published. Its images are queued for review — it appears in the store once they are approved."
 msgstr "公開しました。画像は審査待ちです — 承認されるとストアに表示されます。"
 
@@ -1213,20 +1225,20 @@ msgstr "公開しました。画像は審査待ちです — 承認されると�
 msgid "Raised layer for dropdowns, modals, and tooltips."
 msgstr "ドロップダウン、モダル、およびツールチップ用のレイズド（浮き上がった）レイヤー。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1649
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1770
 msgid "Re-apply"
 msgstr "再適用"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2158
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2279
 msgid "Rename"
 msgstr "名前を変更"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2793
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2822
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2959
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2988
 msgid "Replace “%s”"
-msgstr ""
+msgstr "「%s」を差し替える"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:382
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:417
 msgid "Replaces the light and dark colors; everything else stays as it is."
 msgstr "ライトとダークの配色だけを置き換えます。それ以外はそのままです。"
 
@@ -1260,19 +1272,19 @@ msgstr "解決された色はピッカーで表示できません。"
 msgid "Resolved preview color - click to pick"
 msgstr "解決されたプレビューカラー - クリックして選択"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2282
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2403
 msgid "Restore"
 msgstr "復元"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2283
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2404
 msgid "Restore your creator identity"
 msgstr "作成者としての身元を復元"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2239
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2360
 msgid "Restored."
 msgstr "復元しました。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2238
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2359
 msgid "Restored. What you shared before is back under this identity."
 msgstr "復元しました。以前共有したものがこの身元に戻りました。"
 
@@ -1280,11 +1292,11 @@ msgstr "復元しました。以前共有したものがこの身元に戻りま
 msgid "Restoring..."
 msgstr "復元中..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3044
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3204
 msgid "Retry"
 msgstr "再試行"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:333
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:362
 msgid "Rounded corners"
 msgstr "角丸"
 
@@ -1292,15 +1304,15 @@ msgstr "角丸"
 msgid "SVG mark for the browser tab and login page."
 msgstr "ブラウザタブおよびログインページ用のSVGマーク。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:144
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:159
 msgid "Sage Green"
 msgstr "セージグリーン"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:733
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:827
 msgid "Sans Font"
 msgstr "サンセリフフォント"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2402
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2523
 msgid "Sans Font File"
 msgstr "Sans フォントファイル"
 
@@ -1317,7 +1329,7 @@ msgstr "サンセリフ書体"
 msgid "Sans-serif and monospace typefaces used across the theme. Pick a curated webfont — downloaded once after saving, from pinned, checksum-verified sources, then served locally — or upload your own .woff2 files."
 msgstr "テーマ全体で使用するサンセリフおよび等幅フォントです。厳選された Web フォント(保存後に、バージョン固定・チェックサム検証済みのソースから一度だけダウンロードされ、以後ローカルから配信)を選ぶか、独自の .woff2 ファイルをアップロードできます。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2723
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2889
 msgid "Save"
 msgstr "保存"
 
@@ -1329,7 +1341,7 @@ msgstr "保存された値またはプリセット値"
 msgid "Scrim"
 msgstr "スクリム"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2977
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3137
 msgid "Search themes or authors…"
 msgstr "テーマや作者を検索…"
 
@@ -1341,34 +1353,40 @@ msgstr "セパレーター、ディバイダー、および入力またはカー
 msgid "Settings reset successfully."
 msgstr "設定が正常にリセットされました。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2378
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2499
 msgid "Shape"
 msgstr "形状"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2837
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3003
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2338
 msgid "Share to the store"
 msgstr "ストアで共有"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3126
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3286
 msgid "Shared by other people"
 msgstr "他のユーザーが共有したもの"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2329
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2450
 msgid "Shared on another router before? Restore my identity"
 msgstr "別のルーターで共有したことがある？ 身元を復元する"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2307
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2428
 msgid "Sharing starts in the design studio: make the appearance what you want there, then publish from that page."
-msgstr ""
+msgstr "共有はデザインスタジオから始まります。そこで見た目を思いどおりに整えてから、そのページで公開してください。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1529
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1650
 msgid "Ships with the theme and works offline."
 msgstr "テーマに同梱されており、オフラインでも使えます。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3120
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3280
 msgid "Ships with the theme, works offline"
 msgstr "テーマに同梱、オフラインでも使えます"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2601
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2611
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2720
+msgid "Shortcut Icons"
+msgstr "ショートカットのアイコン"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3421
 msgid "Shortcut Label"
@@ -1382,12 +1400,12 @@ msgstr "ショートカットツールバー"
 msgid "Shortcut URL"
 msgstr "ショートカットのURL"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:596
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:686
 msgid "Shortcuts %d"
 msgstr "ショートカット %d"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2009
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2020
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2130
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2141
 msgid "Show"
 msgstr "表示"
 
@@ -1399,20 +1417,20 @@ msgstr "ショートカットツールバーを表示"
 msgid "Show the floating launcher on all pages."
 msgstr "すべてのページでフローティングランチャーを表示します。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3099
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3259
 msgid "Showing a saved copy — reconnecting…"
 msgstr "保存済みのコピーを表示しています。再接続中…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:717
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:811
 msgid "Shown"
 msgstr "表示"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:135
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:150
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2641
 msgid "Sidebar"
 msgstr "サイドバー"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2140
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2261
 msgid "Signs everything you share. It lives only on this router."
 msgstr "共有するすべてに署名します。このルーターにしか存在しません。"
 
@@ -1420,7 +1438,7 @@ msgstr "共有するすべてに署名します。このルーターにしか存
 msgid "Site Branding"
 msgstr "サイトブランディング"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:314
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:343
 msgid "Site Icon"
 msgstr "サイトアイコン"
 
@@ -1428,7 +1446,7 @@ msgstr "サイトアイコン"
 msgid "Size"
 msgstr "サイズ"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:146
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:161
 msgid "Sky Blue"
 msgstr "スカイブルー"
 
@@ -1438,12 +1456,12 @@ msgstr "スカイブルー"
 msgid "Slot"
 msgstr "用途"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:332
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:361
 msgid "Small corners"
 msgstr "小さめの角丸"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2375
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:725
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2496
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:819
 msgid "Spacing"
 msgstr "間隔"
 
@@ -1451,7 +1469,7 @@ msgstr "間隔"
 msgid "Spacing Scale"
 msgstr "余白スケール"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:331
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:360
 msgid "Square corners"
 msgstr "角なし"
 
@@ -1507,35 +1525,35 @@ msgstr "塗りつぶされたブランド背景上に表示されるテキスト
 msgid "Text, Links & Brand"
 msgstr "テキスト、リンク、ブランド"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:893
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1003
 msgid "That description is too long."
 msgstr "説明が長すぎます。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2214
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2335
 msgid "That doesn't look like a creator identity."
 msgstr "作成者の身元には見えません。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:894
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1004
 msgid "That name is already taken. Try another."
 msgstr "その名前はすでに使われています。別の名前をお試しください。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:814
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:924
 msgid "The font file comes from whoever shared this theme; the store does not verify its licence."
 msgstr "フォントファイルはこのテーマを共有した人によるものです。ストアはそのライセンスを確認していません。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1577
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1698
 msgid "The look this router is wearing right now."
 msgstr "このルーターが今まとっている見た目です。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2527
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2687
 msgid "The name your shares are signed with"
 msgstr "共有に表示される名前"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:902
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1012
 msgid "The theme store refused this configuration. Nothing was published."
-msgstr ""
+msgstr "ストアがこの設定を受け付けませんでした。何も公開されていません。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:607
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:701
 msgid "The toolbar itself is turned off in this configuration."
 msgstr "この構成ではツールバー自体がオフになっています。"
 
@@ -1555,66 +1573,70 @@ msgstr "テーマスタイルシートリゾルバーがタイムアウトしま
 msgid "Theme:"
 msgstr "テーマ:"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:884
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:994
 msgid "There's nothing to restore yet."
 msgstr "まだ復元できるものがありません。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:876
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:881
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:986
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:991
 msgid "This configuration can't be applied."
 msgstr "この設定は適用できません。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:957
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1067
 msgid "This configuration links to these external sites:"
 msgstr "この設定には次の外部サイトへのリンクが含まれます:"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2700
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2866
 msgid "This name signs everything you have published, including what is already in the store."
 msgstr "この名前は、すでにストアにあるものも含め、公開したすべてに表示されます。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1542
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1663
 msgid "This preset uses a downloaded typeface. The router fetches it once after applying; until then the text falls back to the built-in font."
 msgstr "このプリセットはダウンロードが必要なフォントを使用します。適用後にルーターが一度だけ取得し、それまでは組み込みフォントで表示されます。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1331
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1452
 msgid "This puts back the look you had before applying a theme from the store."
 msgstr "ストアのテーマを適用する前の見た目に戻します。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2268
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2389
 msgid "This router already has shared configurations of its own. Switching to another identity gives them up for good — back up the current identity first if you still want them."
 msgstr "このルーターにはすでに自分で共有した設定があります。別の身元に切り替えると、それらを完全に手放すことになります。まだ必要なら、先に現在の身元をバックアップしてください。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:907
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1017
 msgid "This share belongs to another identity."
-msgstr ""
+msgstr "この共有は別の身元のものです。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2923
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3083
 msgid "This share includes your uploaded font file. Please make sure you have the right to redistribute it — most commercial font licences do not allow it. Configurations reported for infringement are taken down."
 msgstr "この共有にはアップロードしたフォントファイルが含まれます。再配布する権利があるか確認してください — 商用フォントのライセンスの多くは再配布を認めていません。権利侵害の報告があった構成は公開停止となります。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:917
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:927
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1027
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1037
 msgid "This share is no longer available."
 msgstr "この共有は利用できなくなりました。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2059
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2180
 msgid "This text is your identity. Anyone who has it can publish under your name and delete what you have shared — don't post it anywhere public."
 msgstr "この文字列があなたの身元です。手に入れた人はあなたの名前で公開でき、共有したものを削除もできます。公開の場に貼らないでください。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:874
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:984
 msgid "This theme is no longer available."
 msgstr "このテーマは利用できなくなりました。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:835
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:945
 msgid "This theme uses a downloaded typeface. The router fetches it once after applying; until then the text falls back to the built-in font."
 msgstr "このテーマはダウンロードが必要なフォントを使用します。適用後にルーターが一度だけ取得し、それまでは組み込みフォントで表示されます。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2451
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:735
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2565
+msgid "Too large to share (%s; the store's limit is %s)"
+msgstr "大きすぎて共有できません（%s、ストアの上限は %s）"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2582
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:829
 msgid "Toolbar"
 msgstr "ツールバー"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:482
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:521
 msgid "Toolbar %d"
 msgstr "ツールバー %d"
 
@@ -1651,7 +1673,7 @@ msgstr "選択した色を変換できません。"
 msgid "Unable to create the theme color resolver."
 msgstr "テーマカラーリゾルバーを作成できません。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:932
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1042
 msgid "Unable to delete this share right now."
 msgstr "現在この共有を削除できません。"
 
@@ -1667,11 +1689,11 @@ msgstr "%s を読み込めません。"
 msgid "Unable to load the Aurora stylesheet."
 msgstr "Aurora スタイルシートを読み込めません。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1595
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1716
 msgid "Unable to load this theme right now. Please try again."
 msgstr "現在このテーマを読み込めません。もう一度お試しください。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3036
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3196
 msgid "Unable to reach the theme store right now."
 msgstr "現在テーマストアに接続できません。"
 
@@ -1679,15 +1701,15 @@ msgstr "現在テーマストアに接続できません。"
 msgid "Unable to resolve color expressions."
 msgstr "カラー表現を解決できません。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:889
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:999
 msgid "Unable to restore the previous configuration."
 msgstr "以前の設定を復元できませんでした。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:911
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1021
 msgid "Unable to share this configuration right now."
 msgstr "現在この設定を共有できません。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:924
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1034
 msgid "Unable to update this share right now."
 msgstr "現在この共有を更新できません。"
 
@@ -1705,9 +1727,9 @@ msgstr "不明なエラー"
 msgid "Unsupported file type. Allowed: %s"
 msgstr "対応していないファイル形式です。対応形式: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1702
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1907
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:759
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1823
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2028
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:853
 msgid "Untitled theme"
 msgstr "無題のテーマ"
 
@@ -1719,7 +1741,7 @@ msgstr "更新あり %s"
 msgid "Update source added"
 msgstr "更新元を追加しました"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1879
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2000
 msgid "Update with current configuration"
 msgstr "現在の設定で更新"
 
@@ -1743,25 +1765,25 @@ msgstr "アップロードに失敗しました (HTTP %s)"
 msgid "Upload failed: %s"
 msgstr "アップロードに失敗しました: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2403
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2524
 msgid "Uploaded with the theme, %s"
 msgstr "テーマと一緒にアップロード、%s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2574
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2740
 msgid "Uploading %s… %d%%"
-msgstr ""
+msgstr "%sをアップロード中… %d%%"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2573
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2739
 msgid "Uploading %s… %d%% (%d/%d)"
-msgstr ""
+msgstr "%sをアップロード中… %d%%（%d/%d）"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:906
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1016
 msgid "Uploading the images failed. Check this computer's internet connection and try again."
-msgstr ""
+msgstr "画像のアップロードに失敗しました。このパソコンのインターネット接続を確認してやり直してください。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2351
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2472
 msgid "Want to publish another one? Set it up in the design studio and publish from there."
-msgstr ""
+msgstr "もう一つ公開しますか？デザインスタジオで仕上げて、そこから公開してください。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:207
 msgid "Warning"
@@ -1771,46 +1793,46 @@ msgstr "警告"
 msgid "Warning Surface"
 msgstr "警告サーフェス"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2900
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3066
 msgid "What gets shared"
 msgstr "共有される内容"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2163
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2284
 msgid "What is this? Where did it come from?"
 msgstr "これは何？どこから来たの？"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2802
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2968
 msgid "Where this configuration goes"
-msgstr ""
+msgstr "この設定の公開先"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3173
 msgid "Will replace the existing '%s'."
 msgstr "既存の「%s」を置き換えます。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1691
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1812
 msgid "Works offline"
 msgstr "オフラインで使用可"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:901
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1011
 msgid "You've published as much as one router may publish today. Try again tomorrow."
-msgstr ""
+msgstr "このルーターが今日公開できる分は使い切りました。明日またお試しください。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2645
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2811
 msgid "Your creator identity lives only on this router — back it up so a reflash can't take it."
 msgstr "作成者としての身元はこのルーターにしか存在しません。再フラッシュで失わないようバックアップしてください。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:896
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:897
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:918
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:919
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1006
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1007
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1028
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1029
 msgid "Your current configuration can't be shared right now."
 msgstr "現在の設定は今すぐ共有できません。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:845
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:955
 msgid "Your current settings are backed up before applying, and you can roll back with one click afterwards."
 msgstr "適用前に現在の設定がバックアップされ、適用後はワンクリックで元に戻せます。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1552
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1673
 msgid "Your shortcuts, logo, icons and login background are left exactly as they are."
 msgstr "ショートカット、ロゴ、アイコン、ログイン背景はそのまま残ります。"
 

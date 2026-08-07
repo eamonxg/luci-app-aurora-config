@@ -522,23 +522,47 @@ test("gallery view: sharing says what gets shared, inline rather than in a modal
     !/ui\.showModal\(\s*_\("Share My Configuration"\)/.test(src),
     "share must no longer be a modal",
   );
-  // 清单来自本机 uci,不是新的 rpcd 调用
-  assert.match(src, /uci\.get\("aurora", "theme", "logo_svg"\)/);
   assert.match(src, /const loginBgFilename = /);
-  // 图片体积仍然是机制信息:一张 logo 多大改变不了任何人的决定,写出来只是噪音。
-  // 它们照旧只说"Included"。
-  assert.match(src, /rows\.push\(\{ label: label, detail: _\("Included"\) \}\)/);
+
+  // 图片那几行的体积来自 rpcd 的 shared_images,而不是这里自己数 uci ——
+  // 问的是 build_share_payload 打包时问的同一个函数,所以面板上说要发什么、
+  // 线路上发的就是什么。字体那两行早就是这个姿态,这次图片跟上了。
+  assert.match(src, /sharedImages\.forEach\(/);
+  assert.match(src, /_\("Included, %s"\)\.format\(/);
+  assert.ok(
+    !/detail: _\("Included"\)/.test(src),
+    "一句光秃秃的 Included 回答不了「要不要装到我的路由器上」",
+  );
+
+  // 超限的那张必须单独说。它现在会被 build_share_payload 跳过 —— 沉默地少发
+  // 一张图,用户只会在别人的截图里发现它没了;而在此之前更糟:hub 拒掉整次
+  // 分享,屏幕上只有一句"商店拒绝了这份配置"。
+  assert.match(src, /_\("Too large to share \(%s; the store's limit is %s\)"\)/);
 });
 
-// 字体是这条规则唯一的例外,而且是被真实后果逼出来的:一份覆盖中文的 woff2
-// 动辄好几 MB,落在与软件包共用的可写分区上,在小 flash 设备上这就是"能不能
-// 应用"本身。不写体积,用户要到刷不动包的时候才知道。
-test("gallery view: font assets are the one place a size belongs", async () => {
+// 体积曾经只给字体写。那条界线站不住:一张 1.8 MB 的登录背景和一份 2 MB 的
+// 中文字体,对 flash 只剩一两 MB 的设备是同一个问题,而商店里只有后者说了实话。
+// 现在发布侧和使用侧都逐项带体积,字体额外多两句(它落在别处、升级不保留)。
+test("gallery view: every asset carries its size, on both sides", async () => {
   const src = await readFile(SRC, "utf8");
-  // 发布侧:我要发出去的这份字体有多大。
+
+  // 发布侧:我要发出去的这些东西各有多大。
   assert.match(src, /sharedFonts\.forEach\(/);
   assert.match(src, /_\("Uploaded with the theme, %s"\)\.format\(/);
-  // 使用侧:我要接下来的这份字体有多大,存在哪,升级后还在不在。
+  assert.match(src, /sharedImages\.forEach\(/);
+  assert.match(src, /sharedToolbarIcons\.filter\(/);
+
+  // 使用侧:每个 tile 自己的体积,加一句图片总计。
+  assert.match(src, /const assetBytesOf = /);
+  assert.match(src, /meta: sizeLabel\(assetBytesOf\(item, \["logo_svg"\]\)\)/);
+  assert.match(src, /meta: sizeLabel\(assetBytesOf\(item, \["login_bg"\]\)\)/);
+  assert.match(src, /meta: sizeLabel\(assetBytesOf\(item, SITE_ICON_KINDS\)\)/);
+  assert.match(src, /meta: sizeLabel\(assetBytesOf\(item, APP_ICON_KINDS\)\)/);
+  assert.match(src, /meta: sizeLabel\(assetBytesOf\(item, TOOLBAR_ICON_KINDS\)\)/);
+  assert.match(src, /_\("Images: %s in total\."\)/);
+
+  // 字体那两句是额外的,不是替代:它们说的是"存在哪、升级后还在不在",
+  // 那是体积之外的信息。
   assert.match(src, /asset\.kind === "font_sans" \|\| asset\.kind === "font_mono"/);
   assert.match(src, /Includes %s of font files/);
   assert.match(src, /writable partition/);
@@ -615,30 +639,37 @@ test("gallery view: the toolbar count is what the share actually sends", async (
   assert.match(src, /lines 637-660/, "the mirrored line range must be named");
 });
 
-test("share manifest skips exactly the filenames build_share_payload skips", async () => {
+test("share manifest skips exactly the filenames the theme itself ships", async () => {
   const js = await readFile(SRC, "utf8");
   const shell = await readFile(repo("root/usr/libexec/rpcd/luci.aurora"), "utf8");
 
-  // shell 侧:build_share_payload 里的 case 分支
-  //   logo.svg|favicon.ico|app-icon-192x192.png|...)
-  const shellMatch = /^\s*(logo\.svg(?:\|[A-Za-z0-9.\-]+)+)\)\s*$/m.exec(shell);
-  assert.ok(shellMatch, "could not find the factory-filename case in luci.aurora");
-  const shellNames = shellMatch[1].split("|").sort();
+  // shell 侧:is_theme_shipped_image 的两条 case 分支
+  const fnMatch = /is_theme_shipped_image\(\) \{[\s\S]*?\n\}/.exec(shell);
+  assert.ok(fnMatch, "could not find is_theme_shipped_image in luci.aurora");
+  const shellNames = [...fnMatch[0].matchAll(/^\t([A-Za-z0-9.\-|]+)\) return 0 ;;$/gm)]
+    .flatMap((m) => m[1].split("|"))
+    .sort();
 
-  const jsMatch = /const FACTORY_ASSET_NAMES = \[([\s\S]*?)\];/.exec(js);
-  assert.ok(jsMatch, "FACTORY_ASSET_NAMES not found in marketplace.js");
+  const jsMatch = /const THEME_SHIPPED_NAMES = \[([\s\S]*?)\];/.exec(js);
+  assert.ok(jsMatch, "THEME_SHIPPED_NAMES not found in marketplace.js");
   const jsNames = [...jsMatch[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]).sort();
 
   // A test comparing two empty arrays would pass while proving nothing --
-  // make sure both regexes actually captured the five factory names.
-  assert.equal(shellNames.length, 5, "shell-side capture did not find 5 names");
-  assert.equal(jsNames.length, 5, "js-side capture did not find 5 names");
+  // make sure both captures actually found the names.
+  assert.equal(shellNames.length, 9, "shell-side capture did not find 9 names");
+  assert.equal(jsNames.length, 9, "js-side capture did not find 9 names");
 
   assert.deepEqual(
     jsNames,
     shellNames,
-    "the share manifest and build_share_payload disagree about which assets are factory defaults",
+    "the share manifest and the rpcd script disagree about which files the theme ships",
   );
+  // 默认工具栏那四个必须在里面:一条指着 overview.svg 的快捷方式不需要上传
+  // 任何字节,而让它占掉一个 toolbar_icon_<k> 编号,接收端从那里往后的图标
+  // 就全部错位。
+  for (const name of ["network.svg", "overview.svg", "software.svg", "system.svg"]) {
+    assert.ok(jsNames.includes(name), `${name} must count as theme-shipped`);
+  }
 });
 
 // 扫的是代码不是散文:安全注释本身会点到被禁 API 的名字。
@@ -698,22 +729,44 @@ test("gallery view: the logo reaches the page only as an img src", async () => {
   assert.match(code, /themePreview\.logoImage\(/, "logo tile must reuse the shared img builder");
 });
 
-test("gallery view: only logo_svg is drawn, login backgrounds stay a label", async () => {
+test("gallery view: login backgrounds stay a label, and only cheap images reach a card", async () => {
   const src = await readFile(SRC, "utf8");
   assert.match(src, /kind === "logo_svg"/, "logo lookup missing");
   // /assets/:id/:kind streams the original image (login_bg is capped at
   // 2 MiB); 24 cards each pulling one is not acceptable. So login_bg stays a
-  // glyph tile, and exactly one call site ever turns a hub asset path into a
-  // fetchable url -- the logo's.
+  // glyph tile.
   assert.match(
     src,
     /glyph: "▣",\s+label: ASSET_LABELS\.loginBg/,
     "login background must stay a glyph tile",
   );
+
+  // 两个取 url 的地方,一个都不能多:logo(卡片和抽屉都画,每张 SVG 几 KB)和
+  // 快捷方式图标(**只**在抽屉里画,每张最多 256 KiB,一次最多 12 张)。
+  // 再多一处就要先回答"这会不会让一页 24 张卡各拉一张大图"。
   assert.equal(
     (src.match(/hubAssetUrl\(/g) || []).length,
-    1,
-    "exactly one place turns a hub asset path into a url",
+    2,
+    "exactly two places turn a hub asset path into a url",
+  );
+  const bodyOf = (name) => {
+    const start = src.indexOf(`const ${name} = `);
+    assert.ok(start !== -1, `${name} not found`);
+    return src.slice(start, src.indexOf("\n};", start));
+  };
+  assert.match(bodyOf("logoUrlOf"), /hubAssetUrl\(/);
+  assert.match(bodyOf("shortcutIconUrls"), /hubAssetUrl\(/);
+
+  // 快捷方式图标只走详情路径。列表行的 preview 投影带 assets 但不带 size,
+  // 而卡片本来也只画 glyph —— 这一条钉住"抽屉才调它"。
+  assert.match(
+    src,
+    /buildShortcutList = \(item, toolbar, layout\)/,
+    "shortcut list must take the item so it can resolve icon assets",
+  );
+  assert.ok(
+    !/buildCardGlyphs[\s\S]{0,400}shortcutIconUrls/.test(src),
+    "cards must never resolve shortcut icon urls",
   );
 });
 
@@ -844,10 +897,17 @@ test("gallery view: the drawer lists the shortcuts, not just how many", async ()
   // 不可信 url 不交给解析器 —— 显示它不需要解析它
   assert.ok(!src.includes("new URL("), "an untrusted url must not reach a parser");
 
-  // 不为 icon 造任何图片:hub 批准的六种资产里没有快捷方式图标,那些字节
-  // 从来没有离开过作者的路由器
-  assert.match(src, /const SHORTCUT_GLYPH = /, "the icon slot must be a neutral placeholder");
-  assert.ok(!/entry\.icon/.test(src), "a shared shortcut icon has no bytes on this router");
+  // 图标的字节现在跟着配置走(toolbar_icon_<k>),所以抽屉可以画真图 ——
+  // 但只能从 hub 那条路径画。entry.icon 是**作者路由器上**的文件名,拿它拼
+  // /luci-static/aurora/images/ 就是在用 hub 给的名字读本机文件系统。
+  assert.match(src, /const SHORTCUT_GLYPH = /, "there must still be a fallback glyph");
+  assert.match(src, /const shortcutIconUrls = /, "shortcut icons must resolve to hub assets");
+  assert.ok(
+    !/["'`]\/luci-static\/aurora\/images\/["'`]\s*\+/.test(src),
+    "an author's icon filename must never be concatenated into a local path",
+  );
+  // 名字只用来在 assets 里查编号,查不到就退回占位符。
+  assert.match(src, /shortcutText\(entry\.icon\)/);
 
   // 关掉的工具栏要说出来,否则这一节在承诺不会出现的东西
   assert.match(src, /toolbar_enabled === "0"/);
@@ -857,7 +917,7 @@ test("gallery view: the drawer lists the shortcuts, not just how many", async ()
   // a green suite (verified by deleting these two lines and re-running).
   assert.match(
     src,
-    /const shortcuts = buildShortcutList\(payload\.toolbar, layout\);\s*\n\s*if \(shortcuts\) children\.push\(\.\.\.shortcuts\);/,
+    /const shortcuts = buildShortcutList\(item, payload\.toolbar, layout\);\s*\n\s*if \(shortcuts\) children\.push\(\.\.\.shortcuts\);/,
     "buildDetailBody must actually render the shortcut section, not just define its builder",
   );
 });
@@ -877,7 +937,7 @@ test("gallery view: a hostile toolbar entry cannot crash the drawer", async () =
   // the version that shipped once and still let entry.url through bare).
   assert.match(
     src,
-    /const buildShortcutRow = \(entry\) => \{\s*\n(?:\s*\/\/[^\n]*\n)*\s*entry = entry \|\| \{\};/,
+    /const buildShortcutRow = \(entry, iconUrls\) => \{\s*\n(?:\s*\/\/[^\n]*\n)*\s*entry = entry \|\| \{\};/,
     "buildShortcutRow must normalize its parameter before any entry.x access",
   );
 });

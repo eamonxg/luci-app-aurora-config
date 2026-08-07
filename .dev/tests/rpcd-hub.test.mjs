@@ -128,7 +128,8 @@ test("rpcd script: hub-applied bookkeeping is written on success", () => {
 
 test("rpcd script: assets are fetched with checksum verification and skip on failure", () => {
   assert.match(rpcd, /fetch_verified\s+"\$tmp_path"/);
-  assert.match(rpcd, /apply_hub_asset\s+"\$ICON_PATH\/\$target"/);
+  const workerBody = extractFunctionBody(rpcd, "hub_apply_worker");
+  assert.match(workerBody, /apply_hub_asset\s+"\$a_kind"\s+"\$a_sha256"/);
 });
 
 test("rpcd script: login_bg asset lands as struct_login_bg", () => {
@@ -144,23 +145,27 @@ test("rpcd script: login_bg asset lands as struct_login_bg", () => {
 
 test("rpcd script: apply_hub_asset fetches+verifies to a temp path, never rm's the live target on failure, and mv's only on success", () => {
   const body = extractFunctionBody(rpcd, "apply_hub_asset");
-  assert.match(body, /tmp_path="\$\{target_path\}\.hubtmp"/);
+  assert.match(body, /tmp_path="\$ICON_PATH\/\.hubtmp-\$\$"/);
   assert.match(body, /fetch_verified\s+"\$tmp_path"\s+"\$sha256"\s+"\$url"/);
   assert.match(body, /mv\s+"\$tmp_path"\s+"\$target_path"/);
   assert.ok(!/rm -f "\$target_path"/.test(body), "must never rm the live target file");
 });
 
-test("rpcd script: apply_hub_asset backs up the live file before overwriting it", () => {
+// 名字现在是 sha 派生的,所以落地通常是**新增**而不是覆盖。两件事因此都要做:
+// 覆盖到的备份下来,新增的打 .new 标记 —— 少了后者,回滚会把别人的图永远留在
+// overlay 上(字体那边同样的道理,见 restore_pre_hub_fonts)。
+test("rpcd script: apply_hub_asset records what a rollback has to undo", () => {
   const body = extractFunctionBody(rpcd, "apply_hub_asset");
   assert.match(body, /backup_dir="\$DEVICE_DIR\/pre-hub-images"/);
-  assert.match(body, /cp -p "\$target_path" "\$backup_dir\/\$\{target_path##\*\/\}"/);
+  assert.match(body, /cp -p "\$target_path" "\$backup_dir\/\$name"/);
+  assert.match(body, /: > "\$backup_dir\/\$name\.new"/);
 });
 
 test("rpcd script: apply_hub_asset points the matching uci option at the applied filename on success", () => {
   const body = extractFunctionBody(rpcd, "apply_hub_asset");
   assert.match(rpcd, /hub_asset_uci_option\(\)\s*\{/);
-  assert.match(body, /uci -q set "aurora\.theme\.\$opt=\$\{target_path##\*\/\}"/);
-  assert.match(body, /struct_login_bg="url\('\/luci-static\/aurora\/images\/\$\{target_path##\*\/\}'\)"/);
+  assert.match(body, /uci -q set "aurora\.theme\.\$opt=\$name"/);
+  assert.match(body, /struct_login_bg="url\('\/luci-static\/aurora\/images\/\$name'\)"/);
 });
 
 // 单槽位快照现在住在 backup_if_mine 里,worker 只是调用它 —— 因为清空上一次的
@@ -181,6 +186,12 @@ test("rpcd script: hub_restore_backup restores backed-up images alongside /etc/c
   assert.match(restoreBody, /pre-hub-images/);
   assert.match(restoreBody, /cp -p "\$f" "\$ICON_PATH\/\$\{f##\*\/\}"/);
   assert.match(restoreBody, /rm -rf "\$backup_dir"/);
+  // 先删本次新引入的,再拷回被覆盖的 —— 顺序是正确性的一部分:一张图可以两者
+  // 都是(这次覆盖掉的,正是更早一次 apply 引入的)。
+  const dropIdx = restoreBody.indexOf('rm -f "$ICON_PATH/${base%.new}"');
+  const copyIdx = restoreBody.indexOf('cp -p "$f" "$ICON_PATH/${f##*/}"');
+  assert.ok(dropIdx >= 0, "must drop the files this apply introduced");
+  assert.ok(dropIdx < copyIdx, "dropping must come before copying back");
 });
 
 test("rpcd script: worker posts a download count after a successful apply", () => {
@@ -353,8 +364,8 @@ test("rpcd script: hub_applied name, struct_font_sans/mono, and toolbar title al
 
 test("rpcd script: build_share_payload and is_valid_font_stack also reject a literal single quote, for consistency with the apply side", () => {
   assert.match(rpcd, /is_valid_font_stack\(\)\s*\{[\s\S]*?case "\$v" in \*\\'\*\) return 1 ;; esac/);
-  const shareBody = extractFunctionBody(rpcd, "build_share_payload");
-  assert.match(shareBody, /case "\$trimmed_title" in \*\\'\*\) continue ;; esac/);
+  const itemBody = extractFunctionBody(rpcd, "toolbar_item_shareable");
+  assert.match(itemBody, /case "\$trimmed_title" in \*\\'\*\) return 1 ;; esac/);
 });
 
 test("rpcd script: require_color_token_keys guards colors validation", () => {
@@ -416,12 +427,18 @@ test("rpcd script: build_share_payload assembles the toolbar from anonymous tool
 });
 
 test("rpcd script: toolbar url filtering rejects protocol-relative urls but allows http(s)/relative", () => {
-  assert.match(rpcd, /\/\/\*\)\s*continue/);
-  assert.match(rpcd, /http:\/\/\*\|https:\/\/\*\|\/\*\)/);
+  const itemBody = extractFunctionBody(rpcd, "toolbar_item_shareable");
+  assert.match(itemBody, /\/\/\*\)\s*return 1/);
+  assert.match(itemBody, /http:\/\/\*\|https:\/\/\*\|\/\*\)/);
 });
 
-test("rpcd script: build_share_payload skips factory-default image filenames", () => {
-  assert.match(rpcd, /logo\.svg\|favicon\.ico\|app-icon-192x192\.png\|app-icon-512x512\.png\|apple-touch-icon\.png/);
+test("rpcd script: build_share_payload skips filenames the theme itself ships", () => {
+  const body = extractFunctionBody(rpcd, "is_theme_shipped_image");
+  assert.match(body, /logo\.svg\|favicon\.ico\|app-icon-192x192\.png\|app-icon-512x512\.png\|apple-touch-icon\.png/);
+  // 默认工具栏那四个也算主题自带:接收方的机器上本来就有,发过去只是浪费,
+  // 还会让对方用作者那份副本而不是自己已经装好的那份。
+  assert.match(body, /network\.svg\|overview\.svg\|software\.svg\|system\.svg/);
+  assert.match(extractFunctionBody(rpcd, "local_image_name"), /is_theme_shipped_image "\$fname" && return 1/);
 });
 
 // sha256/size 仍然由路由器算 —— 这是浏览器直传能安全的关键:hub 校验浏览器
@@ -553,30 +570,39 @@ function extractFunctionBody(source, name) {
   return source.slice(start, i + 1);
 }
 
-test("rpcd script: build_share_payload rejects asset filenames containing '/' or '..' before ICON_PATH is joined", () => {
-  const body = extractFunctionBody(rpcd, "build_share_payload");
-  // Guard must appear (and reject) before `file="$ICON_PATH/$fname"` is ever built.
-  const guardIdx = body.search(/case "\$fname" in\s*\n\s*\*\/\*\|\*\.\.\*\)\s*continue/);
-  const fileIdx = body.indexOf('file="$ICON_PATH/$fname"');
+test("rpcd script: local_image_name rejects filenames containing '/' or '..' before ICON_PATH is joined", () => {
+  const body = extractFunctionBody(rpcd, "local_image_name");
+  // Guard must appear (and reject) before `$ICON_PATH/$fname` is ever built.
+  const guardIdx = body.search(/case "\$fname" in \*\/\*\|\*\.\.\*\) return 1 ;; esac/);
+  const fileIdx = body.indexOf('[ -f "$ICON_PATH/$fname" ]');
   assert.ok(guardIdx >= 0, "path-traversal guard on $fname should exist");
-  assert.ok(fileIdx > guardIdx, "guard must run before $file is constructed");
+  assert.ok(fileIdx > guardIdx, "guard must run before ICON_PATH is joined");
+  // build_share_payload must not have grown a second way to reach ICON_PATH.
+  const shareBody = extractFunctionBody(rpcd, "build_share_payload");
+  assert.match(shareBody, /fname=\$\(local_image_name "\$kind"\) \|\| continue/);
 });
 
-test("rpcd script: build_share_payload validates each toolbar item against the hub's field limits", () => {
-  const body = extractFunctionBody(rpcd, "build_share_payload");
-  // title: control-char-trimmed then 1-30
-  assert.match(body, /trimmed_title=\$\(printf '%s' "\$title" \| tr -d '\[:cntrl:\]'\)/);
+test("rpcd script: toolbar_item_shareable validates each item against the hub's field limits", () => {
+  const body = extractFunctionBody(rpcd, "toolbar_item_shareable");
+  // title: control-char-trimmed then 1-30. strip_control_chars, never
+  // `tr -d '[:cntrl:]'` -- BusyBox's tr reads that as the literal set
+  // { [ : c n t r l } and eats those letters out of the title.
+  assert.match(body, /trimmed_title=\$\(strip_control_chars "\$title"\)/);
   assert.match(body, /tlen=\$\{#trimmed_title\}/);
-  assert.match(body, /\[ "\$tlen" -ge 1 \] && \[ "\$tlen" -le 30 \] \|\| continue/);
+  assert.match(body, /\[ "\$tlen" -ge 1 \] && \[ "\$tlen" -le 30 \] \|\| return 1/);
   // url: control-char guard, scheme guard, length cap
-  assert.match(body, /has_control_char "\$url" && continue/);
-  assert.match(body, /\[ "\$\{#url\}" -le 200 \] \|\| continue/);
+  assert.match(body, /has_control_char "\$url" && return 1/);
+  assert.match(body, /\[ "\$\{#url\}" -le 200 \] \|\| return 1/);
   // icon: control-char guard, length cap, charset
-  assert.match(body, /has_control_char "\$icon" && continue/);
-  assert.match(body, /\[ "\$\{#icon\}" -le 64 \] \|\| continue/);
-  assert.match(body, /grep -Eq '\^\[A-Za-z0-9\._-\]\+\$' \|\| continue/);
+  assert.match(body, /has_control_char "\$icon" && return 1/);
+  assert.match(body, /\[ "\$\{#icon\}" -le 64 \] \|\| return 1/);
+  assert.match(body, /grep -Eq '\^\[A-Za-z0-9\._-\]\+\$' \|\| return 1/);
   // enabled: enum guard
-  assert.match(body, /case "\$enabled" in 0\|1\) ;; \*\) continue ;; esac/);
+  assert.match(body, /case "\$enabled" in 0\|1\) ;; \*\) return 1 ;; esac/);
+  // 两个消费者,一份规则。分开判就会让一条被打包跳过的快捷方式仍然占掉一个
+  // 图标槽位号,接收端从那里往后全部错位。
+  assert.match(extractFunctionBody(rpcd, "build_share_payload"), /toolbar_item_shareable "\$sid" \|\| continue/);
+  assert.match(extractFunctionBody(rpcd, "nth_custom_toolbar_icon"), /toolbar_item_shareable "\$sid" \|\| continue/);
 });
 
 test("rpcd script: build_share_payload falls back to a canonical font stack when struct_font_* fails the hub's regex", () => {

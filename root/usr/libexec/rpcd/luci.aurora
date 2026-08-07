@@ -9,6 +9,15 @@ readonly FONT_JOB_PATH="/tmp/aurora_font_jobs"
 readonly FONT_TMP_UPLOAD="/tmp/aurora_font.tmp"
 readonly FONT_CUSTOM_PATH="$FONT_PATH/custom"
 readonly MAX_UPLOAD=8388608
+# 分享一张图片的上限,与 hub 的 OTHER_ASSET_LIMIT 同为 2 MiB。刻意不是
+# MAX_UPLOAD —— 那是 receive_upload 的上传闸门,图片和字体共用它,收紧它会连
+# 字体一起收紧(字体在 hub 那边有自己的 8 MiB 额度)。分开之后,一张 3 MiB 的
+# 登录背景仍然能上传、能在本机用,只是不随主题发出去。
+readonly MAX_SHARED_IMAGE=2097152
+# 工具栏图标自己一档,见 toolbar_icon_shareable。槽位数与 hub 的
+# TOOLBAR_MAX_ITEMS / build_share_payload 的 12 项上限对齐。
+readonly MAX_SHARED_TOOLBAR_ICON=262144
+readonly MAX_SHARED_TOOLBAR_ICONS=12
 readonly TMP_UPLOAD_PATH="/tmp/aurora_icon.tmp"
 readonly CONFIG_FILE="/etc/config/aurora"
 readonly DEFAULT_TEMPLATE="/usr/share/aurora/default.template"
@@ -653,25 +662,88 @@ write_hub_job_status() {
 	find "$HUB_JOB_PATH" -name '*.status' -mmin +60 -delete 2>/dev/null
 }
 
-# Maps a hub asset "kind" to the local filename it is written to under
-# ICON_PATH. Unknown kinds return failure so the caller skips them instead
-# of aborting the whole apply -- one bad/unexpected asset must never undo
-# config data that has already been validated and committed.
-hub_asset_target_name() {  # $1=kind  $2=sha256  $3=url
-	local kind="$1" sha256="$2" url="$3" ext
+# Prints the extension implied by a local file's leading bytes, or returns
+# non-zero. Two jobs in one read:
+#
+#   1. Local re-verification. The hub sniffed these bytes on the way in and
+#      the review console re-encoded them, but they arrived here over the
+#      network -- same posture apply_hub_font_asset takes with `head -c 4 ==
+#      wOF2`. Not checking would outsource the check to the server.
+#   2. The on-disk extension. uhttpd derives Content-Type from it, and an SVG
+#      landed as .png simply does not render. The url the byte came from
+#      ("/assets/{id}/{kind}") carries no extension at all, so it cannot
+#      answer this -- the old login_bg branch parsed one out of that url and
+#      therefore always fell through to its "jpg" default, writing .jpg files
+#      that had been re-encoded to PNG by the console.
+#
+# hexdump is already relied on for device.key generation, so it is present.
+sniff_image_ext() {  # $1=file
+	local head8 offset
 
-	case "$kind" in
-	logo_svg) printf '%s' "logo.svg"; return 0 ;;
-	favicon_png) printf '%s' "favicon.png"; return 0 ;;
-	favicon_ico) printf '%s' "favicon.ico"; return 0 ;;
-	pwa_icon_192) printf '%s' "app-icon-192x192.png"; return 0 ;;
-	pwa_icon_512) printf '%s' "app-icon-512x512.png"; return 0 ;;
-	login_bg)
-		ext=$(printf '%s' "$url" | sed -n 's/.*\.\([A-Za-z0-9]\{1,5\}\)$/\1/p' | tr 'A-Z' 'a-z')
-		case "$ext" in jpg|jpeg|png|webp|avif|gif) ;; *) ext="jpg" ;; esac
-		printf 'hub-login-bg-%.12s.%s' "$sha256" "$ext"
-		return 0
-		;;
+	head8=$(head -c 8 "$1" 2>/dev/null | hexdump -v -e '/1 "%02x"' 2>/dev/null)
+	case "$head8" in
+	89504e470d0a1a0a) printf 'png'; return 0 ;;
+	ffd8ff*)          printf 'jpg'; return 0 ;;
+	00000100*)        printf 'ico'; return 0 ;;
+	esac
+
+	# SVG is text and has no fixed magic; mirror the hub's own isSvg -- drop a
+	# leading UTF-8 BOM and any whitespace, then require "<svg" or "<?xml".
+	#
+	# The BOM goes by byte offset, not by feeding tr an octal escape: `tr -d
+	# '\357...'` is a GNU extension that BSD tr silently does not honour, so
+	# that spelling would have the router and the test host disagree about a
+	# BOM'd file -- green tests, blank logo.
+	case "$head8" in efbbbf*) offset=4 ;; *) offset=1 ;; esac
+	case "$(tail -c "+$offset" "$1" 2>/dev/null | head -c 512 | tr -d ' \t\r\n')" in
+	'<svg'*|'<?xml'*) printf 'svg'; return 0 ;;
+	esac
+
+	return 1
+}
+
+# True (0) when a sniffed extension is one this kind is allowed to be. Kinds
+# the hub pins to a single format say so; login_bg and toolbar icons are
+# genuinely two-format (the console re-encodes login_bg to PNG but JPEG is in
+# the schema, and a toolbar icon is whichever of SVG/PNG its author uploaded).
+hub_asset_ext_ok() {  # $1=kind  $2=ext
+	case "$1" in
+	logo_svg)                     [ "$2" = "svg" ] ;;
+	favicon_png|pwa_icon_192|pwa_icon_512) [ "$2" = "png" ] ;;
+	favicon_ico)                  [ "$2" = "ico" ] ;;
+	login_bg)                     [ "$2" = "png" ] || [ "$2" = "jpg" ] ;;
+	toolbar_icon_*)               [ "$2" = "png" ] || [ "$2" = "svg" ] ;;
+	*) return 1 ;;
+	esac
+}
+
+# Maps a hub asset "kind" (plus its sha256 and sniffed extension) to the local
+# filename it is written to under ICON_PATH. Unknown kinds return failure so
+# the caller skips them instead of aborting the whole apply -- one
+# bad/unexpected asset must never undo config data that has already been
+# validated and committed.
+#
+# Every name is sha-derived and "hub-" prefixed. It used to be the factory
+# filename (logo.svg, app-icon-192x192.png, ...), which cost two things:
+#
+#   - Applying a store theme OVERWROTE the shipped default. Apply theme A then
+#     theme B and B takes no snapshot (backup_if_mine: the config being
+#     replaced is not yours), so the factory logo A had clobbered was gone for
+#     good.
+#   - A config applied from the store could not be shared onward with its
+#     images: build_share_payload skips factory filenames, and four of the
+#     five landed under exactly those names. logo, favicon.ico and both PWA
+#     icons vanished silently on the second hop.
+#
+# The prefix is what makes the leftovers collectable -- see sweep_hub_images.
+hub_asset_target_name() {  # $1=kind  $2=sha256  $3=ext
+	case "$1" in
+	logo_svg)     printf 'hub-logo-%.12s.%s' "$2" "$3" ;;
+	favicon_png|favicon_ico) printf 'hub-favicon-%.12s.%s' "$2" "$3" ;;
+	pwa_icon_192) printf 'hub-app192-%.12s.%s' "$2" "$3" ;;
+	pwa_icon_512) printf 'hub-app512-%.12s.%s' "$2" "$3" ;;
+	login_bg)     printf 'hub-login-bg-%.12s.%s' "$2" "$3" ;;
+	toolbar_icon_*) printf 'hub-tb-%.12s.%s' "$2" "$3" ;;
 	*) return 1 ;;
 	esac
 }
@@ -692,35 +764,55 @@ hub_asset_uci_option() {  # $1=kind
 	esac
 }
 
-# Fetches+verifies one hub image asset to a temp file beside its target, and
-# only on success backs up the current live file (if any) under
-# $DEVICE_DIR/pre-hub-images/ before mv'ing the verified download onto the
-# target. fetch_verified rm's *its own dest* on a checksum mismatch, so it
-# must never be pointed directly at the live shipped-default file -- a
-# corrupt/mismatched hub asset would otherwise delete a factory default
-# (logo.svg etc.) with nothing to fall back to. On any failure the live file
-# is left completely untouched and the asset is simply skipped, matching the
-# existing "one bad asset never undoes validated config" posture. On success
-# the corresponding aurora.theme uci option is pointed at the new filename
-# (login_bg instead gets its struct_login_bg url('...') form) so the applied
-# asset is actually used, and committed immediately (assets are independent
-# of the already-committed color/layout/typography batch).
-apply_hub_asset() {  # $1=target_path  $2=sha256  $3=url  $4=kind
-	local target_path="$1" sha256="$2" url="$3" kind="$4"
-	local tmp_path="${target_path}.hubtmp" backup_dir="$DEVICE_DIR/pre-hub-images" opt
+# Fetches+verifies one hub image asset into ICON_PATH and points the uci slot
+# that renders it at the landed filename. On success the filename is left in
+# APPLIED_ASSET_NAME for apply_hub_toolbar_icon to pick up -- a global rather
+# than stdout so that no future `wget` chattiness inside fetch_url can end up
+# being read back as a filename. On any failure nothing under ICON_PATH is
+# touched and the asset is simply skipped, matching the existing "one bad
+# asset never undoes validated config" posture.
+#
+# fetch_verified rm's *its own dest* on a checksum mismatch, so it is pointed
+# at a temp name and never at a live file. The name is only computed after the
+# bytes are on disk, because sniff_image_ext is what decides the extension.
+#
+# The backup below is now the narrow case rather than the common one: names
+# are sha-derived, so a landing normally introduces a file rather than
+# replacing one. Introduced files get a ".new" marker instead, exactly like
+# apply_hub_font_asset -- without it a rollback would leave someone else's
+# images sitting in ICON_PATH forever.
+apply_hub_asset() {  # $1=kind  $2=sha256  $3=url
+	local kind="$1" sha256="$2" url="$3"
+	local backup_dir="$DEVICE_DIR/pre-hub-images" opt ext name target_path
+	local tmp_path="$ICON_PATH/.hubtmp-$$"
 
+	APPLIED_ASSET_NAME=""
 	rm -f "$tmp_path"
 	fetch_verified "$tmp_path" "$sha256" "$url" "" || {
 		rm -f "$tmp_path"
 		return 1
 	}
 
-	# 只在这次 apply 真的拍了配置快照时才备份原图 —— 见 backup_if_mine。没拍
+	ext=$(sniff_image_ext "$tmp_path") && hub_asset_ext_ok "$kind" "$ext" || {
+		rm -f "$tmp_path"
+		return 1
+	}
+	name=$(hub_asset_target_name "$kind" "$sha256" "$ext") || {
+		rm -f "$tmp_path"
+		return 1
+	}
+	target_path="$ICON_PATH/$name"
+
+	# 只在这次 apply 真的拍了配置快照时才记回滚信息 —— 见 backup_if_mine。没拍
 	# 快照就说明被覆盖的是另一个商店主题,那些原图不属于备份里那份配置,写下去
 	# 会让回滚交还一份穿着别人 logo 的配置。
-	if [ -f "$target_path" ] && [ "$THEME_BACKUP_TAKEN" = "1" ]; then
+	if [ "$THEME_BACKUP_TAKEN" = "1" ]; then
 		mkdir -p "$backup_dir"
-		cp -p "$target_path" "$backup_dir/${target_path##*/}" 2>/dev/null
+		if [ -f "$target_path" ]; then
+			cp -p "$target_path" "$backup_dir/$name" 2>/dev/null
+		else
+			: > "$backup_dir/$name.new"
+		fi
 	fi
 
 	mv "$tmp_path" "$target_path" 2>/dev/null || {
@@ -730,12 +822,56 @@ apply_hub_asset() {  # $1=target_path  $2=sha256  $3=url  $4=kind
 	chmod 644 "$target_path" 2>/dev/null
 
 	if [ "$kind" = "login_bg" ]; then
-		uci -q set aurora.theme.struct_login_bg="url('/luci-static/aurora/images/${target_path##*/}')"
+		uci -q set aurora.theme.struct_login_bg="url('/luci-static/aurora/images/$name')"
 		uci -q commit aurora
 	elif opt=$(hub_asset_uci_option "$kind"); then
-		uci -q set "aurora.theme.$opt=${target_path##*/}"
+		uci -q set "aurora.theme.$opt=$name"
 		uci -q commit aurora
 	fi
+
+	APPLIED_ASSET_NAME="$name"
+	return 0
+}
+
+# Lands one toolbar shortcut icon and repoints every shortcut that used it.
+#
+# The asset itself goes through apply_hub_asset unchanged (hub_asset_uci_option
+# has no entry for these kinds, so it writes no uci of its own). What is
+# specific here is the second half: the config batch already wrote the AUTHOR's
+# filename into every toolbar_item.icon, and that name means nothing on this
+# device -- it has to be swapped for the name the bytes just landed under.
+#
+# Which shortcuts? The ones naming the k-th distinct custom icon, k being the
+# number in the kind. Both ends derive that ordering from the same name-only
+# rule over the same toolbar list; see nth_custom_toolbar_icon.
+#
+# On failure the shortcut keeps the author's filename and renders as an empty
+# box -- exactly what it did before any of this existed, and strictly better
+# than dropping the shortcut itself.
+apply_hub_toolbar_icon() {  # $1=kind  $2=sha256  $3=url
+	local kind="$1" sha256="$2" url="$3"
+	local index="${1#toolbar_icon_}" author_name landed sid changed=0
+
+	case "$index" in ''|*[!0-9]*) return 1 ;; esac
+	author_name=$(nth_custom_toolbar_icon "$index") || return 1
+
+	apply_hub_asset "$kind" "$sha256" "$url" || return 1
+	landed="$APPLIED_ASSET_NAME"
+
+	for sid in $(uci show aurora 2>/dev/null | sed -n 's/^aurora\.\([^.=]*\)=toolbar_item$/\1/p'); do
+		[ "$(uci -q get "aurora.$sid.icon")" = "$author_name" ] || continue
+		uci -q set "aurora.$sid.icon=$landed"
+		changed=1
+	done
+
+	# 一个都没改到就说明这份字节没有归属 —— 把它留在 ICON_PATH 里只会等着
+	# sweep_hub_images 收走,而现在就删掉更直接。
+	if [ "$changed" = 0 ]; then
+		rm -f "$ICON_PATH/$landed" "$DEVICE_DIR/pre-hub-images/$landed.new"
+		return 1
+	fi
+
+	uci -q commit aurora
 	return 0
 }
 
@@ -870,21 +1006,76 @@ restore_pre_hub_fonts() {
 	rm -rf "$backup_dir"
 }
 
-# Restores every image hub_apply_worker backed up (see apply_hub_asset)
-# before overwriting it, copying each back onto its live ICON_PATH filename,
-# then clears the backup directory -- a later restore must not re-apply
-# images from an even-earlier apply. Companion to hub_restore_backup's
+# Undoes everything hub_apply_worker did to ICON_PATH (see apply_hub_asset),
+# then clears the backup directory -- a later restore must not re-apply images
+# from an even-earlier apply. Companion to hub_restore_backup's
 # /etc/config/aurora restore, which on its own left applied images in place.
+#
+# Two moves, in this order, same shape as restore_pre_hub_fonts: drop the
+# files the apply introduced from scratch (".new" marker), then copy back the
+# ones it overwrote. Dropping first matters -- a file can be both, if an apply
+# replaced one that an even-earlier apply had introduced. Without the first
+# move a rollback would leave someone else's images occupying the overlay for
+# good, which is exactly what sha-derived names would otherwise cost.
 restore_pre_hub_images() {
-	local backup_dir="$DEVICE_DIR/pre-hub-images" f
+	local backup_dir="$DEVICE_DIR/pre-hub-images" f base
 
 	[ -d "$backup_dir" ] || return 0
+
+	for f in "$backup_dir"/*.new; do
+		[ -f "$f" ] || continue
+		base="${f##*/}"
+		rm -f "$ICON_PATH/${base%.new}" 2>/dev/null
+	done
+
 	for f in "$backup_dir"/*; do
 		[ -f "$f" ] || continue
+		case "${f##*/}" in *.new) continue ;; esac
 		cp -p "$f" "$ICON_PATH/${f##*/}" 2>/dev/null
 		chmod 644 "$ICON_PATH/${f##*/}" 2>/dev/null
 	done
+
 	rm -rf "$backup_dir"
+}
+
+# Deletes the hub-* images left over from earlier applies. Names are
+# sha-derived, so nothing overwrites anything and applying five themes in a
+# row would otherwise leave five sets of images on the overlay -- a leak
+# hub-login-bg-* has had since it became the first sha-named kind.
+#
+# Two things keep a file: a live uci slot still pointing at it (theme asset
+# options, struct_login_bg's url() form, or any toolbar_item icon), or the
+# rollback backup still referencing it. Everything else under the prefix is
+# unreachable by definition -- only this function's own naming scheme
+# produces it, and nothing else on the device writes there.
+sweep_hub_images() {
+	local backup_dir="$DEVICE_DIR/pre-hub-images" f name opt live
+
+	live=$(
+		for opt in logo_svg favicon_png favicon_ico pwa_icon_192 pwa_icon_512 pwa_apple_touch; do
+			uci -q get "aurora.theme.$opt"
+		done
+		uci -q get aurora.theme.struct_login_bg | sed "s|url('/luci-static/aurora/images/||;s|')||"
+		uci show aurora 2>/dev/null | sed -n "s/^aurora\.[^.]*\.icon='\(.*\)'\$/\1/p"
+	)
+
+	for f in "$ICON_PATH"/hub-logo-* "$ICON_PATH"/hub-favicon-* \
+		"$ICON_PATH"/hub-app192-* "$ICON_PATH"/hub-app512-* \
+		"$ICON_PATH"/hub-login-bg-* "$ICON_PATH"/hub-tb-*; do
+		[ -f "$f" ] || continue
+		name="${f##*/}"
+		# 只认这个函数自己产的形状:<前缀>-<12 位十六进制>.<扩展名>。用户完全
+		# 可以上传一个叫 hub-whatever.png 的图标,而一个没被任何槽位引用的
+		# 自有图标被当成垃圾删掉,是纯粹的数据丢失。
+		case "${name##*-}" in
+		[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f].???) ;;
+		*) continue ;;
+		esac
+		printf '%s\n' "$live" | grep -qxF "$name" && continue
+		[ -f "$backup_dir/$name" ] && continue
+		[ -f "$backup_dir/$name.new" ] && continue
+		rm -f "$f"
+	done
 }
 
 # Reverse-maps a locally-applied font stack back to the hub's preset id: the
@@ -970,6 +1161,180 @@ shared_custom_font_base() {  # $1=slot
 	return 1
 }
 
+# True (0) when $1 is a filename the theme package itself ships into
+# ICON_PATH. Those bytes exist on every device that has the theme installed,
+# so sharing them would upload a file the receiver already has -- and, worse,
+# the receiver would get the AUTHOR's copy landed under a hub-* name while
+# their own shipped file sat unused.
+#
+# The first five are the asset slots' factory defaults; the last four are the
+# icons header.ut's default floating toolbar points at. Both groups are
+# "present on every install", which is the only property this predicate is
+# about. Duplicated in marketplace.js as THEME_SHIPPED_NAMES --
+# tests/marketplace-view.test.mjs asserts the two stay identical.
+is_theme_shipped_image() {  # $1=filename
+	case "$1" in
+	logo.svg|favicon.ico|app-icon-192x192.png|app-icon-512x512.png|apple-touch-icon.png) return 0 ;;
+	network.svg|overview.svg|software.svg|system.svg) return 0 ;;
+	esac
+	return 1
+}
+
+# True (0) when an image of $1 bytes is small enough to ship. The hub caps
+# every non-font asset at 2 MiB while receive_upload accepts 8 MiB, so a
+# perfectly usable local background can be too big for the store -- and the
+# hub rejects the WHOLE share, not just that asset. Answering this here means
+# the oversized slot is simply left out, the same posture the toolbar and
+# font loops already take for their own out-of-range items.
+#
+# Both the manifest shown before publishing (hub_local_state) and the actual
+# packing (build_share_payload) ask this one function.
+image_fits_share() {  # $1=size in bytes
+	[ "$1" -gt 0 ] && [ "$1" -le "$MAX_SHARED_IMAGE" ]
+}
+
+# The ICON_PATH filename an image asset kind would ship, or non-zero when the
+# slot ships nothing (unset, still the factory file, or the file is gone).
+# Deliberately does NOT apply image_fits_share: the manifest needs to tell an
+# oversized slot apart from an empty one so it can say why nothing goes out.
+#
+# The name comes straight out of uci (or a login_bg url() capture) and is
+# about to be joined onto $ICON_PATH and read, sha256'd and uploaded to the
+# public hub -- a value containing "/" or ".." (e.g.
+# "../../etc/aurora/device.key") could otherwise escape ICON_PATH and
+# exfiltrate an arbitrary file. Rejected outright, same posture as
+# remove_icon's `dirname "$filename" | grep -q "\.\."` guard.
+local_image_name() {  # $1=kind
+	local kind="$1" value fname
+
+	if [ "$kind" = "login_bg" ]; then
+		value=$(uci -q get aurora.theme.struct_login_bg)
+		fname=$(printf '%s' "$value" | sed "s|url('/luci-static/aurora/images/||;s|')||")
+	else
+		fname=$(uci -q get "aurora.theme.$kind")
+	fi
+
+	[ -n "$fname" ] || return 1
+	case "$fname" in */*|*..*) return 1 ;; esac
+	is_theme_shipped_image "$fname" && return 1
+	[ -f "$ICON_PATH/$fname" ] || return 1
+
+	printf '%s' "$fname"
+}
+
+# 一个工具栏图标能不能随配置发出去。图标存的是 ICON_PATH 里的文件名,而
+# payload 里从来只有这个名字 —— 接收方的机器上根本没有这个文件,渲染出来就是
+# 一个空方块(header.ut 把它拼成 background-image 的 url)。所以字节必须跟着走。
+#
+# 两道闸,**只看名字**:路径必须安全(同 local_image_name),主题自带的那几个
+# 不算(对方本来就有那份字节)。刻意不碰文件本身 —— 这个判断决定的是槽位编号,
+# 而接收端算同一个编号时,那些文件在它机器上根本还不存在。
+toolbar_icon_custom() {  # $1=icon filename
+	local icon="$1"
+
+	[ -n "$icon" ] || return 1
+	case "$icon" in */*|*..*) return 1 ;; esac
+	is_theme_shipped_image "$icon" && return 1
+	return 0
+}
+
+# 这一份图标的字节能不能真的发出去。只有分享端问它 —— 它看的是本机文件。
+#
+# 格式只收 PNG 和 SVG:审核台只有这两条清洗路径(canvas 重编码和 sanitizeSvg),
+# 一张永远批不下来的图标不如从一开始就不发。
+#
+# 尺寸上限单独一档(MAX_SHARED_TOOLBAR_ICON):图标渲染出来是 20px,而 12 个
+# 槽位都按图片的 2 MiB 放行的话,光图标就能把审核 body 顶到 24 MiB —— 那是
+# 「能分享但永远批不了」。
+#
+# 不通过只是这一个槽位不上传,**编号照占**:漏掉的那个 kind 在 assets 里缺席,
+# 后面的编号一个都不移位。
+toolbar_icon_uploadable() {  # $1=icon filename
+	local file="$ICON_PATH/$1" size
+
+	[ -f "$file" ] || return 1
+	size=$(wc -c < "$file")
+	[ "$size" -gt 0 ] && [ "$size" -le "$MAX_SHARED_TOOLBAR_ICON" ] || return 1
+	case "$(sniff_image_ext "$file")" in png|svg) ;; *) return 1 ;; esac
+	return 0
+}
+
+# 一条工具栏快捷方式够不够格随配置发出去。本地编辑器只要求每个字段非空,而
+# hub 的 schema 严得多(title 1-30、url <=200 且带 scheme 或以 / 开头、icon 只认
+# [A-Za-z0-9._-] 且 <=64)。越界的那一条整条不发,而不是让 hub 拒掉整次分享。
+#
+# 独立成函数是因为它有两个消费者:真正打包的 build_share_payload,和数图标序号
+# 的 nth_custom_toolbar_icon。两处各判一次的话,一条被打包跳过的快捷方式仍然会
+# 在序号里占掉一格,接收端从那里往后的图标全部错位。
+toolbar_item_shareable() {  # $1=uci section id
+	local sid="$1" title url icon enabled trimmed_title tlen
+
+	title=$(uci -q get "aurora.$sid.title")
+	trimmed_title=$(strip_control_chars "$title")
+	tlen=${#trimmed_title}
+	[ "$tlen" -ge 1 ] && [ "$tlen" -le 30 ] || return 1
+	# validate_and_apply_hub_payload rejects a literal quote in a title
+	# outright (see has_batch_unsafe_char); skip such an item here too, same
+	# posture as any other out-of-range item, instead of sharing a config that
+	# would fail to re-apply on the receiving end.
+	case "$trimmed_title" in *\'*) return 1 ;; esac
+
+	url=$(uci -q get "aurora.$sid.url")
+	has_control_char "$url" && return 1
+	case "$url" in
+	//*) return 1 ;;
+	http://*|https://*|/*) ;;
+	*) return 1 ;;
+	esac
+	[ "${#url}" -le 200 ] || return 1
+
+	icon=$(uci -q get "aurora.$sid.icon")
+	if [ -n "$icon" ]; then
+		has_control_char "$icon" && return 1
+		[ "${#icon}" -le 64 ] || return 1
+		printf '%s' "$icon" | grep -Eq '^[A-Za-z0-9._-]+$' || return 1
+	fi
+
+	enabled=$(uci -q get "aurora.$sid.enabled")
+	case "$enabled" in 0|1) ;; *) return 1 ;; esac
+
+	return 0
+}
+
+# The k-th distinct custom toolbar icon filename in uci order, or non-zero when
+# there is none. This is the whole mapping between `toolbar_icon_<k>` and the
+# shortcuts that use it: nothing about it travels on the wire, so the toolbar
+# item shape in the payload stays exactly what it has always been.
+#
+# Both ends compute the same number because the receiving end's toolbar_item
+# sections ARE payload.toolbar, in payload order
+# (validate_and_apply_hub_payload deletes them all and re-adds them one by
+# one), and because every rule feeding into the count -- toolbar_item_shareable
+# for which shortcuts count, toolbar_icon_custom for which of their icons do,
+# and the 12-item cap -- is decided from names and uci fields alone. Whether
+# the bytes can actually be uploaded (toolbar_icon_uploadable) deliberately
+# does NOT feed in: those files exist only on the sender, so letting them
+# affect the numbering would put the two ends out of step.
+nth_custom_toolbar_icon() {  # $1=0-based index
+	local want="$1" sid icon i=0 tcount=0 seen=" "
+
+	for sid in $(uci show aurora 2>/dev/null | sed -n 's/^aurora\.\([^.=]*\)=toolbar_item$/\1/p'); do
+		[ "$tcount" -ge 12 ] && break
+		toolbar_item_shareable "$sid" || continue
+		tcount=$((tcount + 1))
+
+		icon=$(uci -q get "aurora.$sid.icon")
+		toolbar_icon_custom "$icon" || continue
+		case "$seen" in *" $icon "*) continue ;; esac
+		seen="$seen$icon "
+		[ "$i" = "$want" ] && { printf '%s' "$icon"; return 0; }
+		i=$((i + 1))
+		[ "$i" -ge "$MAX_SHARED_TOOLBAR_ICONS" ] && break
+	done
+
+	return 1
+}
+
 # Assembles the current /etc/config/aurora into the hub's strict payload
 # schema and writes it to $1 (colors/layout/typography/toolbar/assets, no
 # device_token/name -- those are the caller's job). The payload's "assets"
@@ -983,10 +1348,11 @@ shared_custom_font_base() {  # $1=slot
 build_share_payload() {
 	local out_file="$1" files_file="${1}.files"
 	local token prefix key value
-	local sid title url icon enabled tcount trimmed_title tlen
+	local sid url icon enabled tcount trimmed_title
 	local kind fname file sha256 size
 	local font_sans_id font_mono_id struct_font_sans struct_font_mono
 	local slot base
+	local tb_icons=" " tb_count=0 tb_i=0
 
 	require_color_token_keys || return 1
 
@@ -1042,45 +1408,19 @@ build_share_payload() {
 
 	# Anonymous toolbar_item sections have no stable index, so their uci ids
 	# are recovered from `uci show` output rather than iterated by position.
-	# The local settings UI (theme.js) does not itself enforce the hub's
-	# stricter per-field limits (title 1-30, url <=200 + scheme, icon
-	# charset+<=64), so every item is validated here exactly like
-	# validate_and_apply_hub_payload validates them on the inbound side --
-	# an out-of-range item is skipped (never sent), instead of getting the
-	# entire share rejected by the hub. Capped at 12 to match the hub schema.
+	# toolbar_item_shareable holds the per-field rules (and why an
+	# out-of-range item is skipped rather than failing the whole share).
+	# Capped at 12 to match the hub schema.
 	json_add_array "toolbar"
 	tcount=0
 	for sid in $(uci show aurora 2>/dev/null | sed -n 's/^aurora\.\([^.=]*\)=toolbar_item$/\1/p'); do
 		[ "$tcount" -ge 12 ] && break
-		title=$(uci -q get "aurora.$sid.title")
+		toolbar_item_shareable "$sid" || continue
+
 		url=$(uci -q get "aurora.$sid.url")
 		icon=$(uci -q get "aurora.$sid.icon")
 		enabled=$(uci -q get "aurora.$sid.enabled")
-
-		trimmed_title=$(printf '%s' "$title" | tr -d '[:cntrl:]')
-		tlen=${#trimmed_title}
-		[ "$tlen" -ge 1 ] && [ "$tlen" -le 30 ] || continue
-		# validate_and_apply_hub_payload rejects a literal quote in a title
-		# outright (see has_batch_unsafe_char); skip such an item here too,
-		# same posture as any other out-of-range item, instead of sharing a
-		# config that would fail to re-apply on the receiving end.
-		case "$trimmed_title" in *\'*) continue ;; esac
-
-		has_control_char "$url" && continue
-		case "$url" in
-		//*) continue ;;
-		http://*|https://*|/*) ;;
-		*) continue ;;
-		esac
-		[ "${#url}" -le 200 ] || continue
-
-		if [ -n "$icon" ]; then
-			has_control_char "$icon" && continue
-			[ "${#icon}" -le 64 ] || continue
-			printf '%s' "$icon" | grep -Eq '^[A-Za-z0-9._-]+$' || continue
-		fi
-
-		case "$enabled" in 0|1) ;; *) continue ;; esac
+		trimmed_title=$(strip_control_chars "$(uci -q get "aurora.$sid.title")")
 
 		json_add_object ""
 		json_add_string "title" "$trimmed_title"
@@ -1089,6 +1429,20 @@ build_share_payload() {
 		json_add_string "enabled" "$enabled"
 		json_close_object
 		tcount=$((tcount + 1))
+
+		# 图标的字节要跟着走,所以这里顺手把「哪些图标要编号」按首次出现顺序
+		# 去重记下来 —— 必须在**接受**一条之后才记,而不是遍历 uci 时就记:被
+		# 跳过的那条也有图标,让它占掉一个槽位号,接收端算出来的序号就整体错位
+		# 了。用的是 toolbar_icon_custom(只看名字),与接收端同一条规则;能不能
+		# 真的上传是下面 assets 那一段的事。见 nth_custom_toolbar_icon。
+		if toolbar_icon_custom "$icon" \
+			&& [ "$tb_count" -lt "$MAX_SHARED_TOOLBAR_ICONS" ]; then
+			case "$tb_icons" in *" $icon "*) ;; *)
+				tb_icons="$tb_icons$icon "
+				tb_count=$((tb_count + 1))
+				;;
+			esac
+		fi
 	done
 	json_close_array
 
@@ -1097,34 +1451,14 @@ build_share_payload() {
 	# nothing worth uploading (and nothing copyright-risky to check).
 	json_add_array "assets"
 	for kind in logo_svg favicon_png favicon_ico pwa_icon_192 pwa_icon_512 login_bg; do
-		if [ "$kind" = "login_bg" ]; then
-			value=$(uci -q get aurora.theme.struct_login_bg)
-			fname=$(printf '%s' "$value" | sed "s|url('/luci-static/aurora/images/||;s|')||")
-		else
-			fname=$(uci -q get "aurora.theme.$kind")
-		fi
-
-		[ -n "$fname" ] || continue
-		# fname comes straight out of uci (or a login_bg url() capture) and
-		# is about to be joined onto $ICON_PATH and read, sha256'd and
-		# base64'd for upload to the public hub -- a value containing "/" or
-		# ".." (e.g. "../../etc/aurora/device.key") could otherwise escape
-		# ICON_PATH and exfiltrate an arbitrary file. Reject outright, same
-		# posture as remove_icon's `dirname "$filename" | grep -q "\.\."` guard
-		# elsewhere in this file, before $file is ever constructed.
-		case "$fname" in
-		*/*|*..*) continue ;;
-		esac
-		case "$fname" in
-		logo.svg|favicon.ico|app-icon-192x192.png|app-icon-512x512.png|apple-touch-icon.png)
-			continue ;;
-		esac
+		fname=$(local_image_name "$kind") || continue
 
 		file="$ICON_PATH/$fname"
-		[ -f "$file" ] || continue
 		sha256=$(sha256sum "$file" 2>/dev/null | cut -d' ' -f1)
 		[ -n "$sha256" ] || continue
 		size=$(wc -c < "$file")
+		# 超限的图片整张跳过,而不是让 hub 拒掉整次分享 —— 见 image_fits_share。
+		image_fits_share "$size" || continue
 
 		json_add_object ""
 		json_add_string "kind" "$kind"
@@ -1138,6 +1472,32 @@ build_share_payload() {
 		# 没有这个限制。图片在 images/,字体在 fonts/custom/,所以这一列必须带
 		# 上目录 —— hub_share_begin 曾经把 images/ 前缀写死在拼 URL 那一步。
 		printf '%s\timages/%s\n' "$kind" "$fname" >> "$files_file"
+	done
+
+	# 工具栏图标的字节。payload.toolbar 里的 icon 一直只是个文件名,而那个文件
+	# 只存在于作者的路由器上 —— 接收方应用完,快捷方式的图就是一个空框
+	# (header.ut 把它拼成 background-image 的 url)。编号规则见
+	# nth_custom_toolbar_icon:两端各算各的,线格式一个字段都不用加。
+	#
+	# tb_icons 里的名字已经过了 toolbar_icon_custom;这里再问一次能不能上传。
+	# 不能就只是**这一个 kind 缺席**,编号不移位 —— 接收端按编号找名字,不按
+	# assets 的下标。
+	tb_i=0
+	for icon in $tb_icons; do
+		if toolbar_icon_uploadable "$icon"; then
+			file="$ICON_PATH/$icon"
+			sha256=$(sha256sum "$file" 2>/dev/null | cut -d' ' -f1)
+			if [ -n "$sha256" ]; then
+				json_add_object ""
+				json_add_string "kind" "toolbar_icon_$tb_i"
+				json_add_string "sha256" "$sha256"
+				json_add_int "size" "$(wc -c < "$file")"
+				json_close_object
+
+				printf 'toolbar_icon_%s\timages/%s\n' "$tb_i" "$icon" >> "$files_file"
+			fi
+		fi
+		tb_i=$((tb_i + 1))
 	done
 
 	# 自定义字体跟着配置走。struct_font_* 里那个族名只存在于上传它的那台路由器
@@ -1184,6 +1544,36 @@ build_share_payload() {
 # change accepted content instead of failing closed.
 has_control_char() {
 	case "$1" in *[[:cntrl:]]*) return 0 ;; *) return 1 ;; esac
+}
+
+# $1 with every control character removed.
+#
+# NOT `tr -d '[:cntrl:]'`, which is what this used to be everywhere. BusyBox's
+# tr does not implement POSIX character classes: it reads that argument as the
+# literal set { [ : c n t r l ] } and deletes those letters from the text. On a
+# real device "Overview" came back "Oveview" and "Again" came back "Agai" ---
+# every shared shortcut title quietly lost its c/n/t/r/l, and the apply side
+# wrote the mangled version into uci. GNU and BSD tr both handle the class, so
+# nothing on a developer machine ever showed it.
+#
+# The shell's own glob classes DO work under ash (has_control_char above relies
+# on the same thing), so the strip is done with parameter expansion instead.
+# Each pass eats the run of clean characters up to the next control character,
+# so the loop runs once per control character, not once per character.
+strip_control_chars() {  # $1=text
+	local rest="$1" out="" clean
+
+	while [ -n "$rest" ]; do
+		clean=${rest%%[[:cntrl:]]*}
+		if [ "$clean" = "$rest" ]; then
+			out="$out$rest"
+			break
+		fi
+		out="$out$clean"
+		rest=${rest#"$clean"?}
+	done
+
+	printf '%s' "$out"
 }
 
 # True (0) when $1 is unsafe to single-quote verbatim into a `uci batch`
@@ -1359,7 +1749,11 @@ validate_and_apply_hub_payload() {
 		json_get_var icon "icon"
 		json_get_var enabled "enabled"
 
-		trimmed_title=$(printf '%s' "$title" | tr -d '[:cntrl:]')
+		# 长度先粗筛再剥:剥离按控制字符个数循环,而这里的 title 来自不可信的 hub
+		# 响应。一份塞了几十万个控制字符的标题会把它拖成一次拒绝服务,而任何合法
+		# 标题剥完都要 <=30,原串再长也长不到哪去。
+		[ "${#title}" -le 200 ] || { json_select ..; rm -f "$batch_file"; return 1; }
+		trimmed_title=$(strip_control_chars "$title")
 		tlen=${#trimmed_title}
 		if [ "$tlen" -lt 1 ] || [ "$tlen" -gt 30 ]; then
 			json_select ..; rm -f "$batch_file"; return 1
@@ -1448,7 +1842,7 @@ validate_and_apply_hub_payload() {
 hub_apply_worker() {
 	local job_id="$1" id="$2"
 	local body tmpfile fetch_rc
-	local asset_i=1 a_kind a_sha256 a_url target
+	local asset_i=1 a_kind a_sha256 a_url
 
 	ensure_device_identity
 
@@ -1516,10 +1910,14 @@ hub_apply_worker() {
 					apply_hub_font_asset "${a_kind#font_}" "$a_sha256" \
 						"$HUB_BASE$a_url"
 					;;
+				# 图标落地之外还要把快捷方式指过来,所以走自己那条路。
+				toolbar_icon_*)
+					apply_hub_toolbar_icon "$a_kind" "$a_sha256" \
+						"$HUB_BASE$a_url"
+					;;
 				*)
-					target=$(hub_asset_target_name "$a_kind" "$a_sha256" "$a_url") && {
-						apply_hub_asset "$ICON_PATH/$target" "$a_sha256" "$HUB_BASE$a_url" "$a_kind"
-					}
+					apply_hub_asset "$a_kind" "$a_sha256" \
+						"$HUB_BASE$a_url"
 					;;
 				esac
 			fi
@@ -1535,6 +1933,9 @@ hub_apply_worker() {
 	# 不写 @font-face,字体栈又总以内置族收尾,于是静默回退成 Lato,看起来
 	# 就是"配色应用了、字体没应用"。apply_theme_preset 一直用的就是这个。
 	sync_and_cache_fonts_from_uci
+	# 必须排在所有资产落地和 uci 指向之后:它按「当前还有没有槽位指着」判断
+	# 去留,抢在前面跑就会把刚下载的图当成垃圾删掉。
+	sweep_hub_images
 	update_icon_cache_timestamp
 	# 排在资产之后:资产是在色值那批 uci batch 之后单独 commit 的,指纹抢在前面
 	# 算,刚应用完的主题立刻就会读回「已修改」。
@@ -2966,6 +3367,48 @@ MANIFEST
 			json_close_object
 		done
 		json_close_array
+		# 会随这份配置一起发出去的图片,带体积。发布面板此前只写一句
+		# "Included" —— 而体积正是「要不要把这份主题装到我的路由器上」的
+		# 决定性信息,尤其登录背景动辄一两 MB。
+		#
+		# 超限的那张也报上来(oversized=1),否则它就是从面板上凭空消失:
+		# 用户设了登录背景、发布面板里一个字都没有,而 hub 那边只回一句
+		# 「商店拒绝了这份配置」。
+		json_add_array "shared_images"
+		for kind in logo_svg favicon_png favicon_ico pwa_icon_192 pwa_icon_512 login_bg; do
+			fname=$(local_image_name "$kind") || continue
+			size=$(wc -c < "$ICON_PATH/$fname")
+			json_add_object ""
+			json_add_string "kind" "$kind"
+			json_add_int "size" "$size"
+			if image_fits_share "$size"; then
+				json_add_boolean "oversized" 0
+			else
+				json_add_boolean "oversized" 1
+			fi
+			json_close_object
+		done
+		json_close_array
+		# 工具栏图标同理。这里刻意按 uci 顺序去重后逐个列出,而不是给一个总数:
+		# 一个装不下的图标(格式不对、或超过 MAX_SHARED_TOOLBAR_ICON)必须能在
+		# 面板上单独指出来。
+		json_add_array "shared_toolbar_icons"
+		tb_i=0
+		while [ "$tb_i" -lt "$MAX_SHARED_TOOLBAR_ICONS" ]; do
+			fname=$(nth_custom_toolbar_icon "$tb_i") || break
+			tb_i=$((tb_i + 1))
+			[ -f "$ICON_PATH/$fname" ] || continue
+			json_add_object ""
+			json_add_string "name" "$fname"
+			json_add_int "size" "$(wc -c < "$ICON_PATH/$fname")"
+			if toolbar_icon_uploadable "$fname"; then
+				json_add_boolean "shipped" 1
+			else
+				json_add_boolean "shipped" 0
+			fi
+			json_close_object
+		done
+		json_close_array
 		# 备份文件不存在时整个字段不发出,前端读到 undefined —— 与「没有我的
 		# 配置可回去」是同一件事。
 		if [ -f "$DEVICE_DIR/pre-hub-backup.conf" ]; then
@@ -2986,6 +3429,10 @@ MANIFEST
 			# (prepare_font_slot 换预设时会 cleanup_custom_fonts),所以这里
 			# 同样要重新取,不能只按现存缓存重写 CSS。
 			sync_and_cache_fonts_from_uci
+			# restore_pre_hub_images 只认得**这一次**备份记下的东西。中间那些
+			# 没拍快照的 apply(拿商店主题盖商店主题)留下的图,只有这里按
+			# 「还有没有槽位指着」才收得干净。
+			sweep_hub_images
 			update_icon_cache_timestamp
 			echo '{ "result": 0 }'
 		else
