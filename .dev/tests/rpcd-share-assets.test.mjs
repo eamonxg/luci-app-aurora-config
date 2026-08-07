@@ -455,12 +455,26 @@ function applyIcon(kind, uciOut) {
     slice("toolbar_item_shareable") +
     slice("nth_custom_toolbar_icon") +
     slice("apply_hub_toolbar_icon") +
-    `\nif apply_hub_toolbar_icon "${kind}" deadbeef http://x/; then echo RC_OK; else echo RC_FAIL; fi\n`;
-  const log = execFileSync("sh", ["-c", script], {
-    encoding: "utf8",
-    env: { ...process.env, UCI_OUT: uciOut, UCI_LOG: "/dev/stdout" },
-  });
-  return log.trim().split("\n").filter(Boolean);
+    // 真文件,不是 /dev/stdout。uci 替身用 `>> "$UCI_LOG"` 追加,而在 Linux 上
+    // /dev/stdout 是 /proc/self/fd/1 的软链 —— execFileSync 给的 stdout 是一根
+    // 管道,打开 pipe:[N] 这个路径会 ENXIO("cannot create /dev/stdout: No such
+    // device or address"),于是每一条 SET/COMMIT 都写失败。函数照样成功返回,
+    // 所以断言看到的只剩 RC_OK。macOS 的 /dev/stdout 是真设备、直接 dup fd 1,
+    // 本地因此全绿而 CI 全红。rpcd-one-slot.test.mjs 一直用的就是临时文件。
+    `\n: > "$UCI_LOG"\n` +
+    `if apply_hub_toolbar_icon "${kind}" deadbeef http://x/; then rc=RC_OK; else rc=RC_FAIL; fi\n` +
+    // 日志先出、返回码后出,顺序和断言里的一致。
+    `cat "$UCI_LOG"\necho "$rc"\n`;
+  const dir = mkdtempSync(join(tmpdir(), "aurora-icon-"));
+  try {
+    const out = execFileSync("sh", ["-c", script], {
+      encoding: "utf8",
+      env: { ...process.env, UCI_OUT: uciOut, UCI_LOG: join(dir, "uci.log") },
+    });
+    return out.trim().split("\n").filter(Boolean);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 }
 
 const twoUsers = toolbarFixture([
