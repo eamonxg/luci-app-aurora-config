@@ -134,7 +134,7 @@ normalize_preset_name() {
 theme_fingerprint() {
 	uci -q show aurora.theme 2>/dev/null \
 		| sed -n 's/^aurora\.theme\.//p' \
-		| grep -E '^(light_|dark_|nav_type=|struct_font_sans=|struct_font_mono=|struct_spacing=|struct_radius_base=|struct_content_width_centered=|toolbar_enabled=)' \
+		| grep -E '^(light_|dark_|nav_type=|struct_font_sans=|struct_font_mono=|struct_spacing=|struct_radius_base=|struct_content_width_centered=|toolbar_enabled=|struct_main_bg_alpha=|struct_main_bg_blur=|struct_main_bg_scrim=)' \
 		| sort \
 		| md5sum \
 		| cut -d' ' -f1
@@ -711,7 +711,7 @@ hub_asset_ext_ok() {  # $1=kind  $2=ext
 	logo_svg)                     [ "$2" = "svg" ] ;;
 	favicon_png|pwa_icon_192|pwa_icon_512) [ "$2" = "png" ] ;;
 	favicon_ico)                  [ "$2" = "ico" ] ;;
-	login_bg)                     [ "$2" = "png" ] || [ "$2" = "jpg" ] ;;
+	login_bg|main_bg)             [ "$2" = "png" ] || [ "$2" = "jpg" ] ;;
 	toolbar_icon_*)               [ "$2" = "png" ] || [ "$2" = "svg" ] ;;
 	*) return 1 ;;
 	esac
@@ -743,6 +743,7 @@ hub_asset_target_name() {  # $1=kind  $2=sha256  $3=ext
 	pwa_icon_192) printf 'hub-app192-%.12s.%s' "$2" "$3" ;;
 	pwa_icon_512) printf 'hub-app512-%.12s.%s' "$2" "$3" ;;
 	login_bg)     printf 'hub-login-bg-%.12s.%s' "$2" "$3" ;;
+	main_bg)      printf 'hub-main-bg-%.12s.%s' "$2" "$3" ;;
 	toolbar_icon_*) printf 'hub-tb-%.12s.%s' "$2" "$3" ;;
 	*) return 1 ;;
 	esac
@@ -821,8 +822,15 @@ apply_hub_asset() {  # $1=kind  $2=sha256  $3=url
 	}
 	chmod 644 "$target_path" 2>/dev/null
 
+	# 换图之后旧 LQIP 指着换掉前的那张,留着会先闪一帧错图 —— 写回 url() 的
+	# 同时删掉;studio 下次打开会按新图自动补生成。
 	if [ "$kind" = "login_bg" ]; then
 		uci -q set aurora.theme.struct_login_bg="url('/luci-static/aurora/images/$name')"
+		uci -q delete aurora.theme.struct_login_bg_lqip
+		uci -q commit aurora
+	elif [ "$kind" = "main_bg" ]; then
+		uci -q set aurora.theme.struct_main_bg="url('/luci-static/aurora/images/$name')"
+		uci -q delete aurora.theme.struct_main_bg_lqip
 		uci -q commit aurora
 	elif opt=$(hub_asset_uci_option "$kind"); then
 		uci -q set "aurora.theme.$opt=$name"
@@ -1056,12 +1064,13 @@ sweep_hub_images() {
 			uci -q get "aurora.theme.$opt"
 		done
 		uci -q get aurora.theme.struct_login_bg | sed "s|url('/luci-static/aurora/images/||;s|')||"
+		uci -q get aurora.theme.struct_main_bg | sed "s|url('/luci-static/aurora/images/||;s|')||"
 		uci show aurora 2>/dev/null | sed -n "s/^aurora\.[^.]*\.icon='\(.*\)'\$/\1/p"
 	)
 
 	for f in "$ICON_PATH"/hub-logo-* "$ICON_PATH"/hub-favicon-* \
 		"$ICON_PATH"/hub-app192-* "$ICON_PATH"/hub-app512-* \
-		"$ICON_PATH"/hub-login-bg-* "$ICON_PATH"/hub-tb-*; do
+		"$ICON_PATH"/hub-login-bg-* "$ICON_PATH"/hub-main-bg-* "$ICON_PATH"/hub-tb-*; do
 		[ -f "$f" ] || continue
 		name="${f##*/}"
 		# 只认这个函数自己产的形状:<前缀>-<12 位十六进制>.<扩展名>。用户完全
@@ -1128,6 +1137,28 @@ is_valid_font_stack() {
 	has_control_char "$v" && return 1
 	case "$v" in *\'*) return 1 ;; esac
 	printf '%s' "$v" | grep -Eq '^[A-Za-z0-9 ,"'\''-]+$'
+}
+
+# True (0) when a main-background tunable is inside the hub schema's bounds.
+# Shared by build_share_payload (an out-of-range local value is silently left
+# out, same posture as the font-stack fallback) and
+# validate_and_apply_hub_payload (an out-of-range inbound value rejects the
+# payload, same as every other layout key). Bounds mirror the hub's
+# MAIN_BG_BOUNDS: alpha 50-100%, blur 0-40px, scrim 0-70%.
+is_valid_main_bg_value() {  # $1=key  $2=value
+	local n
+	case "$1" in
+	struct_main_bg_alpha)
+		printf '%s' "$2" | grep -Eq '^[0-9]{1,3}%$' || return 1
+		n="${2%\%}"; [ "$n" -ge 50 ] && [ "$n" -le 100 ] ;;
+	struct_main_bg_blur)
+		printf '%s' "$2" | grep -Eq '^[0-9]{1,3}px$' || return 1
+		n="${2%px}"; [ "$n" -ge 0 ] && [ "$n" -le 40 ] ;;
+	struct_main_bg_scrim)
+		printf '%s' "$2" | grep -Eq '^[0-9]{1,3}%$' || return 1
+		n="${2%\%}"; [ "$n" -ge 0 ] && [ "$n" -le 70 ] ;;
+	*) return 1 ;;
+	esac
 }
 
 # The basename (e.g. "sans-oppo-sans-regular") of the uploaded custom font
@@ -1207,12 +1238,15 @@ image_fits_share() {  # $1=size in bytes
 local_image_name() {  # $1=kind
 	local kind="$1" value fname
 
-	if [ "$kind" = "login_bg" ]; then
-		value=$(uci -q get aurora.theme.struct_login_bg)
+	case "$kind" in
+	login_bg|main_bg)
+		value=$(uci -q get "aurora.theme.struct_$kind")
 		fname=$(printf '%s' "$value" | sed "s|url('/luci-static/aurora/images/||;s|')||")
-	else
+		;;
+	*)
 		fname=$(uci -q get "aurora.theme.$kind")
-	fi
+		;;
+	esac
 
 	[ -n "$fname" ] || return 1
 	case "$fname" in */*|*..*) return 1 ;; esac
@@ -1378,6 +1412,13 @@ build_share_payload() {
 	json_add_string "struct_radius_base" "$(uci -q get aurora.theme.struct_radius_base)"
 	json_add_string "struct_content_width_centered" "$(uci -q get aurora.theme.struct_content_width_centered)"
 	json_add_string "toolbar_enabled" "$(uci -q get aurora.theme.toolbar_enabled)"
+	# 主背景的三个可选键:没设就不发(接收端走 CSS fallback 默认),越界也不发
+	# —— 同字体栈的回退姿势,绝不让一个手改出界的值拒掉整次分享。
+	for key in struct_main_bg_alpha struct_main_bg_blur struct_main_bg_scrim; do
+		value=$(uci -q get "aurora.theme.$key")
+		[ -n "$value" ] && is_valid_main_bg_value "$key" "$value" \
+			&& json_add_string "$key" "$value"
+	done
 	json_close_object
 
 	font_sans_id=$(resolve_font_preset_id sans)
@@ -1450,7 +1491,7 @@ build_share_payload() {
 	# factory filename means the user never customized that slot, so there is
 	# nothing worth uploading (and nothing copyright-risky to check).
 	json_add_array "assets"
-	for kind in logo_svg favicon_png favicon_ico pwa_icon_192 pwa_icon_512 login_bg; do
+	for kind in logo_svg favicon_png favicon_ico pwa_icon_192 pwa_icon_512 login_bg main_bg; do
 		fname=$(local_image_name "$kind") || continue
 
 		file="$ICON_PATH/$fname"
@@ -1699,6 +1740,20 @@ validate_and_apply_hub_payload() {
 	printf "set aurora.theme.struct_radius_base='%s'\n" "$struct_radius_base" >> "$batch_file"
 	printf "set aurora.theme.struct_content_width_centered='%s'\n" \
 		"$struct_content_width_centered" >> "$batch_file"
+
+	# 主背景的三个可选参数:带则校验后写入(越界拒掉整单,同其它 layout 键),
+	# 缺则删 —— 它们是被应用外观的一部分,作者没调过就该回到 CSS fallback 默认;
+	# struct_main_bg 本体(资产)不在此列,沿 login_bg 的粘性语义由资产步处理。
+	for key in struct_main_bg_alpha struct_main_bg_blur struct_main_bg_scrim; do
+		value=""
+		json_get_var value "$key" 2>/dev/null
+		if [ -n "$value" ]; then
+			is_valid_main_bg_value "$key" "$value" || { rm -f "$batch_file"; return 1; }
+			printf "set aurora.theme.%s='%s'\n" "$key" "$value" >> "$batch_file"
+		else
+			printf "delete aurora.theme.%s\n" "$key" >> "$batch_file"
+		fi
+	done
 	json_select ..
 
 	# --- typography: enum font stacks (informational) + char-limited stacks ---
@@ -3227,6 +3282,14 @@ FACE
 			icon_slot_cleared=1
 		fi
 
+		current_main_bg=$(uci -q get aurora.theme.struct_main_bg)
+		current_file=$(printf '%s' "$current_main_bg" | sed "s|url('/luci-static/aurora/images/||;s|')||")
+		if [ -n "$current_file" ] && [ "$current_file" = "$filename" ]; then
+			uci -q delete aurora.theme.struct_main_bg
+			uci -q delete aurora.theme.struct_main_bg_lqip
+			icon_slot_cleared=1
+		fi
+
 		# One commit for the whole removal, and only when a slot actually
 		# changed -- committing unconditionally would flush unrelated pending
 		# aurora changes made by another handler.
@@ -3375,7 +3438,7 @@ MANIFEST
 		# 用户设了登录背景、发布面板里一个字都没有,而 hub 那边只回一句
 		# 「商店拒绝了这份配置」。
 		json_add_array "shared_images"
-		for kind in logo_svg favicon_png favicon_ico pwa_icon_192 pwa_icon_512 login_bg; do
+		for kind in logo_svg favicon_png favicon_ico pwa_icon_192 pwa_icon_512 login_bg main_bg; do
 			fname=$(local_image_name "$kind") || continue
 			size=$(wc -c < "$ICON_PATH/$fname")
 			json_add_object ""

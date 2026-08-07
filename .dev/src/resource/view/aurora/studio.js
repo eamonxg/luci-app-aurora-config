@@ -1866,10 +1866,10 @@ const generateLqip = (source) =>
     img.src = url;
   });
 
-const toLoginBgUrl = (filename) =>
+const toBgUrl = (filename) =>
   "url('/luci-static/aurora/images/" + filename + "')";
 
-const fromLoginBgUrl = (value) => {
+const fromBgUrl = (value) => {
   if (!value || typeof value !== "string") return "";
   const match = value.match(/\/images\/([^')]+)/);
   return match ? match[1] : "";
@@ -3310,41 +3310,40 @@ return view.extend({
       );
     });
 
-    so = logoSubsection.option(
-      form.ListValue,
-      "struct_login_bg",
-      _("Login Background"),
-    );
-    so.description = _("Full-screen login page background; use a wide image.");
-    so.rmempty = true;
-    so.load = makeIconListLoader(
-      (icon) => isImageFile(icon) && !icon.endsWith(".svg"),
-      {
-        prepend: [["", _("None")]],
-        valueForIcon: toLoginBgUrl,
-      },
-    );
-    so.cfgvalue = function (section_id) {
-      return uci.get("aurora", section_id, "struct_login_bg") || "";
-    };
-    so.write = function (section_id, value) {
-      if (!value) {
-        uci.unset("aurora", section_id, "struct_login_bg");
-        uci.unset("aurora", section_id, "struct_login_bg_lqip");
-        return;
-      }
-      uci.set("aurora", section_id, "struct_login_bg", value);
-    };
+    // 背景选项 = ListValue(资产库图片 + None)+ 隐藏 LQIP 字段 + 选图时自动
+    // 生成 LQIP。登录背景与主界面背景共用这一份实现——第二份手抄的 LQIP
+    // 逻辑就是下一处 drift。
+    const addBackgroundOption = (section, { key, lqipKey, label, description }) => {
+      let bgSo = section.option(form.ListValue, key, label);
+      bgSo.description = description;
+      bgSo.rmempty = true;
+      bgSo.load = makeIconListLoader(
+        (icon) => isImageFile(icon) && !icon.endsWith(".svg"),
+        {
+          prepend: [["", _("None")]],
+          valueForIcon: toBgUrl,
+        },
+      );
+      bgSo.cfgvalue = function (section_id) {
+        return uci.get("aurora", section_id, key) || "";
+      };
+      bgSo.write = function (section_id, value) {
+        if (!value) {
+          uci.unset("aurora", section_id, key);
+          uci.unset("aurora", section_id, lqipKey);
+          return;
+        }
+        uci.set("aurora", section_id, key, value);
+      };
 
-    {
-      const _renderBg = so.render.bind(so);
-      so.render = function (option_index, section_id, in_table) {
+      const _renderBg = bgSo.render.bind(bgSo);
+      bgSo.render = function (option_index, section_id, in_table) {
         return _renderBg(option_index, section_id, in_table).then((el) => {
           const select = el.querySelector("select");
           if (select) {
             select.addEventListener("change", function () {
               const lqipEl = document.querySelector(
-                '[name="cbid.aurora.theme.struct_login_bg_lqip"]',
+                '[name="cbid.aurora.theme.' + lqipKey + '"]',
               );
               if (!this.value) {
                 if (lqipEl) lqipEl.value = "";
@@ -3360,20 +3359,69 @@ return view.extend({
           return el;
         });
       };
-    }
 
-    const lqipSo = logoSubsection.option(
-      form.Value,
-      "struct_login_bg_lqip",
-      "",
-    );
-    lqipSo.rmempty = true;
-    lqipSo.render = function (option_index, section_id, in_table) {
-      return form.Value.prototype.render.apply(this, arguments).then((el) => {
-        el.style.display = "none";
-        return el;
-      });
+      const lqipSo = section.option(form.Value, lqipKey, "");
+      lqipSo.rmempty = true;
+      lqipSo.render = function (option_index, section_id, in_table) {
+        return form.Value.prototype.render.apply(this, arguments).then((el) => {
+          el.style.display = "none";
+          return el;
+        });
+      };
     };
+
+    addBackgroundOption(logoSubsection, {
+      key: "struct_login_bg",
+      lqipKey: "struct_login_bg_lqip",
+      label: _("Login Background"),
+      description: _("Full-screen login page background; use a wide image."),
+    });
+
+    addBackgroundOption(logoSubsection, {
+      key: "struct_main_bg",
+      lqipKey: "struct_main_bg_lqip",
+      label: _("Main Background"),
+      description: _(
+        "Full-screen admin interface background with frosted bars; needs a luci-theme-aurora build that supports it.",
+      ),
+    });
+
+    // 主背景的三个观感参数。存进 uci 的是带单位的 CSS 值(67% / 20px),界面
+    // 上只填数字;留空 = 不写键,主题的 var() fallback 默认值生效。刻意不用
+    // depends(条件不满足时保存会静默删键,见 LuCI depends/retain 陷阱),
+    // 常显 + 描述里说清生效条件。
+    [
+      ["struct_main_bg_alpha", _("Background Surface Opacity"), "%", 50, 100, "67",
+        _("How opaque cards and bars stay over the background image (50-100%). Empty = 67.")],
+      ["struct_main_bg_blur", _("Background Chrome Blur"), "px", 0, 40, "20",
+        _("Frosted-glass blur of the top and side bars (0-40px). Empty = 20.")],
+      ["struct_main_bg_scrim", _("Background Scrim Strength"), "%", 0, 70, "20",
+        _("How much the backdrop is washed toward the page color (0-70%). Empty = 20.")],
+    ].forEach(([key, label, unit, min, max, def, desc]) => {
+      const tuneSo = logoSubsection.option(form.Value, key, label);
+      tuneSo.description = desc;
+      tuneSo.placeholder = def;
+      tuneSo.rmempty = true;
+      tuneSo.cfgvalue = function (section_id) {
+        const raw = uci.get("aurora", section_id, key) || "";
+        return raw.endsWith(unit) ? raw.slice(0, -unit.length) : raw;
+      };
+      tuneSo.validate = function (section_id, value) {
+        const v = (value || "").trim();
+        if (!v) return true;
+        if (!/^\d{1,3}$/.test(v) || +v < min || +v > max)
+          return _("Enter a number between %d and %d").format(min, max);
+        return true;
+      };
+      tuneSo.write = function (section_id, value) {
+        const v = (value || "").trim();
+        if (!v) {
+          uci.unset("aurora", section_id, key);
+          return;
+        }
+        uci.set("aurora", section_id, key, v + unit);
+      };
+    });
 
     const toolbarSection = s.taboption(
       "icons_branding",
@@ -3443,35 +3491,42 @@ return view.extend({
       enhanceColorTokenGroups(mapNode);
       enhanceDerivedFold(mapNode);
 
-      // Auto-select uploaded background and auto-generate LQIP if missing
+      // Auto-select uploaded background and auto-generate LQIP if missing.
+      // pending_bg(上传后自动选中)只归登录背景——那是设置它的上传入口;
+      // LQIP 自动补生成两对背景键都要(hub 应用与换图都会清掉旧 LQIP)。
       requestAnimationFrame(() => {
-        const bgInput = mapNode.querySelector(
-          '[name="cbid.aurora.theme.struct_login_bg"]',
-        );
-        const lqipInput = mapNode.querySelector(
-          '[name="cbid.aurora.theme.struct_login_bg_lqip"]',
-        );
-        if (!bgInput || !lqipInput) return;
-
         const pending = localStorage.getItem("aurora.pending_bg");
-        if (pending) {
-          localStorage.removeItem("aurora.pending_bg");
-          const pendingUrl = toLoginBgUrl(pending);
-          if (bgInput.querySelector(`option[value="${pendingUrl}"]`)) {
-            bgInput.value = pendingUrl;
-            bgInput.dispatchEvent(new Event("change"));
-            return;
-          }
-        }
+        [
+          ["struct_login_bg", "struct_login_bg_lqip", true],
+          ["struct_main_bg", "struct_main_bg_lqip", false],
+        ].forEach(([key, lqipKey, takesPending]) => {
+          const bgInput = mapNode.querySelector(
+            '[name="cbid.aurora.theme.' + key + '"]',
+          );
+          const lqipInput = mapNode.querySelector(
+            '[name="cbid.aurora.theme.' + lqipKey + '"]',
+          );
+          if (!bgInput || !lqipInput) return;
 
-        if (bgInput.value && !lqipInput.value) {
-          const bgMatch = bgInput.value.match(/url\(["']?(.+?)["']?\)/);
-          if (bgMatch) {
-            generateLqip(bgMatch[1]).then((d) => {
-              if (d) lqipInput.value = d;
-            });
+          if (takesPending && pending) {
+            localStorage.removeItem("aurora.pending_bg");
+            const pendingUrl = toBgUrl(pending);
+            if (bgInput.querySelector(`option[value="${pendingUrl}"]`)) {
+              bgInput.value = pendingUrl;
+              bgInput.dispatchEvent(new Event("change"));
+              return;
+            }
           }
-        }
+
+          if (bgInput.value && !lqipInput.value) {
+            const bgMatch = bgInput.value.match(/url\(["']?(.+?)["']?\)/);
+            if (bgMatch) {
+              generateLqip(bgMatch[1]).then((d) => {
+                if (d) lqipInput.value = d;
+              });
+            }
+          }
+        });
       });
 
       // Fire and forget: the capsule appears when the answer arrives, and if

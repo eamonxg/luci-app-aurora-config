@@ -345,6 +345,7 @@ const ASSET_LABELS = {
   siteIcon: _("Site Icon"),
   appIcon: _("App Icon"),
   loginBg: _("Login Background"),
+  mainBg: _("Main Background"),
 };
 
 // typography.font_sans is a preset id ("geist-sans"); struct_font_sans is the
@@ -498,6 +499,15 @@ const tileEntriesFor = (item) => {
       meta: sizeLabel(assetBytesOf(item, ["login_bg"])),
     });
 
+  if (kinds.indexOf("main_bg") !== -1)
+    entries.push({
+      kind: "mainBg",
+      glyph: "▣",
+      label: ASSET_LABELS.mainBg,
+      title: _("Custom admin interface background"),
+      meta: sizeLabel(assetBytesOf(item, ["main_bg"])),
+    });
+
   if (kinds.some((kind) => SITE_ICON_KINDS.indexOf(kind) !== -1))
     entries.push({
       kind: "siteIcon",
@@ -552,7 +562,7 @@ const buildCardGlyphs = (item) => {
 
 // 抽屉的"随附内容"。字体和圆角在"布局与排版"那张表里已经写了值,快捷方式
 // 自己占一整节 —— 在这里再画一遍就是同一句话说三次。
-const BUNDLED_KINDS = ["logo", "loginBg", "siteIcon", "appIcon"];
+const BUNDLED_KINDS = ["logo", "loginBg", "mainBg", "siteIcon", "appIcon"];
 
 const buildBundledTiles = (item) => {
   const entries = tileEntriesFor(item);
@@ -886,7 +896,7 @@ const buildDetailBody = (item) => {
   // 这一句只算图片。
   const imageBytes = assetBytesOf(
     item,
-    ["logo_svg", "login_bg"].concat(SITE_ICON_KINDS, APP_ICON_KINDS, TOOLBAR_ICON_KINDS),
+    ["logo_svg", "login_bg", "main_bg"].concat(SITE_ICON_KINDS, APP_ICON_KINDS, TOOLBAR_ICON_KINDS),
   );
   if (imageBytes > 0)
     children.push(
@@ -2669,6 +2679,7 @@ return view.extend({
         pwa_icon_192: ASSET_LABELS.appIcon,
         pwa_icon_512: ASSET_LABELS.appIcon,
         login_bg: ASSET_LABELS.loginBg,
+        main_bg: ASSET_LABELS.mainBg,
       };
       const imageRows = [];
       sharedImages.forEach((image) => {

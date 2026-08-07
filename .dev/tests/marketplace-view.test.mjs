@@ -875,7 +875,7 @@ test("gallery view: the drawer stops borrowing LuCI's form row", async () => {
   assert.match(src, /const radiusJoin = /);
   // "随附内容"滤掉已经在别处说过的那几种
   assert.match(src, /const buildBundledTiles = /);
-  assert.match(src, /const BUNDLED_KINDS = \["logo", "loginBg", "siteIcon", "appIcon"\]/);
+  assert.match(src, /const BUNDLED_KINDS = \["logo", "loginBg", "mainBg", "siteIcon", "appIcon"\]/);
   assert.ok(!src.includes(".innerHTML"));
 });
 
@@ -1429,4 +1429,21 @@ test("marketplace: a multi-second upload shows progress, not a frozen button", a
   assert.match(src, /asset_unreadable/);
   // 进度回调必须真的接上,否则上面那些字一次都不会显示
   assert.match(src, /onProgress: renderShareProgress/);
+});
+
+// ---------------------------------------------------------------------------
+// 主界面背景:与登录背景同权重的资产,在浏览、打包、发布三处都要能看见
+// ---------------------------------------------------------------------------
+
+test("main background shows up in tiles, totals, and the publish manifest", async () => {
+  const src = await readFile(SRC, "utf8");
+  // 标签与详情 tile(和 login_bg 一样只作标签行,不拉原图)
+  assert.match(src, /mainBg: _\("Main Background"\)/);
+  assert.match(src, /label: ASSET_LABELS\.mainBg/);
+  assert.match(src, /meta: sizeLabel\(assetBytesOf\(item, \["main_bg"\]\)\)/);
+  // 详情页图片合计与打包清单都数它
+  assert.match(src, /\["logo_svg", "login_bg", "main_bg"\]\.concat\(/);
+  assert.match(src, /const BUNDLED_KINDS = \["logo", "loginBg", "mainBg", "siteIcon", "appIcon"\]/);
+  // 发布面板:rpcd shared_images 的 main_bg 行有标签可挂
+  assert.match(src, /main_bg: ASSET_LABELS\.mainBg/);
 });
