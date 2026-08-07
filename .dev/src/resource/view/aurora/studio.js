@@ -2600,7 +2600,6 @@ return view.extend({
     s.tab("colors", _("Colors"));
     s.tab("layout_typography", _("Layout & Typography"));
     s.tab("icons_branding", _("Branding & Shortcuts"));
-    s.tab("backgrounds", _("Backgrounds"));
 
     const colorSection = s.taboption(
       "colors",
@@ -3038,6 +3037,402 @@ return view.extend({
 
     this.prepareAuroraFonts = prepareSelectedFonts;
 
+    // ── 页面背景组件(B 版设计)────────────────────────────────────────
+    // 选图下拉 + 迷你实时预览 + 可选滑杆组,登录背景与主界面背景共用这一份
+    // 实现——第二份手抄的 LQIP/预览逻辑就是下一处 drift。滑杆的真实数据源
+    // 是隐藏的 form.Value 字段(LuCI 保存管线原样工作),滑杆只是它们的可视
+    // 外壳;重置 = 清空字段不写键,主题的 var() fallback 默认生效。
+
+    // 迷你预览:页面缩影(图层/遮罩/画布/卡片/磨砂顶栏或登录卡),颜色全部
+    // 取当前主题 token,亮暗模式自动跟随。
+    const buildBgPreview = (previewKind) => {
+      const layer = (style) => E("div", { style: "position:absolute;" + style });
+      const img = layer("inset:0;background-size:cover;background-position:center;");
+      const hint = layer(
+        "inset:0;display:flex;align-items:center;justify-content:center;" +
+          "color:var(--text-subtle);font-size:.85em;",
+      );
+      hint.textContent = _("No background selected");
+      const parts = [img, hint];
+
+      let scrim, canvas, card, topbar, loginCard;
+      if (previewKind === "admin") {
+        scrim = layer("inset:0;background:var(--bg);");
+        canvas = layer(
+          "inset:27% 5% 5% 5%;border-radius:8px;" +
+            "background:color-mix(in srgb, var(--bg) 55%, transparent);",
+        );
+        card = layer(
+          "left:13%;right:13%;top:40%;border-radius:8px;padding:8px 12px;" +
+            "font-size:11px;border:1px solid var(--hairline);color:var(--text);",
+        );
+        card.textContent = "Aa 123 · OpenWrt";
+        topbar = layer(
+          "top:0;left:0;right:0;height:30px;display:flex;align-items:center;" +
+            "gap:8px;padding:0 10px;font-size:10px;color:var(--text);" +
+            "border-bottom:1px solid var(--hairline);",
+        );
+        topbar.textContent = "☰ OpenWrt";
+        parts.push(scrim, canvas, card, topbar);
+      } else {
+        loginCard = layer(
+          "left:27%;right:27%;top:22%;bottom:22%;border-radius:10px;" +
+            "background:var(--surface);border:1px solid var(--hairline);" +
+            "box-shadow:0 8px 24px #0004;padding:10px 12px;color:var(--text);" +
+            "font-size:11px;",
+        );
+        loginCard.appendChild(E("div", {}, "Aa 123"));
+        ["", ""].forEach(() =>
+          loginCard.appendChild(
+            E("div", {
+              style:
+                "height:9px;margin-top:6px;border-radius:5px;" +
+                "background:var(--control-bg);border:1px solid var(--hairline);",
+            }),
+          ),
+        );
+        parts.push(loginCard);
+      }
+
+      const el = E(
+        "div",
+        {
+          class: "bg-preview",
+          style:
+            "position:relative;overflow:hidden;height:170px;max-width:560px;" +
+            "margin:8px 0 2px;border:1px solid var(--hairline);border-radius:12px;" +
+            "background:var(--bg);",
+        },
+        parts,
+      );
+
+      return {
+        el,
+        setImage(url) {
+          img.style.backgroundImage = url ? 'url("' + url + '")' : "";
+          hint.style.display = url ? "none" : "flex";
+        },
+        setVals(v) {
+          if (previewKind !== "admin") return;
+          scrim.style.opacity = String(v.scrim / 100);
+          topbar.style.background =
+            "color-mix(in srgb, var(--bg) " + v.alpha + "%, transparent)";
+          topbar.style.backdropFilter = topbar.style.webkitBackdropFilter =
+            "blur(" + v.blur + "px) saturate(150%)";
+          card.style.background =
+            "color-mix(in srgb, var(--surface) " + v.alpha + "%, transparent)";
+        },
+      };
+    };
+
+    const addBackgroundOption = (
+      section,
+      { key, lqipKey, label, description, previewKind, tunables },
+    ) => {
+      // 滑杆的隐藏数据字段。存进 uci 的是带单位的 CSS 值(67% / 20px)。刻意
+      // 不用 depends(条件不满足时保存会静默删键,见 LuCI depends/retain 陷阱)。
+      (tunables || []).forEach(([tkey, , unit, min, max]) => {
+        const tuneSo = section.option(form.Value, tkey, "");
+        tuneSo.rmempty = true;
+        tuneSo.cfgvalue = function (section_id) {
+          const raw = uci.get("aurora", section_id, tkey) || "";
+          return raw.endsWith(unit) ? raw.slice(0, -unit.length) : raw;
+        };
+        tuneSo.validate = function (section_id, value) {
+          const v = (value || "").trim();
+          if (!v) return true;
+          if (!/^\d{1,3}$/.test(v) || +v < min || +v > max)
+            return _("Enter a number between %d and %d").format(min, max);
+          return true;
+        };
+        tuneSo.write = function (section_id, value) {
+          const v = (value || "").trim();
+          if (!v) {
+            uci.unset("aurora", section_id, tkey);
+            return;
+          }
+          uci.set("aurora", section_id, tkey, v + unit);
+        };
+        tuneSo.render = function () {
+          return form.Value.prototype.render.apply(this, arguments).then((el) => {
+            el.style.display = "none";
+            return el;
+          });
+        };
+      });
+      let bgSo = section.option(form.ListValue, key, label);
+      bgSo.description = description;
+      bgSo.rmempty = true;
+      bgSo.load = makeIconListLoader(
+        (icon) => isImageFile(icon) && !icon.endsWith(".svg"),
+        {
+          prepend: [["", _("None")]],
+          valueForIcon: toBgUrl,
+        },
+      );
+      bgSo.cfgvalue = function (section_id) {
+        return uci.get("aurora", section_id, key) || "";
+      };
+      bgSo.write = function (section_id, value) {
+        if (!value) {
+          uci.unset("aurora", section_id, key);
+          uci.unset("aurora", section_id, lqipKey);
+          return;
+        }
+        uci.set("aurora", section_id, key, value);
+      };
+
+      const _renderBg = bgSo.render.bind(bgSo);
+      bgSo.render = function (option_index, section_id, in_table) {
+        return _renderBg(option_index, section_id, in_table).then((el) => {
+          const field = el.querySelector(".cbi-value-field") || el;
+          const select = el.querySelector("select");
+          const preview = buildBgPreview(previewKind);
+          field.appendChild(preview.el);
+
+          // 就地上传:按钮 + 直接把图拖进预览框,复用资产库同一条上传管线;
+          // 成功后带着 pending 归属键整页刷新,列表随 reload 重新拉取并自动
+          // 选中刚传的图。资产库仍是唯一"看所有资源"的视图,这里不铺缩略图
+          // ——画廊会把每张原图都拉一遍,和库的预览列重复加载。
+          const uploadBg = (file) => {
+            const check = assetUpload.checkFile(file, {
+              exts: ["jpg", "jpeg", "png", "webp", "avif", "gif"],
+            });
+            if (!check.ok) {
+              ui.addNotification(null, E("p", check.err), "error");
+              return;
+            }
+            assetUpload
+              .uploadToRouter({ tmpPath: "/tmp/aurora_icon.tmp", file })
+              .then(() => L.resolveDefault(callUploadIcon(file.name), {}))
+              .then((ret) => {
+                if (ret?.result === 0) {
+                  localStorage.setItem("aurora.pending_bg", file.name);
+                  localStorage.setItem("aurora.pending_bg_key", key);
+                  window.location.reload();
+                } else {
+                  throw new Error(ret?.error || _("Unknown"));
+                }
+              })
+              .catch((err) =>
+                ui.addNotification(
+                  null,
+                  E("p", _("Upload failed: %s").format(err.message)),
+                  "error",
+                ),
+              );
+          };
+          const fileInput = E("input", {
+            type: "file",
+            accept: "image/*",
+            style: "display:none;",
+          });
+          fileInput.addEventListener("change", () => {
+            const f = fileInput.files && fileInput.files[0];
+            fileInput.value = "";
+            if (f) uploadBg(f);
+          });
+          preview.el.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            preview.el.style.outline = "2px dashed var(--brand)";
+          });
+          preview.el.addEventListener("dragleave", () => {
+            preview.el.style.outline = "";
+          });
+          preview.el.addEventListener("drop", (e) => {
+            e.preventDefault();
+            preview.el.style.outline = "";
+            const f = e.dataTransfer && e.dataTransfer.files[0];
+            if (f) uploadBg(f);
+          });
+          field.appendChild(
+            E("div", { style: "margin:6px 0 2px;" }, [
+              E(
+                "button",
+                {
+                  type: "button",
+                  class: "cbi-button",
+                  click: () => fileInput.click(),
+                },
+                _("Upload image"),
+              ),
+              fileInput,
+            ]),
+          );
+
+          const urlOf = (value) => {
+            const m = (value || "").match(/url\(["']?(.+?)["']?\)/);
+            return m ? m[1] : "";
+          };
+          const vals = {};
+          const hiddenInput = (tkey) =>
+            document.querySelector('[name="cbid.aurora.theme.' + tkey + '"]');
+          const refresh = () => {
+            preview.setImage(urlOf(select && select.value));
+            preview.setVals({
+              alpha: vals.struct_main_bg_alpha || 67,
+              blur: vals.struct_main_bg_blur >= 0 ? vals.struct_main_bg_blur : 20,
+              scrim: vals.struct_main_bg_scrim >= 0 ? vals.struct_main_bg_scrim : 20,
+            });
+          };
+
+          (tunables || []).forEach(([tkey, tlabel, unit, min, max, def]) => {
+            const raw = uci.get("aurora", "theme", tkey) || "";
+            const parsed = raw.endsWith(unit) ? raw.slice(0, -unit.length) : raw;
+            vals[tkey] = parsed === "" ? +def : +parsed;
+            const valEl = E(
+              "span",
+              {
+                style:
+                  "flex:0 0 3.4em;text-align:right;font-size:.85em;" +
+                  "color:var(--text-muted);font-variant-numeric:tabular-nums;",
+              },
+              vals[tkey] + unit,
+            );
+            const slider = E("input", {
+              type: "range",
+              min: String(min),
+              max: String(max),
+              value: String(vals[tkey]),
+              "data-tunable": tkey,
+              style: "flex:1;accent-color:var(--brand);min-width:120px;",
+            });
+            slider.addEventListener("input", () => {
+              vals[tkey] = +slider.value;
+              valEl.textContent = slider.value + unit;
+              const hid = hiddenInput(tkey);
+              if (hid) {
+                hid.value = slider.value;
+                hid.dispatchEvent(new Event("change", { bubbles: true }));
+              }
+              refresh();
+            });
+            field.appendChild(
+              E(
+                "div",
+                {
+                  style:
+                    "display:flex;align-items:center;gap:10px;margin:6px 0;" +
+                    "max-width:560px;",
+                },
+                [
+                  E("span", { style: "flex:0 0 9em;font-size:.9em;" }, tlabel),
+                  slider,
+                  valEl,
+                ],
+              ),
+            );
+          });
+
+          if ((tunables || []).length) {
+            field.appendChild(
+              E("div", { style: "margin-top:4px;" }, [
+                E(
+                  "button",
+                  {
+                    type: "button",
+                    class: "cbi-button",
+                    click: () => {
+                      (tunables || []).forEach(([tkey, , unit, , , def]) => {
+                        vals[tkey] = +def;
+                        const hid = hiddenInput(tkey);
+                        if (hid) {
+                          hid.value = "";
+                          hid.dispatchEvent(
+                            new Event("change", { bubbles: true }),
+                          );
+                        }
+                        const slider = field.querySelector(
+                          '[data-tunable="' + tkey + '"]',
+                        );
+                        if (slider) {
+                          slider.value = String(+def);
+                          slider.nextElementSibling.textContent = def + unit;
+                        }
+                      });
+                      refresh();
+                    },
+                  },
+                  _("Reset to defaults"),
+                ),
+              ]),
+            );
+          }
+
+          if (select) {
+            select.addEventListener("change", function () {
+              refresh();
+              const lqipEl = document.querySelector(
+                '[name="cbid.aurora.theme.' + lqipKey + '"]',
+              );
+              if (!this.value) {
+                if (lqipEl) lqipEl.value = "";
+                return;
+              }
+              const m = this.value.match(/url\(["']?(.+?)["']?\)/);
+              if (!m || !lqipEl) return;
+              generateLqip(m[1]).then((data) => {
+                if (data && lqipEl) lqipEl.value = data;
+              });
+            });
+          }
+          refresh();
+          return el;
+        });
+      };
+
+      const lqipSo = section.option(form.Value, lqipKey, "");
+      lqipSo.rmempty = true;
+      lqipSo.render = function (option_index, section_id, in_table) {
+        return form.Value.prototype.render.apply(this, arguments).then((el) => {
+          el.style.display = "none";
+          return el;
+        });
+      };
+    };
+
+    // 背景独立成区:它们是页面氛围,不是站点品牌标识。
+    const bgSection = s.taboption(
+      "icons_branding",
+      form.SectionValue,
+      "_background_settings",
+      form.NamedSection,
+      "theme",
+      "aurora",
+      _("Page Backgrounds"),
+      _(
+        "Pick wallpapers for the login page and the admin interface. Drag the sliders and watch the live preview; Save & Apply makes it real.",
+      ),
+    );
+    const bgSubsection = bgSection.subsection;
+
+    addBackgroundOption(bgSubsection, {
+      key: "struct_login_bg",
+      lqipKey: "struct_login_bg_lqip",
+      label: _("Login Background"),
+      description: _("Full-screen login page background; use a wide image."),
+      previewKind: "login",
+    });
+
+    addBackgroundOption(bgSubsection, {
+      key: "struct_main_bg",
+      lqipKey: "struct_main_bg_lqip",
+      label: _("Main Background"),
+      description: _(
+        "Full-screen admin interface background with frosted bars; needs a luci-theme-aurora build that supports it.",
+      ),
+      previewKind: "admin",
+      tunables: [
+        ["struct_main_bg_alpha", _("Background Surface Opacity"), "%", 50, 100, "67",
+          _("How opaque cards and bars stay over the background image (50-100%). Empty = 67.")],
+        ["struct_main_bg_blur", _("Background Chrome Blur"), "px", 0, 40, "20",
+          _("Frosted-glass blur of the top and side bars (0-40px). Empty = 20.")],
+        ["struct_main_bg_scrim", _("Background Scrim Strength"), "%", 0, 70, "20",
+          _("How much the backdrop is washed toward the page color (0-70%). Empty = 20.")],
+      ],
+    });
+
+
     const assetSection = s.taboption(
       "icons_branding",
       form.SectionValue,
@@ -3311,331 +3706,6 @@ return view.extend({
       );
     });
 
-    // ── 页面背景组件(B 版设计)────────────────────────────────────────
-    // 选图下拉 + 迷你实时预览 + 可选滑杆组,登录背景与主界面背景共用这一份
-    // 实现——第二份手抄的 LQIP/预览逻辑就是下一处 drift。滑杆的真实数据源
-    // 是隐藏的 form.Value 字段(LuCI 保存管线原样工作),滑杆只是它们的可视
-    // 外壳;重置 = 清空字段不写键,主题的 var() fallback 默认生效。
-
-    // 迷你预览:页面缩影(图层/遮罩/画布/卡片/磨砂顶栏或登录卡),颜色全部
-    // 取当前主题 token,亮暗模式自动跟随。
-    const buildBgPreview = (previewKind) => {
-      const layer = (style) => E("div", { style: "position:absolute;" + style });
-      const img = layer("inset:0;background-size:cover;background-position:center;");
-      const hint = layer(
-        "inset:0;display:flex;align-items:center;justify-content:center;" +
-          "color:var(--text-subtle);font-size:.85em;",
-      );
-      hint.textContent = _("No background selected");
-      const parts = [img, hint];
-
-      let scrim, canvas, card, topbar, loginCard;
-      if (previewKind === "admin") {
-        scrim = layer("inset:0;background:var(--bg);");
-        canvas = layer(
-          "inset:27% 5% 5% 5%;border-radius:8px;" +
-            "background:color-mix(in srgb, var(--bg) 55%, transparent);",
-        );
-        card = layer(
-          "left:13%;right:13%;top:40%;border-radius:8px;padding:8px 12px;" +
-            "font-size:11px;border:1px solid var(--hairline);color:var(--text);",
-        );
-        card.textContent = "Aa 123 · OpenWrt";
-        topbar = layer(
-          "top:0;left:0;right:0;height:30px;display:flex;align-items:center;" +
-            "gap:8px;padding:0 10px;font-size:10px;color:var(--text);" +
-            "border-bottom:1px solid var(--hairline);",
-        );
-        topbar.textContent = "☰ OpenWrt";
-        parts.push(scrim, canvas, card, topbar);
-      } else {
-        loginCard = layer(
-          "left:27%;right:27%;top:22%;bottom:22%;border-radius:10px;" +
-            "background:var(--surface);border:1px solid var(--hairline);" +
-            "box-shadow:0 8px 24px #0004;padding:10px 12px;color:var(--text);" +
-            "font-size:11px;",
-        );
-        loginCard.appendChild(E("div", {}, "Aa 123"));
-        ["", ""].forEach(() =>
-          loginCard.appendChild(
-            E("div", {
-              style:
-                "height:9px;margin-top:6px;border-radius:5px;" +
-                "background:var(--control-bg);border:1px solid var(--hairline);",
-            }),
-          ),
-        );
-        parts.push(loginCard);
-      }
-
-      const el = E(
-        "div",
-        {
-          class: "bg-preview",
-          style:
-            "position:relative;overflow:hidden;height:170px;max-width:560px;" +
-            "margin:8px 0 2px;border:1px solid var(--hairline);border-radius:12px;" +
-            "background:var(--bg);",
-        },
-        parts,
-      );
-
-      return {
-        el,
-        setImage(url) {
-          img.style.backgroundImage = url ? 'url("' + url + '")' : "";
-          hint.style.display = url ? "none" : "flex";
-        },
-        setVals(v) {
-          if (previewKind !== "admin") return;
-          scrim.style.opacity = String(v.scrim / 100);
-          topbar.style.background =
-            "color-mix(in srgb, var(--bg) " + v.alpha + "%, transparent)";
-          topbar.style.backdropFilter = topbar.style.webkitBackdropFilter =
-            "blur(" + v.blur + "px) saturate(150%)";
-          card.style.background =
-            "color-mix(in srgb, var(--surface) " + v.alpha + "%, transparent)";
-        },
-      };
-    };
-
-    const addBackgroundOption = (
-      section,
-      { key, lqipKey, label, description, previewKind, tunables },
-    ) => {
-      // 滑杆的隐藏数据字段。存进 uci 的是带单位的 CSS 值(67% / 20px)。刻意
-      // 不用 depends(条件不满足时保存会静默删键,见 LuCI depends/retain 陷阱)。
-      (tunables || []).forEach(([tkey, , unit, min, max]) => {
-        const tuneSo = section.option(form.Value, tkey, "");
-        tuneSo.rmempty = true;
-        tuneSo.cfgvalue = function (section_id) {
-          const raw = uci.get("aurora", section_id, tkey) || "";
-          return raw.endsWith(unit) ? raw.slice(0, -unit.length) : raw;
-        };
-        tuneSo.validate = function (section_id, value) {
-          const v = (value || "").trim();
-          if (!v) return true;
-          if (!/^\d{1,3}$/.test(v) || +v < min || +v > max)
-            return _("Enter a number between %d and %d").format(min, max);
-          return true;
-        };
-        tuneSo.write = function (section_id, value) {
-          const v = (value || "").trim();
-          if (!v) {
-            uci.unset("aurora", section_id, tkey);
-            return;
-          }
-          uci.set("aurora", section_id, tkey, v + unit);
-        };
-        tuneSo.render = function () {
-          return form.Value.prototype.render.apply(this, arguments).then((el) => {
-            el.style.display = "none";
-            return el;
-          });
-        };
-      });
-      let bgSo = section.option(form.ListValue, key, label);
-      bgSo.description = description;
-      bgSo.rmempty = true;
-      bgSo.load = makeIconListLoader(
-        (icon) => isImageFile(icon) && !icon.endsWith(".svg"),
-        {
-          prepend: [["", _("None")]],
-          valueForIcon: toBgUrl,
-        },
-      );
-      bgSo.cfgvalue = function (section_id) {
-        return uci.get("aurora", section_id, key) || "";
-      };
-      bgSo.write = function (section_id, value) {
-        if (!value) {
-          uci.unset("aurora", section_id, key);
-          uci.unset("aurora", section_id, lqipKey);
-          return;
-        }
-        uci.set("aurora", section_id, key, value);
-      };
-
-      const _renderBg = bgSo.render.bind(bgSo);
-      bgSo.render = function (option_index, section_id, in_table) {
-        return _renderBg(option_index, section_id, in_table).then((el) => {
-          const field = el.querySelector(".cbi-value-field") || el;
-          const select = el.querySelector("select");
-          const preview = buildBgPreview(previewKind);
-          field.appendChild(preview.el);
-
-          const urlOf = (value) => {
-            const m = (value || "").match(/url\(["']?(.+?)["']?\)/);
-            return m ? m[1] : "";
-          };
-          const vals = {};
-          const hiddenInput = (tkey) =>
-            document.querySelector('[name="cbid.aurora.theme.' + tkey + '"]');
-          const refresh = () => {
-            preview.setImage(urlOf(select && select.value));
-            preview.setVals({
-              alpha: vals.struct_main_bg_alpha || 67,
-              blur: vals.struct_main_bg_blur >= 0 ? vals.struct_main_bg_blur : 20,
-              scrim: vals.struct_main_bg_scrim >= 0 ? vals.struct_main_bg_scrim : 20,
-            });
-          };
-
-          (tunables || []).forEach(([tkey, tlabel, unit, min, max, def]) => {
-            const raw = uci.get("aurora", "theme", tkey) || "";
-            const parsed = raw.endsWith(unit) ? raw.slice(0, -unit.length) : raw;
-            vals[tkey] = parsed === "" ? +def : +parsed;
-            const valEl = E(
-              "span",
-              {
-                style:
-                  "flex:0 0 3.4em;text-align:right;font-size:.85em;" +
-                  "color:var(--text-muted);font-variant-numeric:tabular-nums;",
-              },
-              vals[tkey] + unit,
-            );
-            const slider = E("input", {
-              type: "range",
-              min: String(min),
-              max: String(max),
-              value: String(vals[tkey]),
-              "data-tunable": tkey,
-              style: "flex:1;accent-color:var(--brand);min-width:120px;",
-            });
-            slider.addEventListener("input", () => {
-              vals[tkey] = +slider.value;
-              valEl.textContent = slider.value + unit;
-              const hid = hiddenInput(tkey);
-              if (hid) {
-                hid.value = slider.value;
-                hid.dispatchEvent(new Event("change", { bubbles: true }));
-              }
-              refresh();
-            });
-            field.appendChild(
-              E(
-                "div",
-                {
-                  style:
-                    "display:flex;align-items:center;gap:10px;margin:6px 0;" +
-                    "max-width:560px;",
-                },
-                [
-                  E("span", { style: "flex:0 0 9em;font-size:.9em;" }, tlabel),
-                  slider,
-                  valEl,
-                ],
-              ),
-            );
-          });
-
-          if ((tunables || []).length) {
-            field.appendChild(
-              E("div", { style: "margin-top:4px;" }, [
-                E(
-                  "button",
-                  {
-                    type: "button",
-                    class: "cbi-button",
-                    click: () => {
-                      (tunables || []).forEach(([tkey, , unit, , , def]) => {
-                        vals[tkey] = +def;
-                        const hid = hiddenInput(tkey);
-                        if (hid) {
-                          hid.value = "";
-                          hid.dispatchEvent(
-                            new Event("change", { bubbles: true }),
-                          );
-                        }
-                        const slider = field.querySelector(
-                          '[data-tunable="' + tkey + '"]',
-                        );
-                        if (slider) {
-                          slider.value = String(+def);
-                          slider.nextElementSibling.textContent = def + unit;
-                        }
-                      });
-                      refresh();
-                    },
-                  },
-                  _("Reset to defaults"),
-                ),
-              ]),
-            );
-          }
-
-          if (select) {
-            select.addEventListener("change", function () {
-              refresh();
-              const lqipEl = document.querySelector(
-                '[name="cbid.aurora.theme.' + lqipKey + '"]',
-              );
-              if (!this.value) {
-                if (lqipEl) lqipEl.value = "";
-                return;
-              }
-              const m = this.value.match(/url\(["']?(.+?)["']?\)/);
-              if (!m || !lqipEl) return;
-              generateLqip(m[1]).then((data) => {
-                if (data && lqipEl) lqipEl.value = data;
-              });
-            });
-          }
-          refresh();
-          return el;
-        });
-      };
-
-      const lqipSo = section.option(form.Value, lqipKey, "");
-      lqipSo.rmempty = true;
-      lqipSo.render = function (option_index, section_id, in_table) {
-        return form.Value.prototype.render.apply(this, arguments).then((el) => {
-          el.style.display = "none";
-          return el;
-        });
-      };
-    };
-
-    // 背景独立成区:它们是页面氛围,不是站点品牌标识。
-    const bgSection = s.taboption(
-      "backgrounds",
-      form.SectionValue,
-      "_background_settings",
-      form.NamedSection,
-      "theme",
-      "aurora",
-      _("Page Backgrounds"),
-      _(
-        "Pick wallpapers for the login page and the admin interface. Drag the sliders and watch the live preview; Save & Apply makes it real.",
-      ),
-    );
-    const bgSubsection = bgSection.subsection;
-
-    addBackgroundOption(bgSubsection, {
-      key: "struct_login_bg",
-      lqipKey: "struct_login_bg_lqip",
-      label: _("Login Background"),
-      description: _("Full-screen login page background; use a wide image."),
-      previewKind: "login",
-    });
-
-    addBackgroundOption(bgSubsection, {
-      key: "struct_main_bg",
-      lqipKey: "struct_main_bg_lqip",
-      label: _("Main Background"),
-      description: _(
-        "Full-screen admin interface background with frosted bars; needs a luci-theme-aurora build that supports it.",
-      ),
-      previewKind: "admin",
-      tunables: [
-        ["struct_main_bg_alpha", _("Background Surface Opacity"), "%", 50, 100, "67",
-          _("How opaque cards and bars stay over the background image (50-100%). Empty = 67.")],
-        ["struct_main_bg_blur", _("Background Chrome Blur"), "px", 0, 40, "20",
-          _("Frosted-glass blur of the top and side bars (0-40px). Empty = 20.")],
-        ["struct_main_bg_scrim", _("Background Scrim Strength"), "%", 0, 70, "20",
-          _("How much the backdrop is washed toward the page color (0-70%). Empty = 20.")],
-      ],
-    });
-
     const toolbarSection = s.taboption(
       "icons_branding",
       form.SectionValue,
@@ -3709,10 +3779,14 @@ return view.extend({
       // LQIP 自动补生成两对背景键都要(hub 应用与换图都会清掉旧 LQIP)。
       requestAnimationFrame(() => {
         const pending = localStorage.getItem("aurora.pending_bg");
+        // 上传入口会写明归属键;资产库里按 login-bg.* 改名的老路径没有键,
+        // 默认归登录背景,行为与从前一致。
+        const pendingKey =
+          localStorage.getItem("aurora.pending_bg_key") || "struct_login_bg";
         [
-          ["struct_login_bg", "struct_login_bg_lqip", true],
-          ["struct_main_bg", "struct_main_bg_lqip", false],
-        ].forEach(([key, lqipKey, takesPending]) => {
+          ["struct_login_bg", "struct_login_bg_lqip"],
+          ["struct_main_bg", "struct_main_bg_lqip"],
+        ].forEach(([key, lqipKey]) => {
           const bgInput = mapNode.querySelector(
             '[name="cbid.aurora.theme.' + key + '"]',
           );
@@ -3721,8 +3795,9 @@ return view.extend({
           );
           if (!bgInput || !lqipInput) return;
 
-          if (takesPending && pending) {
+          if (pending && pendingKey === key) {
             localStorage.removeItem("aurora.pending_bg");
+            localStorage.removeItem("aurora.pending_bg_key");
             const pendingUrl = toBgUrl(pending);
             if (bgInput.querySelector(`option[value="${pendingUrl}"]`)) {
               bgInput.value = pendingUrl;

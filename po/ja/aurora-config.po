@@ -18,11 +18,11 @@ msgstr "%d 個は共有されません — テーマと一緒に送れるのは 
 msgid "%d shortcuts"
 msgstr "%d 件のショートカット"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3697
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3767
 msgid "(No icons uploaded)"
 msgstr "(アイコンがアップロードされていません)"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3270
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3665
 msgid "(None)"
 msgstr "(なし)"
 
@@ -39,11 +39,11 @@ msgstr "1 回ダウンロード"
 msgid "1 shortcut"
 msgstr "ショートカット 1 件"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3294
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3689
 msgid "192×192 icon for the installable web app manifest."
 msgstr "インストール可能なウェブアプリマニフェスト用の192×192アイコン。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3300
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3695
 msgid "512×512 icon for the installable web app manifest."
 msgstr "インストール可能なウェブアプリマニフェスト用の512×512アイコン。"
 
@@ -75,7 +75,7 @@ msgstr "通知、バリデーション、およびステータスフィードバ
 msgid "Add"
 msgstr "追加"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3668
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3738
 msgid "Add shortcuts, assign icons, and drag rows to reorder them."
 msgstr "ショートカットの追加、アイコンの割り当て、行のドラッグによる並べ替えができます。"
 
@@ -116,15 +116,15 @@ msgstr "これを適用した人は、上記すべてを受け取ります。後
 msgid "App Icon"
 msgstr "アプリアイコン"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3292
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3687
 msgid "App Icon 192×192"
 msgstr "アプリアイコン 192×192"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3298
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3693
 msgid "App Icon 512×512"
 msgstr "アプリアイコン 512×512"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3286
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3681
 msgid "Apple Touch Icon"
 msgstr "Apple Touch アイコン"
 
@@ -200,7 +200,7 @@ msgstr "適用中..."
 msgid "Applying…"
 msgstr "適用中…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3250
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3645
 msgid "Assign uploaded images to icons, favicons, and PWA metadata. Saved on Save or Save & Apply."
 msgstr "アップロードした画像をアイコン、ファビコン、PWA メタデータに割り当てます。保存または保存して適用で反映されます。"
 
@@ -232,15 +232,15 @@ msgstr "バックアップ済み"
 msgid "Background"
 msgstr "背景"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3632
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3428
 msgid "Background Chrome Blur"
 msgstr "バーのぼかし"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3634
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3430
 msgid "Background Scrim Strength"
 msgstr "背景スクリムの濃さ"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3630
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3426
 msgid "Background Surface Opacity"
 msgstr "サーフェスの不透明度"
 
@@ -260,15 +260,11 @@ msgstr "成功アラートおよび正常状態ラベル의背景。"
 msgid "Background for warning alerts, notices, and labels."
 msgstr "警告アラート、通知、およびラベルの背景。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2603
-msgid "Backgrounds"
-msgstr "背景"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2670
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2669
 msgid "Base corner radius applied to buttons, inputs, cards, and surfaces."
 msgstr "ボタン、入力、カード、およびサーフェスに適用されるベースの角丸半径。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2657
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2656
 msgid "Base spacing unit that scales padding and gaps across the interface."
 msgstr "インターフェース全体のパディングとギャップをスケーリングするベースの余白単位。"
 
@@ -280,7 +276,7 @@ msgstr "パネル、カード、フォーム、テーブル、およびニュー
 msgid "Brand"
 msgstr "ブランド"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3048
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3443
 msgid "Brand Asset Library"
 msgstr "ブランドアセットライブラリ"
 
@@ -341,7 +337,7 @@ msgstr "ファイルをチェック中…"
 msgid "Choose a literal color for this token"
 msgstr "このトークンの具体的な色を選択してください"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3700
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3770
 msgid "Choose an uploaded icon for this shortcut"
 msgstr "このショートカット用にアップロードされたアイコンを選択してください"
 
@@ -399,7 +395,7 @@ msgstr "アップロードを確定"
 msgid "Content"
 msgstr "内容"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2684
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2683
 msgid "Content Max Width"
 msgstr "コンテンツの最大幅"
 
@@ -422,7 +418,7 @@ msgid "Copy"
 msgstr "コピー"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:832
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2668
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2667
 msgid "Corner Radius"
 msgstr "角丸の半径"
 
@@ -465,7 +461,7 @@ msgstr "初めて公開したときに自動で作られます。登録もパス
 msgid "Custom"
 msgstr "カスタム"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2716
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2715
 msgid "Custom Fonts"
 msgstr "カスタムフォント"
 
@@ -506,7 +502,7 @@ msgstr "危険サーフェス（ホバー）"
 msgid "Dark"
 msgstr "ダーク"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2615
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2614
 msgid "Dark Mode"
 msgstr "ダークモード"
 
@@ -524,19 +520,19 @@ msgstr "見出し、本文テキスト、アイコン、およびフォーム値
 msgid "Delete"
 msgstr "削除"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3105
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3500
 msgid "Delete '%s' from /www/luci-static/aurora/images/? Theme settings that reference it may need updating."
 msgstr "/www/luci-static/aurora/images/ から「%s」を削除しますか？これを参照しているテーマ設定の更新が必要になる場合があります。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2752
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2751
 msgid "Delete '%s'? The interface will fall back to the default typeface."
 msgstr "「%s」を削除しますか?インターフェイスは既定のフォントに戻ります。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3104
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3499
 msgid "Delete Brand Asset"
 msgstr "ブランドアセットを削除"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2751
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2750
 msgid "Delete Custom Font"
 msgstr "カスタムフォントを削除"
 
@@ -544,7 +540,7 @@ msgstr "カスタムフォントを削除"
 msgid "Delete Share"
 msgstr "共有を削除"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2767
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2766
 msgid "Delete failed: %s"
 msgstr "削除に失敗しました: %s"
 
@@ -556,11 +552,11 @@ msgstr "この共有設定をテーマストアから削除しますか？"
 msgid "Deleted."
 msgstr "削除しました。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3118
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3513
 msgid "Deleted: %s"
 msgstr "削除されました: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3110
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3505
 msgid "Deleting…"
 msgstr "削除중…"
 
@@ -610,32 +606,32 @@ msgstr "バックアップファイルをダウンロード"
 msgid "Downloads"
 msgstr "ダウンロード"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2798
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2797
 msgid "Drop a .woff2 font here, or click to browse"
 msgstr ".woff2 フォントをここにドラッグするか、クリックして選択してください"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3147
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3542
 msgid "Drop image asset here, or click to browse"
 msgstr "ここに画像アセットをドロップするか、クリックして参照してください"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:149
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2641
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2640
 msgid "Dropdown"
 msgstr "ドロップダウン"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3677
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3747
 msgid "Enabled"
 msgstr "有効"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3692
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3762
 msgid "Enter a LuCI shortcut URL"
 msgstr "LuCI ショートカット URL を入力"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3419
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3145
 msgid "Enter a number between %d and %d"
 msgstr "%d から %d の数値を入力してください"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3686
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3756
 msgid "Enter a shortcut label"
 msgstr "ショートカットのラベルを入力"
 
@@ -663,7 +659,7 @@ msgstr "エクスポートに失敗しました"
 msgid "Export failed: %s"
 msgstr "エクスポートに失敗しました: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3126
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3521
 msgid "Failed to delete: %s"
 msgstr "削除に失敗しました: %s"
 
@@ -671,11 +667,11 @@ msgstr "削除に失敗しました: %s"
 msgid "Faint Hover"
 msgstr "かすかなホバー"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3276
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3671
 msgid "Favicon (ICO / Legacy)"
 msgstr "ファビコン (ICO / レガシー)"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3265
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3660
 msgid "Favicon (PNG)"
 msgstr "ファビコン (PNG)"
 
@@ -687,7 +683,7 @@ msgstr "フィールドは #hex、rgb()、hsl()、lab()、oklch() を受け入�
 msgid "File is %s, exceeding the 8MB limit."
 msgstr "ファイルは %s で、上限の 8MB を超えています。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3198
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3593
 msgid "Filename (with extension)"
 msgstr "ファイル名(拡張子を含む)"
 
@@ -699,7 +695,7 @@ msgstr "フォームコントロール(入力欄、セレクト、テキスト�
 msgid "Finishing…"
 msgstr "仕上げ中…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3647
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3717
 msgid "Floating shortcut launcher shown along the right edge of the interface."
 msgstr "インターフェースの右端に表示されるフローティングショートカットランチャー。"
 
@@ -715,19 +711,19 @@ msgstr "フォーカスリング"
 msgid "Focus outline for inputs, selects, and keyboard-operated controls."
 msgstr "入力、セレクト、およびキーボード操作コントロールのフォーカスアウトライン。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2941
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2940
 msgid "Font CSS file is empty"
 msgstr "フォント CSS ファイルが空です"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2937
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2936
 msgid "Font CSS file is not available"
 msgstr "フォント CSS ファイルが利用できません"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2808
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2807
 msgid "Font family name, e.g. MiSans"
 msgstr "フォント名（例: MiSans）"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2886
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2885
 msgid "Font for code, command output, and the system log viewer."
 msgstr "コード、コマンド出力、およびシステムログビューア用のフォント。"
 
@@ -743,15 +739,15 @@ msgstr "フォアグラウンド（前景）、ハイパーリンク、ブラン
 msgid "From openwrt.eamonxg.fun; the signing key ships with this package."
 msgstr "openwrt.eamonxg.fun から取得します。署名鍵は本パッケージに同梱されています。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3633
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3429
 msgid "Frosted-glass blur of the top and side bars (0-40px). Empty = 20."
 msgstr "上部バーとサイドバーのすりガラス効果のぼかし(0-40px)。空欄 = 20。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3625
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3421
 msgid "Full-screen admin interface background with frosted bars; needs a luci-theme-aurora build that supports it."
 msgstr "管理画面の全画面背景。上部バーとサイドバーはすりガラス効果になります。対応する luci-theme-aurora が必要です。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3617
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3413
 msgid "Full-screen login page background; use a wide image."
 msgstr "フルスクリーンのログインページ背景。幅の広い画像を使用してください。"
 
@@ -780,7 +776,7 @@ msgstr "非表示"
 msgid "Hide"
 msgstr "隠す"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3288
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3683
 msgid "Home Screen icon for iOS and iPadOS."
 msgstr "iOS および iPadOS 用のホーム画面アイコン。"
 
@@ -808,11 +804,11 @@ msgstr "塗りつぶされたプライマリボタンおよび強調度の高い
 msgid "How it looks in the store"
 msgstr "ストアでの見え方"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3635
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3431
 msgid "How much the backdrop is washed toward the page color (0-70%). Empty = 20."
 msgstr "背景をページの地色へなじませる度合い(0-70%)。空欄 = 20。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3631
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3427
 msgid "How opaque cards and bars stay over the background image (50-100%). Empty = 67."
 msgstr "背景画像上でのカードとバーの不透明度(50-100%)。空欄 = 67。"
 
@@ -825,7 +821,7 @@ msgstr "ストアのテーマを適用する前の、このルーターの見た
 msgid "Hyperlinks in page content, help text, and status output."
 msgstr "ページコンテンツ、ヘルプテキスト、およびステータス出力内のハイパーリンク。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3694
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3764
 msgid "Icon"
 msgstr "アイコン"
 
@@ -919,11 +915,11 @@ msgstr "カラー表現が無効、欠落、または循環しています。"
 msgid "It exists only on this router. Reflashing without keeping settings erases it."
 msgstr "このルーターにしか存在しません。設定を残さずに再フラッシュすると消えます。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3148
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3543
 msgid "JPG · PNG · WebP · AVIF · SVG · GIF · ICO"
 msgstr "JPG · PNG · WebP · AVIF · SVG · GIF · ICO"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2853
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2852
 msgid "Keep custom font files as small as possible, as they are stored in the router's limited flash storage."
 msgstr "カスタムフォントのファイルは、ルーターの限られたフラッシュストレージに保存されるため、できるだけ小さくしてください。"
 
@@ -931,7 +927,7 @@ msgstr "カスタムフォントのファイルは、ルーターの限られた
 msgid "Large corners"
 msgstr "大きな角丸"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2627
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2626
 msgid "Layout"
 msgstr "レイアウト"
 
@@ -942,7 +938,7 @@ msgstr "レイアウト"
 msgid "Layout & Typography"
 msgstr "レイアウトとタイポグラフィ"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2639
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2638
 msgid "Layout pattern for the primary navigation menu."
 msgstr "プライマリナビゲーションメニューのレイアウトパターン。"
 
@@ -950,7 +946,7 @@ msgstr "プライマリナビゲーションメニューのレイアウトパタ
 msgid "Leading color for progress meters."
 msgstr "プログレスメーターの開始側の色。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3278
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3673
 msgid "Legacy ICO favicon fallback."
 msgstr "レガシー ICO ファビコンのフォールバック。"
 
@@ -959,7 +955,7 @@ msgstr "レガシー ICO ファビコンのフォールバック。"
 msgid "Light"
 msgstr "ライト"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2614
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2613
 msgid "Light Mode"
 msgstr "ライトモード"
 
@@ -989,7 +985,7 @@ msgid "Loading…"
 msgstr "読み込み中…"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:347
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3616
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3412
 msgid "Login Background"
 msgstr "ログイン背景"
 
@@ -997,7 +993,7 @@ msgstr "ログイン背景"
 msgid "Logo"
 msgstr "ロゴ"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3256
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3651
 msgid "Logo (SVG)"
 msgstr "ロゴ (SVG)"
 
@@ -1006,11 +1002,11 @@ msgid "Low-emphasis text for small labels, placeholders, and disabled hints."
 msgstr "小さなラベル、プレースホルダー、および無効化されたヒント用の強調度の低いテキスト。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:348
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3624
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3420
 msgid "Main Background"
 msgstr "メイン背景"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2686
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2685
 msgid "Maximum width of the centered content area."
 msgstr "中央に配置されるコンテンツエリアの最大幅。"
 
@@ -1019,7 +1015,7 @@ msgid "Medium-emphasis text for helper copy, metadata, and summaries."
 msgstr "ヘルプ文、メタデータ、およびサマリー用の強調度が中程度のテキスト。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:148
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2640
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2639
 msgid "Mega Menu"
 msgstr "メガメニュー"
 
@@ -1049,12 +1045,12 @@ msgstr "等幅フォントファイル"
 msgid "Monochrome"
 msgstr "モノクローム"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2793
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2816
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2792
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2815
 msgid "Monospace"
 msgstr "等幅"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2879
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2878
 msgid "Monospace Typeface"
 msgstr "等幅（モノスペース）書体"
 
@@ -1075,11 +1071,11 @@ msgstr "自分の設定"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:118
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2603
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3194
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2821
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2820
 msgid "Name"
 msgstr "名前"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3191
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3586
 msgid "Name it login-bg.* to use it as the login page background."
 msgstr "login-bg.* という名前にすると、ログインページの背景として使用されます。"
 
@@ -1088,11 +1084,11 @@ msgstr "login-bg.* という名前にすると、ログインページの背景�
 msgid "Navigation"
 msgstr "ナビゲーション"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2637
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2636
 msgid "Navigation Style"
 msgstr "ナビゲーションスタイル"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2628
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2627
 msgid "Navigation, spacing, corner radius, and content width. Takes effect after Save & Apply."
 msgstr "ナビゲーション、余白、角丸の半径、およびコンテンツ幅。「保存して適用」の後に有効になります。"
 
@@ -1100,11 +1096,11 @@ msgstr "ナビゲーション、余白、角丸の半径、およびコンテン
 msgid "New"
 msgstr "新着"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3329
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3055
 msgid "No background selected"
 msgstr "背景が選択されていません"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3138
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3533
 msgid "No brand assets uploaded yet."
 msgstr "ブランドアセットはまだアップロードされていません。"
 
@@ -1112,7 +1108,7 @@ msgstr "ブランドアセットはまだアップロードされていません
 msgid "No configs here yet — go share the first one."
 msgstr "まだ設定がありません。最初の共有をしてみましょう。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2776
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2775
 msgid "No custom fonts uploaded."
 msgstr "カスタムフォントはアップロードされていません。"
 
@@ -1124,7 +1120,7 @@ msgstr "ファイルが選択されていないか、アップロードに失敗
 msgid "No themes match your search."
 msgstr "検索に一致するテーマがありません。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3443
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3169
 msgid "None"
 msgstr "なし"
 
@@ -1167,7 +1163,7 @@ msgstr "このコンフィグが向いている場面を一言で。"
 msgid "One more piece in the store"
 msgstr "ストアに作品がもう一つ"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2799
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2798
 msgid "Only .woff2 files up to 8MB are accepted."
 msgstr "8MB までの .woff2 ファイルのみ使用できます。"
 
@@ -1191,11 +1187,11 @@ msgstr "運用ステータスのアクセント"
 msgid "Overlay Surface"
 msgstr "オーバーレイサーフェス"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3267
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3662
 msgid "PNG fallback when SVG favicons are unsupported."
 msgstr "SVGファビコンがサポートされていない場合のPNGフォールバック。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3606
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3402
 msgid "Page Backgrounds"
 msgstr "ページ背景"
 
@@ -1212,7 +1208,7 @@ msgstr "バックアップした身元を貼り付けるか、ダウンロード
 msgid "Pick a name between 1 and 40 characters."
 msgstr "1〜40文字の名前にしてください。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3607
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3403
 msgid "Pick wallpapers for the login page and the admin interface. Drag the sliders and watch the live preview; Save & Apply makes it real."
 msgstr "ログインページと管理画面の壁紙を選びます。スライダーを動かすとライブプレビューに反映され、保存して適用で実際に反映されます。"
 
@@ -1221,15 +1217,15 @@ msgstr "ログインページと管理画面の壁紙を選びます。スライ
 msgid "Please enter a name."
 msgstr "名前を入力してください。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3111
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3506
 msgid "Please wait…"
 msgstr "しばらくお待ちください…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3009
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3008
 msgid "Preparing Typography"
 msgstr "タイポグラフィを準備中"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3006
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3005
 msgid "Preparing selected typefaces..."
 msgstr "選択された書体を準備中..."
 
@@ -1241,7 +1237,7 @@ msgstr "準備中…"
 msgid "Preset applied successfully."
 msgstr "プリセットが正常に適用されました。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2883
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2882
 msgid "Primary font for all interface text — headings, body, menus, forms, and tables."
 msgstr "すべてのインターフェイステキスト（見出し、本文、メニュー、フォーム、テーブル）用のプライマリフォント。"
 
@@ -1310,7 +1306,7 @@ msgstr "/etc/config/aurora をパッケージに同梱されているデフォ�
 msgid "Reset All Aurora Settings"
 msgstr "すべての Aurora 設定をリセット"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3560
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3356
 msgid "Reset to defaults"
 msgstr "デフォルトに戻す"
 
@@ -1362,7 +1358,7 @@ msgstr "再試行"
 msgid "Rounded corners"
 msgstr "角丸"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3257
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3652
 msgid "SVG mark for the browser tab and login page."
 msgstr "ブラウザタブおよびログインページ用のSVGマーク。"
 
@@ -1378,16 +1374,16 @@ msgstr "サンセリフフォント"
 msgid "Sans Font File"
 msgstr "Sans フォントファイル"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2793
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2815
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2792
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2814
 msgid "Sans-Serif"
 msgstr "サンセリフ"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2879
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2878
 msgid "Sans-Serif Typeface"
 msgstr "サンセリフ書体"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2707
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2706
 msgid "Sans-serif and monospace typefaces used across the theme. Pick a curated webfont — downloaded once after saving, from pinned, checksum-verified sources, then served locally — or upload your own .woff2 files."
 msgstr "テーマ全体で使用するサンセリフおよび等幅フォントです。厳選された Web フォント(保存後に、バージョン固定・チェックサム検証済みのソースから一度だけダウンロードされ、以後ローカルから配信)を選ぶか、独自の .woff2 ファイルをアップロードできます。"
 
@@ -1443,15 +1439,15 @@ msgstr "テーマに同梱、オフラインでも使えます"
 msgid "Shortcut Icons"
 msgstr "ショートカットのアイコン"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3682
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3752
 msgid "Shortcut Label"
 msgstr "ショートカットのラベル"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3646
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3716
 msgid "Shortcut Toolbar"
 msgstr "ショートカットツールバー"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3688
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3758
 msgid "Shortcut URL"
 msgstr "ショートカットのURL"
 
@@ -1464,11 +1460,11 @@ msgstr "ショートカット %d"
 msgid "Show"
 msgstr "表示"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3656
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3726
 msgid "Show Shortcut Toolbar"
 msgstr "ショートカットツールバーを表示"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3658
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3728
 msgid "Show the floating launcher on all pages."
 msgstr "すべてのページでフローティングランチャーを表示します。"
 
@@ -1481,7 +1477,7 @@ msgid "Shown"
 msgstr "表示"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:150
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2642
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2641
 msgid "Sidebar"
 msgstr "サイドバー"
 
@@ -1489,7 +1485,7 @@ msgstr "サイドバー"
 msgid "Signs everything you share. It lives only on this router."
 msgstr "共有するすべてに署名します。このルーターにしか存在しません。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3249
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3644
 msgid "Site Branding"
 msgstr "サイトブランディング"
 
@@ -1506,8 +1502,8 @@ msgid "Sky Blue"
 msgstr "スカイブルー"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:91
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2775
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2822
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2774
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2821
 msgid "Slot"
 msgstr "用途"
 
@@ -1520,7 +1516,7 @@ msgstr "小さめの角丸"
 msgid "Spacing"
 msgstr "間隔"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2655
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2654
 msgid "Spacing Scale"
 msgstr "余白スケール"
 
@@ -1700,7 +1696,7 @@ msgstr "ツールバー"
 msgid "Toolbar %d"
 msgstr "ツールバー %d"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3667
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3737
 msgid "Toolbar Shortcuts"
 msgstr "ツールバーのショートカット"
 
@@ -1709,19 +1705,19 @@ msgid "Trailing color for progress meters."
 msgstr "プログレスメーターの終了側の色。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:91
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3137
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3532
 msgid "Type"
 msgstr "種類"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2985
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2984
 msgid "Typeface download failed after retries — the system font stack is in effect. Save again to retry."
 msgstr "フォントのダウンロードに繰り返し失敗したため、システムフォントを使用しています。再度保存すると再試行します。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2706
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2705
 msgid "Typography"
 msgstr "タイポグラフィ"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3030
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3029
 msgid "Typography preparation failed:"
 msgstr "タイポグラフィの準備に失敗しました:"
 
@@ -1773,9 +1769,10 @@ msgstr "現在この設定を共有できません。"
 msgid "Unable to update this share right now."
 msgstr "現在この共有を更新できません。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2767
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2844
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3233
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2766
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2843
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3214
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3628
 msgid "Unknown"
 msgstr "不明"
 
@@ -1809,7 +1806,7 @@ msgstr "現在の設定で更新"
 msgid "Upgrading Aurora needs its update source. Once added, upgrades happen in System → Software like any other OpenWrt package."
 msgstr "Aurora の更新には更新元が必要です。追加すれば、他の OpenWrt パッケージと同様に システム → ソフトウェア から更新できます。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3049
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3444
 msgid "Upload and manage images for icons, favicons, PWA assets, and page backgrounds. Files are stored in <code>/www/luci-static/aurora/images/</code>."
 msgstr "アイコン、ファビコン、PWA アセット、ページ背景用の画像をアップロードして管理します。ファイルは <code>/www/luci-static/aurora/images/</code> に保存されます。"
 
@@ -1822,8 +1819,13 @@ msgid "Upload failed (HTTP %s)"
 msgstr "アップロードに失敗しました (HTTP %s)"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:340
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3220
 msgid "Upload failed: %s"
 msgstr "アップロードに失敗しました: %s"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3257
+msgid "Upload image"
+msgstr "画像をアップロード"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2661
 msgid "Uploaded with the theme, %s"
@@ -1861,7 +1863,7 @@ msgstr "これは何？どこから来たの？"
 msgid "Where this configuration goes"
 msgstr "この設定の公開先"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3174
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3569
 msgid "Will replace the existing '%s'."
 msgstr "既存の「%s」を置き換えます。"
 
@@ -1892,10 +1894,10 @@ msgstr "適用前に現在の設定がバックアップされ、適用後はワ
 msgid "Your shortcuts, logo, icons and login background are left exactly as they are."
 msgstr "ショートカット、ロゴ、アイコン、ログイン背景はそのまま残ります。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3684
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3754
 msgid "e.g., Network Interfaces"
 msgstr "例: ネットワークインターフェース"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3014
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3013
 msgid "unknown error"
 msgstr "不明なエラー"

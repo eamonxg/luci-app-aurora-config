@@ -32,15 +32,31 @@ test("the LQIP auto-fill loop covers both background pairs", async () => {
   assert.match(src, /\["struct_main_bg", "struct_main_bg_lqip"/);
 });
 
-// ── B 组件:独立"背景"分区,选图 + 实时预览 + 滑杆,两个背景共用一份实现 ──
-test("backgrounds live in their own tab, not under site branding", async () => {
+// ── B 组件:背景分区并入品牌 tab 且排最前,选图 + 预览 + 滑杆共用一份实现 ──
+test("backgrounds top the branding tab instead of owning a separate one", async () => {
   const src = await readFile(SRC, "utf8");
-  assert.match(src, /s\.tab\("backgrounds", _\("Backgrounds"\)\)/);
+  // 独立 tab 已撤:上传在资产库、选择在背景区,分开两个 tab 就是断流程
+  assert.doesNotMatch(src, /s\.tab\("backgrounds"/);
   assert.match(src, /_\("Page Backgrounds"\)/);
-  // 两个背景都挂在新分区的 subsection 上
+  // 背景分区注册在品牌 tab,且先于资产库注册(= 渲染在 tab 最顶)
+  const bgAt = src.indexOf('"_background_settings"');
+  const libAt = src.indexOf('"_asset_library"');
+  assert.ok(bgAt > 0 && libAt > 0 && bgAt < libAt, "backgrounds must render above the asset library");
+  // 两个背景都挂在分区 subsection 上
   assert.equal(src.match(/addBackgroundOption\(bgSubsection/g)?.length, 2);
   // 站点品牌分区不再描述登录背景
   assert.doesNotMatch(src, /and the login background/);
+});
+
+test("upload is embedded in the component, tagged with its owning key", async () => {
+  const src = await readFile(SRC, "utf8");
+  // 按钮 + 拖拽双入口,复用资产库同一条上传管线
+  assert.match(src, /_\("Upload image"\)/);
+  assert.match(src, /addEventListener\("drop"/);
+  assert.match(src, /callUploadIcon\(file\.name\)/);
+  // pending 带归属键:主背景的上传不再误落到登录背景上
+  assert.match(src, /aurora\.pending_bg_key/);
+  assert.match(src, /pendingKey === key/);
 });
 
 test("the shared component previews live and drives tunables with sliders", async () => {
