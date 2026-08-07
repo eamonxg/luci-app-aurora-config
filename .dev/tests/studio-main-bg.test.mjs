@@ -38,10 +38,14 @@ test("backgrounds top the branding tab instead of owning a separate one", async 
   // 独立 tab 已撤:上传在资产库、选择在背景区,分开两个 tab 就是断流程
   assert.doesNotMatch(src, /s\.tab\("backgrounds"/);
   assert.match(src, /_\("Page Backgrounds"\)/);
-  // 背景分区注册在品牌 tab,且先于资产库注册(= 渲染在 tab 最顶)
-  const bgAt = src.indexOf('"_background_settings"');
+  // 分区顺序:资产库置顶统一管理 → 背景 → 品牌
   const libAt = src.indexOf('"_asset_library"');
-  assert.ok(bgAt > 0 && libAt > 0 && bgAt < libAt, "backgrounds must render above the asset library");
+  const bgAt = src.indexOf('"_background_settings"');
+  const brandAt = src.indexOf('"_branding_settings"');
+  assert.ok(
+    libAt > 0 && libAt < bgAt && bgAt < brandAt,
+    "order must be asset library, backgrounds, branding",
+  );
   // 两个背景都挂在分区 subsection 上
   assert.equal(src.match(/addBackgroundOption\(bgSubsection/g)?.length, 2);
   // 站点品牌分区不再描述登录背景
@@ -57,6 +61,9 @@ test("upload is embedded in the component, tagged with its owning key", async ()
   // pending 带归属键:主背景的上传不再误落到登录背景上
   assert.match(src, /aurora\.pending_bg_key/);
   assert.match(src, /pendingKey === key/);
+  // 上传入口只归主背景;登录背景纯选择,上传统一走置顶的资产库
+  assert.match(src, /key: "struct_main_bg"[\s\S]{0,400}withUpload: true/);
+  assert.doesNotMatch(src, /key: "struct_login_bg"[\s\S]{0,300}withUpload/);
 });
 
 test("the shared component previews live and drives tunables with sliders", async () => {
