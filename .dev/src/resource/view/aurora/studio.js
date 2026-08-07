@@ -3299,13 +3299,7 @@ return view.extend({
 
       const el = E(
         "div",
-        {
-          class: "bg-preview",
-          style:
-            "position:relative;overflow:hidden;height:170px;max-width:560px;" +
-            "margin:8px 0 2px;border:1px solid var(--hairline);border-radius:12px;" +
-            "background:var(--bg);",
-        },
+        { class: "bg-preview" },
         parts,
       );
 
@@ -3480,22 +3474,13 @@ return view.extend({
             const raw = uci.get("aurora", "theme", tkey) || "";
             const parsed = raw.endsWith(unit) ? raw.slice(0, -unit.length) : raw;
             vals[tkey] = parsed === "" ? +def : +parsed;
-            const valEl = E(
-              "span",
-              {
-                style:
-                  "flex:0 0 3.4em;text-align:right;font-size:.85em;" +
-                  "color:var(--text-muted);font-variant-numeric:tabular-nums;",
-              },
-              vals[tkey] + unit,
-            );
+            const valEl = E("output", {}, vals[tkey] + unit);
             const slider = E("input", {
               type: "range",
               min: String(min),
               max: String(max),
               value: String(vals[tkey]),
               "data-tunable": tkey,
-              style: "flex:1;accent-color:var(--brand);min-width:120px;",
             });
             slider.addEventListener("input", () => {
               vals[tkey] = +slider.value;
@@ -3510,19 +3495,11 @@ return view.extend({
               refresh();
             });
             field.appendChild(
-              E(
-                "div",
-                {
-                  style:
-                    "display:flex;align-items:center;gap:10px;margin:6px 0;" +
-                    "max-width:560px;",
-                },
-                [
-                  E("span", { style: "flex:0 0 9em;font-size:.9em;" }, tlabel),
-                  slider,
-                  valEl,
-                ],
-              ),
+              E("div", { class: "bg-srow" }, [
+                E("label", {}, tlabel),
+                slider,
+                valEl,
+              ]),
             );
           });
 
@@ -3580,21 +3557,13 @@ return view.extend({
     const targetSo = bgSubsection.option(form.DummyValue, "_bg_target", "");
     targetSo.render = function () {
       const mk = (tkey, label) =>
-        E(
-          "button",
-          { type: "button", class: "cbi-button", "data-bg-switch": tkey },
-          label,
-        );
-      return E("div", { class: "cbi-value" }, [
+        E("button", { type: "button", "data-bg-switch": tkey }, label);
+      return E("div", { class: "cbi-value bg-seg-row" }, [
         E("div", { class: "cbi-value-field" }, [
-          E(
-            "div",
-            { "data-bg-switcher": "", style: "display:flex;gap:8px;" },
-            [
-              mk("struct_main_bg", _("Main Background")),
-              mk("struct_login_bg", _("Login Background")),
-            ],
-          ),
+          E("div", { class: "bg-seg", "data-bg-switcher": "" }, [
+            mk("struct_main_bg", _("Main Background")),
+            mk("struct_login_bg", _("Login Background")),
+          ]),
         ]),
       ]);
     };
@@ -3605,9 +3574,9 @@ return view.extend({
       label: "",
       previewKind: "login",
       tunables: [
-        ["struct_login_bg_alpha", _("Background Surface Opacity"), "%", 50, 100, "100"],
-        ["struct_login_bg_blur", _("Background Chrome Blur"), "px", 0, 40, "0"],
-        ["struct_login_bg_scrim", _("Background Scrim Strength"), "%", 0, 70, "0"],
+        ["struct_login_bg_alpha", _("Surface Opacity"), "%", 50, 100, "100"],
+        ["struct_login_bg_blur", _("Frosted Blur"), "px", 0, 40, "0"],
+        ["struct_login_bg_scrim", _("Backdrop Scrim"), "%", 0, 70, "0"],
       ],
     });
 
@@ -3618,9 +3587,9 @@ return view.extend({
       previewKind: "admin",
       withUpload: true,
       tunables: [
-        ["struct_main_bg_alpha", _("Background Surface Opacity"), "%", 50, 100, "67"],
-        ["struct_main_bg_blur", _("Background Chrome Blur"), "px", 0, 40, "20"],
-        ["struct_main_bg_scrim", _("Background Scrim Strength"), "%", 0, 70, "20"],
+        ["struct_main_bg_alpha", _("Surface Opacity"), "%", 50, 100, "67"],
+        ["struct_main_bg_blur", _("Frosted Blur"), "px", 0, 40, "20"],
+        ["struct_main_bg_scrim", _("Backdrop Scrim"), "%", 0, 70, "20"],
       ],
     });
 
@@ -3818,7 +3787,7 @@ return view.extend({
             row.style.display = row.dataset.bgTarget === tkey ? "" : "none";
           });
           bgSeg.querySelectorAll("[data-bg-switch]").forEach((b) =>
-            b.classList.toggle("cbi-button-apply", b.dataset.bgSwitch === tkey),
+            b.classList.toggle("on", b.dataset.bgSwitch === tkey),
           );
         };
         bgSeg.querySelectorAll("[data-bg-switch]").forEach((b) =>

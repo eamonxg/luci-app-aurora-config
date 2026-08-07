@@ -18,11 +18,11 @@ msgstr "%d 個無法分享 —— 只有小於 %s 的 PNG 和 SVG 會隨佈景�
 msgid "%d shortcuts"
 msgstr "%d 個捷徑"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3759
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3728
 msgid "(No icons uploaded)"
 msgstr "(未上傳圖示)"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3657
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3626
 msgid "(None)"
 msgstr "(無)"
 
@@ -39,11 +39,11 @@ msgstr "1 次下載"
 msgid "1 shortcut"
 msgstr "1 個捷徑"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3681
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3650
 msgid "192×192 icon for the installable web app manifest."
 msgstr "用於可安裝 Web 應用程式資訊清單的 192×192 圖示。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3687
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3656
 msgid "512×512 icon for the installable web app manifest."
 msgstr "用於可安裝 Web 應用程式資訊清單的 512×512 圖示。"
 
@@ -75,7 +75,7 @@ msgstr "用於通知、驗證和狀態回饋的強調色。"
 msgid "Add"
 msgstr "新增"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3730
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3699
 msgid "Add shortcuts, assign icons, and drag rows to reorder them."
 msgstr "新增捷徑、指定圖示，並拖曳各列以重新排序。"
 
@@ -116,15 +116,15 @@ msgstr "套用這套配置的人會連同上面這些一起裝上。你隨時可
 msgid "App Icon"
 msgstr "應用程式圖示"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3679
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3648
 msgid "App Icon 192×192"
 msgstr "應用程式圖示 192×192"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3685
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3654
 msgid "App Icon 512×512"
 msgstr "應用程式圖示 512×512"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3673
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3642
 msgid "Apple Touch Icon"
 msgstr "Apple Touch 圖示"
 
@@ -200,7 +200,7 @@ msgstr "正在套用..."
 msgid "Applying…"
 msgstr "正在套用…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3637
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3606
 msgid "Assign uploaded images to icons, favicons, and PWA metadata. Saved on Save or Save & Apply."
 msgstr "把已上傳的圖片指派給圖示、Favicon 與 PWA 中繼資料。點擊儲存或儲存並套用後生效。"
 
@@ -224,6 +224,11 @@ msgstr "先備份目前身分"
 msgid "Back up your creator identity"
 msgstr "備份創作者身分"
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3579
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3592
+msgid "Backdrop Scrim"
+msgstr "背景遮罩"
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2404
 msgid "Backed up"
 msgstr "已備份"
@@ -231,21 +236,6 @@ msgstr "已備份"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:164
 msgid "Background"
 msgstr "背景"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3609
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3622
-msgid "Background Chrome Blur"
-msgstr "頂欄與側欄模糊"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3610
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3623
-msgid "Background Scrim Strength"
-msgstr "背景遮罩濃度"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3608
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3621
-msgid "Background Surface Opacity"
-msgstr "表面不透明度"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:328
 msgid "Background for error alerts and destructive-action messages."
@@ -340,7 +330,7 @@ msgstr "正在檢查檔案…"
 msgid "Choose a literal color for this token"
 msgstr "為此變數選擇一個實際色彩"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3762
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3731
 msgid "Choose an uploaded icon for this shortcut"
 msgstr "為此捷徑選擇一個已上傳的圖示"
 
@@ -622,19 +612,19 @@ msgstr "將圖片素材拖曳至此處，或點擊進行瀏覽"
 msgid "Dropdown"
 msgstr "下拉選單"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3739
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3708
 msgid "Enabled"
 msgstr "已啟用"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3754
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3723
 msgid "Enter a LuCI shortcut URL"
 msgstr "輸入 LuCI 捷徑 URL"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3355
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3349
 msgid "Enter a number between %d and %d"
 msgstr "請輸入 %d 到 %d 之間的數字"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3748
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3717
 msgid "Enter a shortcut label"
 msgstr "輸入捷徑標籤"
 
@@ -670,11 +660,11 @@ msgstr "刪除失敗：%s"
 msgid "Faint Hover"
 msgstr "微淡懸停態"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3663
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3632
 msgid "Favicon (ICO / Legacy)"
 msgstr "網站圖示 (ICO / 傳統)"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3652
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3621
 msgid "Favicon (PNG)"
 msgstr "網站圖示 (PNG)"
 
@@ -698,7 +688,7 @@ msgstr "表單控制項的填充色:輸入框、下拉選單、文字區域與�
 msgid "Finishing…"
 msgstr "收尾中…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3709
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3678
 msgid "Floating shortcut launcher shown along the right edge of the interface."
 msgstr "沿介面右側邊緣顯示的懸浮快捷啟動列。"
 
@@ -742,6 +732,11 @@ msgstr "前景、超連結、品牌色及其對比文字。"
 msgid "From openwrt.eamonxg.fun; the signing key ships with this package."
 msgstr "來自 openwrt.eamonxg.fun，簽章公鑰隨本套件發佈。"
 
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3578
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3591
+msgid "Frosted Blur"
+msgstr "磨砂模糊"
+
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2810
 msgid "Give it a name"
 msgstr "取個名字"
@@ -767,7 +762,7 @@ msgstr "隱藏"
 msgid "Hide"
 msgstr "隱藏"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3675
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3644
 msgid "Home Screen icon for iOS and iPadOS."
 msgstr "用於 iOS 和 iPadOS 的主畫面圖示。"
 
@@ -804,7 +799,7 @@ msgstr "你在商店中套用主題之前,這台路由器的樣子。"
 msgid "Hyperlinks in page content, help text, and status output."
 msgstr "網頁內容、說明文字和狀態輸出中的超連結。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3756
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3725
 msgid "Icon"
 msgstr "圖示"
 
@@ -929,7 +924,7 @@ msgstr "主導覽選單的版面配置方式。"
 msgid "Leading color for progress meters."
 msgstr "進度列的起始顏色。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3665
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3634
 msgid "Legacy ICO favicon fallback."
 msgstr "傳統 ICO 網站圖示備用方案。"
 
@@ -968,7 +963,7 @@ msgid "Loading…"
 msgstr "載入中…"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:347
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3595
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3565
 msgid "Login Background"
 msgstr "登入背景"
 
@@ -976,7 +971,7 @@ msgstr "登入背景"
 msgid "Logo"
 msgstr "Logo"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3643
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3612
 msgid "Logo (SVG)"
 msgstr "標誌 (SVG)"
 
@@ -985,7 +980,7 @@ msgid "Low-emphasis text for small labels, placeholders, and disabled hints."
 msgstr "用於小標籤、預留位置和停用提示的低強調文字。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:348
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3594
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3564
 msgid "Main Background"
 msgstr "主介面背景"
 
@@ -1103,7 +1098,7 @@ msgstr "未選擇檔案或上傳失敗"
 msgid "No themes match your search."
 msgstr "沒有符合搜尋的主題。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3379
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3373
 msgid "None"
 msgstr "無"
 
@@ -1170,11 +1165,11 @@ msgstr "運作狀態強調色"
 msgid "Overlay Surface"
 msgstr "覆蓋層表面"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3654
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3623
 msgid "PNG fallback when SVG favicons are unsupported."
 msgstr "當不支援 SVG 網站圖示時的 PNG 備用方案。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3570
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3547
 msgid "Page Backgrounds"
 msgstr "頁面背景"
 
@@ -1191,7 +1186,7 @@ msgstr "貼上你備份過的身分，或者選擇下載的備份檔案。恢復
 msgid "Pick a name between 1 and 40 characters."
 msgstr "取一個 1 到 40 個字的名稱。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3571
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3548
 msgid "Pick wallpapers for the login page and the admin interface. Drag the sliders and watch the live preview; Save & Apply makes it real."
 msgstr "為登入頁與管理介面挑選桌布。拖曳滑桿即可即時預覽;儲存並套用後生效。"
 
@@ -1337,7 +1332,7 @@ msgstr "重試"
 msgid "Rounded corners"
 msgstr "圓角"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3644
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3613
 msgid "SVG mark for the browser tab and login page."
 msgstr "用於瀏覽器分頁與登入頁面的 SVG 標誌。"
 
@@ -1418,15 +1413,15 @@ msgstr "隨主題附帶，離線可用"
 msgid "Shortcut Icons"
 msgstr "捷徑圖示"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3744
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3713
 msgid "Shortcut Label"
 msgstr "捷徑標籤"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3708
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3677
 msgid "Shortcut Toolbar"
 msgstr "快捷工具列"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3750
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3719
 msgid "Shortcut URL"
 msgstr "捷徑 URL"
 
@@ -1439,11 +1434,11 @@ msgstr "捷徑 %d"
 msgid "Show"
 msgstr "顯示"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3718
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3687
 msgid "Show Shortcut Toolbar"
 msgstr "顯示快捷工具列"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3720
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3689
 msgid "Show the floating launcher on all pages."
 msgstr "在所有網頁上顯示懸浮啟動器。"
 
@@ -1464,7 +1459,7 @@ msgstr "側邊欄"
 msgid "Signs everything you share. It lives only on this router."
 msgstr "你分享的一切都以它署名。它只存在這台路由器上。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3636
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3605
 msgid "Site Branding"
 msgstr "網站品牌識別"
 
@@ -1534,6 +1529,11 @@ msgstr "下陷層表面"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:171
 msgid "Surface"
 msgstr "表面"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3577
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3590
+msgid "Surface Opacity"
+msgstr "表面不透明"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2090
 msgid "System Mono"
@@ -1675,7 +1675,7 @@ msgstr "工具列"
 msgid "Toolbar %d"
 msgstr "工具列 %d"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3729
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3698
 msgid "Toolbar Shortcuts"
 msgstr "工具列快捷方式"
 
@@ -1751,7 +1751,7 @@ msgstr "暫時無法更新這條分享。"
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2766
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2843
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3232
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3427
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3421
 msgid "Unknown"
 msgstr "未知"
 
@@ -1798,7 +1798,7 @@ msgid "Upload failed (HTTP %s)"
 msgstr "上傳失敗 (HTTP %s)"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:340
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3433
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3427
 msgid "Upload failed: %s"
 msgstr "上傳失敗：%s"
 
@@ -1869,7 +1869,7 @@ msgstr "套用前會自動備份目前設定，套用後可一鍵還原。"
 msgid "Your shortcuts, logo, icons and login background are left exactly as they are."
 msgstr "你的捷徑、Logo、圖示與登入背景維持原樣不變。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3746
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3715
 msgid "e.g., Network Interfaces"
 msgstr "例如：網路介面"
 
