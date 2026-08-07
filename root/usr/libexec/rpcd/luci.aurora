@@ -704,7 +704,7 @@ sniff_image_ext() {  # $1=file
 
 # True (0) when a sniffed extension is one this kind is allowed to be. Kinds
 # the hub pins to a single format say so; login_bg and toolbar icons are
-# genuinely two-format (the console re-encodes login_bg to PNG but JPEG is in
+# genuinely two-format (the console re-encodes the bg kinds to JPEG; PNG is in
 # the schema, and a toolbar icon is whichever of SVG/PNG its author uploaded).
 hub_asset_ext_ok() {  # $1=kind  $2=ext
 	case "$1" in
