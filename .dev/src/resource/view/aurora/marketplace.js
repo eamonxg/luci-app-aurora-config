@@ -182,12 +182,15 @@ const callApplyThemePreset = rpc.declare({
 // both a card (preview) and the drawer (full payload), and neither can
 // describe the same configuration differently.
 //
-// Three shapes have to be handled, newest first:
-//   1. `item.preview`   -- a list row from a hub with the projection
+// Two shapes have to be handled:
+//   1. `item.preview`   -- a list row, from browse or from /api/v1/me
 //   2. `item.payload`   -- a detail row (always complete)
-//   3. `item.palette`   -- a list row from a hub without the projection.
-//      DEPRECATED on the hub side and kept only so a new client still works
-//      against an old one.
+//
+// There used to be a third, `item.palette`, in a nested shape of its own. The
+// hub no longer emits it anywhere: /api/v1/me was its last producer and now
+// carries the same `preview` the browse list does. One set of colors, one
+// shape -- while there were two, a card and the hub's own site could draw the
+// same configuration differently depending on which one they read.
 const previewOf = (item) => {
   const preview = item && item.preview;
   return preview && typeof preview === "object" && !Array.isArray(preview)
@@ -209,7 +212,6 @@ const paletteOf = (item) => {
       }, {});
     return { light: pick("light"), dark: pick("dark") };
   }
-  if (item && item.palette) return item.palette;
   return { light: {}, dark: {} };
 };
 
@@ -1268,17 +1270,25 @@ const STORE_CSS =
   ".aurora-store-why summary{cursor:pointer;color:var(--brand,#333);" +
   "font-weight:600;list-style:none;}" +
   ".aurora-store-why summary::-webkit-details-marker{display:none;}" +
-  ".aurora-store-empty{margin-top:1em;padding:1.3em 1.4em;border-radius:12px;" +
-  "border:1px dashed var(--hairline,rgba(0,0,0,0.2));}" +
-  ".aurora-store-empty h4{margin:0 0 0.4em;font-size:1.02em;}" +
-  ".aurora-store-empty p{margin:0;color:var(--text-muted,#777);" +
-  "font-size:0.9em;max-width:56ch;}" +
-  ".aurora-store-empty .row{display:flex;gap:0.8em;align-items:center;" +
-  "flex-wrap:wrap;margin-top:1.1em;}" +
-  // 两处文字链:身份卡折叠说明里的"恢复身份",和空态引导卡里的那条。
-  ".aurora-store-why .lnk,.aurora-store-empty .lnk{" +
+  // 「还没发过」曾经是一张虚线卡:标题、一段说明、两个按钮。它整块删掉了 ——
+  // 那张卡劝人去别处发布,而发布入口现在就在它上面那条横幅上。空态回到商店
+  // 别处一直在用的写法(见 buildOnlineGrid 的 "No themes match your search."):
+  // 一行灰字,说完就完。
+  ".aurora-store-none{color:var(--text-muted,#777);font-size:0.9em;padding:1.2em 0.2em;}" +
+  // 身份卡上的"改名"和"恢复"。以前只有折叠说明里那一条文字链,而"恢复"同时
+  // 还在空态卡里出现了第二次 —— 两条都指向同一个对话框。现在只剩这里一处。
+  ".aurora-store-why .lnk,.aurora-store-idcard .lnk{" +
   "background:none;border:0;padding:0;cursor:pointer;font:inherit;" +
   "color:var(--brand,#333);text-decoration:underline;}" +
+  // 「我的配置」那条横幅。外框直接用 .aurora-store-share(发布面板的容器),
+  // 这里只多一个三列栅格:缩略图 / 说明 / 动作。窄屏塌成一列,动作排回一行。
+  ".aurora-store-mine{display:grid;grid-template-columns:200px 1fr auto;" +
+  "gap:1.2em;align-items:center;}" +
+  ".aurora-store-mine .sum{margin:0.35em 0 0;color:var(--text-muted,#777);" +
+  "font-size:0.88em;}" +
+  ".aurora-store-mine .acts{display:flex;flex-direction:column;gap:0.5em;}" +
+  "@media (max-width:700px){.aurora-store-mine{grid-template-columns:1fr;}" +
+  ".aurora-store-mine .acts{flex-direction:row;}}" +
   ".aurora-store-keybox{display:flex;align-items:center;gap:0.7em;margin:0.9em 0;" +
   "padding:0.7em 0.8em;border-radius:9px;" +
   "background:var(--surface-sunken,rgba(0,0,0,0.04));" +
@@ -1893,6 +1903,102 @@ return view.extend({
       return E("div", { class: "aurora-store-grid" }, [buildCard(model)]);
     };
 
+    // 同一份配置,两种画法,按它在哪一页出场。
+    //
+    // 「全部」页上它是可浏览的一组里的一张卡(buildMineGrid),和内置、社区
+    // 那两组同一种形状。「我的」页上它是主角,所以摊成一条横幅:一张 252px
+    // 的卡孤零零待在一个为 N 件作品准备的 auto-fill 网格里,后面拖着几格空白
+    // —— 而这一格永远只有一件,因为它就是当前 uci 的投影。
+    //
+    // 横幅换来的宽度不是留白,是清单:发出去到底带什么,连体积一起。那份清单
+    // 直接调 shareManifestRows(),发布面板用的是同一个函数 —— 不复制,否则以
+    // 后加一项配置要改两处,两处必然会长歪。
+    const buildMineBanner = () => {
+      const model = buildMineModel();
+      if (!model) return null;
+
+      const prev = E("div", { class: "aurora-store-prev" }, [
+        buildDuo(model.palette, model.opts),
+        E("span", { class: "aurora-store-dots" }, [buildDotRow(model.palette)]),
+      ]);
+      if (model.current) prev.appendChild(buildCurrentPin());
+
+      const nm = E("div", { class: "aurora-store-nm" }, [
+        document.createTextNode(_("My configuration")),
+        E(
+          "span",
+          { class: "aurora-store-pill " + (modified ? "ok" : "") },
+          modified ? _("In use") : _("Not in use"),
+        ),
+      ]);
+      if (model.glyphs) nm.appendChild(model.glyphs);
+
+      // 主动作跟着这条横幅代表的东西走,不是跟着按钮的可用性走。改过 ->
+      // 它就是屏幕上正在发生的样子,发布发的就是它。没改过 -> 它是被商店
+      // 主题盖掉之前那份备份,而 build_share_payload 打包的是当前 uci,不是
+      // 这张预览 —— 那时"发布"会发出一份和画面上不符的东西,所以这里根本
+      // 不给这个按钮,而不是把它置灰了事。
+      const acts = modified
+        ? [
+            E(
+              "button",
+              {
+                type: "button",
+                class: "btn cbi-button-action important",
+                click: () => openSharePanel(),
+              },
+              _("Share to the store"),
+            ),
+            E(
+              "button",
+              { type: "button", class: "cbi-button", click: () => model.open() },
+              _("Details"),
+            ),
+          ]
+        : [
+            E(
+              "button",
+              {
+                type: "button",
+                class: "btn cbi-button-action important",
+                click: () => confirmRestore(),
+              },
+              _("Apply"),
+            ),
+            E(
+              "button",
+              { type: "button", class: "cbi-button", click: () => model.open() },
+              _("Details"),
+            ),
+          ];
+
+      return E("div", { class: "aurora-store-share aurora-store-mine" }, [
+        E("div", { class: "aurora-store-share-prev" }, [prev]),
+        E("div", {}, [
+          nm,
+          E(
+            "p",
+            { class: "sum" },
+            modified
+              ? _("The look this router is wearing right now.")
+              : _("How this router looked before you applied a theme from the store."),
+          ),
+          // 抽屉里那排「随附内容」用的同一个 buildTiles。清单本身来自
+          // shareManifestRows() —— 发布面板的那一份,一字不差,所以横幅上
+          // 写着要发什么,点下去发的就是什么。
+          buildTiles(
+            shareManifestRows().map((row) => ({
+              glyph: "·",
+              label: row.label,
+              meta: row.detail,
+              title: row.label + " — " + row.detail,
+            })),
+          ),
+        ]),
+        E("div", { class: "acts" }, acts),
+      ]);
+    };
+
     // ------------------------------------------------------------------
     // My shares
 
@@ -1937,6 +2043,21 @@ return view.extend({
       shareOpen = true;
       nameInput.value = item.name || "";
       descInput.value = item.description || "";
+      renderContent();
+    };
+
+    // 同一张面板的另一个入口,来自「我的配置」横幅。openUpdateForm 进来时
+    // 选中了一条已有分享("用当前配置替换它"),这里什么都不选("发一份新的")。
+    //
+    // 这一页此前一个发布入口都没有 —— studio.js 的注释记着为什么:页头按钮、
+    // 面板标题、空态卡按钮三个入口同时在场,说的都是同一句话,于是一起删掉了。
+    // 这次只加回来一个,而且挂在被发布的那个对象上。工作台那个入口保留,两处
+    // 落到同一张表单。
+    const openSharePanel = () => {
+      shareTarget = "";
+      shareOpen = true;
+      nameInput.value = "";
+      descInput.value = "";
       renderContent();
     };
 
@@ -2024,18 +2145,45 @@ return view.extend({
       // and a "Name"/"Downloads" line above each would only stutter.
       // 状态挂在名字底下,不占一列:这张表刚在 390px 上修过溢出,第四列会让
       // 它重演。而状态本来就是在说这一件作品,贴着它的名字最省一次目光移动。
+      // 一行色点走在名字前面。/api/v1/me 现在带回和商店列表同一份 preview,
+      // 所以这几个色值和别人在商店里看到的这件作品是同一批 —— 作者不必靠
+      // 名字回忆哪件是哪件。
       const nameCell = E("td", { class: "td", style: "word-break:break-word;" }, [
+        E(
+          "span",
+          { style: "display:inline-flex;vertical-align:middle;margin-right:8px;" },
+          [buildDotRow(paletteOf(item))],
+        ),
         document.createTextNode(item.name || _("Untitled theme")),
       ]);
-      const note = reviewNoteFor(item.assets_status);
-      if (note) {
+
+      // 被下架的那一行:它不是错误,是这件作品此刻唯一的真相,而这里是作者
+      // 唯一会被告知的地方 —— 公开的浏览接口按设计不会再列出它。
+      //
+      // 不给按钮,两个都不给。更新一件已经不在商店里的作品没有意义;而删除
+      // 走的 hub_delete 要求 status='active'(见 hub 的 requireOwnedConfig),
+      // 对着已下架的调过去只会拿到 404,而 404 在 shell 那边只能报成"连不上
+      // 商店" —— 那正是这张表以前那个"删了还在"的老毛病的后半段。
+      const takenDown = item.status === "removed";
+      if (takenDown) {
         nameCell.appendChild(
           E(
             "div",
-            { style: "margin-top:2px;font-size:0.84em;color:" + note.color + ";" },
-            note.text,
+            { style: "margin-top:2px;font-size:0.84em;color:var(--warning);" },
+            _("Taken down — no longer in the store. Nothing you can do from here."),
           ),
         );
+      } else {
+        const note = reviewNoteFor(item.assets_status);
+        if (note) {
+          nameCell.appendChild(
+            E(
+              "div",
+              { style: "margin-top:2px;font-size:0.84em;color:" + note.color + ";" },
+              note.text,
+            ),
+          );
+        }
       }
 
       return E("tr", { class: "tr" }, [
@@ -2044,7 +2192,7 @@ return view.extend({
           document.createTextNode(formatDownloads(item.downloads)),
         ]),
         E("td", { class: "td cbi-section-actions" }, [
-          E("div", {}, [updateBtn, " ", deleteBtn]),
+          E("div", {}, takenDown ? [] : [updateBtn, " ", deleteBtn]),
         ]),
       ]);
     };
@@ -2262,6 +2410,12 @@ return view.extend({
               ),
             ]),
           ]),
+          // 身份的三个动作全在这一处。备份是实心的那个(没备份时),改名和
+          // 恢复是文字链 —— 它们不是这张卡要人做的事,只是要人找得到的事。
+          //
+          // 「恢复」以前有两个入口:折叠说明里一条,空态引导卡里又一条,同屏
+          // 可见,指向同一个对话框。空态卡整张删掉了,说明里那条也删了,只剩
+          // 这一个。
           E("div", { class: "acts" }, [
             E(
               "button",
@@ -2278,20 +2432,21 @@ return view.extend({
               { type: "button", class: "cbi-button", click: () => promptRename() },
               _("Rename"),
             ),
+            " ",
+            E(
+              "button",
+              { type: "button", class: "lnk", click: () => restoreIdentityPrompt() },
+              _("Restore…"),
+            ),
           ]),
         ]),
         E("details", { class: "aurora-store-why" }, [
           E("summary", {}, _("What is this? Where did it come from?")),
-          E("p", { style: "margin:0 0 0.6em;" }, [
+          E("p", { style: "margin:0;" }, [
             document.createTextNode(
               _("Created automatically the first time you publish — no sign-up, no password. It decides which configurations in the store are yours, and who can change or remove them. Backing it up saves an identity backup file; import that file after a reflash, or on a new router, and your work comes back to you."),
             ),
           ]),
-          E(
-            "button",
-            { type: "button", class: "lnk", click: () => restoreIdentityPrompt() },
-            _("Changed routers? Restore your identity"),
-          ),
         ]),
       ]);
     };
@@ -2407,50 +2562,28 @@ return view.extend({
     // The tab keeps the count of what is already published, so the number is
     // readable without opening the tab first.
     const renderMyShares = (items) => {
-      // 商店那边是软删除:一件作品删掉之后,/api/v1/me 仍然把它列出来,只是
-      // status 变成 "removed"。这是删除看起来"删不掉"的全部原因 —— 删成功了,
-      // 刷新一遍,那一行还在,于是用户再点一次,这次撞上 404,而 404 在 shell
-      // 那边只能报成"连不上商店"。这里滤掉,那一行就再也不会重新出现。
-      myShares = (items || []).filter((item) => item && item.status !== "removed");
+      // 这里曾经有一句 filter(status !== "removed")。当时商店的软删除让作者
+      // 自己删掉的作品继续出现在 /api/v1/me 里,只是 status 变成 removed ——
+      // 删成功了、刷新一遍那一行还在,用户再点一次就撞 404。滤掉是对的,代价
+      // 是被管理员下架的作品也一起被藏了,作者永远不知道自己被下架过。
+      //
+      // 现在 hub 那边分得清了(migration 0007 的 removed_by):作者自己删的根本
+      // 不再下发,而 status === "removed" 只剩一个意思 —— 被下架。所以这里不再
+      // 滤,那一行改由 buildMyShareRow 画成「已下架」。
+      myShares = (items || []).filter((item) => item);
       TABS.forEach(renderTabLabel);
       while (mySharesEl.firstChild) mySharesEl.removeChild(mySharesEl.firstChild);
       if (!myShares.length) {
-        // 没有意图就不摆表单 —— 表单是个重家伙,凭空占满一整页就是原先那种
-        // 冗余(一张劝你发布的卡,底下再跟一张让你发布的面板)。这里只给一块
-        // 路标。按钮是路标,不是发布控件:它把人送回工作台,不在这一页发起
-        // 任何事。两种空态(从没发过 / 全删光了)合成一句话,因为改版之后它们
-        // 要说的下一步完全相同。
+        // 曾经是一张虚线卡:标题、一段说明、一个"去工作台"按钮,外加第二条
+        // "恢复身份"链接。三样东西现在都没有理由存在了 —— 发布入口就在这一
+        // 屏上方那条横幅上,身份的恢复入口在身份卡里。剩下要说的只有一句:
+        // 这里以后会长出什么。
         mySharesEl.appendChild(
-          E("div", { class: "aurora-store-empty" }, [
-            E("h4", {}, _("Nothing shared yet")),
-            E("p", {}, [
-              document.createTextNode(
-                _("Sharing starts in the design studio: make the appearance what you want there, then publish from that page."),
-              ),
-            ]),
-            E("div", { class: "row" }, [
-              E(
-                "button",
-                {
-                  type: "button",
-                  class: "cbi-button",
-                  click: () => {
-                    window.location.href = L.url("admin/system/aurora/studio");
-                  },
-                },
-                _("Go to the design studio"),
-              ),
-              E(
-                "button",
-                {
-                  type: "button",
-                  class: "lnk",
-                  click: () => restoreIdentityPrompt(),
-                },
-                _("Shared on another router before? Restore my identity"),
-              ),
-            ]),
-          ]),
+          E(
+            "p",
+            { class: "aurora-store-none" },
+            _("Nothing shared yet. Publish the configuration above and it shows up here."),
+          ),
         );
         return;
       }
@@ -2464,14 +2597,8 @@ return view.extend({
           ...myShares.map((item) => buildMyShareRow(item)),
         ]),
       );
-      // 有作品的人也需要知道下一套从哪儿发 —— 这一页已经没有发布入口了。
-      mySharesEl.appendChild(
-        E(
-          "p",
-          { style: "font-size:0.84em;color:var(--text-subtle);margin:12px 0 0;" },
-          _("Want to publish another one? Set it up in the design studio and publish from there."),
-        ),
-      );
+      // 这里曾经跟着一句"想再发一套?去工作台发"。它存在的理由是这一页当时
+      // 没有发布入口 —— 现在这一屏上方就是那条横幅,再指一次路只是多一行字。
     };
 
     // ------------------------------------------------------------------
@@ -3266,7 +3393,10 @@ return view.extend({
 
       // 排在最前面:正在用的那张卡应该第一眼看见。既没改过、又没有可回去的
       // 配置时整段不出现 —— 那时用户还没有属于自己的东西。
-      if (state.tab === "all" || state.tab === "mine") {
+      //
+      // 「全部」页上它是一张卡:那一页是拿来逛的,内置和社区也是网格,它跟着
+      // 一样才读得顺。「我的」页在下面单独处理 —— 那里它是主角,画成横幅。
+      if (state.tab === "all") {
         const mineGrid = buildMineGrid();
         if (mineGrid) {
           push(buildSectionTitle(_("Mine"), _("On this router only")));
@@ -3298,12 +3428,16 @@ return view.extend({
           push(buildSharePanel());
           return;
         }
-        const identityCard = buildIdentityCard();
-        if (identityCard) {
-          push(buildSectionTitle(_("My creator identity"), ""));
-          push(identityCard);
+        // 一屏两个标题,不是三个。身份曾经占着和作品同一级的一个 section ——
+        // 它是设施,不是目的,现在并进「我的分享」:这台路由器以谁的名义发布,
+        // 说的本来就是下面那张表里的东西归谁。
+        const banner = buildMineBanner();
+        if (banner) {
+          push(buildSectionTitle(_("Mine"), _("On this router only")));
+          push(banner);
         }
         push(buildSectionTitle(_("My Shares"), ""));
+        push(buildIdentityCard());
         push(mySharesEl);
       }
     };

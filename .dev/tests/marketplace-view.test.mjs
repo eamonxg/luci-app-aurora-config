@@ -1154,7 +1154,12 @@ test("identity card: names the router's creator, and carries back-up / rename / 
   // 没有身份时返回 null —— 引导态由调用方负责,卡片不假装有一个空账号。
   assert.match(src, /if \(!profile\.id\) return null;/);
 
-  assert.ok(src.includes('_("My creator identity")'));
+  // 身份不再占一个和作品同级的 section。它并进「我的分享」的标题下面 ——
+  // 这台路由器以谁的名义发布,说的本来就是那张表里的东西归谁。
+  assert.ok(
+    !src.includes('_("My creator identity")'),
+    "identity is no longer a section of its own",
+  );
   assert.ok(src.includes('_("Back up identity")'));
   assert.ok(src.includes('_("Not backed up")'));
   assert.ok(src.includes('_("Backed up")'));
@@ -1166,10 +1171,20 @@ test("identity card: names the router's creator, and carries back-up / rename / 
     "the card must offer Rename",
   );
 
-  // 折叠说明回答“这是什么、从哪来的”,并在末尾提供恢复入口。
+  // 折叠说明只回答“这是什么、从哪来的”。恢复入口曾经挂在它末尾 —— 而空态
+  // 引导卡里还有第二条,同屏可见,点开是同一个对话框。现在恢复只在身份卡上。
   assert.ok(src.includes('_("What is this? Where did it come from?")'));
-  assert.ok(src.includes('_("Changed routers? Restore your identity")'));
   assert.match(src, /class: "aurora-store-why"/);
+  assert.ok(
+    !src.includes('_("Changed routers? Restore your identity")'),
+    "the explainer must not carry a second restore entry point",
+  );
+  assert.ok(
+    src.includes('_("Restore…")'),
+    "the card must offer Restore",
+  );
+  const restoreSites = (src.match(/restoreIdentityPrompt\(\)/g) || []).length;
+  assert.equal(restoreSites, 1, "restore must have exactly one entry point");
 
   // 昵称来自 hub,属不可信文本。
   assert.match(src, /document\.createTextNode\(profile\.nickname\)/);
@@ -1200,56 +1215,79 @@ test("publishing has no entry point on this page at all", async () => {
   );
 });
 
-// 原先这里分两种空态:没身份的给引导卡,有身份零作品的给一句话。改版之后
-// 两者要说的下一步完全相同(去工作台),所以合成一句。引导卡不再是发布入口,
-// 那颗按钮是路标 —— 它把人送走,不在这一页发起任何事。
-test("my-shares empty state points at the studio instead of publishing", async () => {
+// 空态一路瘦到只剩一行字。它曾经是一张虚线卡:标题、一段说明、一颗"去工作台"
+// 按钮,外加第二条"恢复身份"链接。三样东西现在都没有存在的理由 —— 发布入口
+// 就在同一屏上方那条横幅上,恢复在身份卡里。剩下要说的只有"这里以后会长出
+// 什么",而商店别处的空态本来就是一行灰字。
+test("my-shares empty state is one line, not a card with its own buttons", async () => {
   const src = await readFile(SRC, "utf8");
 
-  assert.ok(src.includes('_("Nothing shared yet")'));
   assert.ok(
     src.includes(
-      '_("Sharing starts in the design studio: make the appearance what you want there, then publish from that page.")',
+      '_("Nothing shared yet. Publish the configuration above and it shows up here.")',
     ),
   );
+  assert.match(src, /class: "aurora-store-none"/);
+
+  // 那张卡整块没了,连同它的样式类。
   assert.ok(
-    src.includes('_("Shared on another router before? Restore my identity")'),
+    !/class: "aurora-store-empty"/.test(src),
+    "the dashed empty card is gone",
   );
-  assert.match(src, /class: "aurora-store-empty"/);
+  assert.ok(
+    !src.includes('_("Go to the design studio")'),
+    "the empty state must not send people away -- publishing happens here now",
+  );
+  assert.ok(
+    !src.includes('_("Shared on another router before? Restore my identity")'),
+    "the second restore entry point is gone",
+  );
 
   // 两种空态合并了:不再按 profile.id 分叉。
   assert.ok(
     !/if \(!profile\.id\) \{/.test(src),
     "the two empty states now say the same next step and were merged",
   );
-  assert.ok(
-    !src.includes('_("Publish your current configuration and it shows up here.")'),
-  );
 
   // 旧的那句“或者导入创作者密钥”彻底消失,连同两个旧按钮标签。
-  assert.ok(
-    !src.includes(
-      '_("Nothing shared yet — publish your current configuration, or import a creator key to bring back what you shared before.")',
-    ),
-  );
   assert.ok(!src.includes('_("Import a creator key")'));
   assert.ok(!src.includes('_("Import a key")'));
 });
 
-// The hub soft-deletes: /api/v1/me keeps listing a share this device has
-// already deleted, marked `status: "removed"`. Nothing else in this view reads
-// `status`, so an unfiltered list re-renders that share with live Update and
-// Delete buttons -- which is why a delete looked broken end to end: it
-// succeeded, the row stayed, and the second click hit a 404.
-test("gallery: a share the hub has removed never reaches My Shares", async () => {
+// 这一条以前钉的是"removed 一律滤掉"。当时非滤不可:hub 的软删除让作者自己
+// 删掉的作品继续出现在 /api/v1/me 里,只是 status 变成 removed —— 删成功了、
+// 那一行还在,再点一次就撞 404。代价是被管理员下架的作品跟着一起被藏了。
+//
+// hub 那边现在分得清了(migration 0007 的 removed_by):作者自己删的根本不再
+// 下发,status === "removed" 只剩"被下架"一个意思。所以这里反过来钉:不许再
+// 滤,那一行必须画出来 —— 而且不带按钮,因为 hub 的 requireOwnedConfig 要求
+// status='active',对已下架的调 delete 只会拿回 404。
+test("gallery: a taken-down share is shown, and carries no buttons", async () => {
   const src = await readFile(SRC, "utf8");
+
   const start = src.indexOf("const renderMyShares");
   assert.ok(start > 0, "renderMyShares not found");
   const head = src.slice(start, src.indexOf("TABS.forEach", start));
+  assert.ok(
+    !/\.filter\(\(item\) => item && item\.status !== "removed"\)/.test(head),
+    "renderMyShares must no longer drop removed rows -- the hub already did",
+  );
+
+  const row = src.slice(
+    src.indexOf("const buildMyShareRow"),
+    src.indexOf("let myShares = []"),
+  );
+  assert.match(row, /const takenDown = item\.status === "removed";/);
+  assert.ok(
+    row.includes(
+      '_("Taken down — no longer in the store. Nothing you can do from here.")',
+    ),
+    "the author must be told, here or nowhere",
+  );
   assert.match(
-    head,
-    /status !== "removed"/,
-    "renderMyShares must drop the shares the hub has already removed",
+    row,
+    /takenDown \? \[\] : \[updateBtn, " ", deleteBtn\]/,
+    "a taken-down row must offer neither Update nor Delete",
   );
 });
 
@@ -1285,16 +1323,78 @@ test("gallery: the tab strip names the page, so the head carries no heading", as
 });
 
 // 三处发布入口(页头按钮、面板标题、空态卡按钮)说的是同一句话,而且面板开着
-// 的时候下面还在劝你开面板。一次删干净:商店从此只干两件事 —— 逛别人的、
-// 管自己的,发布的起点在主题工作台。
-test("marketplace: no publish button anywhere on this page", async () => {
+// 的时候下面还在劝你开面板 —— 那三处一次删干净了。
+//
+// 这一条现在钉的是"回来的只有一个":入口挂在「我的配置」那条横幅上,也就是
+// 被发布的那个对象自己身上,而不是页头/面板标题/空态卡各来一个。页头那颗
+// 按钮和它切标签的副作用必须仍然不存在。
+// 「我的配置」恒为 1(它只是当前 uci 的投影),而「我的分享」是 0…N。这两样
+// 曾经共用一个 auto-fill minmax(252px,1fr) 网格 —— 单例被塞进为 N 准备的容器
+// 里,一张卡后面拖着几格空白。
+//
+// 「我的」页因此改画横幅:换来的宽度不是留白,是清单。清单必须来自
+// shareManifestRows() 本尊 —— 复制一份的话,以后加一项配置要改两处,而两处
+// 迟早会长歪,横幅上写着要发什么、线路上发的却是另一套。
+test("mine banner: one row, and its manifest is the publish panel's own", async () => {
+  const src = await readFile(SRC, "utf8");
+
+  assert.match(src, /const buildMineBanner = \(\) =>/);
+  assert.match(src, /class: "aurora-store-share aurora-store-mine"/);
+  assert.match(
+    src,
+    /buildTiles\(\s*shareManifestRows\(\)\.map\(/,
+    "the banner must render the publish panel's manifest, not a copy of it",
+  );
+
+  // 「全部」页仍然是卡片:那一页拿来逛,内置和社区也是网格。横幅只在「我的」。
+  assert.match(
+    src,
+    /if \(state\.tab === "all"\) \{\s*const mineGrid = buildMineGrid\(\);/,
+    "the browse tab keeps the card so it reads like the other groups",
+  );
+
+  // modified=false 时这条横幅代表的是"被商店主题盖掉之前那份备份",而
+  // build_share_payload 打包的是当前 uci —— 两者不是同一个东西。那时根本
+  // 不给发布按钮,不是置灰。
+  const banner = src.slice(
+    src.indexOf("const buildMineBanner"),
+    src.indexOf("// ------------------------------------------------------------------\n    // My shares"),
+  );
+  assert.match(banner, /const acts = modified\s*\?/);
+  assert.match(banner, /confirmRestore\(\)/);
+  assert.equal(
+    (banner.match(/openSharePanel\(\)/g) || []).length,
+    1,
+    "the share action exists only on the modified branch",
+  );
+});
+
+test("marketplace: publishing has exactly one entry point, on the thing being published", async () => {
   const src = await readFile(srcPath("view/aurora/marketplace.js"), "utf8");
+
   assert.ok(!/cbi-button-add/.test(src), "the header publish button (and its CSS) should be gone");
   assert.ok(
     !/_\("Publish current configuration"\)/.test(src),
     "the copy that named three separate entry points should be gone",
   );
-  assert.match(src, /_\("Go to the design studio"\)/);
+  assert.ok(
+    !/shareOpen = true;\s*selectTab\("mine"\);/.test(src),
+    "the header button's tab-switching side effect should stay gone",
+  );
+
+  // 唯一入口:横幅上的这颗按钮。openSharePanel 只被它调用一次。
+  assert.match(src, /const openSharePanel = \(\) =>/);
+  assert.equal(
+    (src.match(/openSharePanel\(\)/g) || []).length,
+    1,
+    "openSharePanel must have exactly one call site",
+  );
+  assert.match(
+    src,
+    /click: \(\) => openSharePanel\(\),?\s*\},\s*_\("Share to the store"\)/,
+    "the banner's primary action must be the publish entry",
+  );
+  // 工作台那个入口保留,两处落到同一张面板 —— 但它不在这个文件里。
 });
 
 // 意图优先,状态兜底:用户上一秒刚在工作台点了"分享到商店",这句话不该被
