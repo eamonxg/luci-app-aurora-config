@@ -76,12 +76,18 @@ test("the shared component previews live and drives tunables with sliders", asyn
   assert.match(src, /buildBgPreview|bg-preview/);
 });
 
-test("one segmented control serves both targets; defaults mean unset", async () => {
+test("design A: two picker cards, one shared slider pane, no tab", async () => {
   const src = await readFile(SRC, "utf8");
-  // 分段切换:同一份预览+滑杆,两组键轮流上台;初始停在主背景
-  assert.match(src, /data-bg-switcher/);
-  assert.match(src, /data-bg-target/);
+  // 双卡常驻可见,tab/分段已撤——不许再隐藏另一组背景的状态
+  assert.doesNotMatch(src, /data-bg-switcher/);
+  assert.match(src, /class: "bg-duo"/);
+  assert.match(src, /class: "bg-card-head"/);
+  // 滑杆装进各自 pane,渲染后移入共享面板行,跟随选中的卡;初始停在主背景
+  assert.match(src, /"data-bg-pane": key/);
+  assert.match(src, /class: "bg-pane"/);
   assert.match(src, /showBg\("struct_main_bg"\)/);
+  // 卡内下拉的点击不冒泡成选卡
+  assert.match(src, /e\.stopPropagation\(\)/);
   // 拖回默认值 = 写空(不写键),所以不需要"恢复默认"按钮
   assert.match(src, /=== \+def \? ""/);
   assert.doesNotMatch(src, /_\("Reset to defaults"\)/);

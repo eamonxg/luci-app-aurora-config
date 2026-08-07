@@ -3331,7 +3331,7 @@ return view.extend({
 
     const addBackgroundOption = (
       section,
-      { key, lqipKey, label, description, previewKind, tunables, withUpload },
+      { key, lqipKey, label, heading, previewKind, tunables, withUpload },
     ) => {
       // 滑杆的隐藏数据字段。存进 uci 的是带单位的 CSS 值(67% / 20px)。刻意
       // 不用 depends(条件不满足时保存会静默删键,见 LuCI depends/retain 陷阱)。
@@ -3365,7 +3365,6 @@ return view.extend({
         };
       });
       let bgSo = section.option(form.ListValue, key, label);
-      bgSo.description = description;
       bgSo.rmempty = true;
       bgSo.load = makeIconListLoader(
         (icon) => isImageFile(icon) && !icon.endsWith(".svg"),
@@ -3392,6 +3391,15 @@ return view.extend({
           el.dataset.bgTarget = key;
           const field = el.querySelector(".cbi-value-field") || el;
           const select = el.querySelector("select");
+          // 卡头:标题在左,LuCI 渲染好的选图控件整体迁到右侧
+          const widget = field.firstElementChild;
+          const head = E("div", { class: "bg-card-head" }, [
+            E("span", { class: "bg-card-title" }, heading),
+          ]);
+          field.insertBefore(head, field.firstChild);
+          if (widget) head.appendChild(widget);
+          if (select)
+            select.addEventListener("click", (e) => e.stopPropagation());
           const preview = buildBgPreview(previewKind);
           field.appendChild(preview.el);
 
@@ -3453,6 +3461,7 @@ return view.extend({
             document.querySelector('[name="cbid.aurora.theme.' + tkey + '"]');
           // 角色由键名后缀推断(_alpha/_blur/_scrim),login/main 两组键共用
           // 同一段预览联动;无滑杆的实例落到中性默认(不透明、无模糊、无遮罩)。
+          const paneDiv = E("div", { "data-bg-pane": key });
           const roleVals = () => {
             const out = { alpha: 100, blur: 0, scrim: 0 };
             (tunables || []).forEach(([tkey, , , , , def]) => {
@@ -3494,7 +3503,7 @@ return view.extend({
               }
               refresh();
             });
-            field.appendChild(
+            paneDiv.appendChild(
               E("div", { class: "bg-srow" }, [
                 E("label", {}, tlabel),
                 slider,
@@ -3503,6 +3512,8 @@ return view.extend({
             );
           });
 
+
+          if ((tunables || []).length) field.appendChild(paneDiv);
 
           if (select) {
             select.addEventListener("change", function () {
@@ -3551,27 +3562,11 @@ return view.extend({
     );
     const bgSubsection = bgSection.subsection;
 
-    // 一份控件、两个目标:分段切换决定当前编辑/预览哪组背景,数据层仍是
-    // 各自独立的 uci 键。按钮点击与初始态在 m.render() 收尾处接线(那里
-    // 才拿得到整棵 mapNode)。
-    const targetSo = bgSubsection.option(form.DummyValue, "_bg_target", "");
-    targetSo.render = function () {
-      const mk = (tkey, label) =>
-        E("button", { type: "button", "data-bg-switch": tkey }, label);
-      return E("div", { class: "cbi-value bg-seg-row" }, [
-        E("div", { class: "cbi-value-field" }, [
-          E("div", { class: "bg-seg", "data-bg-switcher": "" }, [
-            mk("struct_main_bg", _("Main Background")),
-            mk("struct_login_bg", _("Login Background")),
-          ]),
-        ]),
-      ]);
-    };
-
     addBackgroundOption(bgSubsection, {
       key: "struct_login_bg",
       lqipKey: "struct_login_bg_lqip",
       label: "",
+      heading: _("Login Background"),
       previewKind: "login",
       tunables: [
         ["struct_login_bg_alpha", _("Surface Opacity"), "%", 50, 100, "100"],
@@ -3584,6 +3579,7 @@ return view.extend({
       key: "struct_main_bg",
       lqipKey: "struct_main_bg_lqip",
       label: "",
+      heading: _("Main Background"),
       previewKind: "admin",
       withUpload: true,
       tunables: [
@@ -3778,20 +3774,29 @@ return view.extend({
         });
       });
 
-      // 背景目标分段切换:一次只显示一组背景控件,数据行(隐藏字段)不受
-      // display 影响,保存管线照常收集两组键。
-      const bgSeg = mapNode.querySelector("[data-bg-switcher]");
-      if (bgSeg) {
+      // 设计 A:两张背景卡并排常驻(状态全可见),共享滑杆面板跟随选中的
+      // 卡。这里把两张卡行收进 .bg-duo 网格、把各自的滑杆组移进共享面板行;
+      // 隐藏字段不受 display 影响,保存管线照常收集两组键。
+      const bgCards = Array.from(mapNode.querySelectorAll("[data-bg-target]"));
+      if (bgCards.length === 2) {
+        const duo = E("div", { class: "bg-duo" });
+        bgCards[0].parentNode.insertBefore(duo, bgCards[0]);
+        bgCards.forEach((c) => duo.appendChild(c));
+        const paneRow = E("div", { class: "bg-pane" });
+        duo.parentNode.insertBefore(paneRow, duo.nextSibling);
+        mapNode
+          .querySelectorAll("[data-bg-pane]")
+          .forEach((pane) => paneRow.appendChild(pane));
         const showBg = (tkey) => {
-          mapNode.querySelectorAll("[data-bg-target]").forEach((row) => {
-            row.style.display = row.dataset.bgTarget === tkey ? "" : "none";
-          });
-          bgSeg.querySelectorAll("[data-bg-switch]").forEach((b) =>
-            b.classList.toggle("on", b.dataset.bgSwitch === tkey),
+          bgCards.forEach((c) =>
+            c.classList.toggle("on", c.dataset.bgTarget === tkey),
           );
+          paneRow.querySelectorAll("[data-bg-pane]").forEach((pane) => {
+            pane.style.display = pane.dataset.bgPane === tkey ? "" : "none";
+          });
         };
-        bgSeg.querySelectorAll("[data-bg-switch]").forEach((b) =>
-          b.addEventListener("click", () => showBg(b.dataset.bgSwitch)),
+        bgCards.forEach((c) =>
+          c.addEventListener("click", () => showBg(c.dataset.bgTarget)),
         );
         showBg("struct_main_bg");
       }
