@@ -443,6 +443,19 @@ const buildLegacyCardTiles = (item) => {
 //
 // 返回 null 表示这行来自没有 preview 投影的老 hub,调用方退回
 // buildLegacyCardTiles;返回空数组表示这份配置确实只带了颜色。
+// 背景 tile 的 meta:体积 + 随包发出的观感参数(不透明度/磨砂/遮罩,存的
+// 就是带单位的 CSS 值,原样展示)。参数缺席 = 接收端走主题默认,不占版面。
+const bgTileMeta = (item, kindList, layout, prefix) => {
+  const parts = [sizeLabel(assetBytesOf(item, kindList))];
+  const tune = [
+    layout[prefix + "_alpha"],
+    layout[prefix + "_blur"],
+    layout[prefix + "_scrim"],
+  ].filter(Boolean);
+  if (tune.length) parts.push(tune.join(" / "));
+  return parts.filter(Boolean).join(" · ");
+};
+
 const tileEntriesFor = (item) => {
   const preview = previewOf(item);
   const source = preview || (item && item.payload);
@@ -496,7 +509,7 @@ const tileEntriesFor = (item) => {
       glyph: "▣",
       label: ASSET_LABELS.loginBg,
       title: _("Custom login page background"),
-      meta: sizeLabel(assetBytesOf(item, ["login_bg"])),
+      meta: bgTileMeta(item, ["login_bg"], layout, "struct_login_bg"),
     });
 
   if (kinds.indexOf("main_bg") !== -1)
@@ -505,7 +518,7 @@ const tileEntriesFor = (item) => {
       glyph: "▣",
       label: ASSET_LABELS.mainBg,
       title: _("Custom admin interface background"),
-      meta: sizeLabel(assetBytesOf(item, ["main_bg"])),
+      meta: bgTileMeta(item, ["main_bg"], layout, "struct_main_bg"),
     });
 
   if (kinds.some((kind) => SITE_ICON_KINDS.indexOf(kind) !== -1))

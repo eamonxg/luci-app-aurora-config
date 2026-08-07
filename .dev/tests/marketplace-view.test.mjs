@@ -555,7 +555,7 @@ test("gallery view: every asset carries its size, on both sides", async () => {
   // 使用侧:每个 tile 自己的体积,加一句图片总计。
   assert.match(src, /const assetBytesOf = /);
   assert.match(src, /meta: sizeLabel\(assetBytesOf\(item, \["logo_svg"\]\)\)/);
-  assert.match(src, /meta: sizeLabel\(assetBytesOf\(item, \["login_bg"\]\)\)/);
+  assert.match(src, /meta: bgTileMeta\(item, \["login_bg"\], layout, "struct_login_bg"\)/);
   assert.match(src, /meta: sizeLabel\(assetBytesOf\(item, SITE_ICON_KINDS\)\)/);
   assert.match(src, /meta: sizeLabel\(assetBytesOf\(item, APP_ICON_KINDS\)\)/);
   assert.match(src, /meta: sizeLabel\(assetBytesOf\(item, TOOLBAR_ICON_KINDS\)\)/);
@@ -1440,10 +1440,19 @@ test("main background shows up in tiles, totals, and the publish manifest", asyn
   // 标签与详情 tile(和 login_bg 一样只作标签行,不拉原图)
   assert.match(src, /mainBg: _\("Main Background"\)/);
   assert.match(src, /label: ASSET_LABELS\.mainBg/);
-  assert.match(src, /meta: sizeLabel\(assetBytesOf\(item, \["main_bg"\]\)\)/);
+  assert.match(src, /meta: bgTileMeta\(item, \["main_bg"\], layout, "struct_main_bg"\)/);
   // 详情页图片合计与打包清单都数它
   assert.match(src, /\["logo_svg", "login_bg", "main_bg"\]\.concat\(/);
   assert.match(src, /const BUNDLED_KINDS = \["logo", "loginBg", "mainBg", "siteIcon", "appIcon"\]/);
   // 发布面板:rpcd shared_images 的 main_bg 行有标签可挂
   assert.match(src, /main_bg: ASSET_LABELS\.mainBg/);
+});
+
+// 背景 tile 的 meta 同时报体积与随包参数(体积 · 67% / 20px / 20%),
+// 参数缺席就只报体积——使用方在应用前看得见这套背景的完整观感设定
+test("background tiles surface the bundled tunables", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(src, /const bgTileMeta = /);
+  assert.match(src, /prefix \+ "_alpha"/);
+  assert.match(src, /prefix \+ "_scrim"/);
 });
