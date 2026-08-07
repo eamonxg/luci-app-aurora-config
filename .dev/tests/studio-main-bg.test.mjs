@@ -21,9 +21,9 @@ test("one background helper serves both the login and the main page", async () =
 
 test("the three tunables write unit-suffixed values and default by absence", async () => {
   const src = await readFile(SRC, "utf8");
-  assert.match(src, /\["struct_main_bg_alpha", [^\]]*"%", 50, 100, "67",/);
-  assert.match(src, /\["struct_main_bg_blur", [^\]]*"px", 0, 40, "20",/);
-  assert.match(src, /\["struct_main_bg_scrim", [^\]]*"%", 0, 70, "20",/);
+  assert.match(src, /\["struct_main_bg_alpha", [^\]]*"%", 50, 100, "67"\]/);
+  assert.match(src, /\["struct_main_bg_blur", [^\]]*"px", 0, 40, "20"\]/);
+  assert.match(src, /\["struct_main_bg_scrim", [^\]]*"%", 0, 70, "20"\]/);
 });
 
 test("the LQIP auto-fill loop covers both background pairs", async () => {
@@ -54,8 +54,8 @@ test("backgrounds top the branding tab instead of owning a separate one", async 
 
 test("upload is embedded in the component, tagged with its owning key", async () => {
   const src = await readFile(SRC, "utf8");
-  // 按钮 + 拖拽双入口,复用资产库同一条上传管线
-  assert.match(src, /_\("Upload image"\)/);
+  // 按钮已砍(资产库统一上传),拖拽静默入口保留
+  assert.doesNotMatch(src, /_\("Upload image"\)/);
   assert.match(src, /addEventListener\("drop"/);
   assert.match(src, /callUploadIcon\(file\.name\)/);
   // pending 带归属键:主背景的上传不再误落到登录背景上
@@ -71,7 +71,18 @@ test("the shared component previews live and drives tunables with sliders", asyn
   // 滑杆而不是裸数字输入;隐藏字段仍是三个 struct 键(保存管线不变)
   assert.match(src, /type: "range"/);
   assert.match(src, /tunables/);
-  assert.match(src, /\["struct_main_bg_alpha", [^\]]*"%", 50, 100, "67",/);
+  assert.match(src, /\["struct_main_bg_alpha", [^\]]*"%", 50, 100, "67"\]/);
   // 预览读选图的 url() 并随滑杆联动
   assert.match(src, /buildBgPreview|bg-preview/);
+});
+
+test("one segmented control serves both targets; defaults mean unset", async () => {
+  const src = await readFile(SRC, "utf8");
+  // 分段切换:同一份预览+滑杆,两组键轮流上台;初始停在主背景
+  assert.match(src, /data-bg-switcher/);
+  assert.match(src, /data-bg-target/);
+  assert.match(src, /showBg\("struct_main_bg"\)/);
+  // 拖回默认值 = 写空(不写键),所以不需要"恢复默认"按钮
+  assert.match(src, /=== \+def \? ""/);
+  assert.doesNotMatch(src, /_\("Reset to defaults"\)/);
 });

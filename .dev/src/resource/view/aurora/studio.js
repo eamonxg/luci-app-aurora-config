@@ -3395,6 +3395,7 @@ return view.extend({
       const _renderBg = bgSo.render.bind(bgSo);
       bgSo.render = function (option_index, section_id, in_table) {
         return _renderBg(option_index, section_id, in_table).then((el) => {
+          el.dataset.bgTarget = key;
           const field = el.querySelector(".cbi-value-field") || el;
           const select = el.querySelector("select");
           const preview = buildBgPreview(previewKind);
@@ -3434,16 +3435,6 @@ return view.extend({
                   ),
                 );
             };
-            const fileInput = E("input", {
-              type: "file",
-              accept: "image/*",
-              style: "display:none;",
-            });
-            fileInput.addEventListener("change", () => {
-              const f = fileInput.files && fileInput.files[0];
-              fileInput.value = "";
-              if (f) uploadBg(f);
-            });
             preview.el.addEventListener("dragover", (e) => {
               e.preventDefault();
               preview.el.style.outline = "2px dashed var(--brand)";
@@ -3457,20 +3448,6 @@ return view.extend({
               const f = e.dataTransfer && e.dataTransfer.files[0];
               if (f) uploadBg(f);
             });
-            field.appendChild(
-              E("div", { style: "margin:6px 0 2px;" }, [
-                E(
-                  "button",
-                  {
-                    type: "button",
-                    class: "cbi-button",
-                    click: () => fileInput.click(),
-                  },
-                  _("Upload image"),
-                ),
-                fileInput,
-              ]),
-            );
           }
 
           const urlOf = (value) => {
@@ -3525,7 +3502,9 @@ return view.extend({
               valEl.textContent = slider.value + unit;
               const hid = hiddenInput(tkey);
               if (hid) {
-                hid.value = slider.value;
+                // 拖回默认值 = 回到"未设置":不写键,主题 fallback 接管。
+                // 这也是砍掉"恢复默认"按钮的底气——默认位置就是重置。
+                hid.value = +slider.value === +def ? "" : slider.value;
                 hid.dispatchEvent(new Event("change", { bubbles: true }));
               }
               refresh();
@@ -3547,40 +3526,6 @@ return view.extend({
             );
           });
 
-          if ((tunables || []).length) {
-            field.appendChild(
-              E("div", { style: "margin-top:4px;" }, [
-                E(
-                  "button",
-                  {
-                    type: "button",
-                    class: "cbi-button",
-                    click: () => {
-                      (tunables || []).forEach(([tkey, , unit, , , def]) => {
-                        vals[tkey] = +def;
-                        const hid = hiddenInput(tkey);
-                        if (hid) {
-                          hid.value = "";
-                          hid.dispatchEvent(
-                            new Event("change", { bubbles: true }),
-                          );
-                        }
-                        const slider = field.querySelector(
-                          '[data-tunable="' + tkey + '"]',
-                        );
-                        if (slider) {
-                          slider.value = String(+def);
-                          slider.nextElementSibling.textContent = def + unit;
-                        }
-                      });
-                      refresh();
-                    },
-                  },
-                  _("Reset to defaults"),
-                ),
-              ]),
-            );
-          }
 
           if (select) {
             select.addEventListener("change", function () {
@@ -3629,38 +3574,53 @@ return view.extend({
     );
     const bgSubsection = bgSection.subsection;
 
+    // 一份控件、两个目标:分段切换决定当前编辑/预览哪组背景,数据层仍是
+    // 各自独立的 uci 键。按钮点击与初始态在 m.render() 收尾处接线(那里
+    // 才拿得到整棵 mapNode)。
+    const targetSo = bgSubsection.option(form.DummyValue, "_bg_target", "");
+    targetSo.render = function () {
+      const mk = (tkey, label) =>
+        E(
+          "button",
+          { type: "button", class: "cbi-button", "data-bg-switch": tkey },
+          label,
+        );
+      return E("div", { class: "cbi-value" }, [
+        E("div", { class: "cbi-value-field" }, [
+          E(
+            "div",
+            { "data-bg-switcher": "", style: "display:flex;gap:8px;" },
+            [
+              mk("struct_main_bg", _("Main Background")),
+              mk("struct_login_bg", _("Login Background")),
+            ],
+          ),
+        ]),
+      ]);
+    };
+
     addBackgroundOption(bgSubsection, {
       key: "struct_login_bg",
       lqipKey: "struct_login_bg_lqip",
-      label: _("Login Background"),
-      description: _("Full-screen login page background; use a wide image."),
+      label: "",
       previewKind: "login",
       tunables: [
-        ["struct_login_bg_alpha", _("Background Surface Opacity"), "%", 50, 100, "100",
-          _("How opaque the login card stays over the image (50-100%). Empty = 100.")],
-        ["struct_login_bg_blur", _("Background Chrome Blur"), "px", 0, 40, "0",
-          _("Frosted-glass blur of the login card (0-40px). Empty = 0.")],
-        ["struct_login_bg_scrim", _("Background Scrim Strength"), "%", 0, 70, "0",
-          _("How much the login backdrop is washed toward the page color (0-70%). Empty = 0.")],
+        ["struct_login_bg_alpha", _("Background Surface Opacity"), "%", 50, 100, "100"],
+        ["struct_login_bg_blur", _("Background Chrome Blur"), "px", 0, 40, "0"],
+        ["struct_login_bg_scrim", _("Background Scrim Strength"), "%", 0, 70, "0"],
       ],
     });
 
     addBackgroundOption(bgSubsection, {
       key: "struct_main_bg",
       lqipKey: "struct_main_bg_lqip",
-      label: _("Main Background"),
-      description: _(
-        "Full-screen admin interface background with frosted bars; needs a luci-theme-aurora build that supports it.",
-      ),
+      label: "",
       previewKind: "admin",
       withUpload: true,
       tunables: [
-        ["struct_main_bg_alpha", _("Background Surface Opacity"), "%", 50, 100, "67",
-          _("How opaque cards and bars stay over the background image (50-100%). Empty = 67.")],
-        ["struct_main_bg_blur", _("Background Chrome Blur"), "px", 0, 40, "20",
-          _("Frosted-glass blur of the top and side bars (0-40px). Empty = 20.")],
-        ["struct_main_bg_scrim", _("Background Scrim Strength"), "%", 0, 70, "20",
-          _("How much the backdrop is washed toward the page color (0-70%). Empty = 20.")],
+        ["struct_main_bg_alpha", _("Background Surface Opacity"), "%", 50, 100, "67"],
+        ["struct_main_bg_blur", _("Background Chrome Blur"), "px", 0, 40, "20"],
+        ["struct_main_bg_scrim", _("Background Scrim Strength"), "%", 0, 70, "20"],
       ],
     });
 
@@ -3848,6 +3808,24 @@ return view.extend({
           }
         });
       });
+
+      // 背景目标分段切换:一次只显示一组背景控件,数据行(隐藏字段)不受
+      // display 影响,保存管线照常收集两组键。
+      const bgSeg = mapNode.querySelector("[data-bg-switcher]");
+      if (bgSeg) {
+        const showBg = (tkey) => {
+          mapNode.querySelectorAll("[data-bg-target]").forEach((row) => {
+            row.style.display = row.dataset.bgTarget === tkey ? "" : "none";
+          });
+          bgSeg.querySelectorAll("[data-bg-switch]").forEach((b) =>
+            b.classList.toggle("cbi-button-apply", b.dataset.bgSwitch === tkey),
+          );
+        };
+        bgSeg.querySelectorAll("[data-bg-switch]").forEach((b) =>
+          b.addEventListener("click", () => showBg(b.dataset.bgSwitch)),
+        );
+        showBg("struct_main_bg");
+      }
 
       // Fire and forget: the capsule appears when the answer arrives, and if
       // it never does the header simply stays as it is.

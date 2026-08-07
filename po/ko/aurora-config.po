@@ -18,11 +18,11 @@ msgstr "%d개는 공유되지 않음 — %s 미만의 PNG와 SVG만 테마와 �
 msgid "%d shortcuts"
 msgstr "바로가기 %d개"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3799
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3759
 msgid "(No icons uploaded)"
 msgstr "(업로드된 아이콘 없음)"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3697
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3657
 msgid "(None)"
 msgstr "(없음)"
 
@@ -39,11 +39,11 @@ msgstr "다운로드 1회"
 msgid "1 shortcut"
 msgstr "바로가기 1개"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3721
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3681
 msgid "192×192 icon for the installable web app manifest."
 msgstr "설치 가능한 웹 앱 매니페스트용 192×192 아이콘."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3727
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3687
 msgid "512×512 icon for the installable web app manifest."
 msgstr "설치 가능한 웹 앱 매니페스트용 512×512 아이콘."
 
@@ -75,7 +75,7 @@ msgstr "알림, 유효성 검사 및 상태 피드백을 위한 강조색."
 msgid "Add"
 msgstr "추가"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3770
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3730
 msgid "Add shortcuts, assign icons, and drag rows to reorder them."
 msgstr "바로가기를 추가하고, 아이콘을 지정하고, 행을 드래그하여 순서를 변경합니다."
 
@@ -116,15 +116,15 @@ msgstr "이것을 적용하는 사람은 전부 그대로 받습니다. 나중�
 msgid "App Icon"
 msgstr "앱 아이콘"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3719
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3679
 msgid "App Icon 192×192"
 msgstr "앱 아이콘 192×192"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3725
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3685
 msgid "App Icon 512×512"
 msgstr "앱 아이콘 512×512"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3713
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3673
 msgid "Apple Touch Icon"
 msgstr "Apple 터치 아이콘"
 
@@ -200,7 +200,7 @@ msgstr "적용 중..."
 msgid "Applying…"
 msgstr "적용 중…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3677
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3637
 msgid "Assign uploaded images to icons, favicons, and PWA metadata. Saved on Save or Save & Apply."
 msgstr "업로드한 이미지를 아이콘, 파비콘, PWA 메타데이터에 지정합니다. 저장 또는 저장 후 적용 시 반영됩니다."
 
@@ -232,18 +232,18 @@ msgstr "백업됨"
 msgid "Background"
 msgstr "배경"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3641
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3660
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3609
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3622
 msgid "Background Chrome Blur"
 msgstr "바 흐림 효과"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3643
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3662
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3610
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3623
 msgid "Background Scrim Strength"
 msgstr "배경 스크림 강도"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3639
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3658
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3608
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3621
 msgid "Background Surface Opacity"
 msgstr "표면 불투명도"
 
@@ -340,7 +340,7 @@ msgstr "파일 확인 중…"
 msgid "Choose a literal color for this token"
 msgstr "이 토큰에 사용할 정확한 색상을 선택하세요"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3802
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3762
 msgid "Choose an uploaded icon for this shortcut"
 msgstr "이 바로가기에 사용할 업로드된 아이콘을 선택하세요"
 
@@ -622,11 +622,11 @@ msgstr "여기에 이미지 자산을 드롭하거나, 클릭하여 찾아보세
 msgid "Dropdown"
 msgstr "드롭다운"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3779
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3739
 msgid "Enabled"
 msgstr "활성화됨"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3794
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3754
 msgid "Enter a LuCI shortcut URL"
 msgstr "LuCI 바로가기 URL 입력"
 
@@ -634,7 +634,7 @@ msgstr "LuCI 바로가기 URL 입력"
 msgid "Enter a number between %d and %d"
 msgstr "%d에서 %d 사이의 숫자를 입력하세요"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3788
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3748
 msgid "Enter a shortcut label"
 msgstr "바로가기 레이블 입력"
 
@@ -670,11 +670,11 @@ msgstr "삭제 실패: %s"
 msgid "Faint Hover"
 msgstr "흐릿한 호버"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3703
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3663
 msgid "Favicon (ICO / Legacy)"
 msgstr "Favicon (ICO / 레거시)"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3692
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3652
 msgid "Favicon (PNG)"
 msgstr "Favicon (PNG)"
 
@@ -698,7 +698,7 @@ msgstr "폼 컨트롤(입력란, 선택 상자, 텍스트 영역, 체크박스)�
 msgid "Finishing…"
 msgstr "마무리 중…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3749
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3709
 msgid "Floating shortcut launcher shown along the right edge of the interface."
 msgstr "인터페이스의 오른쪽 가장자리를 따라 표시되는 플로팅 바로가기 런처."
 
@@ -742,22 +742,6 @@ msgstr "전경, 하이퍼링크, 브랜드 색상 및 대비 텍스트."
 msgid "From openwrt.eamonxg.fun; the signing key ships with this package."
 msgstr "openwrt.eamonxg.fun에서 가져옵니다. 서명 키는 이 패키지에 포함되어 있습니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3642
-msgid "Frosted-glass blur of the login card (0-40px). Empty = 0."
-msgstr "로그인 카드의 반투명 블러(0-40px). 비워 두면 0."
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3661
-msgid "Frosted-glass blur of the top and side bars (0-40px). Empty = 20."
-msgstr "상단 바와 사이드바의 반투명 블러 강도(0-40px). 비워 두면 20."
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3652
-msgid "Full-screen admin interface background with frosted bars; needs a luci-theme-aurora build that supports it."
-msgstr "관리 화면 전체 배경. 상단 바와 사이드바에 반투명 블러 효과가 적용됩니다. 이를 지원하는 luci-theme-aurora 버전이 필요합니다."
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3636
-msgid "Full-screen login page background; use a wide image."
-msgstr "전체 화면 로그인 페이지 배경. 와이드 이미지를 사용하세요."
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2810
 msgid "Give it a name"
 msgstr "이름을 입력하세요"
@@ -783,7 +767,7 @@ msgstr "숨김"
 msgid "Hide"
 msgstr "숨기기"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3715
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3675
 msgid "Home Screen icon for iOS and iPadOS."
 msgstr "iOS 및 iPadOS용 홈 화면 아이콘."
 
@@ -811,22 +795,6 @@ msgstr "채워진 기본 버튼 및 고강조 제어 요소의 호버 상태."
 msgid "How it looks in the store"
 msgstr "스토어에서 보이는 모습"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3663
-msgid "How much the backdrop is washed toward the page color (0-70%). Empty = 20."
-msgstr "배경을 페이지 바탕색 쪽으로 씻어 내는 정도(0-70%). 비워 두면 20."
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3644
-msgid "How much the login backdrop is washed toward the page color (0-70%). Empty = 0."
-msgstr "로그인 배경을 페이지 바탕색 쪽으로 씻어 내는 정도(0-70%). 비워 두면 0."
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3659
-msgid "How opaque cards and bars stay over the background image (50-100%). Empty = 67."
-msgstr "배경 이미지 위 카드와 바의 불투명도(50-100%). 비워 두면 67."
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3640
-msgid "How opaque the login card stays over the image (50-100%). Empty = 100."
-msgstr "이미지 위 로그인 카드의 불투명도(50-100%). 비워 두면 100."
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1719
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1994
 msgid "How this router looked before you applied a theme from the store."
@@ -836,7 +804,7 @@ msgstr "스토어의 테마를 적용하기 전 이 공유기의 모습입니다
 msgid "Hyperlinks in page content, help text, and status output."
 msgstr "ページコンテンツ、ヘルプテキスト、およびステータス出力内のハイパーリンク。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3796
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3756
 msgid "Icon"
 msgstr "아이콘"
 
@@ -961,7 +929,7 @@ msgstr "기본 탐색 메뉴의 레이아웃 패턴입니다."
 msgid "Leading color for progress meters."
 msgstr "진행 표시기의 앞쪽(시작) 색상."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3705
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3665
 msgid "Legacy ICO favicon fallback."
 msgstr "레거시 ICO 파비콘 폴백."
 
@@ -1000,7 +968,7 @@ msgid "Loading…"
 msgstr "불러오는 중…"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:347
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3635
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3595
 msgid "Login Background"
 msgstr "로그인 배경"
 
@@ -1008,7 +976,7 @@ msgstr "로그인 배경"
 msgid "Logo"
 msgstr "로고"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3683
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3643
 msgid "Logo (SVG)"
 msgstr "로고 (SVG)"
 
@@ -1017,7 +985,7 @@ msgid "Low-emphasis text for small labels, placeholders, and disabled hints."
 msgstr "작은 레이블, 자리 표시자 및 비활성화된 힌트를 위한 낮은 강조도의 텍스트."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:348
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3651
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3594
 msgid "Main Background"
 msgstr "메인 배경"
 
@@ -1202,11 +1170,11 @@ msgstr "작업 상태 강조색"
 msgid "Overlay Surface"
 msgstr "오버레이 서페이스"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3694
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3654
 msgid "PNG fallback when SVG favicons are unsupported."
 msgstr "SVG 파비콘을 지원하지 않을 때 대체할 PNG 파일입니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3625
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3570
 msgid "Page Backgrounds"
 msgstr "페이지 배경"
 
@@ -1223,7 +1191,7 @@ msgstr "백업해 둔 신원을 붙여넣거나, 내려받은 백업 파일을 �
 msgid "Pick a name between 1 and 40 characters."
 msgstr "1자에서 40자 사이의 이름을 정하세요."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3626
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3571
 msgid "Pick wallpapers for the login page and the admin interface. Drag the sliders and watch the live preview; Save & Apply makes it real."
 msgstr "로그인 페이지와 관리 화면의 배경 화면을 고르세요. 슬라이더를 움직이면 실시간 미리보기에 반영되고, 저장 후 적용하면 실제로 적용됩니다."
 
@@ -1321,10 +1289,6 @@ msgstr "/etc/config/aurora를 패키지에 포함된 '기본값' 프리셋으로
 msgid "Reset All Aurora Settings"
 msgstr "모든 Aurora 설정 초기화"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3579
-msgid "Reset to defaults"
-msgstr "기본값으로 재설정"
-
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2289
 msgid "Resetting..."
 msgstr "초기화 중..."
@@ -1373,7 +1337,7 @@ msgstr "다시 시도"
 msgid "Rounded corners"
 msgstr "둥근 모서리"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3684
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3644
 msgid "SVG mark for the browser tab and login page."
 msgstr "브라우저 탭 및 로그인 페이지용 SVG 마크."
 
@@ -1454,15 +1418,15 @@ msgstr "테마에 포함되어 있으며 오프라인에서도 작동합니다"
 msgid "Shortcut Icons"
 msgstr "바로가기 아이콘"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3784
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3744
 msgid "Shortcut Label"
 msgstr "바로가기 레이블"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3748
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3708
 msgid "Shortcut Toolbar"
 msgstr "바로가기 툴바"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3790
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3750
 msgid "Shortcut URL"
 msgstr "바로가기 URL"
 
@@ -1475,11 +1439,11 @@ msgstr "바로 가기 %d"
 msgid "Show"
 msgstr "표시"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3758
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3718
 msgid "Show Shortcut Toolbar"
 msgstr "바로가기 툴바 표시"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3760
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3720
 msgid "Show the floating launcher on all pages."
 msgstr "모든 페이지에서 플로팅 런처를 표시합니다."
 
@@ -1500,7 +1464,7 @@ msgstr "사이드바"
 msgid "Signs everything you share. It lives only on this router."
 msgstr "공유하는 모든 것에 서명합니다. 이 공유기에만 존재합니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3676
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3636
 msgid "Site Branding"
 msgstr "사이트 브랜딩"
 
@@ -1711,7 +1675,7 @@ msgstr "도구 모음"
 msgid "Toolbar %d"
 msgstr "도구 모음 %d"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3769
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3729
 msgid "Toolbar Shortcuts"
 msgstr "툴바 바로가기"
 
@@ -1787,7 +1751,7 @@ msgstr "지금은 이 공유를 업데이트할 수 없습니다."
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2766
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2843
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3232
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3426
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3427
 msgid "Unknown"
 msgstr "알 수 없음"
 
@@ -1834,13 +1798,9 @@ msgid "Upload failed (HTTP %s)"
 msgstr "업로드 실패 (HTTP %s)"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:340
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3432
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3433
 msgid "Upload failed: %s"
 msgstr "업로드 실패: %s"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3469
-msgid "Upload image"
-msgstr "이미지 업로드"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2661
 msgid "Uploaded with the theme, %s"
@@ -1909,7 +1869,7 @@ msgstr "적용 전에 현재 설정이 백업되며, 적용 후 클릭 한 번�
 msgid "Your shortcuts, logo, icons and login background are left exactly as they are."
 msgstr "바로 가기, 로고, 아이콘, 로그인 배경은 그대로 유지됩니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3786
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:3746
 msgid "e.g., Network Interfaces"
 msgstr "예: 네트워크 인터페이스"
 
