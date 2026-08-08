@@ -24,7 +24,32 @@
         "font_sans": "default",
         "font_mono": "default"
       },
-      "toolbar": []
+      "toolbar": [
+        {
+          "title": "Overview",
+          "url": "/cgi-bin/luci/admin/status/overview",
+          "icon": "overview.svg",
+          "enabled": "1"
+        },
+        {
+          "title": "System",
+          "url": "/cgi-bin/luci/admin/system/system",
+          "icon": "system.svg",
+          "enabled": "1"
+        },
+        {
+          "title": "Software",
+          "url": "/cgi-bin/luci/admin/system/package-manager",
+          "icon": "software.svg",
+          "enabled": "0"
+        },
+        {
+          "title": "Network",
+          "url": "/cgi-bin/luci/admin/network/network",
+          "icon": "network.svg",
+          "enabled": "1"
+        }
+      ]
     },
     "sage-green": {
       "colors": {
@@ -50,7 +75,32 @@
         "font_sans": "nunito",
         "font_mono": "maple-mono"
       },
-      "toolbar": []
+      "toolbar": [
+        {
+          "title": "Overview",
+          "url": "/cgi-bin/luci/admin/status/overview",
+          "icon": "overview.svg",
+          "enabled": "1"
+        },
+        {
+          "title": "System",
+          "url": "/cgi-bin/luci/admin/system/system",
+          "icon": "system.svg",
+          "enabled": "1"
+        },
+        {
+          "title": "Software",
+          "url": "/cgi-bin/luci/admin/system/package-manager",
+          "icon": "software.svg",
+          "enabled": "0"
+        },
+        {
+          "title": "Network",
+          "url": "/cgi-bin/luci/admin/network/network",
+          "icon": "network.svg",
+          "enabled": "1"
+        }
+      ]
     },
     "amber-sand": {
       "colors": {
@@ -76,7 +126,32 @@
         "font_sans": "space-grotesk",
         "font_mono": "fira-code"
       },
-      "toolbar": []
+      "toolbar": [
+        {
+          "title": "Overview",
+          "url": "/cgi-bin/luci/admin/status/overview",
+          "icon": "overview.svg",
+          "enabled": "1"
+        },
+        {
+          "title": "System",
+          "url": "/cgi-bin/luci/admin/system/system",
+          "icon": "system.svg",
+          "enabled": "1"
+        },
+        {
+          "title": "Software",
+          "url": "/cgi-bin/luci/admin/system/package-manager",
+          "icon": "software.svg",
+          "enabled": "0"
+        },
+        {
+          "title": "Network",
+          "url": "/cgi-bin/luci/admin/network/network",
+          "icon": "network.svg",
+          "enabled": "1"
+        }
+      ]
     },
     "monochrome": {
       "colors": {
@@ -102,7 +177,32 @@
         "font_sans": "geist-sans",
         "font_mono": "jetbrains-mono"
       },
-      "toolbar": []
+      "toolbar": [
+        {
+          "title": "Overview",
+          "url": "/cgi-bin/luci/admin/status/overview",
+          "icon": "overview.svg",
+          "enabled": "1"
+        },
+        {
+          "title": "System",
+          "url": "/cgi-bin/luci/admin/system/system",
+          "icon": "system.svg",
+          "enabled": "1"
+        },
+        {
+          "title": "Software",
+          "url": "/cgi-bin/luci/admin/system/package-manager",
+          "icon": "software.svg",
+          "enabled": "0"
+        },
+        {
+          "title": "Network",
+          "url": "/cgi-bin/luci/admin/network/network",
+          "icon": "network.svg",
+          "enabled": "1"
+        }
+      ]
     },
     "sky-blue": {
       "colors": {
@@ -128,7 +228,32 @@
         "font_sans": "system",
         "font_mono": "default"
       },
-      "toolbar": []
+      "toolbar": [
+        {
+          "title": "Overview",
+          "url": "/cgi-bin/luci/admin/status/overview",
+          "icon": "overview.svg",
+          "enabled": "1"
+        },
+        {
+          "title": "System",
+          "url": "/cgi-bin/luci/admin/system/system",
+          "icon": "system.svg",
+          "enabled": "1"
+        },
+        {
+          "title": "Software",
+          "url": "/cgi-bin/luci/admin/system/package-manager",
+          "icon": "software.svg",
+          "enabled": "0"
+        },
+        {
+          "title": "Network",
+          "url": "/cgi-bin/luci/admin/network/network",
+          "icon": "network.svg",
+          "enabled": "1"
+        }
+      ]
     }
   }
 }

@@ -353,6 +353,7 @@ function runSweep(files, uciOut, backups = []) {
   runSh(
     `ICON_PATH="${iconPath}"\nDEVICE_DIR="${deviceDir}"\n` +
       UCI_STUB +
+      slice("is_hub_asset_name") +
       slice("sweep_hub_images") +
       "\nsweep_hub_images\n",
     { UCI_OUT: uciOut, UCI_LOG: "/dev/null" },

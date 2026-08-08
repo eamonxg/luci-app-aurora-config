@@ -115,6 +115,40 @@ const structureOf = (preset, source) => {
   return { layout: pick(LAYOUT_KEYS), typography };
 };
 
+const toolbarOf = (preset, source) => {
+  const items = [];
+  let current = null;
+  for (const raw of source.split("\n")) {
+    const line = raw.trim();
+    if (/^config\s+toolbar_item\s*$/.test(line)) {
+      if (current) items.push(current);
+      current = { title: "", url: "", icon: "", enabled: "" };
+      continue;
+    }
+    if (/^config\s/.test(line)) {
+      if (current) items.push(current);
+      current = null;
+      continue;
+    }
+    if (!current) continue;
+    const m = line.match(/^option\s+(title|url|icon|enabled)\s+(.*)$/);
+    if (!m) continue;
+    current[m[1]] = m[2].replace(/^'(.*)'$/, "$1").replace(/^"(.*)"$/, "$1");
+  }
+  if (current) items.push(current);
+
+  for (const item of items) {
+    if (!item.title || !item.url || !/^[01]$/.test(item.enabled))
+      throw new Error(
+        `${preset}: a toolbar_item is missing title/url/enabled -- the device ` +
+          `rejects the whole preset on this (see load_preset_toolbar)`,
+      );
+  }
+  return items.map(({ title, url, icon, enabled }) =>
+    icon ? { title, url, icon, enabled } : { title, url, enabled },
+  );
+};
+
 // The four colours the Marketplace draws a card from -- marketplace.js SWATCH_KEYS.
 // Kept in sync by builtin-presets.test.mjs, which parses that declaration and
 // fails if this list drifts from it.
@@ -161,14 +195,11 @@ for (const preset of Object.keys(presets)) {
   console.log(`gen-presets: wrote ${templateFile}`);
 
   const { layout, typography } = structureOf(preset, source);
-  // `toolbar` is always empty and always present: applying a built-in preset
-  // never rewrites the user's shortcut sections (see apply_theme_preset), and
-  // the Marketplace reads the key to decide whether to draw a shortcut tile.
   browserPresets[preset] = {
     colors: flatColors(preset),
     layout,
     typography,
-    toolbar: [],
+    toolbar: toolbarOf(preset, source),
   };
 }
 

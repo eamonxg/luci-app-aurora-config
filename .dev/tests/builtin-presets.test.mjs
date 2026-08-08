@@ -51,6 +51,33 @@ const structOf = (id) => {
   }, {});
 };
 
+const toolbarOf = (source) => {
+  const items = [];
+  let current = null;
+  for (const raw of source.split("\n")) {
+    const line = raw.trim();
+    if (/^config\s+toolbar_item\s*$/.test(line)) {
+      if (current) items.push(current);
+      current = {};
+      continue;
+    }
+    if (/^config\s/.test(line)) {
+      if (current) items.push(current);
+      current = null;
+      continue;
+    }
+    if (!current) continue;
+    const m = line.match(/^option\s+(title|url|icon|enabled)\s+'([^']*)'/);
+    if (m && m[2] !== "") current[m[1]] = m[2];
+  }
+  if (current) items.push(current);
+  return items.map((it) =>
+    it.icon
+      ? { title: it.title, url: it.url, icon: it.icon, enabled: it.enabled }
+      : { title: it.title, url: it.url, enabled: it.enabled },
+  );
+};
+
 const rpcd = read("root/usr/libexec/rpcd/luci.aurora");
 const gallery = read(".dev/src/resource/view/aurora/marketplace.js");
 const browserPresets = JSON.parse(
@@ -233,13 +260,15 @@ test("rpcd applies the same structural keys the templates carry", () => {
     "load_preset_snapshot must fail the whole preset when its structure is unusable",
   );
 
-  // toolbar_item sections belong to the user. Unlike hub_apply_worker this
-  // path takes no backup, so deleting them would be unrecoverable.
-  const applyBlock = rpcd.slice(rpcd.indexOf('"apply_theme_preset")'));
-  assert.ok(
-    !/delete aurora\.@toolbar_item/.test(applyBlock.slice(0, 3000)),
-    "applying a built-in preset must not delete the user's shortcuts",
+  const start = rpcd.indexOf('"apply_theme_preset")');
+  const applyBlock = rpcd.slice(start, rpcd.indexOf('"export_config")', start));
+  assert.match(applyBlock, /backup_if_mine/, "删之前必须先留底");
+  assert.match(
+    applyBlock,
+    /delete aurora\.@toolbar_item\[0\]/,
+    "applying a built-in preset replaces the shortcuts with its own",
   );
+  assert.match(applyBlock, /load_preset_toolbar "\$template"/);
 });
 
 // PRESET_SNAPSHOT is one flat list now that it carries structure as well as
@@ -280,10 +309,11 @@ test("applying a preset fetches the typeface it names", () => {
   // Detached: it talks to the network and the rpc call must not wait on it.
   assert.match(rpcd, /\) <\/dev\/null >\/dev\/null 2>&1 &/);
 
-  const applyBlock = rpcd.slice(rpcd.indexOf('"apply_theme_preset")'));
-  assert.match(
-    applyBlock.slice(0, 3000),
-    /sync_and_cache_fonts_from_uci/,
+  const start = rpcd.indexOf('"apply_theme_preset")');
+  const applyBlock = rpcd.slice(start, rpcd.indexOf('"export_config")', start));
+  assert.ok(
+    applyBlock.indexOf('uci -q commit aurora') <
+      applyBlock.indexOf("sync_and_cache_fonts_from_uci"),
     "apply_theme_preset must resync fonts after committing",
   );
 });
@@ -303,7 +333,12 @@ test("the browser copy of the presets matches the templates", () => {
     // The hub's payload shape, so the store reads a built-in preset with the
     // accessors it already uses for a shared configuration.
     assert.ok(Array.isArray(entry.toolbar), `${id}: toolbar must be an array`);
-    assert.equal(entry.toolbar.length, 0, `${id}: presets carry no shortcut sections`);
+    assert.deepEqual(
+      entry.toolbar,
+      toolbarOf(templateOf(id)),
+      `${id}: toolbar drifted from the template`,
+    );
+    assert.ok(entry.toolbar.length > 0, `${id}: every preset ships its own shortcuts`);
     for (const key of Object.keys(entry.colors))
       assert.equal(
         entry.colors[key],

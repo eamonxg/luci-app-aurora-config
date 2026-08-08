@@ -45,7 +45,7 @@ const SWATCH_KEYS = ["bg", "surface", "text", "brand"];
 // LuCI cache-busts the resources it `require`s itself; this fetch is ours, so
 // it has to carry its own stamp. Same reason theme.js appends
 // ?v=TOKENS_ENGINE_VERSION to the token engine.
-const PRESETS_VERSION = "d685cb2b";
+const PRESETS_VERSION = "97884ace";
 
 // Filenames the theme package itself ships into
 // /www/luci-static/aurora/images. Nothing under one of these names is ever
@@ -1674,7 +1674,7 @@ return view.extend({
           "p",
           {},
           _(
-            "Apply the '%s' preset now? It is saved immediately and the page reloads. A preset carries a whole look — colors, navigation, spacing, corner radius, content width and fonts. Your shortcuts, logo, icons and login background are left as they are.",
+            "Apply the '%s' preset now? It is saved immediately and the page reloads. A preset carries a whole look — colors, navigation, spacing, corner radius, content width, fonts and shortcuts. Whatever the theme you are wearing now brought with it is replaced; images you uploaded yourself stay as they are.",
           ).format(preset.label),
         ),
         buildConfirmActions(() => {
@@ -1759,6 +1759,13 @@ return view.extend({
         buildLayoutRows(preset.preview.layout || {}, typography),
       ];
 
+      const presetShortcuts = buildShortcutList(
+        preset,
+        preset.preview.toolbar,
+        preset.preview.layout || {},
+      );
+      if (presetShortcuts) body.push(...presetShortcuts);
+
       if (needsFontDownload(typography))
         body.push(
           E(
@@ -1775,7 +1782,7 @@ return view.extend({
           "p",
           { class: "aurora-store-dt-foot" },
           _(
-            "Your shortcuts, logo, icons and login background are left exactly as they are.",
+            "Applying replaces the shortcuts above and removes the logo, icons and backgrounds the current theme brought with it. Images you uploaded yourself stay as they are.",
           ),
         ),
       );

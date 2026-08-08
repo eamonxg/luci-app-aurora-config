@@ -68,3 +68,27 @@ config aurora 'theme'
 	option struct_radius_base '0rem'
 	option nav_type 'dropdown'
 	option toolbar_enabled '0'
+
+config toolbar_item
+	option title 'Overview'
+	option url '/cgi-bin/luci/admin/status/overview'
+	option icon 'overview.svg'
+	option enabled '1'
+
+config toolbar_item
+	option title 'System'
+	option url '/cgi-bin/luci/admin/system/system'
+	option icon 'system.svg'
+	option enabled '1'
+
+config toolbar_item
+	option title 'Software'
+	option url '/cgi-bin/luci/admin/system/package-manager'
+	option icon 'software.svg'
+	option enabled '0'
+
+config toolbar_item
+	option title 'Network'
+	option url '/cgi-bin/luci/admin/network/network'
+	option icon 'network.svg'
+	option enabled '1'

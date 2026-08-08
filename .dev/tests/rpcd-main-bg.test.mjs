@@ -139,12 +139,19 @@ test("build_share_payload ships main_bg and the three tunables", () => {
   assert.match(fn, /is_valid_main_bg_value "\$key" "\$value"/);
 });
 
-test("validate_and_apply writes the tunables when present and deletes them when absent", () => {
+test("validate_and_apply validates the tunables and parks them for the asset step", () => {
   const fn = slice("validate_and_apply_hub_payload");
   assert.match(fn, /for key in struct_main_bg_alpha struct_main_bg_blur struct_main_bg_scrim struct_login_bg_alpha struct_login_bg_blur struct_login_bg_scrim; do/);
-  // 带则校验后写(越界拒整单),缺则删(回 CSS fallback 默认)
   assert.match(fn, /is_valid_main_bg_value "\$key" "\$value" \|\| \{ rm -f "\$batch_file"; return 1; \}/);
-  assert.match(fn, /printf "delete aurora\.theme\.%s\\n" "\$key"/);
+  assert.match(fn, /HUB_BG_TUNABLES="\$HUB_BG_TUNABLES\$key=\$value/);
+});
+
+test("the tunables land only for a background this apply actually replaced", () => {
+  const fn = slice("apply_hub_bg_tunables");
+  assert.match(fn, /uci -q set "aurora\.theme\.\$key=\$value"/);
+  assert.match(fn, /uci -q delete "aurora\.theme\.\$key"/);
+  assert.match(fn, /struct_main_bg_\*\)\n\s*case "\$written" in \*" main_bg "\*\)/);
+  assert.match(fn, /struct_login_bg_\*\)\n\s*case "\$written" in \*" login_bg "\*\)/);
 });
 
 test("apply_hub_asset writes struct_main_bg's url() and drops the stale lqip", () => {
