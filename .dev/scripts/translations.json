@@ -291,22 +291,6 @@
     "zh_Hans": "备份密钥",
     "zh_Hant": "備份金鑰"
   },
-  "Back up the current identity first": {
-    "de": "Zuerst die aktuelle Identität sichern",
-    "es": "Hacer primero una copia de la identidad actual",
-    "fr": "Sauvegarder d'abord l'identité actuelle",
-    "id": "Cadangkan dulu identitas saat ini",
-    "it": "Prima esegui il backup dell'identità attuale",
-    "ja": "先に現在の身元をバックアップ",
-    "ko": "현재 신원 먼저 백업",
-    "nl": "Eerst de huidige identiteit back-uppen",
-    "pl": "Najpierw utwórz kopię obecnej tożsamości",
-    "ru": "Сначала сохранить текущую личность",
-    "tr": "Önce mevcut kimliği yedekle",
-    "uk": "Спершу зберегти поточну особистість",
-    "zh_Hans": "先备份当前身份",
-    "zh_Hant": "先備份目前身分"
-  },
   "Back up the current key first": {
     "de": "Zuerst den aktuellen Schlüssel sichern",
     "es": "Guardar antes la clave actual",
@@ -738,6 +722,22 @@
     "uk": "Створюється автоматично під час першої публікації — без реєстрації та пароля. Вона визначає, які конфігурації в магазині ваші й хто може їх змінювати чи вилучати. Резервне копіювання зберігає файл резервної копії особистості; імпортуйте його після перепрошивки або на новому роутері, і ваші роботи повернуться до вас.",
     "zh_Hans": "第一次发布配置时自动生成，不用注册、没有密码。它决定商店里哪些配置属于你、谁能修改或下架它们。备份会存成一个身份备份文件；重刷系统之后、或者换了新路由器，导入这个文件，作品就回到你名下。",
     "zh_Hant": "第一次發布配置時自動生成，不用註冊、沒有密碼。它決定商店裡哪些配置屬於你、誰能修改或下架它們。備份會存成一個身分備份檔案；重刷系統之後、或者換了新路由器，匯入這個檔案，作品就回到你名下。"
+  },
+  "Created the first time you publish — or restore one you backed up.": {
+    "de": "Wird bei der ersten Veröffentlichung erstellt — oder stelle eine gesicherte wieder her.",
+    "es": "Se crea la primera vez que publicas, o restaura una de la que tengas copia.",
+    "fr": "Créée lors de votre première publication — ou restaurez-en une sauvegardée.",
+    "id": "Dibuat saat pertama kali kamu memublikasikan — atau pulihkan dari cadangan.",
+    "it": "Creata alla prima pubblicazione — oppure ripristinane una di cui hai il backup.",
+    "ja": "初めて公開したときに作成されます。バックアップしたものを復元することもできます。",
+    "ko": "처음 공개할 때 만들어집니다 — 백업해 둔 것을 복원할 수도 있습니다.",
+    "nl": "Wordt aangemaakt bij je eerste publicatie — of herstel er een uit een back-up.",
+    "pl": "Tworzona przy pierwszej publikacji — albo przywróć zapisaną kopię.",
+    "ru": "Создаётся при первой публикации — или восстановите сохранённую.",
+    "tr": "İlk yayınladığınızda oluşturulur — ya da yedeklediğiniz birini geri yükleyin.",
+    "uk": "Створюється під час першої публікації — або відновіть збережену.",
+    "zh_Hans": "第一次发布时自动创建，也可以恢复你备份过的那一个。",
+    "zh_Hant": "第一次發布時自動建立，也可以還原你備份過的那一個。"
   },
   "Custom app icons": {
     "de": "Eigene App-Symbole",
@@ -1474,6 +1474,22 @@
     "uk": "Моя особистість автора",
     "zh_Hans": "我的创作者身份",
     "zh_Hant": "我的創作者身分"
+  },
+  "No creator identity yet": {
+    "de": "Noch keine Ersteller-Identität",
+    "es": "Aún no hay identidad de creador",
+    "fr": "Pas encore d'identité de créateur",
+    "id": "Belum ada identitas kreator",
+    "it": "Nessuna identità di autore",
+    "ja": "作成者 ID はまだありません",
+    "ko": "아직 제작자 ID가 없습니다",
+    "nl": "Nog geen makersidentiteit",
+    "pl": "Brak tożsamości twórcy",
+    "ru": "Личности автора пока нет",
+    "tr": "Henüz oluşturan kimliği yok",
+    "uk": "Особистості автора ще немає",
+    "zh_Hans": "还没有创作者身份",
+    "zh_Hant": "還沒有創作者身分"
   },
   "Not backed up": {
     "de": "Nicht gesichert",

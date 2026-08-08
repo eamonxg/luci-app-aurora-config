@@ -1,20 +1,20 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3140
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3266
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:773
 msgid "%d downloads"
 msgstr "다운로드 %d회"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2780
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2896
 msgid "%d included, %s"
 msgstr "%d개 포함됨, %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2790
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2906
 msgid "%d not shared — only PNG and SVG under %s travel with a theme"
 msgstr "%d개는 공유되지 않음 — %s 미만의 PNG와 SVG만 테마와 함께 전달됩니다"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2764
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2880
 msgid "%d shortcuts"
 msgstr "바로가기 %d개"
 
@@ -30,12 +30,12 @@ msgstr "(없음)"
 msgid "(disabled)"
 msgstr "(사용 안 함)"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3139
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3265
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:773
 msgid "1 download"
 msgstr "다운로드 1회"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2763
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2879
 msgid "1 shortcut"
 msgstr "바로가기 1개"
 
@@ -95,7 +95,7 @@ msgstr "업데이트 소스를 추가하는 중…"
 msgid "Afterwards you can upgrade Aurora in System → Software, like any other OpenWrt package."
 msgstr "그 후에는 다른 OpenWrt 패키지와 마찬가지로 시스템 → 소프트웨어에서 Aurora를 업그레이드할 수 있습니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3278
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3404
 msgid "All"
 msgstr "전체"
 
@@ -103,12 +103,12 @@ msgstr "전체"
 msgid "Amber Sand"
 msgstr "호박색 모래"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1884
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1923
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:909
 msgid "Anonymous"
 msgstr "익명"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3249
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3375
 msgid "Anyone who applies this gets all of it. You can update or remove it later."
 msgstr "이것을 적용하는 사람은 전부 그대로 받습니다. 나중에 업데이트하거나 삭제할 수 있습니다."
 
@@ -128,75 +128,75 @@ msgstr "앱 아이콘 512×512"
 msgid "Apple Touch Icon"
 msgstr "Apple 터치 아이콘"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1554
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1593
 msgid "Applied."
 msgstr "적용되었습니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1115
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1130
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1532
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1662
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1742
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1768
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1801
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1830
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2016
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1154
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1169
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1571
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1701
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1781
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1807
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1840
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1869
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2055
 msgid "Apply"
 msgstr "적용"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1600
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1639
 msgid "Apply Configuration"
 msgstr "구성 적용"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1508
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1547
 msgid "Apply My Configuration"
 msgstr "내 설정 적용"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1633
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1672
 msgid "Apply Preset"
 msgstr "프리셋 적용"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1657
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1696
 msgid "Apply failed: %s"
 msgstr "적용 실패: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1128
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1167
 msgid "Apply it anyway? Your current settings are backed up first."
 msgstr "그래도 적용할까요? 현재 설정은 먼저 백업됩니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1637
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1676
 msgid "Apply the '%s' preset now? It is saved immediately and the page reloads. A preset carries a whole look — colors, navigation, spacing, corner radius, content width and fonts. Your shortcuts, logo, icons and login background are left as they are."
 msgstr "지금 '%s' 프리셋을 적용하시겠습니까? 즉시 저장되고 페이지가 새로고침됩니다. 프리셋은 색상, 탐색, 간격, 모서리 둥글기, 콘텐츠 너비, 글꼴까지 외관 전체를 바꿉니다. 바로 가기, 로고, 아이콘, 로그인 배경은 그대로 유지됩니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1111
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1150
 msgid "Apply this configuration now? Your current settings are backed up first."
 msgstr "이 구성을 지금 적용할까요? 현재 설정은 먼저 백업됩니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1517
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1578
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1610
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1556
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1617
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1649
 msgid "Applying"
 msgstr "적용 중"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1643
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1682
 msgid "Applying preset..."
 msgstr "프리셋 적용 중..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1579
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1618
 msgid "Applying this configuration…"
 msgstr "구성을 적용하는 중…"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1039
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1544
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1583
 msgid "Applying timed out. Please try again."
 msgstr "적용 시간이 초과되었습니다. 다시 시도해 주세요."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1642
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1681
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2335
 msgid "Applying..."
 msgstr "적용 중..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1518
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1557
 msgid "Applying…"
 msgstr "적용 중…"
 
@@ -212,15 +212,11 @@ msgstr "Aurora 테마 디자인"
 msgid "Automatic"
 msgstr "자동"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2477
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2557
 msgid "Back up identity"
 msgstr "신원 백업"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2602
-msgid "Back up the current identity first"
-msgstr "현재 신원 먼저 백업"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2374
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2438
 msgid "Back up your creator identity"
 msgstr "제작자 신원 백업"
 
@@ -229,7 +225,7 @@ msgstr "제작자 신원 백업"
 msgid "Backdrop Scrim"
 msgstr "스크림"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2444
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2539
 msgid "Backed up"
 msgstr "백업됨"
 
@@ -289,9 +285,9 @@ msgstr "활성화된 탐색 및 선택된 상태를 위한 브랜드 색조 서�
 msgid "Branding & Shortcuts"
 msgstr "브랜딩 및 바로가기"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1701
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3279
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3461
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1740
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3405
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3587
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2213
 msgid "Built-in"
 msgstr "내장형"
@@ -302,8 +298,8 @@ msgstr "포함된 콘텐츠"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:272
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:381
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1098
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3198
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1125
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3324
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2326
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2404
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2686
@@ -314,7 +310,7 @@ msgstr "취소"
 msgid "Canvas and panel surfaces that frame the interface."
 msgstr "인터페이스의 틀을 형성하는 캔버스 및 패널 서페이스."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3040
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3166
 msgid "Change your name"
 msgstr "이름 변경"
 
@@ -334,23 +330,23 @@ msgstr "이 토큰에 사용할 정확한 색상을 선택하세요"
 msgid "Choose an uploaded icon for this shortcut"
 msgstr "이 바로가기에 사용할 업로드된 아이콘을 선택하세요"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2534
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2624
 msgid "Choose backup file…"
 msgstr "백업 파일 선택…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2937
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3053
 msgid "Choose the name to publish under."
 msgstr "게시할 이름을 정하세요."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1677
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1779
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2406
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1716
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1818
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2470
 msgid "Close"
 msgstr "닫기"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1712
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1763
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2661
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1751
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1802
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2777
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:922
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2722
 msgid "Colors"
@@ -360,7 +356,7 @@ msgstr "색상"
 msgid "Colors only"
 msgstr "색상만"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3467
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3593
 msgid "Community"
 msgstr "커뮤니티"
 
@@ -384,7 +380,7 @@ msgstr "구성을 성공적으로 가져왔습니다."
 msgid "Confirm Upload"
 msgstr "업로드 확인"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2805
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2921
 msgid "Content"
 msgstr "항목"
 
@@ -392,7 +388,7 @@ msgstr "항목"
 msgid "Content Max Width"
 msgstr "콘텐츠 최대 너비"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2684
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2800
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:876
 msgid "Content Width"
 msgstr "콘텐츠 너비"
@@ -401,12 +397,12 @@ msgstr "콘텐츠 너비"
 msgid "Control Fill"
 msgstr "컨트롤 채우기"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2353
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2417
 msgid "Copied"
 msgstr "복사됨"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2348
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2355
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2412
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2419
 msgid "Copy"
 msgstr "복사"
 
@@ -419,7 +415,7 @@ msgstr "모서리 둥글기"
 msgid "Could not add the update source: %s"
 msgstr "업데이트 소스를 추가하지 못했습니다: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2366
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2430
 msgid "Couldn't copy. The identity is shown above — select it and copy it manually."
 msgstr "복사하지 못했습니다. 신원을 위에 표시했으니 직접 선택해 복사하세요."
 
@@ -434,11 +430,11 @@ msgstr "테마 스토어에 연결할 수 없습니다. 다시 시도해 주세�
 msgid "Couldn't read one of the images from this router. Try reloading the page."
 msgstr "공유기에서 이미지 하나를 읽지 못했습니다. 페이지를 새로 고친 뒤 다시 시도하세요."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2303
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2367
 msgid "Couldn't read your identity. Please try again."
 msgstr "신원을 읽지 못했습니다. 다시 시도하세요."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2546
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2638
 msgid "Couldn't restore that identity. Check it and try again."
 msgstr "그 신원을 복원하지 못했습니다. 확인 후 다시 시도하세요."
 
@@ -446,9 +442,13 @@ msgstr "그 신원을 복원하지 못했습니다. 확인 후 다시 시도하�
 msgid "Couldn't save that name. Try again."
 msgstr "이름을 저장하지 못했습니다. 다시 시도하세요."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2497
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2587
 msgid "Created automatically the first time you publish — no sign-up, no password. It decides which configurations in the store are yours, and who can change or remove them. Backing it up saves an identity backup file; import that file after a reflash, or on a new router, and your work comes back to you."
 msgstr "처음 게시할 때 자동으로 만들어집니다. 가입도 비밀번호도 없습니다. 스토어의 어떤 설정이 내 것인지, 누가 그것을 바꾸거나 내릴 수 있는지를 정합니다. 백업하면 신원 백업 파일이 저장되며, 펌웨어를 다시 올린 뒤나 새 공유기에서 그 파일을 가져오면 작업물이 다시 내 것이 됩니다."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2508
+msgid "Created the first time you publish — or restore one you backed up."
+msgstr "처음 공개할 때 만들어집니다 — 백업해 둔 것을 복원할 수도 있습니다."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2186
 msgid "Custom"
@@ -513,7 +513,7 @@ msgstr "제목, 본문 텍스트, 아이콘 및 폼 값에 대한 기본 전경�
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:159
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:393
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2180
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2236
 msgid "Delete"
 msgstr "삭제"
 
@@ -533,7 +533,7 @@ msgstr "브랜드 자산 삭제"
 msgid "Delete Custom Font"
 msgstr "사용자 지정 글꼴 삭제"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2121
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2177
 msgid "Delete Share"
 msgstr "공유 삭제"
 
@@ -541,11 +541,11 @@ msgstr "공유 삭제"
 msgid "Delete failed: %s"
 msgstr "삭제 실패: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2122
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2178
 msgid "Delete this shared configuration from the theme store?"
 msgstr "이 공유 구성을 테마 스토어에서 삭제할까요?"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2129
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2186
 msgid "Deleted."
 msgstr "삭제되었습니다."
 
@@ -573,7 +573,7 @@ msgstr "캔버스, 서페이스, 텍스트 색상에서 파생됨: 뮤트 및 �
 msgid "Derived from the status accents: alert, label, and badge backgrounds."
 msgstr "상태 강조색에서 파생됨: 알림, 레이블 및 배지 배경."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3235
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3361
 msgid "Description"
 msgstr "설명"
 
@@ -581,9 +581,9 @@ msgstr "설명"
 msgid "Design Studio"
 msgstr "디자인 스튜디오"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2005
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2021
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2806
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2044
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2060
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2922
 msgid "Details"
 msgstr "세부 정보"
 
@@ -595,11 +595,11 @@ msgstr "모달 대화 상자 뒤의 조명 감쇠 백드롭."
 msgid "Dismiss"
 msgstr "닫기"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2400
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2464
 msgid "Download backup file"
 msgstr "백업 파일 내려받기"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2644
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2760
 msgid "Downloads"
 msgstr "다운로드"
 
@@ -688,7 +688,7 @@ msgstr "파일 이름(확장자 포함)"
 msgid "Fill for form controls: inputs, selects, textareas, and checkboxes."
 msgstr "폼 컨트롤(입력란, 선택 상자, 텍스트 영역, 체크박스)의 채우기 색상."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2910
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3026
 msgid "Finishing…"
 msgstr "마무리 중…"
 
@@ -724,7 +724,7 @@ msgstr "글꼴 이름(예: MiSans)"
 msgid "Font for code, command output, and the system log viewer."
 msgstr "코드, 명령 출력 및 시스템 로그 뷰어용 폰트."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2690
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2806
 msgid "Fonts"
 msgstr "글꼴"
 
@@ -741,7 +741,7 @@ msgstr "openwrt.eamonxg.fun에서 가져옵니다. 서명 키는 이 패키지�
 msgid "Frosted Blur"
 msgstr "블러"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2850
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2966
 msgid "Give it a name"
 msgstr "이름을 입력하세요"
 
@@ -762,7 +762,7 @@ msgstr "헤어라인"
 msgid "Hidden"
 msgstr "숨김"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2333
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2397
 msgid "Hide"
 msgstr "숨기기"
 
@@ -770,7 +770,7 @@ msgstr "숨기기"
 msgid "Home Screen icon for iOS and iPadOS."
 msgstr "iOS 및 iPadOS용 홈 화면 아이콘."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3280
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3406
 msgid "Hot"
 msgstr "인기"
 
@@ -790,12 +790,12 @@ msgstr "은은한 기본 버튼 및 선택된 서페이스의 호버 채우기 �
 msgid "Hover state for filled primary buttons and high-emphasis controls."
 msgstr "채워진 기본 버튼 및 고강조 제어 요소의 호버 상태."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3230
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3356
 msgid "How it looks in the store"
 msgstr "스토어에서 보이는 모습"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1759
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2034
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1798
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2073
 msgid "How this router looked before you applied a theme from the store."
 msgstr "스토어의 테마를 적용하기 전 이 공유기의 모습입니다."
 
@@ -807,7 +807,7 @@ msgstr "ページコンテンツ、ヘルプテキスト、およびステータ
 msgid "Icon"
 msgstr "아이콘"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2157
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2213
 msgid "Images not approved — colours and layout still work. Swap the image, then update."
 msgstr "이미지가 승인되지 않았습니다 — 색상과 레이아웃은 그대로 작동합니다. 이미지를 바꾼 뒤 업데이트하세요."
 
@@ -841,19 +841,19 @@ msgstr "가져오기를 하면 /etc/config/aurora가 교체되고, 모든 설정
 msgid "Importing..."
 msgstr "가져오는 중..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2152
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2208
 msgid "In review — appears in the store once its images are approved."
 msgstr "검토 중 — 이미지가 승인되면 스토어에 표시됩니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1682
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1939
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1981
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1721
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1978
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2020
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:792
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:795
 msgid "In use"
 msgstr "사용 중"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2747
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2863
 msgid "Included, %s"
 msgstr "포함됨, %s"
 
@@ -861,7 +861,7 @@ msgstr "포함됨, %s"
 msgid "Includes %s of font files. They are stored in the router's writable partition, which is shared with installed packages — on devices with little flash, check the free space first. Fonts are not kept across a firmware upgrade and have to be applied again."
 msgstr "%s의 글꼴 파일이 포함됩니다. 공유기의 쓰기 가능 파티션에 저장되며, 이 공간은 설치된 패키지와 함께 씁니다 — 플래시가 작은 기기에서는 남은 공간을 먼저 확인하세요. 글꼴은 펌웨어 업그레이드 후에는 남지 않으므로 다시 적용해야 합니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1891
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1930
 msgid "Includes assets"
 msgstr "자산 포함"
 
@@ -893,7 +893,7 @@ msgstr "유효하지 않은 색상 표현식입니다."
 msgid "Invalid, missing, or cyclic color expression."
 msgstr "유효하지 않거나, 누락되었거나, 순환 참조되는 색상 표현식입니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2384
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2448
 msgid "It exists only on this router. Reflashing without keeping settings erases it."
 msgstr "이 공유기에만 있습니다. 설정을 유지하지 않고 다시 플래시하면 사라집니다."
 
@@ -913,8 +913,8 @@ msgstr "많이 둥근 모서리"
 msgid "Layout"
 msgstr "레이아웃"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1714
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1765
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1753
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1804
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:924
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2723
 msgid "Layout & Typography"
@@ -941,7 +941,7 @@ msgstr "라이트"
 msgid "Light Mode"
 msgstr "라이트 모드"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2661
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2777
 msgid "Light and dark, 62 values"
 msgstr "라이트・다크, 62개 값"
 
@@ -957,12 +957,13 @@ msgstr "링크"
 msgid "Links marked ↗ open sites outside your router. You'll be asked to confirm before applying."
 msgstr "↗ 표시가 있는 링크는 라우터 외부 사이트를 엽니다. 적용하기 전에 확인을 요청합니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1611
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1787
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1650
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1826
 msgid "Loading theme details…"
 msgstr "테마 세부 정보를 불러오는 중…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3398
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2737
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3524
 msgid "Loading…"
 msgstr "불러오는 중…"
 
@@ -1009,9 +1010,9 @@ msgstr "메가 메뉴 배경"
 msgid "Mega Menu Scrim"
 msgstr "메가 메뉴 스크림"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3286
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3453
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3487
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3412
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3579
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3613
 msgid "Mine"
 msgstr "내 것"
 
@@ -1019,7 +1020,7 @@ msgstr "내 것"
 msgid "Mono Font"
 msgstr "고정폭 글꼴"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2700
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2816
 msgid "Mono Font File"
 msgstr "고정폭 글꼴 파일"
 
@@ -1040,19 +1041,19 @@ msgstr "고정폭 서체"
 msgid "Muted Text"
 msgstr "뮤트 텍스트"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3490
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3616
 msgid "My Shares"
 msgstr "내 공유"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1752
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1937
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1977
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1791
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1976
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2016
 msgid "My configuration"
 msgstr "내 설정"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:118
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2643
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3234
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2759
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3360
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2942
 msgid "Name"
 msgstr "이름"
@@ -1061,7 +1062,7 @@ msgstr "이름"
 msgid "Name it login-bg.* to use it as the login page background."
 msgstr "login-bg.*로 이름을 지정하면 로그인 페이지 배경으로 사용됩니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2663
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2779
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:870
 msgid "Navigation"
 msgstr "탐색"
@@ -1074,7 +1075,7 @@ msgstr "탐색 스타일"
 msgid "Navigation, spacing, corner radius, and content width. Takes effect after Save & Apply."
 msgstr "탐색, 공백, 모서리 둥글기 및 콘텐츠 너비 설정입니다. '저장 및 적용' 후 반영됩니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3281
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3407
 msgid "New"
 msgstr "최신"
 
@@ -1086,9 +1087,13 @@ msgstr "선택된 배경 없음"
 msgid "No brand assets uploaded yet."
 msgstr "아직 업로드된 브랜드 자산이 없습니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3419
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3545
 msgid "No configs here yet — go share the first one."
 msgstr "아직 구성이 없습니다. 첫 번째로 공유해 보세요."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2505
+msgid "No creator identity yet"
+msgstr "아직 제작자 ID가 없습니다"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2897
 msgid "No custom fonts uploaded."
@@ -1098,7 +1103,7 @@ msgstr "업로드된 사용자 지정 글꼴이 없습니다."
 msgid "No file selected or upload failed"
 msgstr "선택된 파일이 없거나 업로드에 실패했습니다"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3418
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3544
 msgid "No themes match your search."
 msgstr "검색과 일치하는 테마가 없습니다."
 
@@ -1106,26 +1111,26 @@ msgstr "검색과 일치하는 테마가 없습니다."
 msgid "None"
 msgstr "없음"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2444
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2539
 msgid "Not backed up"
 msgstr "백업 안 됨"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1939
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1981
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1978
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2020
 msgid "Not in use"
 msgstr "사용 안 함"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2435
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2530
 msgid "Not named yet"
 msgstr "이름 없음"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2635
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2751
 msgid "Nothing shared yet. Publish the configuration above and it shows up here."
 msgstr "아직 공유한 것이 없습니다. 위의 구성을 게시하면 여기에 표시됩니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1938
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3453
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3487
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1977
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3579
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3613
 msgid "On this router only"
 msgstr "이 공유기에만 있음"
 
@@ -1133,15 +1138,15 @@ msgstr "이 공유기에만 있음"
 msgid "On-Brand Text"
 msgstr "브랜드 배경 위 텍스트"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3185
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3311
 msgid "Once published, anyone can find it and apply it in one click. You can update or remove it later."
 msgstr "게시하면 누구나 찾아서 한 번의 클릭으로 적용할 수 있습니다. 나중에 수정하거나 삭제할 수 있습니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2856
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2972
 msgid "One line about where this configuration fits."
 msgstr "이 구성이 어울리는 상황을 한 줄로."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3130
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3256
 msgid "One more piece in the store"
 msgstr "스토어에 작품 하나 더"
 
@@ -1181,12 +1186,12 @@ msgstr "페이지 배경"
 msgid "Page canvas behind the header, navigation, content, and login screen."
 msgstr "헤더, 탐색, 콘텐츠 및 로그인 화면 뒤의 페이지 캔버스."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2578
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2671
 msgid "Paste the identity you backed up, or pick the backup file you downloaded. What you shared before comes back under this router."
 msgstr "백업해 둔 신원을 붙여넣거나, 내려받은 백업 파일을 고르세요. 예전에 공유한 것들이 이 공유기로 돌아옵니다."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1057
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3051
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3177
 msgid "Pick a name between 1 and 40 characters."
 msgstr "1자에서 40자 사이의 이름을 정하세요."
 
@@ -1195,7 +1200,7 @@ msgid "Pick wallpapers for the login page and the admin interface. Drag the slid
 msgstr "로그인 페이지와 관리 화면의 배경 화면을 고르세요. 슬라이더를 움직이면 실시간 미리보기에 반영되고, 저장 후 적용하면 실제로 적용됩니다."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1054
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2930
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3046
 msgid "Please enter a name."
 msgstr "이름을 입력해 주세요."
 
@@ -1211,11 +1216,11 @@ msgstr "타이포그래피 준비 중"
 msgid "Preparing selected typefaces..."
 msgstr "선택한 서체 준비 중..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2906
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3022
 msgid "Preparing…"
 msgstr "준비 중…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1650
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1689
 msgid "Preset applied successfully."
 msgstr "프리셋이 성공적으로 적용되었습니다."
 
@@ -1231,25 +1236,25 @@ msgstr "진행 종료 지점"
 msgid "Progress Start"
 msgstr "진행 시작 지점"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2924
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3166
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3040
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3292
 msgid "Publish"
 msgstr "게시"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3083
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3086
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3209
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3212
 msgid "Publish as"
 msgstr "게시 이름"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3130
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3256
 msgid "Publish as a new one"
 msgstr "새 항목으로 게시"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2985
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3111
 msgid "Published."
 msgstr "게시되었습니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2984
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3110
 msgid "Published. Its images are queued for review — it appears in the store once they are approved."
 msgstr "게시했습니다. 이미지는 검토 대기 중입니다 — 승인되면 스토어에 표시됩니다."
 
@@ -1257,16 +1262,16 @@ msgstr "게시했습니다. 이미지는 검토 대기 중입니다 — 승인�
 msgid "Raised layer for dropdowns, modals, and tooltips."
 msgstr "드롭다운, 모달 및 툴팁을 위한 돌출된 레이어."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1830
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1869
 msgid "Re-apply"
 msgstr "다시 적용"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2483
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2563
 msgid "Rename"
 msgstr "이름 변경"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3137
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3166
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3263
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3292
 msgid "Replace “%s”"
 msgstr "“%s” 교체"
 
@@ -1304,23 +1309,24 @@ msgstr "해석된 색상은 색상 선택기에서 표시할 수 없습니다."
 msgid "Resolved preview color - click to pick"
 msgstr "해석된 미리보기 색상 - 클릭하여 선택"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2608
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2696
 msgid "Restore"
 msgstr "복원"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2609
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2697
 msgid "Restore your creator identity"
 msgstr "제작자 신원 복원"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2565
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2658
 msgid "Restored."
 msgstr "복구했습니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2564
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2657
 msgid "Restored. What you shared before is back under this identity."
 msgstr "복원했습니다. 예전에 공유한 것들이 이 신원으로 돌아왔습니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2489
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2518
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2569
 msgid "Restore…"
 msgstr "복원…"
 
@@ -1328,7 +1334,8 @@ msgstr "복원…"
 msgid "Restoring..."
 msgstr "복원 중..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3382
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2729
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3508
 msgid "Retry"
 msgstr "다시 시도"
 
@@ -1348,7 +1355,7 @@ msgstr "세이지 그린"
 msgid "Sans Font"
 msgstr "산세리프 글꼴"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2700
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2816
 msgid "Sans Font File"
 msgstr "산세리프 글꼴 파일"
 
@@ -1365,7 +1372,7 @@ msgstr "고딕체 서체"
 msgid "Sans-serif and monospace typefaces used across the theme. Pick a curated webfont — downloaded once after saving, from pinned, checksum-verified sources, then served locally — or upload your own .woff2 files."
 msgstr "테마 전체에서 사용하는 산세리프 및 고정폭 글꼴입니다. 엄선된 웹 글꼴(저장 후 버전이 고정되고 체크섬이 검증된 소스에서 한 번만 내려받아 이후 로컬에서 제공)을 선택하거나 자신의 .woff2 파일을 업로드할 수 있습니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3067
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3193
 msgid "Save"
 msgstr "저장"
 
@@ -1377,7 +1384,7 @@ msgstr "저장된 값 또는 프리셋 값"
 msgid "Scrim"
 msgstr "스크림"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3315
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3441
 msgid "Search themes or authors…"
 msgstr "테마 또는 작성자 검색…"
 
@@ -1389,31 +1396,31 @@ msgstr "구분선, 분할선, 입력창 또는 카드 테두리."
 msgid "Settings reset successfully."
 msgstr "설정이 성공적으로 초기화되었습니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2676
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2792
 msgid "Shape"
 msgstr "모양"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2000
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3181
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2039
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3307
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2460
 msgid "Share to the store"
 msgstr "스토어에 공유"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3467
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3593
 msgid "Shared by other people"
 msgstr "다른 사용자가 공유한 것"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1710
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1749
 msgid "Ships with the theme and works offline."
 msgstr "테마에 기본 포함되어 오프라인에서도 사용할 수 있습니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3461
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3587
 msgid "Ships with the theme, works offline"
 msgstr "테마에 포함되어 있으며 오프라인에서도 작동합니다"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2779
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2789
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2898
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2895
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2905
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3014
 msgid "Shortcut Icons"
 msgstr "바로가기 아이콘"
 
@@ -1433,8 +1440,8 @@ msgstr "바로가기 URL"
 msgid "Shortcuts %d"
 msgstr "바로 가기 %d"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2328
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2339
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2392
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2403
 msgid "Show"
 msgstr "표시"
 
@@ -1446,7 +1453,7 @@ msgstr "바로가기 툴바 표시"
 msgid "Show the floating launcher on all pages."
 msgstr "모든 페이지에서 플로팅 런처를 표시합니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3437
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3563
 msgid "Showing a saved copy — reconnecting…"
 msgstr "저장된 사본을 표시하는 중 — 다시 연결 중…"
 
@@ -1459,7 +1466,7 @@ msgstr "표시"
 msgid "Sidebar"
 msgstr "사이드바"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2459
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2542
 msgid "Signs everything you share. It lives only on this router."
 msgstr "공유하는 모든 것에 서명합니다. 이 공유기에만 존재합니다."
 
@@ -1489,7 +1496,7 @@ msgstr "용도"
 msgid "Small corners"
 msgstr "약간 둥근 모서리"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2673
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2789
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:871
 msgid "Spacing"
 msgstr "간격"
@@ -1547,7 +1554,7 @@ msgstr "시스템 고정폭"
 msgid "System Surfaces"
 msgstr "시스템 서페이스"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2223
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2279
 msgid "Taken down — no longer in the store. Nothing you can do from here."
 msgstr "게시가 중단되었습니다. 스토어에 더 이상 없으며, 여기서 할 수 있는 일은 없습니다."
 
@@ -1567,7 +1574,7 @@ msgstr "텍스트, 링크 및 브랜드"
 msgid "That description is too long."
 msgstr "설명이 너무 깁니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2540
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2632
 msgid "That doesn't look like a creator identity."
 msgstr "제작자 신원처럼 보이지 않습니다."
 
@@ -1579,12 +1586,12 @@ msgstr "이미 사용 중인 이름입니다. 다른 이름을 사용하세요."
 msgid "The font file comes from whoever shared this theme; the store does not verify its licence."
 msgstr "글꼴 파일은 이 테마를 공유한 사람이 올린 것으로, 스토어는 라이선스를 확인하지 않습니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1758
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2033
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1797
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2072
 msgid "The look this router is wearing right now."
 msgstr "이 공유기가 지금 입고 있는 모습입니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2865
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2981
 msgid "The name your shares are signed with"
 msgstr "공유에 표시되는 이름"
 
@@ -1621,23 +1628,23 @@ msgstr "아직 복원할 항목이 없습니다."
 msgid "This configuration can't be applied."
 msgstr "이 구성은 적용할 수 없습니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1119
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1158
 msgid "This configuration links to these external sites:"
 msgstr "이 구성은 다음 외부 사이트로 연결됩니다:"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3044
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3170
 msgid "This name signs everything you have published, including what is already in the store."
 msgstr "이 이름은 이미 스토어에 올라간 것까지 포함해, 게시한 모든 것에 표시됩니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1723
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1762
 msgid "This preset uses a downloaded typeface. The router fetches it once after applying; until then the text falls back to the built-in font."
 msgstr "이 프리셋은 내려받아야 하는 글꼴을 사용합니다. 적용 후 공유기가 한 번 내려받으며, 그전까지는 내장 글꼴로 표시됩니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1512
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1551
 msgid "This puts back the look you had before applying a theme from the store."
 msgstr "스토어의 테마를 적용하기 전 모습으로 되돌립니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2594
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2691
 msgid "This router already has shared configurations of its own. Switching to another identity gives them up for good — back up the current identity first if you still want them."
 msgstr "이 공유기에는 이미 직접 공유한 설정이 있습니다. 다른 신원으로 바꾸면 그것들을 영영 포기하게 됩니다. 계속 갖고 싶다면 먼저 현재 신원을 백업하세요."
 
@@ -1645,7 +1652,7 @@ msgstr "이 공유기에는 이미 직접 공유한 설정이 있습니다. 다�
 msgid "This share belongs to another identity."
 msgstr "이 공유는 다른 신원의 것입니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3261
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3387
 msgid "This share includes your uploaded font file. Please make sure you have the right to redistribute it — most commercial font licences do not allow it. Configurations reported for infringement are taken down."
 msgstr "이 공유에는 업로드한 글꼴 파일이 포함됩니다. 재배포할 권리가 있는지 확인하세요 — 대부분의 상용 글꼴 라이선스는 재배포를 허용하지 않습니다. 침해 신고가 접수된 구성은 내려갑니다."
 
@@ -1654,7 +1661,7 @@ msgstr "이 공유에는 업로드한 글꼴 파일이 포함됩니다. 재배�
 msgid "This share is no longer available."
 msgstr "이 공유는 더 이상 사용할 수 없습니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2378
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2442
 msgid "This text is your identity. Anyone who has it can publish under your name and delete what you have shared — don't post it anywhere public."
 msgstr "이 문자열이 곧 당신의 신원입니다. 이것을 가진 사람은 당신 이름으로 게시할 수 있고, 공유한 것을 삭제할 수도 있습니다. 공개된 곳에 올리지 마세요."
 
@@ -1666,11 +1673,11 @@ msgstr "이 테마는 더 이상 사용할 수 없습니다."
 msgid "This theme uses a downloaded typeface. The router fetches it once after applying; until then the text falls back to the built-in font."
 msgstr "이 테마는 내려받아야 하는 글꼴을 사용합니다. 적용 후 공유기가 한 번 내려받으며, 그전까지는 내장 글꼴로 표시됩니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2743
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2859
 msgid "Too large to share (%s; the store's limit is %s)"
 msgstr "너무 커서 공유할 수 없음 (%s, 스토어 제한은 %s)"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2760
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2876
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:881
 msgid "Toolbar"
 msgstr "도구 모음"
@@ -1732,11 +1739,12 @@ msgstr "%s을(를) 로드할 수 없습니다."
 msgid "Unable to load the Aurora stylesheet."
 msgstr "Aurora 스타일시트를 로드할 수 없습니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1776
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1815
 msgid "Unable to load this theme right now. Please try again."
 msgstr "지금은 이 테마를 불러올 수 없습니다. 다시 시도해 주세요."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3374
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2721
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3500
 msgid "Unable to reach the theme store right now."
 msgstr "지금은 테마 스토어에 연결할 수 없습니다."
 
@@ -1771,8 +1779,8 @@ msgstr "알 수 없는 오류"
 msgid "Unsupported file type. Allowed: %s"
 msgstr "지원하지 않는 파일 형식입니다. 허용: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1883
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2207
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1922
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2263
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:905
 msgid "Untitled theme"
 msgstr "제목 없는 테마"
@@ -1785,7 +1793,7 @@ msgstr "업데이트 있음 %s"
 msgid "Update source added"
 msgstr "업데이트 소스가 추가되었습니다"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2171
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2227
 msgid "Update with current configuration"
 msgstr "현재 구성으로 업데이트"
 
@@ -1810,15 +1818,15 @@ msgstr "업로드 실패 (HTTP %s)"
 msgid "Upload failed: %s"
 msgstr "업로드 실패: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2701
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2817
 msgid "Uploaded with the theme, %s"
 msgstr "테마와 함께 업로드됨, %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2918
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3034
 msgid "Uploading %s… %d%%"
 msgstr "%s 업로드 중… %d%%"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2917
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3033
 msgid "Uploading %s… %d%% (%d/%d)"
 msgstr "%s 업로드 중… %d%% (%d/%d)"
 
@@ -1834,15 +1842,15 @@ msgstr "경고"
 msgid "Warning Surface"
 msgstr "경고 서페이스"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3244
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3370
 msgid "What gets shared"
 msgstr "공유되는 항목"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2494
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2584
 msgid "What is this? Where did it come from?"
 msgstr "이게 뭔가요? 어디서 온 건가요?"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3146
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3272
 msgid "Where this configuration goes"
 msgstr "이 구성이 올라갈 곳"
 
@@ -1850,7 +1858,7 @@ msgstr "이 구성이 올라갈 곳"
 msgid "Will replace the existing '%s'."
 msgstr "기존 '%s'을(를) 대체합니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1872
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1911
 msgid "Works offline"
 msgstr "오프라인 사용 가능"
 
@@ -1858,7 +1866,7 @@ msgstr "오프라인 사용 가능"
 msgid "You've published as much as one router may publish today. Try again tomorrow."
 msgstr "이 공유기가 오늘 게시할 수 있는 양을 다 썼습니다. 내일 다시 시도하세요."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2989
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3115
 msgid "Your creator identity lives only on this router — back it up so a reflash can't take it."
 msgstr "제작자 신원은 이 공유기에만 존재합니다. 펌웨어를 다시 올려도 잃지 않도록 백업하세요."
 
@@ -1873,7 +1881,7 @@ msgstr "현재 구성은 지금 공유할 수 없습니다."
 msgid "Your current settings are backed up before applying, and you can roll back with one click afterwards."
 msgstr "적용 전에 현재 설정이 백업되며, 적용 후 클릭 한 번으로 되돌릴 수 있습니다."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1733
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1772
 msgid "Your shortcuts, logo, icons and login background are left exactly as they are."
 msgstr "바로 가기, 로고, 아이콘, 로그인 배경은 그대로 유지됩니다."
 

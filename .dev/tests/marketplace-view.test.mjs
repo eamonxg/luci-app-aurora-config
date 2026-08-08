@@ -609,13 +609,31 @@ test("gallery view: publishing stays disabled until the panel is gone", async ()
   // 成功分支里提前解禁按钮,会在 my-shares 往返期间留下一个可再次点击的
   // 「发布」按钮 —— 第二次点击就是重复发布。
   assert.ok(
-    !/\.then\(\s*\(res\) => \{\s*submitBtn\.disabled = false;/.test(src),
+    !/\.then\(\s*\(res\) => \{\s*endSubmit\(\);/.test(src),
     "submit button must not be re-enabled before the result is known",
   );
   assert.match(
     src,
-    /\} else \{\s*submitBtn\.disabled = false;/,
+    /\} else \{\s*endSubmit\(\);\s*showError\(/,
     "the failure branch must be the one that re-enables the button",
+  );
+  // 禁用是防重复提交,不是等待反馈 —— 一个按不动又没有任何变化的按钮读起来
+  // 就是坏了。转圈和禁用一起加、一起撤。
+  assert.match(
+    src,
+    /submitBtn\.disabled = true;\s*submitBtn\.classList\.add\("spinning"\);/,
+    "publishing must show the spinner, not just go dead",
+  );
+  assert.match(
+    src,
+    /const endSubmit = \(\) => \{\s*submitBtn\.disabled = false;\s*submitBtn\.classList\.remove\("spinning"\);/,
+    "one restore path for all three endings",
+  );
+  // claim 昵称那趟往返发生在第一个资源上传之前,进度行原先在那几秒里是空的。
+  assert.match(
+    src,
+    /renderShareProgress\(\{ phase: "begin" \}\);/,
+    "the progress line must start before the nickname round trip, not after it",
   );
 });
 
@@ -1134,7 +1152,25 @@ test("restore dialog: identity wording, a real file button, and one parse path",
   assert.ok(src.includes('_("That doesn\'t look like a creator identity.")'));
   assert.ok(src.includes('_("Couldn\'t restore that identity. Check it and try again.")'));
   assert.ok(src.includes('_("Choose backup file…")'));
-  assert.ok(src.includes('_("Back up the current identity first")'));
+
+  // 恢复框里曾经还有一个「先备份当前身份」按钮。身份卡上已经有一个备份入口,
+  // 这里再放一个就是同一件事的第二条岔路 —— 一个对话框只做一件事。
+  assert.ok(
+    !src.includes('_("Back up the current identity first")'),
+    "the restore dialog must not carry a second backup entry point",
+  );
+  assert.equal(
+    (src.match(/backupKeyPrompt\(\)/g) || []).length,
+    1,
+    "backup must have exactly one entry point (the identity card)",
+  );
+  // 警告本身留着:它讲的是换身份的后果,不是一条通往别处的入口。
+  assert.ok(
+    src.includes(
+      '_("This router already has shared configurations of its own. Switching to another identity gives them up for good — back up the current identity first if you still want them.")',
+    ),
+    "the irreversibility warning must survive the button it used to sit above",
+  );
 
   // 文件选择器被 label 包住并隐藏 —— 浏览器默认的 "未选择文件" 在这里是噪音。
   assert.match(src, /class: "cbi-button aurora-store-filebtn"/);
@@ -1152,8 +1188,28 @@ test("identity card: names the router's creator, and carries back-up / rename / 
   assert.match(src, /const buildIdentityCard = \(\) =>/);
   assert.ok(!src.includes("buildKeyBar"), "buildKeyBar must be gone, call site included");
 
-  // 没有身份时返回 null —— 引导态由调用方负责,卡片不假装有一个空账号。
-  assert.match(src, /if \(!profile\.id\) return null;/);
+  // 一张卡两个状态。没有身份时它照画 —— 只是名字换成"还没有创作者身份",
+  // 动作只剩「恢复…」。此前这里 return null,于是一台刚刷好的路由器在「我的」
+  // 页上只剩一句"还没有分享过",而带着备份文件从旧路由器过来的人要的恰恰
+  // 就是这一屏上的恢复入口。
+  assert.ok(
+    !/if \(!profile\.id\) return null;/.test(src),
+    "a router without an identity must still get the card -- that is where Restore lives",
+  );
+  assert.ok(
+    src.includes('_("No creator identity yet")'),
+    "the empty identity state must name itself",
+  );
+  assert.ok(
+    src.includes('_("Created the first time you publish — or restore one you backed up.")'),
+    "the empty identity state must say where an identity comes from",
+  );
+  // 数据还没回来时才 return null:那时 profile 是空的,画空态等于先撒谎再纠正。
+  assert.match(
+    src,
+    /const buildIdentityCard = \(\) => \{\s*if \(!myLoaded\) return null;/,
+    "the card must wait for hub_me rather than guess",
+  );
 
   // 身份不再占一个和作品同级的 section。它并进「我的分享」的标题下面 ——
   // 这台路由器以谁的名义发布,说的本来就是那张表里的东西归谁。
@@ -1184,8 +1240,19 @@ test("identity card: names the router's creator, and carries back-up / rename / 
     src.includes('_("Restore…")'),
     "the card must offer Restore",
   );
+  // 两个调用点,但它们是同一张卡的两个互斥状态(有身份 / 没身份),同屏永远
+  // 只看得见一个 —— 而且都在这张卡里,没有第三处。
+  const cardSrc = src.slice(
+    src.indexOf("const buildIdentityCard"),
+    src.indexOf("const KEY_RE"),
+  );
   const restoreSites = (src.match(/restoreIdentityPrompt\(\)/g) || []).length;
-  assert.equal(restoreSites, 1, "restore must have exactly one entry point");
+  assert.equal(restoreSites, 2, "restore lives in the identity card's two states, nowhere else");
+  assert.equal(
+    (cardSrc.match(/restoreIdentityPrompt\(\)/g) || []).length,
+    2,
+    "both restore entry points must be inside the identity card",
+  );
 
   // 昵称来自 hub,属不可信文本。
   assert.match(src, /document\.createTextNode\(profile\.nickname\)/);
@@ -1193,6 +1260,86 @@ test("identity card: names the router's creator, and carries back-up / rename / 
   // 发布面板里那份只读署名不再重复提供改名 —— 改名只有一个入口。
   const renameSites = (src.match(/promptRename\(\)/g) || []).length;
   assert.equal(renameSites, 1, "rename must have exactly one entry point");
+});
+
+// 等待反馈只有一种机制:LuCI 自带的 .spinning 加 disabled。这一条钉的是
+// "别长出第二套 loading",以及每个会让人干等的动作都接上了它。
+test("waiting has exactly one mechanism, and every round trip uses it", async () => {
+  const src = await readFile(SRC, "utf8");
+
+  assert.match(
+    src,
+    /const withBusy = \(btn, promise\) => \{\s*btn\.disabled = true;\s*btn\.classList\.add\("spinning"\);/,
+    "the one busy helper must both disable and spin",
+  );
+  // 自制的转圈会和页面上已有的那几处不一样。复用 LuCI 的类,不新增样式。
+  assert.ok(
+    !/@keyframes|aurora-store-spinner|animation:/.test(src),
+    "no second spinner -- .spinning is what the rest of this page already uses",
+  );
+
+  // 确认框:onConfirm 返回 thenable 才 busy。返回 undefined 的同步路径(应用
+  // 预设、应用配置 —— 它们当场换成一个 spinner 模态)必须一个字不变。
+  assert.match(
+    src,
+    /if \(!pending \|\| typeof pending\.then !== "function"\) return;/,
+    "synchronous confirm paths must keep their old behaviour",
+  );
+  assert.match(src, /cancelBtn\.disabled = true;/, "cancel must not stay live mid-flight");
+
+  // 每一趟会让人干等的动作都接上了它:模态确认键、备份身份、删除某一行、
+  // 重试读取我的分享。(发布另有 endSubmit —— 它要跨 renderContent 存活。)
+  [
+    [/withBusy\(confirmBtn, pending\)/, "modal confirm buttons"],
+    [/withBusy\(ev\.currentTarget, backupKeyPrompt\(\)\)/, "back up identity"],
+    [/withBusy\(\s*btn,/, "delete a share"],
+    [/withBusy\(ev\.currentTarget, refreshMyShares\(\)\)/, "retry my-shares"],
+  ].forEach(([re, what]) =>
+    assert.match(src, re, `${what} must show a wait`),
+  );
+  // 改名和恢复走确认框那条路 —— 它们把 promise 交回去,而不是自己 fire-and-forget。
+  assert.match(
+    src,
+    /return L\.resolveDefault\(hubApi\.callHubSetNickname\(next\), null\)/,
+    "rename must hand its promise to the confirm footer",
+  );
+  assert.match(
+    src,
+    /return L\.resolveDefault\(hubApi\.callHubImportKey\(key\), null\)/,
+    "restore must hand its promise to the confirm footer",
+  );
+});
+
+// 首屏那一句"还没有分享过"曾经在 hub_me 回来之前就说出口了 —— 在一台其实
+// 发布过东西的路由器上,它是假的。三种"没有表格"的理由现在各说各的。
+test("my-shares tells loading, unreachable and empty apart", async () => {
+  const src = await readFile(SRC, "utf8");
+
+  assert.match(src, /let myLoaded = false;/, "the view must know whether hub_me answered");
+  assert.match(src, /let myFailed = false;/, "and whether it failed");
+
+  const listSrc = src.slice(
+    src.indexOf("const renderMyShares"),
+    src.indexOf("const shareManifestRows"),
+  );
+  assert.match(listSrc, /if \(myFailed && !myShares\.length\)/, "unreachable state missing");
+  assert.match(listSrc, /if \(!myLoaded\)/, "loading state missing");
+  assert.match(listSrc, /class: "spinning"/, "loading must look like the rest of the page");
+  // 文案跟社区网格共用,不新造 msgid。
+  assert.ok(listSrc.includes('_("Loading…")'));
+  assert.ok(listSrc.includes('_("Unable to reach the theme store right now.")'));
+  assert.ok(listSrc.includes('_("Retry")'));
+
+  // 拿不到就不假装知道:失败时不置 myLoaded,身份卡因此不会画出"还没有创作者
+  // 身份"这种替 hub 编的答案。
+  const refresh = src.slice(
+    src.indexOf("const refreshMyShares"),
+    src.indexOf("const applyMe"),
+  );
+  assert.ok(
+    !/^\s*myLoaded = true;$/m.test(refresh.slice(refresh.indexOf("} else {"))),
+    "a failed hub_me must not count as loaded",
+  );
 });
 
 // 这一条原先钉的是"三处入口用同一个词"。三处已经一起删了:发布的起点搬到
@@ -1244,9 +1391,14 @@ test("my-shares empty state is one line, not a card with its own buttons", async
     "the second restore entry point is gone",
   );
 
-  // 两种空态合并了:不再按 profile.id 分叉。
+  // 两种空态合并了:这一段不再按 profile.id 分叉。(身份卡自己是分叉的 ——
+  // 有没有身份决定它画什么、给哪个动作 —— 那是另一段代码的事。)
+  const listSrc = src.slice(
+    src.indexOf("const renderMyShares"),
+    src.indexOf("const shareManifestRows"),
+  );
   assert.ok(
-    !/if \(!profile\.id\) \{/.test(src),
+    !/if \(!profile\.id\)/.test(listSrc),
     "the two empty states now say the same next step and were merged",
   );
 
@@ -1297,12 +1449,22 @@ test("gallery: a delete the hub refuses still re-reads My Shares", async () => {
   const start = src.indexOf("const confirmDeleteShare");
   assert.ok(start > 0, "confirmDeleteShare not found");
   const fn = src.slice(start, src.indexOf("const buildMyShareRow", start));
-  // Two refreshes, not one. The failure branch is the only way a row the hub
-  // has already dropped ever leaves the screen.
+  // 刷新只写一次,但在 if/else 之外 —— 两条分支都必须走到它。失败分支是一行
+  // hub 那边其实已经不存在的作品离开屏幕的唯一途径。
   assert.equal(
     (fn.match(/refreshMyShares\(\)/g) || []).length,
-    2,
-    "both the success and the failure branch must re-read hub_me",
+    1,
+    "one unconditional refresh, not one per branch",
+  );
+  assert.ok(
+    fn.indexOf("refreshMyShares()") > fn.indexOf("deleteErrorMessage"),
+    "the refresh must sit after both branches, not inside the success one",
+  );
+  // 确认框关掉之后还有两趟网络 —— 期间那一行的 Delete 键转圈并按不动。
+  assert.match(
+    fn,
+    /return withBusy\(\s*btn,/,
+    "the row's own Delete button is what shows the wait",
   );
 });
 

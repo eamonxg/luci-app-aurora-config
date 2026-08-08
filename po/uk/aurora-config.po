@@ -1,20 +1,20 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3140
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3266
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:773
 msgid "%d downloads"
 msgstr "Завантажень: %d"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2780
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2896
 msgid "%d included, %s"
 msgstr "%d включено, %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2790
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2906
 msgid "%d not shared — only PNG and SVG under %s travel with a theme"
 msgstr "%d не буде опубліковано — разом із темою передаються лише PNG і SVG менші за %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2764
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2880
 msgid "%d shortcuts"
 msgstr "%d ярликів"
 
@@ -30,12 +30,12 @@ msgstr "(Немає)"
 msgid "(disabled)"
 msgstr "(вимкнено)"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3139
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3265
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:773
 msgid "1 download"
 msgstr "1 завантаження"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2763
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2879
 msgid "1 shortcut"
 msgstr "1 ярлик"
 
@@ -95,7 +95,7 @@ msgstr "Додавання джерела оновлень…"
 msgid "Afterwards you can upgrade Aurora in System → Software, like any other OpenWrt package."
 msgstr "Після цього ви зможете оновлювати Aurora в розділі Система → Програми, як і будь-який інший пакунок OpenWrt."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3278
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3404
 msgid "All"
 msgstr "Усі"
 
@@ -103,12 +103,12 @@ msgstr "Усі"
 msgid "Amber Sand"
 msgstr "Бурштиновий пісок"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1884
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1923
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:909
 msgid "Anonymous"
 msgstr "Анонім"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3249
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3375
 msgid "Anyone who applies this gets all of it. You can update or remove it later."
 msgstr "Той, хто застосує це, отримає все перелічене. Пізніше ви зможете це оновити або видалити."
 
@@ -128,75 +128,75 @@ msgstr "Іконка додатка 512×512"
 msgid "Apple Touch Icon"
 msgstr "Іконка Apple Touch"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1554
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1593
 msgid "Applied."
 msgstr "Застосовано."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1115
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1130
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1532
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1662
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1742
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1768
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1801
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1830
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2016
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1154
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1169
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1571
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1701
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1781
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1807
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1840
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1869
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2055
 msgid "Apply"
 msgstr "Застосувати"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1600
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1639
 msgid "Apply Configuration"
 msgstr "Застосувати конфігурацію"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1508
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1547
 msgid "Apply My Configuration"
 msgstr "Застосувати мою конфігурацію"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1633
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1672
 msgid "Apply Preset"
 msgstr "Застосувати пресет"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1657
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1696
 msgid "Apply failed: %s"
 msgstr "Помилка застосування: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1128
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1167
 msgid "Apply it anyway? Your current settings are backed up first."
 msgstr "Все одно застосувати? Поточні налаштування спочатку буде збережено в резервну копію."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1637
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1676
 msgid "Apply the '%s' preset now? It is saved immediately and the page reloads. A preset carries a whole look — colors, navigation, spacing, corner radius, content width and fonts. Your shortcuts, logo, icons and login background are left as they are."
 msgstr "Застосувати пресет «%s» зараз? Його буде збережено одразу, а сторінку перезавантажено. Пресет задає весь вигляд — кольори, навігацію, відступи, радіус скруглення кутів, ширину вмісту та шрифти. Ваші ярлики, логотип, значки та фон входу залишаються незмінними."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1111
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1150
 msgid "Apply this configuration now? Your current settings are backed up first."
 msgstr "Застосувати цю конфігурацію зараз? Поточні налаштування спочатку буде збережено в резервну копію."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1517
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1578
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1610
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1556
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1617
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1649
 msgid "Applying"
 msgstr "Застосування"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1643
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1682
 msgid "Applying preset..."
 msgstr "Застосування пресету..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1579
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1618
 msgid "Applying this configuration…"
 msgstr "Застосування конфігурації…"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1039
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1544
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1583
 msgid "Applying timed out. Please try again."
 msgstr "Час застосування вичерпано. Спробуйте ще раз."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1642
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1681
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2335
 msgid "Applying..."
 msgstr "Зазастосування..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1518
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1557
 msgid "Applying…"
 msgstr "Застосування…"
 
@@ -212,15 +212,11 @@ msgstr "Оформлення теми Aurora"
 msgid "Automatic"
 msgstr "Автоматично"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2477
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2557
 msgid "Back up identity"
 msgstr "Зберегти особистість"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2602
-msgid "Back up the current identity first"
-msgstr "Спершу зберегти поточну особистість"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2374
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2438
 msgid "Back up your creator identity"
 msgstr "Збережіть свою особистість автора"
 
@@ -229,7 +225,7 @@ msgstr "Збережіть свою особистість автора"
 msgid "Backdrop Scrim"
 msgstr "Затемнення"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2444
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2539
 msgid "Backed up"
 msgstr "Є резервна копія"
 
@@ -289,9 +285,9 @@ msgstr "Поверхня з відтінком бренду для активн�
 msgid "Branding & Shortcuts"
 msgstr "Оформлення та ярлики"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1701
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3279
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3461
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1740
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3405
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3587
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2213
 msgid "Built-in"
 msgstr "Вбудований"
@@ -302,8 +298,8 @@ msgstr "Вкладений вміст"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:272
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:381
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1098
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3198
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1125
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3324
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2326
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2404
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2686
@@ -314,7 +310,7 @@ msgstr "Скасувати"
 msgid "Canvas and panel surfaces that frame the interface."
 msgstr "Поверхні полотна та панелей, що обрамляють інтерфейс."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3040
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3166
 msgid "Change your name"
 msgstr "Змініть своє ім'я"
 
@@ -334,23 +330,23 @@ msgstr "Виберіть точний колір для цього токена"
 msgid "Choose an uploaded icon for this shortcut"
 msgstr "Виберіть завантажену іконку для цього ярлика"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2534
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2624
 msgid "Choose backup file…"
 msgstr "Вибрати файл резервної копії…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2937
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3053
 msgid "Choose the name to publish under."
 msgstr "Виберіть ім'я для публікації."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1677
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1779
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2406
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1716
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1818
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2470
 msgid "Close"
 msgstr "Закрити"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1712
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1763
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2661
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1751
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1802
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2777
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:922
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2722
 msgid "Colors"
@@ -360,7 +356,7 @@ msgstr "Кольори"
 msgid "Colors only"
 msgstr "Лише кольори"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3467
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3593
 msgid "Community"
 msgstr "Спільнота"
 
@@ -384,7 +380,7 @@ msgstr "Конфігурацію успішно імпортовано."
 msgid "Confirm Upload"
 msgstr "Підтвердити завантаження"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2805
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2921
 msgid "Content"
 msgstr "Вміст"
 
@@ -392,7 +388,7 @@ msgstr "Вміст"
 msgid "Content Max Width"
 msgstr "Максимальна ширина контенту"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2684
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2800
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:876
 msgid "Content Width"
 msgstr "Ширина вмісту"
@@ -401,12 +397,12 @@ msgstr "Ширина вмісту"
 msgid "Control Fill"
 msgstr "Заливка елементів керування"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2353
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2417
 msgid "Copied"
 msgstr "Скопійовано"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2348
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2355
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2412
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2419
 msgid "Copy"
 msgstr "Копіювати"
 
@@ -419,7 +415,7 @@ msgstr "Радіус скруглення кутів"
 msgid "Could not add the update source: %s"
 msgstr "Не вдалося додати джерело оновлень: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2366
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2430
 msgid "Couldn't copy. The identity is shown above — select it and copy it manually."
 msgstr "Не вдалося скопіювати. Особистість показано вище — виділіть її та скопіюйте вручну."
 
@@ -434,11 +430,11 @@ msgstr "Не вдалося з'єднатися з магазином тем. С
 msgid "Couldn't read one of the images from this router. Try reloading the page."
 msgstr "Не вдалося прочитати одне із зображень з роутера. Перезавантажте сторінку та спробуйте ще раз."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2303
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2367
 msgid "Couldn't read your identity. Please try again."
 msgstr "Не вдалося прочитати вашу особистість. Спробуйте ще раз."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2546
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2638
 msgid "Couldn't restore that identity. Check it and try again."
 msgstr "Не вдалося відновити цю особистість. Перевірте її та спробуйте ще раз."
 
@@ -446,9 +442,13 @@ msgstr "Не вдалося відновити цю особистість. Пе
 msgid "Couldn't save that name. Try again."
 msgstr "Не вдалося зберегти це ім'я. Спробуйте ще раз."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2497
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2587
 msgid "Created automatically the first time you publish — no sign-up, no password. It decides which configurations in the store are yours, and who can change or remove them. Backing it up saves an identity backup file; import that file after a reflash, or on a new router, and your work comes back to you."
 msgstr "Створюється автоматично під час першої публікації — без реєстрації та пароля. Вона визначає, які конфігурації в магазині ваші й хто може їх змінювати чи вилучати. Резервне копіювання зберігає файл резервної копії особистості; імпортуйте його після перепрошивки або на новому роутері, і ваші роботи повернуться до вас."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2508
+msgid "Created the first time you publish — or restore one you backed up."
+msgstr "Створюється під час першої публікації — або відновіть збережену."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2186
 msgid "Custom"
@@ -513,7 +513,7 @@ msgstr "Основний колір переднього плану для за�
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:159
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:393
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2180
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2236
 msgid "Delete"
 msgstr "Видалити"
 
@@ -533,7 +533,7 @@ msgstr "Видалити ресурс бренду"
 msgid "Delete Custom Font"
 msgstr "Видалити користувацький шрифт"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2121
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2177
 msgid "Delete Share"
 msgstr "Видалити публікацію"
 
@@ -541,11 +541,11 @@ msgstr "Видалити публікацію"
 msgid "Delete failed: %s"
 msgstr "Не вдалося видалити: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2122
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2178
 msgid "Delete this shared configuration from the theme store?"
 msgstr "Видалити цю опубліковану конфігурацію з магазину тем?"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2129
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2186
 msgid "Deleted."
 msgstr "Видалено."
 
@@ -573,7 +573,7 @@ msgstr "Похідні від кольорів полотна, поверхні 
 msgid "Derived from the status accents: alert, label, and badge backgrounds."
 msgstr "Похідні від статусних акцентів: фони сповіщень, міток та значків."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3235
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3361
 msgid "Description"
 msgstr "Опис"
 
@@ -581,9 +581,9 @@ msgstr "Опис"
 msgid "Design Studio"
 msgstr "Студія дизайну"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2005
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2021
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2806
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2044
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2060
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2922
 msgid "Details"
 msgstr "Подробиці"
 
@@ -595,11 +595,11 @@ msgstr "Затемнюючий фон за модальними вікнами."
 msgid "Dismiss"
 msgstr "Приховати"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2400
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2464
 msgid "Download backup file"
 msgstr "Завантажити файл резервної копії"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2644
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2760
 msgid "Downloads"
 msgstr "Завантаження"
 
@@ -688,7 +688,7 @@ msgstr "Ім'я файлу (з розширенням)"
 msgid "Fill for form controls: inputs, selects, textareas, and checkboxes."
 msgstr "Заливка елементів форми: поля вводу, списки, текстові області та прапорці."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2910
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3026
 msgid "Finishing…"
 msgstr "Завершення…"
 
@@ -724,7 +724,7 @@ msgstr "Назва шрифту, напр. MiSans"
 msgid "Font for code, command output, and the system log viewer."
 msgstr "Шрифт для коду, виводу команд та перегляду системного журналу."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2690
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2806
 msgid "Fonts"
 msgstr "Шрифти"
 
@@ -741,7 +741,7 @@ msgstr "З openwrt.eamonxg.fun; ключ підпису постачається
 msgid "Frosted Blur"
 msgstr "Розмиття"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2850
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2966
 msgid "Give it a name"
 msgstr "Дайте назву"
 
@@ -762,7 +762,7 @@ msgstr "Тонка лінія"
 msgid "Hidden"
 msgstr "Приховано"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2333
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2397
 msgid "Hide"
 msgstr "Сховати"
 
@@ -770,7 +770,7 @@ msgstr "Сховати"
 msgid "Home Screen icon for iOS and iPadOS."
 msgstr "Іконка домашнього екрана для iOS та iPadOS."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3280
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3406
 msgid "Hot"
 msgstr "Популярні"
 
@@ -790,12 +790,12 @@ msgstr "Заливка при наведенні для неявних осно�
 msgid "Hover state for filled primary buttons and high-emphasis controls."
 msgstr "Стан наведення для залитих основних кнопок та елементів з високим акцентом."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3230
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3356
 msgid "How it looks in the store"
 msgstr "Як це виглядатиме в магазині"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1759
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2034
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1798
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2073
 msgid "How this router looked before you applied a theme from the store."
 msgstr "Так цей роутер виглядав до застосування теми з магазину."
 
@@ -807,7 +807,7 @@ msgstr "Гіперпосилання у вмісті сторінки, текс�
 msgid "Icon"
 msgstr "Іконка"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2157
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2213
 msgid "Images not approved — colours and layout still work. Swap the image, then update."
 msgstr "Зображення відхилено — кольори та макет усе ще працюють. Замініть зображення й оновіть."
 
@@ -841,19 +841,19 @@ msgstr "Імпортування замінює /etc/config/aurora, застос
 msgid "Importing..."
 msgstr "Імпортування..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2152
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2208
 msgid "In review — appears in the store once its images are approved."
 msgstr "На перевірці — з'явиться в магазині, коли зображення схвалять."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1682
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1939
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1981
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1721
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1978
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2020
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:792
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:795
 msgid "In use"
 msgstr "Використовується"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2747
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2863
 msgid "Included, %s"
 msgstr "Включено, %s"
 
@@ -861,7 +861,7 @@ msgstr "Включено, %s"
 msgid "Includes %s of font files. They are stored in the router's writable partition, which is shared with installed packages — on devices with little flash, check the free space first. Fonts are not kept across a firmware upgrade and have to be applied again."
 msgstr "Містить %s файлів шрифтів. Вони зберігаються в записуваному розділі маршрутизатора, який ділить місце зі встановленими пакунками — на пристроях із малим обсягом flash спершу перевірте вільне місце. Шрифти не зберігаються після оновлення прошивки, їх доведеться застосувати знову."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1891
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1930
 msgid "Includes assets"
 msgstr "З ресурсами"
 
@@ -893,7 +893,7 @@ msgstr "Некоректний вираз кольору."
 msgid "Invalid, missing, or cyclic color expression."
 msgstr "Некоректний, відсутній або циклічний вираз кольору."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2384
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2448
 msgid "It exists only on this router. Reflashing without keeping settings erases it."
 msgstr "Він існує лише на цьому роутері. Перепрошивка без збереження налаштувань видалить його."
 
@@ -913,8 +913,8 @@ msgstr "Сильно скруглені кути"
 msgid "Layout"
 msgstr "Макет"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1714
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1765
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1753
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1804
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:924
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2723
 msgid "Layout & Typography"
@@ -941,7 +941,7 @@ msgstr "Світла"
 msgid "Light Mode"
 msgstr "Світлий режим"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2661
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2777
 msgid "Light and dark, 62 values"
 msgstr "Світла і темна, 62 значення"
 
@@ -957,12 +957,13 @@ msgstr "Посилання"
 msgid "Links marked ↗ open sites outside your router. You'll be asked to confirm before applying."
 msgstr "Посилання зі знаком ↗ ведуть на сайти поза межами роутера. Перед застосуванням буде запит на підтвердження."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1611
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1787
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1650
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1826
 msgid "Loading theme details…"
 msgstr "Завантаження відомостей про тему…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3398
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2737
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3524
 msgid "Loading…"
 msgstr "Завантаження…"
 
@@ -1009,9 +1010,9 @@ msgstr "Фон мега-меню"
 msgid "Mega Menu Scrim"
 msgstr "Затеняючий шар мега-меню"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3286
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3453
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3487
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3412
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3579
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3613
 msgid "Mine"
 msgstr "Мої"
 
@@ -1019,7 +1020,7 @@ msgstr "Мої"
 msgid "Mono Font"
 msgstr "Моноширинний шрифт"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2700
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2816
 msgid "Mono Font File"
 msgstr "Файл моноширинного шрифту"
 
@@ -1040,19 +1041,19 @@ msgstr "Моноширинний шрифт"
 msgid "Muted Text"
 msgstr "Приглушений текст"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3490
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3616
 msgid "My Shares"
 msgstr "Мої публікації"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1752
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1937
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1977
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1791
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1976
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2016
 msgid "My configuration"
 msgstr "Моя конфігурація"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:118
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2643
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3234
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2759
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3360
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2942
 msgid "Name"
 msgstr "Назва"
@@ -1061,7 +1062,7 @@ msgstr "Назва"
 msgid "Name it login-bg.* to use it as the login page background."
 msgstr "Назвіть файл login-bg.*, щоб використовувати його як тло сторінки входу."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2663
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2779
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:870
 msgid "Navigation"
 msgstr "Навігація"
@@ -1074,7 +1075,7 @@ msgstr "Стиль навігації"
 msgid "Navigation, spacing, corner radius, and content width. Takes effect after Save & Apply."
 msgstr "Навігація, відступи, радіус кутів та ширина контенту. Набуває чинності після «Зберегти та застосувати»."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3281
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3407
 msgid "New"
 msgstr "Нові"
 
@@ -1086,9 +1087,13 @@ msgstr "Тло не вибрано"
 msgid "No brand assets uploaded yet."
 msgstr "Ресурси бренду ще не завантажені."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3419
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3545
 msgid "No configs here yet — go share the first one."
 msgstr "Тут поки порожньо — поділіться першою конфігурацією."
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2505
+msgid "No creator identity yet"
+msgstr "Особистості автора ще немає"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2897
 msgid "No custom fonts uploaded."
@@ -1098,7 +1103,7 @@ msgstr "Користувацькі шрифти не завантажено."
 msgid "No file selected or upload failed"
 msgstr "Файл не вибрано або помилка завантаження"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3418
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3544
 msgid "No themes match your search."
 msgstr "За вашим запитом тем не знайдено."
 
@@ -1106,26 +1111,26 @@ msgstr "За вашим запитом тем не знайдено."
 msgid "None"
 msgstr "Немає"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2444
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2539
 msgid "Not backed up"
 msgstr "Немає резервної копії"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1939
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1981
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1978
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2020
 msgid "Not in use"
 msgstr "Не використовується"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2435
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2530
 msgid "Not named yet"
 msgstr "Ще без імені"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2635
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2751
 msgid "Nothing shared yet. Publish the configuration above and it shows up here."
 msgstr "Ви ще нічого не опублікували. Опублікуйте конфігурацію вище — вона з'явиться тут."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1938
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3453
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3487
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1977
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3579
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3613
 msgid "On this router only"
 msgstr "Лише на цьому роутері"
 
@@ -1133,15 +1138,15 @@ msgstr "Лише на цьому роутері"
 msgid "On-Brand Text"
 msgstr "Текст на фоні бренду"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3185
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3311
 msgid "Once published, anyone can find it and apply it in one click. You can update or remove it later."
 msgstr "Після публікації її зможе знайти й застосувати одним кліком будь-хто. Пізніше ви зможете оновити або прибрати її."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2856
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2972
 msgid "One line about where this configuration fits."
 msgstr "Один рядок про те, для чого підходить ця конфігурація."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3130
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3256
 msgid "One more piece in the store"
 msgstr "Ще одна робота в магазині"
 
@@ -1181,12 +1186,12 @@ msgstr "Тла сторінок"
 msgid "Page canvas behind the header, navigation, content, and login screen."
 msgstr "Холст сторінки позаду заголовка, навігації, контенту та екрана входу."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2578
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2671
 msgid "Paste the identity you backed up, or pick the backup file you downloaded. What you shared before comes back under this router."
 msgstr "Вставте збережену особистість або виберіть завантажений файл резервної копії. Те, чим ви ділилися раніше, повернеться на цей роутер."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1057
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3051
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3177
 msgid "Pick a name between 1 and 40 characters."
 msgstr "Виберіть ім'я довжиною від 1 до 40 символів."
 
@@ -1195,7 +1200,7 @@ msgid "Pick wallpapers for the login page and the admin interface. Drag the slid
 msgstr "Виберіть шпалери для сторінки входу та інтерфейсу керування. Пересувайте повзунки та стежте за живим переглядом; «Зберегти й застосувати» вводить їх у дію."
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1054
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2930
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3046
 msgid "Please enter a name."
 msgstr "Введіть назву."
 
@@ -1211,11 +1216,11 @@ msgstr "Підготовка типографіки"
 msgid "Preparing selected typefaces..."
 msgstr "Підготовка вибраних шрифтів..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2906
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3022
 msgid "Preparing…"
 msgstr "Підготовка…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1650
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1689
 msgid "Preset applied successfully."
 msgstr "Пресет успішно застосовано."
 
@@ -1231,25 +1236,25 @@ msgstr "Кінець індикатора прогресу"
 msgid "Progress Start"
 msgstr "Початок індикатора прогресу"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2924
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3166
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3040
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3292
 msgid "Publish"
 msgstr "Опублікувати"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3083
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3086
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3209
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3212
 msgid "Publish as"
 msgstr "Публікувати як"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3130
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3256
 msgid "Publish as a new one"
 msgstr "Опублікувати як нову"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2985
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3111
 msgid "Published."
 msgstr "Опубліковано."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2984
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3110
 msgid "Published. Its images are queued for review — it appears in the store once they are approved."
 msgstr "Опубліковано. Зображення чекають на перевірку — з'явиться в магазині після схвалення."
 
@@ -1257,16 +1262,16 @@ msgstr "Опубліковано. Зображення чекають на пе�
 msgid "Raised layer for dropdowns, modals, and tooltips."
 msgstr "Припіднятий шар для випадаючих списків, модальних вікон та підказок."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1830
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1869
 msgid "Re-apply"
 msgstr "Застосувати знову"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2483
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2563
 msgid "Rename"
 msgstr "Перейменувати"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3137
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3166
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3263
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3292
 msgid "Replace “%s”"
 msgstr "Замінити «%s»"
 
@@ -1304,23 +1309,24 @@ msgstr "Обчислений колір не може бути відображ�
 msgid "Resolved preview color - click to pick"
 msgstr "Обчислений колір попереднього перегляду - натисніть для вибору"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2608
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2696
 msgid "Restore"
 msgstr "Відновити"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2609
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2697
 msgid "Restore your creator identity"
 msgstr "Відновіть свою особистість автора"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2565
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2658
 msgid "Restored."
 msgstr "Відновлено."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2564
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2657
 msgid "Restored. What you shared before is back under this identity."
 msgstr "Відновлено. Те, чим ви ділилися раніше, знову під цією особистістю."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2489
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2518
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2569
 msgid "Restore…"
 msgstr "Відновити…"
 
@@ -1328,7 +1334,8 @@ msgstr "Відновити…"
 msgid "Restoring..."
 msgstr "Відновлення..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3382
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2729
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3508
 msgid "Retry"
 msgstr "Повторити"
 
@@ -1348,7 +1355,7 @@ msgstr "Шавлієвий зелений"
 msgid "Sans Font"
 msgstr "Шрифт без засічок"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2700
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2816
 msgid "Sans Font File"
 msgstr "Файл шрифту без засічок"
 
@@ -1365,7 +1372,7 @@ msgstr "Шрифт без засічок"
 msgid "Sans-serif and monospace typefaces used across the theme. Pick a curated webfont — downloaded once after saving, from pinned, checksum-verified sources, then served locally — or upload your own .woff2 files."
 msgstr "Шрифти без засічок і моноширинні, що використовуються в усій темі. Виберіть дібраний веб-шрифт — він завантажується один раз після збереження з джерел із зафіксованою версією та перевіркою контрольної суми, а потім роздається локально — або завантажте власні файли .woff2."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3067
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3193
 msgid "Save"
 msgstr "Зберегти"
 
@@ -1377,7 +1384,7 @@ msgstr "Збережене значення або пресет"
 msgid "Scrim"
 msgstr "Затемнення"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3315
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3441
 msgid "Search themes or authors…"
 msgstr "Пошук тем або авторів…"
 
@@ -1389,31 +1396,31 @@ msgstr "Роздільники, лінії та межі полів введен
 msgid "Settings reset successfully."
 msgstr "Налаштування успішно скинуто."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2676
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2792
 msgid "Shape"
 msgstr "Форма"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2000
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3181
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2039
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3307
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2460
 msgid "Share to the store"
 msgstr "Поділитися в магазині"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3467
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3593
 msgid "Shared by other people"
 msgstr "Поділилися інші користувачі"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1710
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1749
 msgid "Ships with the theme and works offline."
 msgstr "Постачається разом із темою та працює офлайн."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3461
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3587
 msgid "Ships with the theme, works offline"
 msgstr "Входить до складу теми, працює офлайн"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2779
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2789
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2898
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2895
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2905
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3014
 msgid "Shortcut Icons"
 msgstr "Піктограми ярликів"
 
@@ -1433,8 +1440,8 @@ msgstr "URL ярлика"
 msgid "Shortcuts %d"
 msgstr "Ярлики %d"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2328
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2339
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2392
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2403
 msgid "Show"
 msgstr "Показати"
 
@@ -1446,7 +1453,7 @@ msgstr "Показати панель ярликів"
 msgid "Show the floating launcher on all pages."
 msgstr "Показувати плавальну панель запуску на всіх сторінках."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3437
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3563
 msgid "Showing a saved copy — reconnecting…"
 msgstr "Показано збережену копію — повторне з'єднання…"
 
@@ -1459,7 +1466,7 @@ msgstr "Показано"
 msgid "Sidebar"
 msgstr "Бічна панель"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2459
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2542
 msgid "Signs everything you share. It lives only on this router."
 msgstr "Підписує все, чим ви ділитеся. Існує лише на цьому роутері."
 
@@ -1489,7 +1496,7 @@ msgstr "Призначення"
 msgid "Small corners"
 msgstr "Злегка скруглені кути"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2673
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2789
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:871
 msgid "Spacing"
 msgstr "Відступи"
@@ -1547,7 +1554,7 @@ msgstr "Системний моноширинний"
 msgid "System Surfaces"
 msgstr "Системні поверхні"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2223
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2279
 msgid "Taken down — no longer in the store. Nothing you can do from here."
 msgstr "Знято з публікації — у крамниці його більше немає. Звідси нічого зробити не можна."
 
@@ -1567,7 +1574,7 @@ msgstr "Текст, посилання та бренд"
 msgid "That description is too long."
 msgstr "Опис задовгий."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2540
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2632
 msgid "That doesn't look like a creator identity."
 msgstr "Це не схоже на особистість автора."
 
@@ -1579,12 +1586,12 @@ msgstr "Це ім'я вже зайняте. Спробуйте інше."
 msgid "The font file comes from whoever shared this theme; the store does not verify its licence."
 msgstr "Файл шрифту завантажив той, хто поділився цією темою; крамниця не перевіряє його ліцензію."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1758
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2033
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1797
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2072
 msgid "The look this router is wearing right now."
 msgstr "Як цей роутер виглядає просто зараз."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2865
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2981
 msgid "The name your shares are signed with"
 msgstr "Ім'я, яким підписані ваші публікації"
 
@@ -1621,23 +1628,23 @@ msgstr "Поки нема чого відновлювати."
 msgid "This configuration can't be applied."
 msgstr "Цю конфігурацію не можна застосувати."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1119
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1158
 msgid "This configuration links to these external sites:"
 msgstr "Ця конфігурація містить посилання на зовнішні сайти:"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3044
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3170
 msgid "This name signs everything you have published, including what is already in the store."
 msgstr "Це ім'я підписує все опубліковане вами, зокрема те, що вже є в магазині."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1723
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1762
 msgid "This preset uses a downloaded typeface. The router fetches it once after applying; until then the text falls back to the built-in font."
 msgstr "Цей пресет використовує шрифт, який завантажується. Маршрутизатор завантажить його один раз після застосування; доти текст показується вбудованим шрифтом."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1512
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1551
 msgid "This puts back the look you had before applying a theme from the store."
 msgstr "Поверне вигляд, який був до застосування теми з магазину."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2594
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2691
 msgid "This router already has shared configurations of its own. Switching to another identity gives them up for good — back up the current identity first if you still want them."
 msgstr "Цей роутер уже має власні опубліковані конфігурації. Перехід на іншу особистість віддає їх назавжди — спершу збережіть поточну особистість, якщо вони вам ще потрібні."
 
@@ -1645,7 +1652,7 @@ msgstr "Цей роутер уже має власні опубліковані 
 msgid "This share belongs to another identity."
 msgstr "Ця публікація належить іншій особистості."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3261
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3387
 msgid "This share includes your uploaded font file. Please make sure you have the right to redistribute it — most commercial font licences do not allow it. Configurations reported for infringement are taken down."
 msgstr "У цю публікацію входить завантажений вами файл шрифту. Переконайтеся, що маєте право на його поширення — більшість комерційних ліцензій на шрифти цього не дозволяють. Конфігурації, на які надійшла скарга про порушення, знімаються з публікації."
 
@@ -1654,7 +1661,7 @@ msgstr "У цю публікацію входить завантажений в�
 msgid "This share is no longer available."
 msgstr "Ця публікація більше недоступна."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2378
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2442
 msgid "This text is your identity. Anyone who has it can publish under your name and delete what you have shared — don't post it anywhere public."
 msgstr "Цей текст — ваша особистість. Будь-хто, хто його має, може публікувати від вашого імені та видаляти те, чим ви поділилися. Не викладайте його в загальний доступ."
 
@@ -1666,11 +1673,11 @@ msgstr "Ця тема більше недоступна."
 msgid "This theme uses a downloaded typeface. The router fetches it once after applying; until then the text falls back to the built-in font."
 msgstr "Ця тема використовує шрифт, який завантажується. Маршрутизатор завантажить його один раз після застосування; доти текст показується вбудованим шрифтом."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2743
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2859
 msgid "Too large to share (%s; the store's limit is %s)"
 msgstr "Завеликий для публікації (%s; обмеження магазину — %s)"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2760
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2876
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:881
 msgid "Toolbar"
 msgstr "Панель інструментів"
@@ -1732,11 +1739,12 @@ msgstr "Не вдалося завантажити %s."
 msgid "Unable to load the Aurora stylesheet."
 msgstr "Не удалось загрузить таблицу стилей Aurora."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1776
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1815
 msgid "Unable to load this theme right now. Please try again."
 msgstr "Наразі не вдається завантажити цю тему. Спробуйте ще раз."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3374
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2721
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3500
 msgid "Unable to reach the theme store right now."
 msgstr "Магазин тем наразі недоступний."
 
@@ -1771,8 +1779,8 @@ msgstr "Невідома помилка"
 msgid "Unsupported file type. Allowed: %s"
 msgstr "Непідтримуваний тип файлу. Дозволені: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1883
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2207
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1922
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2263
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:905
 msgid "Untitled theme"
 msgstr "Тема без назви"
@@ -1785,7 +1793,7 @@ msgstr "Доступне оновлення %s"
 msgid "Update source added"
 msgstr "Джерело оновлень додано"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2171
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2227
 msgid "Update with current configuration"
 msgstr "Оновити поточною конфігурацією"
 
@@ -1810,15 +1818,15 @@ msgstr "Помилка завантаження (HTTP %s)"
 msgid "Upload failed: %s"
 msgstr "Помилка завантаження: %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2701
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2817
 msgid "Uploaded with the theme, %s"
 msgstr "Завантажується разом із темою, %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2918
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3034
 msgid "Uploading %s… %d%%"
 msgstr "Завантаження: %s… %d%%"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2917
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3033
 msgid "Uploading %s… %d%% (%d/%d)"
 msgstr "Завантаження: %s… %d%% (%d/%d)"
 
@@ -1834,15 +1842,15 @@ msgstr "Попередження"
 msgid "Warning Surface"
 msgstr "Поверхня попередження"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3244
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3370
 msgid "What gets shared"
 msgstr "Що буде опубліковано"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2494
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2584
 msgid "What is this? Where did it come from?"
 msgstr "Що це? Звідки воно взялося?"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3146
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3272
 msgid "Where this configuration goes"
 msgstr "Куди піде ця конфігурація"
 
@@ -1850,7 +1858,7 @@ msgstr "Куди піде ця конфігурація"
 msgid "Will replace the existing '%s'."
 msgstr "Замінить наявний файл «%s»."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1872
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1911
 msgid "Works offline"
 msgstr "Працює офлайн"
 
@@ -1858,7 +1866,7 @@ msgstr "Працює офлайн"
 msgid "You've published as much as one router may publish today. Try again tomorrow."
 msgstr "Цей роутер уже опублікував сьогодні все, що можна. Спробуйте завтра."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2989
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3115
 msgid "Your creator identity lives only on this router — back it up so a reflash can't take it."
 msgstr "Ваша особистість автора існує лише на цьому роутері — збережіть її, щоб перепрошивка її не забрала."
 
@@ -1873,7 +1881,7 @@ msgstr "Вашу поточну конфігурацію наразі не мо�
 msgid "Your current settings are backed up before applying, and you can roll back with one click afterwards."
 msgstr "Перед застосуванням поточні налаштування зберігаються, після чого їх можна повернути одним натисканням."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1733
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1772
 msgid "Your shortcuts, logo, icons and login background are left exactly as they are."
 msgstr "Ваші ярлики, логотип, значки та фон входу залишаються точно такими самими."
 

@@ -1,20 +1,20 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3140
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3266
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:773
 msgid "%d downloads"
 msgstr "%d 次下载"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2780
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2896
 msgid "%d included, %s"
 msgstr "包含 %d 个，共 %s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2790
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2906
 msgid "%d not shared — only PNG and SVG under %s travel with a theme"
 msgstr "%d 个发不出去 —— 只有小于 %s 的 PNG 和 SVG 会随主题一起走"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2764
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2880
 msgid "%d shortcuts"
 msgstr "%d 个快捷方式"
 
@@ -30,12 +30,12 @@ msgstr "(无)"
 msgid "(disabled)"
 msgstr "（已关闭）"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3139
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3265
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:773
 msgid "1 download"
 msgstr "1 次下载"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2763
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2879
 msgid "1 shortcut"
 msgstr "1 个快捷方式"
 
@@ -95,7 +95,7 @@ msgstr "正在添加更新源…"
 msgid "Afterwards you can upgrade Aurora in System → Software, like any other OpenWrt package."
 msgstr "之后就能在「系统 → 软件包」里升级 Aurora，和升级其他 OpenWrt 软件一样。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3278
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3404
 msgid "All"
 msgstr "全部"
 
@@ -103,12 +103,12 @@ msgstr "全部"
 msgid "Amber Sand"
 msgstr "琥珀沙"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1884
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1923
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:909
 msgid "Anonymous"
 msgstr "匿名"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3249
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3375
 msgid "Anyone who applies this gets all of it. You can update or remove it later."
 msgstr "应用这套配置的人会连同上面这些一起装上。你随时可以更新或删除。"
 
@@ -128,75 +128,75 @@ msgstr "应用图标 512×512"
 msgid "Apple Touch Icon"
 msgstr "Apple Touch 图标"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1554
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1593
 msgid "Applied."
 msgstr "已应用。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1115
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1130
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1532
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1662
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1742
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1768
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1801
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1830
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2016
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1154
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1169
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1571
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1701
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1781
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1807
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1840
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1869
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2055
 msgid "Apply"
 msgstr "应用"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1600
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1639
 msgid "Apply Configuration"
 msgstr "应用配置"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1508
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1547
 msgid "Apply My Configuration"
 msgstr "应用我的配置"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1633
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1672
 msgid "Apply Preset"
 msgstr "应用预设"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1657
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1696
 msgid "Apply failed: %s"
 msgstr "应用失败：%s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1128
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1167
 msgid "Apply it anyway? Your current settings are backed up first."
 msgstr "仍要应用吗？会先备份你当前的设置。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1637
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1676
 msgid "Apply the '%s' preset now? It is saved immediately and the page reloads. A preset carries a whole look — colors, navigation, spacing, corner radius, content width and fonts. Your shortcuts, logo, icons and login background are left as they are."
 msgstr "立即应用“%s”预设吗？这将立即保存并重新加载页面。预设带的是一整套外观——配色、导航、间距、圆角半径、内容宽度和字体。你的快捷方式、Logo、图标和登录背景保持不变。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1111
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1150
 msgid "Apply this configuration now? Your current settings are backed up first."
 msgstr "现在应用这套配置吗？会先备份你当前的设置。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1517
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1578
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1610
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1556
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1617
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1649
 msgid "Applying"
 msgstr "正在应用"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1643
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1682
 msgid "Applying preset..."
 msgstr "正在应用预设..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1579
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1618
 msgid "Applying this configuration…"
 msgstr "正在应用这套配置…"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1039
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1544
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1583
 msgid "Applying timed out. Please try again."
 msgstr "应用超时，请重试。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1642
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1681
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2335
 msgid "Applying..."
 msgstr "正在应用..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1518
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1557
 msgid "Applying…"
 msgstr "正在应用…"
 
@@ -212,15 +212,11 @@ msgstr "Aurora 主题设计"
 msgid "Automatic"
 msgstr "自动"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2477
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2557
 msgid "Back up identity"
 msgstr "备份身份"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2602
-msgid "Back up the current identity first"
-msgstr "先备份当前身份"
-
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2374
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2438
 msgid "Back up your creator identity"
 msgstr "备份创作者身份"
 
@@ -229,7 +225,7 @@ msgstr "备份创作者身份"
 msgid "Backdrop Scrim"
 msgstr "背景遮罩"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2444
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2539
 msgid "Backed up"
 msgstr "已备份"
 
@@ -289,9 +285,9 @@ msgstr "带有品牌色调的表面，用于激活的导航和选中状态。"
 msgid "Branding & Shortcuts"
 msgstr "品牌与快捷"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1701
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3279
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3461
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1740
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3405
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3587
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2213
 msgid "Built-in"
 msgstr "内置"
@@ -302,8 +298,8 @@ msgstr "随附内容"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:272
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:381
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1098
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3198
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1125
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3324
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2326
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2404
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2686
@@ -314,7 +310,7 @@ msgstr "取消"
 msgid "Canvas and panel surfaces that frame the interface."
 msgstr "构筑界面框架的画布（Canvas）和面板表面。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3040
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3166
 msgid "Change your name"
 msgstr "更改你的名字"
 
@@ -334,23 +330,23 @@ msgstr "为此令牌（Token）选择具体的颜色"
 msgid "Choose an uploaded icon for this shortcut"
 msgstr "为此快捷方式选择一个已上传的图标"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2534
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2624
 msgid "Choose backup file…"
 msgstr "选择备份文件…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2937
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3053
 msgid "Choose the name to publish under."
 msgstr "选一个用来署名的名字。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1677
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1779
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2406
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1716
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1818
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2470
 msgid "Close"
 msgstr "关闭"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1712
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1763
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2661
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1751
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1802
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2777
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:922
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2722
 msgid "Colors"
@@ -360,7 +356,7 @@ msgstr "颜色"
 msgid "Colors only"
 msgstr "仅配色"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3467
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3593
 msgid "Community"
 msgstr "社区"
 
@@ -384,7 +380,7 @@ msgstr "配置导入成功。"
 msgid "Confirm Upload"
 msgstr "确认上传"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2805
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2921
 msgid "Content"
 msgstr "内容"
 
@@ -392,7 +388,7 @@ msgstr "内容"
 msgid "Content Max Width"
 msgstr "内容最大宽度"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2684
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2800
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:876
 msgid "Content Width"
 msgstr "内容宽度"
@@ -401,12 +397,12 @@ msgstr "内容宽度"
 msgid "Control Fill"
 msgstr "控件填充"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2353
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2417
 msgid "Copied"
 msgstr "已复制"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2348
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2355
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2412
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2419
 msgid "Copy"
 msgstr "复制"
 
@@ -419,7 +415,7 @@ msgstr "圆角半径"
 msgid "Could not add the update source: %s"
 msgstr "添加更新源失败：%s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2366
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2430
 msgid "Couldn't copy. The identity is shown above — select it and copy it manually."
 msgstr "复制不了。身份已显示在上面，请手动选中复制。"
 
@@ -434,11 +430,11 @@ msgstr "无法连接主题商店，请重试。"
 msgid "Couldn't read one of the images from this router. Try reloading the page."
 msgstr "从路由器上读不到其中一张图，刷新页面再试。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2303
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2367
 msgid "Couldn't read your identity. Please try again."
 msgstr "读不到你的身份，请重试。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2546
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2638
 msgid "Couldn't restore that identity. Check it and try again."
 msgstr "恢复不了。检查一下再试。"
 
@@ -446,9 +442,13 @@ msgstr "恢复不了。检查一下再试。"
 msgid "Couldn't save that name. Try again."
 msgstr "这个名字没能保存，请重试。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2497
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2587
 msgid "Created automatically the first time you publish — no sign-up, no password. It decides which configurations in the store are yours, and who can change or remove them. Backing it up saves an identity backup file; import that file after a reflash, or on a new router, and your work comes back to you."
 msgstr "第一次发布配置时自动生成，不用注册、没有密码。它决定商店里哪些配置属于你、谁能修改或下架它们。备份会存成一个身份备份文件；重刷系统之后、或者换了新路由器，导入这个文件，作品就回到你名下。"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2508
+msgid "Created the first time you publish — or restore one you backed up."
+msgstr "第一次发布时自动创建，也可以恢复你备份过的那一个。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2186
 msgid "Custom"
@@ -513,7 +513,7 @@ msgstr "用于标题、正文、图标和表单值的默认前景色。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:159
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:393
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2180
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2236
 msgid "Delete"
 msgstr "删除"
 
@@ -533,7 +533,7 @@ msgstr "删除品牌资源"
 msgid "Delete Custom Font"
 msgstr "删除自定义字体"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2121
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2177
 msgid "Delete Share"
 msgstr "删除分享"
 
@@ -541,11 +541,11 @@ msgstr "删除分享"
 msgid "Delete failed: %s"
 msgstr "删除失败：%s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2122
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2178
 msgid "Delete this shared configuration from the theme store?"
 msgstr "从主题商店删除这条分享的配置吗？"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2129
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2186
 msgid "Deleted."
 msgstr "已删除。"
 
@@ -573,7 +573,7 @@ msgstr "衍生自画布、表面和文本颜色：低调与微调文本、边框
 msgid "Derived from the status accents: alert, label, and badge backgrounds."
 msgstr "衍生自状态强调色：提示、标签和徽章背景色。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3235
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3361
 msgid "Description"
 msgstr "描述"
 
@@ -581,9 +581,9 @@ msgstr "描述"
 msgid "Design Studio"
 msgstr "设计工作台"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2005
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2021
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2806
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2044
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2060
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2922
 msgid "Details"
 msgstr "明细"
 
@@ -595,11 +595,11 @@ msgstr "模态对话框背后的暗化背景（遮罩）。"
 msgid "Dismiss"
 msgstr "关闭"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2400
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2464
 msgid "Download backup file"
 msgstr "下载备份文件"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2644
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2760
 msgid "Downloads"
 msgstr "下载量"
 
@@ -688,7 +688,7 @@ msgstr "文件名(含扩展名)"
 msgid "Fill for form controls: inputs, selects, textareas, and checkboxes."
 msgstr "表单控件的填充色:输入框、下拉框、文本域和复选框。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2910
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3026
 msgid "Finishing…"
 msgstr "收尾中…"
 
@@ -724,7 +724,7 @@ msgstr "字体名称，例如 MiSans"
 msgid "Font for code, command output, and the system log viewer."
 msgstr "用于代码、命令输出和系统日志查看器的字体。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2690
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2806
 msgid "Fonts"
 msgstr "字体"
 
@@ -741,7 +741,7 @@ msgstr "来自 openwrt.eamonxg.fun，签名公钥随本插件发布。"
 msgid "Frosted Blur"
 msgstr "磨砂模糊"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2850
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2966
 msgid "Give it a name"
 msgstr "起个名字"
 
@@ -762,7 +762,7 @@ msgstr "极细线"
 msgid "Hidden"
 msgstr "隐藏"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2333
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2397
 msgid "Hide"
 msgstr "隐藏"
 
@@ -770,7 +770,7 @@ msgstr "隐藏"
 msgid "Home Screen icon for iOS and iPadOS."
 msgstr "用于 iOS 和 iPadOS 的主屏幕图标。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3280
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3406
 msgid "Hot"
 msgstr "热门"
 
@@ -790,12 +790,12 @@ msgstr "用于柔和主按钮和选中表面的悬停填充色。"
 msgid "Hover state for filled primary buttons and high-emphasis controls."
 msgstr "用于实色填充主按钮和高强调度控件的悬停状态。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3230
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3356
 msgid "How it looks in the store"
 msgstr "在商店里的样子"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1759
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2034
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1798
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2073
 msgid "How this router looked before you applied a theme from the store."
 msgstr "你在商店里应用主题之前,这台路由器的样子。"
 
@@ -807,7 +807,7 @@ msgstr "页面内容、帮助文本和状态输出中的超链接。"
 msgid "Icon"
 msgstr "图标"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2157
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2213
 msgid "Images not approved — colours and layout still work. Swap the image, then update."
 msgstr "图片未通过审核 —— 配色和布局仍然可用。换一张图，然后更新。"
 
@@ -841,19 +841,19 @@ msgstr "导入将替换 /etc/config/aurora，应用所有设置并重新加载�
 msgid "Importing..."
 msgstr "正在导入..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2152
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2208
 msgid "In review — appears in the store once its images are approved."
 msgstr "审核中 —— 图片通过后才会出现在商店里。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1682
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1939
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1981
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1721
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1978
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2020
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:792
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:795
 msgid "In use"
 msgstr "正在使用"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2747
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2863
 msgid "Included, %s"
 msgstr "包含，%s"
 
@@ -861,7 +861,7 @@ msgstr "包含，%s"
 msgid "Includes %s of font files. They are stored in the router's writable partition, which is shared with installed packages — on devices with little flash, check the free space first. Fonts are not kept across a firmware upgrade and have to be applied again."
 msgstr "包含 %s 的字体文件。字体存放在路由器的可写分区，与已安装的软件包共用空间——闪存较小的设备请先确认剩余空间。固件升级后字体不会保留，需要重新应用。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1891
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1930
 msgid "Includes assets"
 msgstr "含素材"
 
@@ -893,7 +893,7 @@ msgstr "无效的颜色表达式。"
 msgid "Invalid, missing, or cyclic color expression."
 msgstr "颜色表达式无效、缺失或存在循环引用。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2384
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2448
 msgid "It exists only on this router. Reflashing without keeping settings erases it."
 msgstr "它只存在于这台路由器上。刷机时不保留配置就会没。"
 
@@ -913,8 +913,8 @@ msgstr "大圆角"
 msgid "Layout"
 msgstr "布局"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1714
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1765
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1753
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1804
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:924
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2723
 msgid "Layout & Typography"
@@ -941,7 +941,7 @@ msgstr "浅色"
 msgid "Light Mode"
 msgstr "亮色模式"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2661
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2777
 msgid "Light and dark, 62 values"
 msgstr "浅色 + 深色，共 62 项"
 
@@ -957,12 +957,13 @@ msgstr "链接"
 msgid "Links marked ↗ open sites outside your router. You'll be asked to confirm before applying."
 msgstr "标 ↗ 的会打开路由器以外的网站，应用前会再确认一次。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1611
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1787
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1650
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1826
 msgid "Loading theme details…"
 msgstr "正在加载主题详情…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3398
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2737
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3524
 msgid "Loading…"
 msgstr "加载中…"
 
@@ -1009,9 +1010,9 @@ msgstr "大型菜单背景"
 msgid "Mega Menu Scrim"
 msgstr "大型菜单遮罩"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3286
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3453
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3487
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3412
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3579
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3613
 msgid "Mine"
 msgstr "我的"
 
@@ -1019,7 +1020,7 @@ msgstr "我的"
 msgid "Mono Font"
 msgstr "等宽字体"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2700
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2816
 msgid "Mono Font File"
 msgstr "等宽字体文件"
 
@@ -1040,19 +1041,19 @@ msgstr "等宽字体"
 msgid "Muted Text"
 msgstr "柔和文本"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3490
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3616
 msgid "My Shares"
 msgstr "我的分享"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1752
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1937
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1977
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1791
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1976
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2016
 msgid "My configuration"
 msgstr "我的配置"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/utils/asset-upload.js:118
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2643
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3234
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2759
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3360
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2942
 msgid "Name"
 msgstr "名称"
@@ -1061,7 +1062,7 @@ msgstr "名称"
 msgid "Name it login-bg.* to use it as the login page background."
 msgstr "命名为 login-bg.* 可用作登录页背景。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2663
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2779
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:870
 msgid "Navigation"
 msgstr "导航"
@@ -1074,7 +1075,7 @@ msgstr "导航样式"
 msgid "Navigation, spacing, corner radius, and content width. Takes effect after Save & Apply."
 msgstr "导航、间距、圆角半径和内容宽度。在点击“保存并应用”后生效。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3281
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3407
 msgid "New"
 msgstr "最新"
 
@@ -1086,9 +1087,13 @@ msgstr "未选择背景"
 msgid "No brand assets uploaded yet."
 msgstr "尚未上传品牌资源。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3419
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3545
 msgid "No configs here yet — go share the first one."
 msgstr "这里还没有配置——去分享第一条吧。"
+
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2505
+msgid "No creator identity yet"
+msgstr "还没有创作者身份"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2897
 msgid "No custom fonts uploaded."
@@ -1098,7 +1103,7 @@ msgstr "尚未上传自定义字体。"
 msgid "No file selected or upload failed"
 msgstr "未选择文件或上传失败"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3418
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3544
 msgid "No themes match your search."
 msgstr "没有匹配搜索的主题。"
 
@@ -1106,26 +1111,26 @@ msgstr "没有匹配搜索的主题。"
 msgid "None"
 msgstr "无"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2444
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2539
 msgid "Not backed up"
 msgstr "未备份"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1939
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1981
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1978
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2020
 msgid "Not in use"
 msgstr "未在使用"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2435
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2530
 msgid "Not named yet"
 msgstr "还没取名"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2635
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2751
 msgid "Nothing shared yet. Publish the configuration above and it shows up here."
 msgstr "还没有分享过。把上面的配置发布出去，它就会出现在这里。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1938
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3453
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3487
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1977
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3579
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3613
 msgid "On this router only"
 msgstr "仅存在于这台路由器"
 
@@ -1133,15 +1138,15 @@ msgstr "仅存在于这台路由器"
 msgid "On-Brand Text"
 msgstr "品牌背景上的文本"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3185
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3311
 msgid "Once published, anyone can find it and apply it in one click. You can update or remove it later."
 msgstr "发布后所有人都能搜到并一键套用；你随时可以更新或删除。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2856
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2972
 msgid "One line about where this configuration fits."
 msgstr "一句话说说这套配置适合什么场景。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3130
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3256
 msgid "One more piece in the store"
 msgstr "商店里多一件作品"
 
@@ -1181,12 +1186,12 @@ msgstr "页面背景"
 msgid "Page canvas behind the header, navigation, content, and login screen."
 msgstr "位于页眉、导航、内容和登录屏幕背后的页面画布（Canvas）。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2578
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2671
 msgid "Paste the identity you backed up, or pick the backup file you downloaded. What you shared before comes back under this router."
 msgstr "粘贴你备份过的身份，或者选择下载的备份文件。恢复之后，你以前分享的作品就回到这台路由器上管理。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1057
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3051
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3177
 msgid "Pick a name between 1 and 40 characters."
 msgstr "取一个 1 到 40 个字的名字。"
 
@@ -1195,7 +1200,7 @@ msgid "Pick wallpapers for the login page and the admin interface. Drag the slid
 msgstr "为登录页和管理界面挑选壁纸。拖动滑杆即可实时预览;保存并应用后生效。"
 
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1054
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2930
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3046
 msgid "Please enter a name."
 msgstr "请输入名称。"
 
@@ -1211,11 +1216,11 @@ msgstr "正在准备排版"
 msgid "Preparing selected typefaces..."
 msgstr "正在准备所选字体..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2906
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3022
 msgid "Preparing…"
 msgstr "准备中…"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1650
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1689
 msgid "Preset applied successfully."
 msgstr "预设应用成功。"
 
@@ -1231,25 +1236,25 @@ msgstr "进度结束点"
 msgid "Progress Start"
 msgstr "进度起始点"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2924
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3166
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3040
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3292
 msgid "Publish"
 msgstr "发布"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3083
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3086
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3209
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3212
 msgid "Publish as"
 msgstr "署名"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3130
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3256
 msgid "Publish as a new one"
 msgstr "发布为新的一条"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2985
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3111
 msgid "Published."
 msgstr "已发布。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2984
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3110
 msgid "Published. Its images are queued for review — it appears in the store once they are approved."
 msgstr "已发布。图片正在排队等审核 —— 通过后才会出现在商店里。"
 
@@ -1257,16 +1262,16 @@ msgstr "已发布。图片正在排队等审核 —— 通过后才会出现在�
 msgid "Raised layer for dropdowns, modals, and tooltips."
 msgstr "用于下拉菜单、模态框和气泡提示的悬浮层（抬高层）。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1830
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1869
 msgid "Re-apply"
 msgstr "重新应用"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2483
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2563
 msgid "Rename"
 msgstr "改名"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3137
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3166
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3263
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3292
 msgid "Replace “%s”"
 msgstr "更新「%s」"
 
@@ -1304,23 +1309,24 @@ msgstr "拾色器无法显示解析后的颜色。"
 msgid "Resolved preview color - click to pick"
 msgstr "解析后的预览颜色 - 点击进行选择"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2608
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2696
 msgid "Restore"
 msgstr "恢复"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2609
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2697
 msgid "Restore your creator identity"
 msgstr "恢复创作者身份"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2565
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2658
 msgid "Restored."
 msgstr "已恢复。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2564
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2657
 msgid "Restored. What you shared before is back under this identity."
 msgstr "已恢复。你以前分享的作品回来了。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2489
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2518
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2569
 msgid "Restore…"
 msgstr "恢复…"
 
@@ -1328,7 +1334,8 @@ msgstr "恢复…"
 msgid "Restoring..."
 msgstr "正在恢复..."
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3382
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2729
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3508
 msgid "Retry"
 msgstr "重试"
 
@@ -1348,7 +1355,7 @@ msgstr "鼠尾草绿"
 msgid "Sans Font"
 msgstr "无衬线字体"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2700
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2816
 msgid "Sans Font File"
 msgstr "无衬线字体文件"
 
@@ -1365,7 +1372,7 @@ msgstr "无衬线字体"
 msgid "Sans-serif and monospace typefaces used across the theme. Pick a curated webfont — downloaded once after saving, from pinned, checksum-verified sources, then served locally — or upload your own .woff2 files."
 msgstr "主题全局使用的无衬线与等宽字体。可选用精选网络字体——保存后才从固定版本、经校验的来源下载一次,此后由本机提供——也可上传自己的 .woff2 字体文件。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3067
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3193
 msgid "Save"
 msgstr "保存"
 
@@ -1377,7 +1384,7 @@ msgstr "已保存值或预设值"
 msgid "Scrim"
 msgstr "遮罩"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3315
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3441
 msgid "Search themes or authors…"
 msgstr "搜索主题或作者…"
 
@@ -1389,31 +1396,31 @@ msgstr "分割线、分隔符以及输入框或卡片的边框。"
 msgid "Settings reset successfully."
 msgstr "设置重置成功。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2676
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2792
 msgid "Shape"
 msgstr "外形"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2000
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3181
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2039
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3307
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/studio.js:2460
 msgid "Share to the store"
 msgstr "分享到商店"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3467
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3593
 msgid "Shared by other people"
 msgstr "由其他人分享"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1710
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1749
 msgid "Ships with the theme and works offline."
 msgstr "随主题内置，离线可用。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3461
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3587
 msgid "Ships with the theme, works offline"
 msgstr "随主题附带，离线可用"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2779
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2789
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2898
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2895
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2905
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3014
 msgid "Shortcut Icons"
 msgstr "快捷方式图标"
 
@@ -1433,8 +1440,8 @@ msgstr "快捷方式 URL"
 msgid "Shortcuts %d"
 msgstr "快捷方式 %d"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2328
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2339
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2392
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2403
 msgid "Show"
 msgstr "显示"
 
@@ -1446,7 +1453,7 @@ msgstr "显示快捷工具栏"
 msgid "Show the floating launcher on all pages."
 msgstr "在所有页面上显示悬浮启动器。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3437
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3563
 msgid "Showing a saved copy — reconnecting…"
 msgstr "正在显示已保存的副本——重新连接中…"
 
@@ -1459,7 +1466,7 @@ msgstr "显示"
 msgid "Sidebar"
 msgstr "侧边栏"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2459
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2542
 msgid "Signs everything you share. It lives only on this router."
 msgstr "你分享的一切都以它署名。它只存在这台路由器上。"
 
@@ -1489,7 +1496,7 @@ msgstr "用途"
 msgid "Small corners"
 msgstr "小圆角"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2673
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2789
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:871
 msgid "Spacing"
 msgstr "间距"
@@ -1547,7 +1554,7 @@ msgstr "系统等宽字体"
 msgid "System Surfaces"
 msgstr "系统表面"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2223
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2279
 msgid "Taken down — no longer in the store. Nothing you can do from here."
 msgstr "已被下架，商店里不再显示。这里没有可以操作的了。"
 
@@ -1567,7 +1574,7 @@ msgstr "文本、链接与品牌"
 msgid "That description is too long."
 msgstr "描述太长了。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2540
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2632
 msgid "That doesn't look like a creator identity."
 msgstr "这看起来不像创作者身份。"
 
@@ -1579,12 +1586,12 @@ msgstr "这个名字已经被占用了，换一个。"
 msgid "The font file comes from whoever shared this theme; the store does not verify its licence."
 msgstr "字体文件来自分享这份主题的人，商店不核实它的授权状态。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1758
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2033
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1797
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2072
 msgid "The look this router is wearing right now."
 msgstr "这台路由器现在的样子。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2865
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2981
 msgid "The name your shares are signed with"
 msgstr "你分享的东西署这个名"
 
@@ -1621,23 +1628,23 @@ msgstr "还没有可恢复的配置。"
 msgid "This configuration can't be applied."
 msgstr "这套配置无法应用。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1119
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1158
 msgid "This configuration links to these external sites:"
 msgstr "这套配置包含指向以下外部网站的链接："
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3044
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3170
 msgid "This name signs everything you have published, including what is already in the store."
 msgstr "这个名字会署在你发布过的所有东西上，包括商店里已经有的。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1723
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1762
 msgid "This preset uses a downloaded typeface. The router fetches it once after applying; until then the text falls back to the built-in font."
 msgstr "此预设使用需要下载的字体。应用后路由器会下载一次，在那之前文字会先用内置字体显示。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1512
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1551
 msgid "This puts back the look you had before applying a theme from the store."
 msgstr "这会把你在商店里应用主题之前的样子放回来。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2594
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2691
 msgid "This router already has shared configurations of its own. Switching to another identity gives them up for good — back up the current identity first if you still want them."
 msgstr "这台路由器已经有自己的作品。换成别的身份会永久放弃它们 —— 还想要就先备份当前身份。"
 
@@ -1645,7 +1652,7 @@ msgstr "这台路由器已经有自己的作品。换成别的身份会永久放
 msgid "This share belongs to another identity."
 msgstr "这条分享属于另一个身份。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3261
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3387
 msgid "This share includes your uploaded font file. Please make sure you have the right to redistribute it — most commercial font licences do not allow it. Configurations reported for infringement are taken down."
 msgstr "这次分享包含你上传的字体文件。请确认你有权再分发它——多数商业字体授权并不允许。收到侵权举报的配置会被下架。"
 
@@ -1654,7 +1661,7 @@ msgstr "这次分享包含你上传的字体文件。请确认你有权再分发
 msgid "This share is no longer available."
 msgstr "这条分享已不存在。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2378
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2442
 msgid "This text is your identity. Anyone who has it can publish under your name and delete what you have shared — don't post it anywhere public."
 msgstr "这串文字就是你的身份。拿到它的人可以用你的名字发布，也能删掉你已分享的作品 —— 别贴到公开的地方。"
 
@@ -1666,11 +1673,11 @@ msgstr "这个主题已不存在。"
 msgid "This theme uses a downloaded typeface. The router fetches it once after applying; until then the text falls back to the built-in font."
 msgstr "此主题使用需要下载的字体。应用后路由器会下载一次，在那之前文字会先用内置字体显示。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2743
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2859
 msgid "Too large to share (%s; the store's limit is %s)"
 msgstr "太大，发不出去（%s；商店上限 %s）"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2760
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2876
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:881
 msgid "Toolbar"
 msgstr "工具栏"
@@ -1732,11 +1739,12 @@ msgstr "无法加载 %s。"
 msgid "Unable to load the Aurora stylesheet."
 msgstr "无法加载 Aurora 样式表。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1776
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1815
 msgid "Unable to load this theme right now. Please try again."
 msgstr "暂时无法加载这个主题，请重试。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3374
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2721
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3500
 msgid "Unable to reach the theme store right now."
 msgstr "暂时连不上主题商店。"
 
@@ -1771,8 +1779,8 @@ msgstr "未知错误"
 msgid "Unsupported file type. Allowed: %s"
 msgstr "不支持的文件类型,仅支持:%s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1883
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2207
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1922
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2263
 #: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:905
 msgid "Untitled theme"
 msgstr "未命名主题"
@@ -1785,7 +1793,7 @@ msgstr "有新版 %s"
 msgid "Update source added"
 msgstr "更新源已添加"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2171
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2227
 msgid "Update with current configuration"
 msgstr "用当前配置更新"
 
@@ -1810,15 +1818,15 @@ msgstr "上传失败 (HTTP %s)"
 msgid "Upload failed: %s"
 msgstr "上传失败：%s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2701
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2817
 msgid "Uploaded with the theme, %s"
 msgstr "随主题一起上传，%s"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2918
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3034
 msgid "Uploading %s… %d%%"
 msgstr "正在上传%s… %d%%"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2917
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3033
 msgid "Uploading %s… %d%% (%d/%d)"
 msgstr "正在上传%s… %d%%（%d/%d）"
 
@@ -1834,15 +1842,15 @@ msgstr "警告"
 msgid "Warning Surface"
 msgstr "警告表面"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3244
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3370
 msgid "What gets shared"
 msgstr "本次分享包含"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2494
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2584
 msgid "What is this? Where did it come from?"
 msgstr "这是什么？从哪来的？"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3146
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3272
 msgid "Where this configuration goes"
 msgstr "这套配置要放到哪儿"
 
@@ -1850,7 +1858,7 @@ msgstr "这套配置要放到哪儿"
 msgid "Will replace the existing '%s'."
 msgstr "将替换已存在的“%s”。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1872
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1911
 msgid "Works offline"
 msgstr "离线可用"
 
@@ -1858,7 +1866,7 @@ msgstr "离线可用"
 msgid "You've published as much as one router may publish today. Try again tomorrow."
 msgstr "今天这台路由器能发布的量已经用完了，明天再来。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:2989
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:3115
 msgid "Your creator identity lives only on this router — back it up so a reflash can't take it."
 msgstr "你的创作者身份只存在这台路由器上 —— 备份一下，刷机就带不走它。"
 
@@ -1873,7 +1881,7 @@ msgstr "你当前的配置暂时无法分享。"
 msgid "Your current settings are backed up before applying, and you can roll back with one click afterwards."
 msgstr "应用前会自动备份当前设置，应用后可一键回滚。"
 
-#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1733
+#: applications/luci-app-aurora-config/htdocs/luci-static/resources/view/aurora/marketplace.js:1772
 msgid "Your shortcuts, logo, icons and login background are left exactly as they are."
 msgstr "你的快捷方式、Logo、图标和登录背景保持原样不变。"
 

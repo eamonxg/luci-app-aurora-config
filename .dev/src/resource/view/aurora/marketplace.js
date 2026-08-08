@@ -1093,16 +1093,55 @@ const DELETE_ERROR_COPY = {
 const deleteErrorMessage = (code) =>
   DELETE_ERROR_COPY[code] || _("Unable to delete this share right now.");
 
-const buildConfirmActions = (onConfirm, confirmLabel) =>
-  E("div", { class: "right", style: "margin-top:1em;" }, [
-    E("button", { class: "btn", click: ui.hideModal }, _("Cancel")),
+// 等待反馈只有这一种:LuCI 自带的 .spinning(文字前一个转圈)加上 disabled。
+// 没有第二套 loading 组件 —— 页面上已经在用 .spinning 的地方(应用、抽屉、
+// 社区列表)读起来就该和这里一模一样。
+//
+// disabled 不只是观感:hub_set_nickname / hub_import_key / hub_delete 都是一次
+// 跨太平洋往返,期间按钮活着就等于允许发第二遍。
+const withBusy = (btn, promise) => {
+  btn.disabled = true;
+  btn.classList.add("spinning");
+  const done = () => {
+    // 成功路径经常在这之前就把模态关了,此时按钮已脱离文档 —— 还原它无害。
+    btn.disabled = false;
+    btn.classList.remove("spinning");
+  };
+  return promise.then(
+    (value) => {
+      done();
+      return value;
+    },
+    (err) => {
+      done();
+      throw err;
+    },
+  );
+};
+
+// onConfirm 返回 thenable 时确认键自己进入 busy;返回 undefined 的同步路径
+// (应用预设、应用配置 —— 它们当场换成一个 spinner 模态)行为一个字不变。
+const buildConfirmActions = (onConfirm, confirmLabel) => {
+  const cancelBtn = E("button", { class: "btn", click: ui.hideModal }, _("Cancel"));
+  const confirmBtn = E(
+    "button",
+    { class: "btn cbi-button-action important" },
+    confirmLabel,
+  );
+  confirmBtn.addEventListener("click", () => {
+    const pending = onConfirm();
+    if (!pending || typeof pending.then !== "function") return;
+    cancelBtn.disabled = true;
+    withBusy(confirmBtn, pending).catch(() => {}).then(() => {
+      cancelBtn.disabled = false;
+    });
+  });
+  return E("div", { class: "right", style: "margin-top:1em;" }, [
+    cancelBtn,
     " ",
-    E(
-      "button",
-      { class: "btn cbi-button-action important", click: onConfirm },
-      confirmLabel,
-    ),
+    confirmBtn,
   ]);
+};
 
 const buildSimpleApplyConfirm = (onConfirm) => [
   E(
@@ -2068,12 +2107,27 @@ return view.extend({
     const refreshMyShares = () =>
       L.resolveDefault(hubApi.callHubMe(), null).then((res) => {
         if (res && res.result === 0) {
+          // 失败时刻意不置 myLoaded:一台冷启动就断网的路由器,我们并不知道
+          // 它有没有身份 —— 画那张"还没有创作者身份"的卡就是替 hub 编答案。
+          myLoaded = true;
+          myFailed = false;
           hubApi.meCache.set(res.data);
           applyMe(res.data);
+        } else {
+          myFailed = true;
+          // 保留上一帧的作品,但这一帧要重画:没有上一帧时它是"连不上 + 重试",
+          // 不是空态。
+          renderMyShares(myShares);
         }
+        // 身份卡是 renderContent 画的,而这次请求正是它等的那份数据 —— 加载态
+        // 与空态的切换只有在这里重画才看得见。
+        if (state.tab === "mine") renderContent();
       });
 
     const applyMe = (data) => {
+      // 缓存那一帧同样算"已加载":它是真数据,只是旧的。首屏靠它立刻成型,
+      // 不该被自己的 spinner 盖住。
+      if (data) myLoaded = true;
       profile = {
         id: (data && data.id) || null,
         nickname: (data && data.nickname) || null,
@@ -2111,7 +2165,9 @@ return view.extend({
       renderContent();
     };
 
-    const confirmDeleteShare = (item) => {
+    // btn 是发起这次删除的那一行的 Delete 键:确认框关掉之后,hub_delete 加上
+    // 随后的 hub_me 还要走两趟网络,而这两趟里屏幕上原本什么都不会变。
+    const confirmDeleteShare = (item, btn) => {
       // Static message, deliberately not interpolating item.name: asset-upload's
       // confirmDelete renders opts.message as a bare E() child, which LuCI can
       // route through innerHTML, and the hub config name is attacker-controlled
@@ -2123,22 +2179,22 @@ return view.extend({
         })
         .then((confirmed) => {
           if (!confirmed) return;
-          return L.resolveDefault(hubApi.callHubDelete(item.id), null).then(
-            (res) => {
+          return withBusy(
+            btn,
+            L.resolveDefault(hubApi.callHubDelete(item.id), null).then((res) => {
               if (res && res.result === 0) {
                 ui.addNotification(null, E("p", {}, _("Deleted.")), "info");
-                refreshMyShares();
               } else {
                 ui.addNotification(
                   null,
                   E("p", {}, deleteErrorMessage(res && res.error)),
                   "warning",
                 );
-                // 失败也要重读一次。invalid_id 说的是"商店那边已经没有这件
-                // 作品了",此时留着那一行就是把用户再送回同一个 404。
-                refreshMyShares();
               }
-            },
+              // 失败也要重读一次。invalid_id 说的是"商店那边已经没有这件
+              // 作品了",此时留着那一行就是把用户再送回同一个 404。
+              return refreshMyShares();
+            }),
           );
         });
     };
@@ -2175,7 +2231,7 @@ return view.extend({
         {
           type: "button",
           class: "cbi-button cbi-button-remove",
-          click: () => confirmDeleteShare(item),
+          click: () => confirmDeleteShare(item, deleteBtn),
         },
         _("Delete"),
       );
@@ -2249,6 +2305,12 @@ return view.extend({
 
     let myShares = [];
 
+    // hub_me 回来过没有,以及上一次是不是失败的。首屏之所以要分这两个状态:
+    // 没有它们,一台还在等 hub_me 的路由器画的是"还没有分享过" —— 一句在
+    // 数据到达前就说出口的、可能是假的话。
+    let myLoaded = false;
+    let myFailed = false;
+
     // Whoever this router publishes as. A null nickname means the creator
     // account exists but has never been named.
     let profile = { id: null, nickname: null };
@@ -2295,7 +2357,9 @@ return view.extend({
 
     const KEY_MASK = "•".repeat(64);
 
-    const backupKeyPrompt = () => {
+    // 返回 promise:调用方(身份卡上那个按钮)拿它做 busy —— 取密钥要过一次
+    // ubus,弹窗在那之后才出现,中间这段静默正是用户会再点一次的地方。
+    const backupKeyPrompt = () =>
       L.resolveDefault(hubApi.callHubExportKey(), null).then((res) => {
         if (!res || res.result !== 0 || !res.key) {
           ui.addNotification(
@@ -2408,87 +2472,113 @@ return view.extend({
           ]),
         ]);
       });
-    };
 
     // "我的分享" 顶上的常驻卡片:这台路由器以谁的名义发布,身份备没备份,以及
-    // 三个身份动作都在这里。
+    // 身份的几个动作都在这里。
     //
     // 它取代了原来那条 keybar。keybar 的毛病不在样式,在于 profile.id 为空时
-    // 整条不渲染 —— 于是一台全新路由器看不到"备份"那一半,页面上唯一跟身份
-    // 有关的按钮就只剩"导入",一个还没有身份的人被要求先导入一个身份。这里
-    // 仍然在没有身份时返回 null,但引导态改由调用方给(见 renderMyShares),
-    // 那里说的是"发布",不是"导入"。
+    // 整条不渲染 —— 于是一台全新路由器看不到"备份"那一半。
+    //
+    // 一张卡两个状态,而不是两张卡:没有身份时它照画,只是名字换成"还没有创作
+    // 者身份",动作只剩「恢复…」。以前这里 return null,于是一台刚刷好的路由器
+    // 在「我的」页上只有一句"还没有分享过" —— 而带着备份文件从旧路由器过来的
+    // 人,恰恰要的就是这一屏上的恢复入口,却一个入口都没有。
+    //
+    // 加载未回来之前仍然返回 null:那时 profile 是空的,画空态就是先撒一次谎
+    // 再纠正。这一小段等待由下面 mySharesEl 里的 spinner 一并说了。
     //
     // 改名也搬到了这里。它以前只挂在发布面板内部那个 "Publish as" 字段的
     // Change 按钮上 —— 不点开发布面板就找不到,等于"想改个名得先假装去发个布"。
     const buildIdentityCard = () => {
-      if (!profile.id) return null;
+      if (!myLoaded) return null;
 
       const nameRow = [];
-      if (profile.nickname) {
-        nameRow.push(
-          E("strong", {}, [document.createTextNode(profile.nickname)]),
-        );
-      } else {
-        nameRow.push(
-          E("strong", { style: "color:var(--text-muted);" }, [
-            document.createTextNode(_("Not named yet")),
-          ]),
-        );
-      }
-      nameRow.push(
-        E("span", { class: "hid" }, [document.createTextNode("#" + profile.id)]),
-        E(
-          "span",
-          { class: "aurora-store-pill " + (keySaved ? "ok" : "risk") },
-          keySaved ? _("Backed up") : _("Not backed up"),
-        ),
-      );
-
+      const acts = [];
+      let meta;
       // 首字母做头像。昵称可以是任意 Unicode,取第一个 code point 而不是第一个
       // UTF-16 码元 —— 否则一个 emoji 昵称会被切成半个代理对,画出一个方块。
-      const initial = profile.nickname ? Array.from(profile.nickname)[0] : "#";
+      let initial = "#";
+
+      if (!profile.id) {
+        nameRow.push(
+          E("strong", { style: "color:var(--text-muted);" }, [
+            document.createTextNode(_("No creator identity yet")),
+          ]),
+        );
+        meta = _("Created the first time you publish — or restore one you backed up.");
+        // 唯一的动作,所以是实心的那个:这张卡此刻只剩一件事可做。
+        acts.push(
+          E(
+            "button",
+            {
+              type: "button",
+              class: "btn cbi-button-action",
+              click: () => restoreIdentityPrompt(),
+            },
+            _("Restore…"),
+          ),
+        );
+      } else {
+        if (profile.nickname) {
+          nameRow.push(
+            E("strong", {}, [document.createTextNode(profile.nickname)]),
+          );
+          initial = Array.from(profile.nickname)[0];
+        } else {
+          nameRow.push(
+            E("strong", { style: "color:var(--text-muted);" }, [
+              document.createTextNode(_("Not named yet")),
+            ]),
+          );
+        }
+        nameRow.push(
+          E("span", { class: "hid" }, [document.createTextNode("#" + profile.id)]),
+          E(
+            "span",
+            { class: "aurora-store-pill " + (keySaved ? "ok" : "risk") },
+            keySaved ? _("Backed up") : _("Not backed up"),
+          ),
+        );
+        meta = _("Signs everything you share. It lives only on this router.");
+        // 身份的三个动作全在这一处。备份是实心的那个(没备份时),改名和
+        // 恢复是文字链 —— 它们不是这张卡要人做的事,只是要人找得到的事。
+        //
+        // 「恢复」以前有两个入口:折叠说明里一条,空态引导卡里又一条,同屏
+        // 可见,指向同一个对话框。空态卡整张删掉了,说明里那条也删了,只剩
+        // 这一个。
+        acts.push(
+          E(
+            "button",
+            {
+              type: "button",
+              class: keySaved ? "cbi-button" : "btn cbi-button-action",
+              click: (ev) => withBusy(ev.currentTarget, backupKeyPrompt()),
+            },
+            _("Back up identity"),
+          ),
+          " ",
+          E(
+            "button",
+            { type: "button", class: "cbi-button", click: () => promptRename() },
+            _("Rename"),
+          ),
+          " ",
+          E(
+            "button",
+            { type: "button", class: "lnk", click: () => restoreIdentityPrompt() },
+            _("Restore…"),
+          ),
+        );
+      }
 
       return E("div", {}, [
         E("div", { class: "aurora-store-idcard" }, [
           E("div", { class: "av" }, [document.createTextNode(initial)]),
           E("div", { class: "who" }, [
             E("div", { class: "nm" }, nameRow),
-            E("div", { class: "meta" }, [
-              document.createTextNode(
-                _("Signs everything you share. It lives only on this router."),
-              ),
-            ]),
+            E("div", { class: "meta" }, [document.createTextNode(meta)]),
           ]),
-          // 身份的三个动作全在这一处。备份是实心的那个(没备份时),改名和
-          // 恢复是文字链 —— 它们不是这张卡要人做的事,只是要人找得到的事。
-          //
-          // 「恢复」以前有两个入口:折叠说明里一条,空态引导卡里又一条,同屏
-          // 可见,指向同一个对话框。空态卡整张删掉了,说明里那条也删了,只剩
-          // 这一个。
-          E("div", { class: "acts" }, [
-            E(
-              "button",
-              {
-                type: "button",
-                class: keySaved ? "cbi-button" : "btn cbi-button-action",
-                click: () => backupKeyPrompt(),
-              },
-              _("Back up identity"),
-            ),
-            " ",
-            E(
-              "button",
-              { type: "button", class: "cbi-button", click: () => promptRename() },
-              _("Rename"),
-            ),
-            " ",
-            E(
-              "button",
-              { type: "button", class: "lnk", click: () => restoreIdentityPrompt() },
-              _("Restore…"),
-            ),
-          ]),
+          E("div", { class: "acts" }, acts),
         ]),
         E("details", { class: "aurora-store-why" }, [
           E("summary", {}, _("What is this? Where did it come from?")),
@@ -2534,6 +2624,8 @@ return view.extend({
         [document.createTextNode(_("Choose backup file…")), picker],
       );
 
+      // 返回 promise:导入加上随后那次 hub_me 是两趟往返,确认键要 busy 到
+      // 两趟都回来为止 —— 见 buildConfirmActions。
       const commit = () => {
         const key = input.value.trim().toLowerCase();
         if (!KEY_RE.test(key)) {
@@ -2541,7 +2633,7 @@ return view.extend({
           err.style.display = "block";
           return;
         }
-        L.resolveDefault(hubApi.callHubImportKey(key), null).then((res) => {
+        return L.resolveDefault(hubApi.callHubImportKey(key), null).then((res) => {
           if (!res || res.result !== 0) {
             err.textContent = _("Couldn't restore that identity. Check it and try again.");
             err.style.display = "block";
@@ -2552,8 +2644,9 @@ return view.extend({
           // "导入成功、随后 hub_me 失败"会把上一个账号的作品留在界面上,
           // 而 Task 2 之后失败路径不再自行清空。
           hubApi.meCache.clear();
+          myLoaded = false;
           applyMe(null);
-          refreshMyShares().then(() => {
+          return refreshMyShares().then(() => {
             keySaved = true;
             ui.addNotification(
               null,
@@ -2583,7 +2676,11 @@ return view.extend({
       ];
 
       // Replacing an identity that still owns published work is unrecoverable,
-      // so the current one gets one last chance to be saved first.
+      // so it gets said out loud before the button that does it.
+      //
+      // 这里曾经还挂着一个「先备份当前身份」按钮。备份入口在身份卡上就有一个,
+      // 这个框是恢复框 —— 一个对话框只做一件事,警告负责讲后果,不负责再开一
+      // 条通往别处的岔路。
       if (myShares.length) {
         body.splice(
           1,
@@ -2593,15 +2690,6 @@ return view.extend({
             { style: "color:var(--danger);" },
             _("This router already has shared configurations of its own. Switching to another identity gives them up for good — back up the current identity first if you still want them."),
           ),
-        );
-        body.push(
-          E("div", { style: "margin-top:0.8em;" }, [
-            E(
-              "button",
-              { type: "button", class: "cbi-button", click: () => backupKeyPrompt() },
-              _("Back up the current identity first"),
-            ),
-          ]),
         );
       }
 
@@ -2623,6 +2711,34 @@ return view.extend({
       myShares = (items || []).filter((item) => item);
       TABS.forEach(renderTabLabel);
       while (mySharesEl.firstChild) mySharesEl.removeChild(mySharesEl.firstChild);
+
+      // 三个"没有表格"的理由,措辞各不相同,因为它们是三件事:问不到、还不
+      // 知道、确实没有。文案和转圈都跟社区网格用同一套 —— 同一页上同一种等待
+      // 不该长出第二种样子。
+      if (myFailed && !myShares.length) {
+        mySharesEl.appendChild(
+          E("div", { class: "aurora-store-none" }, [
+            E("p", { style: "margin:0 0 0.6em;" }, _("Unable to reach the theme store right now.")),
+            E(
+              "button",
+              {
+                type: "button",
+                class: "cbi-button cbi-button-apply",
+                click: (ev) => withBusy(ev.currentTarget, refreshMyShares()),
+              },
+              _("Retry"),
+            ),
+          ]),
+        );
+        return;
+      }
+      if (!myLoaded) {
+        mySharesEl.appendChild(
+          E("p", { class: "spinning", style: "padding:1.2em 0.2em;" }, _("Loading…")),
+        );
+        return;
+      }
+
       if (!myShares.length) {
         // 曾经是一张虚线卡:标题、一段说明、一个"去工作台"按钮,外加第二条
         // "恢复身份"链接。三样东西现在都没有理由存在了 —— 发布入口就在这一
@@ -2940,6 +3056,16 @@ return view.extend({
 
       errEl.style.display = "none";
       submitBtn.disabled = true;
+      submitBtn.classList.add("spinning");
+      // 进度行原先要等第一个资源开始上传才出现,而在那之前还有一次 claim 昵称
+      // 的往返 —— 那几秒里按钮已经按不动了,却没有一个字解释为什么。
+      renderShareProgress({ phase: "begin" });
+
+      // 三条收尾路径(昵称被拒、发布失败、发布成功刷新完)共用同一个还原。
+      const endSubmit = () => {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove("spinning");
+      };
 
       // Two calls on purpose. The signature is account state, so it is
       // claimed first and the publish itself carries no author at all. If the
@@ -2961,7 +3087,7 @@ return view.extend({
 
       claim.then((claimed) => {
         if (!claimed) {
-          submitBtn.disabled = false;
+          endSubmit();
           return;
         }
         hubApi
@@ -3010,11 +3136,11 @@ return view.extend({
                 nameInput.value = "";
                 descInput.value = "";
                 nicknameInput.value = "";
-                submitBtn.disabled = false;
+                endSubmit();
                 renderContent();
               });
             } else {
-              submitBtn.disabled = false;
+              endSubmit();
               showError(shareErrorMessage(res && res.error));
             }
           });
@@ -3052,12 +3178,12 @@ return view.extend({
             err.style.display = "block";
             return;
           }
-          L.resolveDefault(hubApi.callHubSetNickname(next), null).then((res) => {
+          // 返回给 buildConfirmActions 做 busy —— 改名要过 hub,不是本地操作。
+          return L.resolveDefault(hubApi.callHubSetNickname(next), null).then((res) => {
             const data = (res && res.result === 0 && res.data) || null;
             if (data && !data.error) {
               ui.hideModal();
-              refreshMyShares().then(renderContent);
-              return;
+              return refreshMyShares().then(renderContent);
             }
             err.textContent = data
               ? nicknameErrorMessage(data.error)
