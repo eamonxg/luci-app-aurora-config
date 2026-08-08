@@ -19,10 +19,11 @@
 - **配色系统**——浅色/深色独立的实时配色编辑器，派生色自动生成。
 - **布局**——Mega Menu、下拉、侧边栏三种导航；滑块微调间距比例、圆角与内容宽度。
 - **排版与字体**——精选网络字体，保存后才从固定版本、经校验的来源下载一次；也可上传自己的 `.woff2` 字体。
-- **品牌与 PWA**——拖拽上传的资源库（上传时可重命名），统一供给 Logo、favicon、应用图标与登录背景；自动生成 manifest，面板可作为 PWA 安装。
+- **页面背景**——为登录页与主界面分别设置壁纸，各自带毛玻璃与遮罩滑块，实时预览。
+- **品牌与 PWA**——拖拽上传的资源库，统一供给 Logo、favicon、应用图标与页面背景；自动生成 manifest，面板可作为 PWA 安装。
 - **悬浮工具栏**——添加、命名并拖拽排序快捷方式，快速访问常用页面。
 - **备份与恢复**——一键导出、导入或重置整套配置，无需 SSH。
-- **主题商店**——浏览、应用、分享主题配置。
+- **主题商店**——浏览、应用并分享整套主题，字体、快捷图标与背景随配置一并带走。
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/eamonxg/assets/master/aurora/preview/config/multi-theme-showcase.png" alt="Multi Theme Showcase" width="1200">
@@ -32,7 +33,7 @@
 
 | 组件                  | 要求        | 说明                     |
 | :-------------------- | :---------- | :----------------------- |
-| **LuCI Theme Aurora** | `≥ v1.1.0`  | 旧版本将忽略这些配置。   |
+| **LuCI Theme Aurora** | `≥ v1.2.0`  | 旧版本将忽略这些配置。   |
 | **OpenWrt**           | `≥ 23.05`   | 不支持基于 Lua 的 LuCI。 |
 
 ## 安装
@@ -59,11 +60,11 @@ OpenWrt 25.12+ 和 Snapshot 版本使用 `apk`；其他版本使用 `opkg`：
 cd /tmp
 
 # opkg
-uclient-fetch -O luci-app-aurora-config.ipk https://github.com/eamonxg/luci-app-aurora-config/releases/latest/download/luci-app-aurora-config_1.1.0-r20260711_all.ipk
+uclient-fetch -O luci-app-aurora-config.ipk https://github.com/eamonxg/luci-app-aurora-config/releases/latest/download/luci-app-aurora-config_1.2.0-r20260808_all.ipk
 opkg install luci-app-aurora-config.ipk
 
 # apk
-uclient-fetch -O luci-app-aurora-config.apk https://github.com/eamonxg/luci-app-aurora-config/releases/latest/download/luci-app-aurora-config-1.1.0-r20260711.apk
+uclient-fetch -O luci-app-aurora-config.apk https://github.com/eamonxg/luci-app-aurora-config/releases/latest/download/luci-app-aurora-config-1.2.0-r20260808.apk
 apk add --allow-untrusted luci-app-aurora-config.apk
 ```
 

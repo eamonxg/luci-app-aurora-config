@@ -19,10 +19,11 @@
 - **Color system** — a live editor with independent light and dark palettes; derived tones are computed automatically.
 - **Layout** — Mega Menu, Dropdown, or Sidebar navigation; sliders for spacing scale, corner radius, and content width.
 - **Typography** — curated webfonts, downloaded once on save from pinned, checksum-verified sources — or upload your own `.woff2` files.
-- **Branding & PWA** — a drag-and-drop asset library (files can be renamed on upload) feeding the logo, favicons, app icons, and login background; a generated manifest makes the panel installable as a PWA.
+- **Page backgrounds** — set a wallpaper for the login page and the main interface, each with its own frosted-glass and overlay sliders, previewed live.
+- **Branding & PWA** — a drag-and-drop asset library feeding the logo, favicons, app icons, and backgrounds; a generated manifest makes the panel installable as a PWA.
 - **Shortcut toolbar** — add, label, and drag-reorder entries in the floating launcher.
 - **Backup & restore** — export, import, or reset the whole configuration from the interface, no SSH required.
-- **Theme Store** — browse, apply, and share theme configurations with other users.
+- **Theme Store** — browse, apply, and share complete themes, carrying their fonts, shortcut icons and backgrounds along with the settings.
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/eamonxg/assets/master/aurora/preview/config/multi-theme-showcase.png" alt="Multi Theme Showcase" width="1200">
@@ -32,7 +33,7 @@
 
 | Component             | Requirement | Note                                             |
 | :-------------------- | :---------- | :----------------------------------------------- |
-| **LuCI Theme Aurora** | `≥ v1.1.0`  | Older versions will ignore these configurations. |
+| **LuCI Theme Aurora** | `≥ v1.2.0`  | Older versions will ignore these configurations. |
 | **OpenWrt**           | `≥ 23.05`   | Lua-based LuCI is not supported.                 |
 
 ## Installation
@@ -59,11 +60,11 @@ OpenWrt 25.12+ and snapshots use `apk`; other versions use `opkg`:
 cd /tmp
 
 # opkg
-uclient-fetch -O luci-app-aurora-config.ipk https://github.com/eamonxg/luci-app-aurora-config/releases/latest/download/luci-app-aurora-config_1.1.0-r20260711_all.ipk
+uclient-fetch -O luci-app-aurora-config.ipk https://github.com/eamonxg/luci-app-aurora-config/releases/latest/download/luci-app-aurora-config_1.2.0-r20260808_all.ipk
 opkg install luci-app-aurora-config.ipk
 
 # apk
-uclient-fetch -O luci-app-aurora-config.apk https://github.com/eamonxg/luci-app-aurora-config/releases/latest/download/luci-app-aurora-config-1.1.0-r20260711.apk
+uclient-fetch -O luci-app-aurora-config.apk https://github.com/eamonxg/luci-app-aurora-config/releases/latest/download/luci-app-aurora-config-1.2.0-r20260808.apk
 apk add --allow-untrusted luci-app-aurora-config.apk
 ```
 
