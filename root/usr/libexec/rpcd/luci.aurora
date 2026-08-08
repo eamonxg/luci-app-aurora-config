@@ -1948,7 +1948,7 @@ validate_and_apply_hub_payload() {
 		cat "$batch_file"
 		printf "set aurora.theme.hub_applied='%s'\n" "$hub_name"
 		printf "set aurora.theme.icon_cache_version='%s'\n" "$(date +%s)"
-	} | uci batch; then
+	} | uci batch >/dev/null; then
 		rm -f "$batch_file"
 		uci -q revert aurora
 		return 1
@@ -3249,6 +3249,11 @@ FACE
 		# shell-like command and treats a bare `#` as a comment, so an
 		# unquoted hex color (e.g. set ...=#fcfcfc) is silently truncated to
 		# an empty value. Snapshot values are already validated injection-safe
+		# `uci batch`'s stdout MUST go to /dev/null: every `add` line makes it
+		# print the new anonymous section name (cfg0686e6...), and this handler's
+		# stdout *is* the ubus reply body. Those names ahead of `{ "result": 0 }`
+		# make rpcd fail to parse the JSON and return INVALID_ARGUMENT, so the
+		# store says "apply failed" about a preset it already committed.
 		{
 			uci -q show aurora.theme \
 				| sed -n 's/^aurora\.theme\.\(\(light\|dark\)_[^=]*\)=.*/delete aurora.theme.\1/p'
@@ -3275,7 +3280,7 @@ FACE
 			EOF
 			printf "set aurora.theme.active_preset='%s'\n" "$name"
 			printf "set aurora.theme.icon_cache_version='%s'\n" "$(date +%s)"
-		} | uci batch
+		} | uci batch >/dev/null
 
 		if ! uci -q commit aurora; then
 			uci -q revert aurora

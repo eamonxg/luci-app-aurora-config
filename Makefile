@@ -7,7 +7,7 @@ LUCI_TITLE:=LuCI configuration UI for the Aurora theme
 LUCI_DEPENDS:=+luci-base
 LUCI_PKGARCH:=all
 
-PKG_VERSION:=1.1.22
+PKG_VERSION:=1.1.23
 PKG_RELEASE:=20260808
 PKG_LICENSE:=Apache-2.0
 

@@ -261,6 +261,24 @@ test("apply_theme_preset replaces the shortcut sections the way hub apply does",
   );
 });
 
+// `uci batch` 会把 `add` 新建的匿名 section 名(cfg0686e6…)打到 stdout 上。
+// apply_theme_preset 是同步 handler,它的 stdout 就是 ubus 的应答体 —— 那几行
+// 名字排在 `{ "result": 0 }` 前面,rpcd 解析 JSON 失败,回 INVALID_ARGUMENT,
+// 前端于是报「应用失败：未知」,而配置其实已经 commit 了。
+test("every uci batch swallows its stdout, or the section names land in the JSON reply", () => {
+  const lines = rpcd.split("\n");
+  const offenders = lines
+    .map((line, i) => ({ line, no: i + 1 }))
+    .filter(({ line }) => /\|\s*uci batch\b/.test(line) && !/^\s*#/.test(line))
+    .filter(({ line }) => !/\|\s*uci batch\s+[^|]*>\s*\/dev\/null/.test(line));
+
+  assert.deepEqual(
+    offenders.map(({ no }) => no),
+    [],
+    `uci batch 未吞掉 stdout(行 ${offenders.map((o) => o.no).join(", ")})`,
+  );
+});
+
 test("hub apply drops dead icons after the icon assets have landed", () => {
   const worker = codeOnly(slice("hub_apply_worker"));
   assert.ok(

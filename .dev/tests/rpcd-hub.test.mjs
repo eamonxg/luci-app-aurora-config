@@ -341,7 +341,9 @@ test("rpcd script: every free-text field is guarded by has_control_char before i
 });
 
 test("rpcd script: uci batch exit status is checked (not just the later uci commit)", () => {
-  assert.match(rpcd, /if\s+!\s*\{[\s\S]*?\}\s*\|\s*uci batch;\s*then/);
+  // 允许 `>/dev/null`(见 rpcd-toolbar-handoff 那条 stdout 卫生测试):重定向
+  // 只吞 uci batch 自己的 stdout,管道退出码依然是它的。
+  assert.match(rpcd, /if\s+!\s*\{[\s\S]*?\}\s*\|\s*uci batch(\s+>\s*\/dev\/null)?;\s*then/);
 });
 
 // --- Security review round 4: uci batch always exits 0, and a literal
