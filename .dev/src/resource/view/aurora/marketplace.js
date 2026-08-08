@@ -1693,7 +1693,12 @@ return view.extend({
             } else {
               ui.addNotification(
                 null,
-                E("p", _("Apply failed: %s").format((ret && ret.error) || "Unknown")),
+                E(
+                  "p",
+                  _("Apply failed: %s").format(
+                    (ret && ret.error) || _("Unknown"),
+                  ),
+                ),
                 "error",
               );
             }

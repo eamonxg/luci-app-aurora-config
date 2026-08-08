@@ -108,16 +108,18 @@ const callPrepareFont = rpc.declare({
   object: "luci.aurora",
   method: "prepare_font",
   params: ["sans", "mono", "sans_stack"],
-  expect: {
-    "": { result: -1, error: "RPC call failed (timeout or transport error)" },
-  },
+  // result -1 marks a dead call (rpcd timeout or transport error). No message
+  // is carried here: this literal would be evaluated at load time, before
+  // LuCI's translation catalogue exists, so the wording lives at the call
+  // site where _() is safe to use.
+  expect: { "": { result: -1 } },
 });
 
 const callGetFontStatus = rpc.declare({
   object: "luci.aurora",
   method: "get_font_status",
   params: ["job_id"],
-  expect: { "": { state: "missing", error: "RPC call failed" } },
+  expect: { "": { state: "missing" } },
 });
 
 const callUploadFont = rpc.declare({
@@ -2162,9 +2164,9 @@ return view.extend({
     const m = new form.Map("aurora");
 
     const themeVersion =
-      installedVersions?.theme?.installed_version || "Unknown";
+      installedVersions?.theme?.installed_version || _("Unknown");
     const configVersion =
-      installedVersions?.config?.installed_version || "Unknown";
+      installedVersions?.config?.installed_version || _("Unknown");
 
     let so;
     const viewCtx = this;
@@ -2355,7 +2357,7 @@ return view.extend({
                                 );
                                 window.location.reload();
                               } else {
-                                const errorMsg = ret?.error || "Unknown error";
+                                const errorMsg = ret?.error || _("Unknown error");
                                 ui.addNotification(
                                   null,
                                   E(
@@ -2431,7 +2433,9 @@ return view.extend({
                               null,
                               E(
                                 "p",
-                                _("Error: %s").format(ret?.error || "Unknown"),
+                                _("Error: %s").format(
+                                  ret?.error || _("Unknown"),
+                                ),
                               ),
                               "error",
                             );
@@ -3137,7 +3141,11 @@ return view.extend({
       return callPrepareFont(selected.sans, selected.mono, selected.sansStack)
         .then((res) => {
           if (!res || res.result !== 0) {
-            throw new Error(res?.error || _("unknown error"));
+            throw new Error(
+              res?.result === -1
+                ? _("The router did not respond. Please try again.")
+                : res?.error || _("Unknown error"),
+            );
           }
 
           pollFontCache(res.job_id, 20, selected);
@@ -3250,7 +3258,7 @@ return view.extend({
                   E(
                     "p",
                     _("Failed to delete: %s").format(
-                      ret?.error || "Unknown",
+                      ret?.error || _("Unknown"),
                     ),
                   ),
                   "error",
