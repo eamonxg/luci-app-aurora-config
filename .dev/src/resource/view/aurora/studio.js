@@ -10,6 +10,11 @@
 
 const CONFIG_IMPORT_PATH = "/tmp/aurora_config_import.tmp";
 
+// LuCI 客户端渲染的表单控件没有 name 属性，真实 input/select 挂的是
+// id="widget.<cbid>"；按 name 查找永远落空且被 if 守卫静默吞掉。
+const themeFormField = (key) =>
+  document.getElementById("widget.cbid.aurora.theme." + key);
+
 const FEED_HOST = "openwrt.eamonxg.fun";
 const MANIFEST_URL = `https://${FEED_HOST}/manifest.json`;
 const MANIFEST_CACHE_KEY = "aurora.manifest";
@@ -3582,8 +3587,6 @@ return view.extend({
             return m ? m[1] : "";
           };
           const vals = {};
-          const hiddenInput = (tkey) =>
-            document.querySelector('[name="cbid.aurora.theme.' + tkey + '"]');
           // 角色由键名后缀推断(_alpha/_blur/_scrim),login/main 两组键共用
           // 同一段预览联动;无滑杆的实例落到中性默认(不透明、无模糊、无遮罩)。
           const paneDiv = E("div", { "data-bg-pane": key });
@@ -3619,7 +3622,7 @@ return view.extend({
             slider.addEventListener("input", () => {
               vals[tkey] = +slider.value;
               valEl.textContent = slider.value + unit;
-              const hid = hiddenInput(tkey);
+              const hid = themeFormField(tkey);
               if (hid) {
                 // 拖回默认值 = 回到"未设置":不写键,主题 fallback 接管。
                 // 这也是砍掉"恢复默认"按钮的底气——默认位置就是重置。
@@ -3643,9 +3646,7 @@ return view.extend({
           if (select) {
             select.addEventListener("change", function () {
               refresh();
-              const lqipEl = document.querySelector(
-                '[name="cbid.aurora.theme.' + lqipKey + '"]',
-              );
+              const lqipEl = themeFormField(lqipKey);
               if (!this.value) {
                 if (lqipEl) lqipEl.value = "";
                 return;
@@ -3869,12 +3870,8 @@ return view.extend({
           ["struct_login_bg", "struct_login_bg_lqip"],
           ["struct_main_bg", "struct_main_bg_lqip"],
         ].forEach(([key, lqipKey]) => {
-          const bgInput = mapNode.querySelector(
-            '[name="cbid.aurora.theme.' + key + '"]',
-          );
-          const lqipInput = mapNode.querySelector(
-            '[name="cbid.aurora.theme.' + lqipKey + '"]',
-          );
+          const bgInput = themeFormField(key);
+          const lqipInput = themeFormField(lqipKey);
           if (!bgInput || !lqipInput) return;
 
           if (pending && pendingKey === key) {
