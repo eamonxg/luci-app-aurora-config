@@ -873,9 +873,10 @@ test("gallery view: the drawer stops borrowing LuCI's form row", async () => {
   assert.match(src, /aurora-store-pal-row/, "the palette must be grouped by mode");
   // 圆角同时给档位名和原值
   assert.match(src, /const radiusJoin = /);
-  // "随附内容"滤掉已经在别处说过的那几种
+  // "随附内容"滤掉已经在别处说过的那几种(字体除外:名字在布局表里,但随附
+  // 文件的体积只有这里说)
   assert.match(src, /const buildBundledTiles = /);
-  assert.match(src, /const BUNDLED_KINDS = \["logo", "loginBg", "mainBg", "siteIcon", "appIcon"\]/);
+  assert.match(src, /const BUNDLED_KINDS = \["font", "logo", "loginBg", "mainBg", "siteIcon", "appIcon"\]/);
   assert.ok(!src.includes(".innerHTML"));
 });
 
@@ -1443,7 +1444,7 @@ test("main background shows up in tiles, totals, and the publish manifest", asyn
   assert.match(src, /meta: bgTileMeta\(item, \["main_bg"\], layout, "struct_main_bg"\)/);
   // 详情页图片合计与打包清单都数它
   assert.match(src, /\["logo_svg", "login_bg", "main_bg"\]\.concat\(/);
-  assert.match(src, /const BUNDLED_KINDS = \["logo", "loginBg", "mainBg", "siteIcon", "appIcon"\]/);
+  assert.match(src, /const BUNDLED_KINDS = \["font", "logo", "loginBg", "mainBg", "siteIcon", "appIcon"\]/);
   // 发布面板:rpcd shared_images 的 main_bg 行有标签可挂
   assert.match(src, /main_bg: ASSET_LABELS\.mainBg/);
 });
@@ -1455,4 +1456,41 @@ test("background tiles surface the bundled tunables", async () => {
   assert.match(src, /const bgTileMeta = /);
   assert.match(src, /prefix \+ "_alpha"/);
   assert.match(src, /prefix \+ "_scrim"/);
+});
+
+// ---------------------------------------------------------------------------
+// 随附内容的体积:字体和自定义工具栏图标与背景同权重,都要带体积
+// (docs/superpowers/specs/2026-08-08-bundled-content-sizes-design.md)
+// ---------------------------------------------------------------------------
+
+test("bundled tiles put a size on fonts and custom toolbar icons", async () => {
+  const src = await readFile(SRC, "utf8");
+  // 字体 entry 的 meta = 随附字体文件的字节数(font_sans + font_mono 合计)
+  assert.match(
+    src,
+    /kind: "font",[\s\S]{0,400}?meta: sizeLabel\(assetBytesOf\(item, \["font_sans", "font_mono"\]\)\)/,
+    "font entry must carry the bundled font bytes as meta",
+  );
+  // 字体进随附内容 —— 但名册字体不随附文件(meta 空),那是"应用后路由器自己
+  // 下载",不能算随附内容;既有的"需下载字体"脚注继续负责说明它
+  assert.match(
+    src,
+    /entry\.kind !== "font" \|\| entry\.meta/,
+    "a roster font with no bundled file must stay out of Bundled content",
+  );
+  // 工具栏图标 tile:报数量与合计体积
+  assert.match(
+    src,
+    /kind: "toolbarIcons",[\s\S]{0,400}?meta: sizeLabel\(assetBytesOf\(item, TOOLBAR_ICON_KINDS\)\)/,
+    "toolbar icons tile must total the icon assets",
+  );
+  assert.match(src, /_\("Toolbar icons ×%d"\)/);
+  // 抽屉专属:由 buildBundledTiles 合成并且真的接上;卡片 glyph 仍走共享的
+  // toolbar entry,不受影响
+  assert.match(src, /const toolbarIconsTile = \(item\) => \{/);
+  assert.match(
+    src,
+    /const iconsTile = toolbarIconsTile\(item\);\s*\n\s*if \(iconsTile\) bundled\.push\(iconsTile\);/,
+    "buildBundledTiles must actually append the toolbar icons tile",
+  );
 });

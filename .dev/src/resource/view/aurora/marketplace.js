@@ -483,6 +483,9 @@ const tileEntriesFor = (item) => {
         (firstFontFamily(typography.struct_font_mono)
           ? " · " + firstFontFamily(typography.struct_font_mono)
           : ""),
+      // 名册字体不随附文件 —— 体积为 0,meta 空串;buildBundledTiles 靠它把
+      // "随附了字体文件"和"应用后路由器自己下载"分开。卡片不画 meta,零影响。
+      meta: sizeLabel(assetBytesOf(item, ["font_sans", "font_mono"])),
     });
 
   const radius = radiusLabel(layout.struct_radius_base);
@@ -573,17 +576,41 @@ const buildCardGlyphs = (item) => {
   );
 };
 
-// 抽屉的"随附内容"。字体和圆角在"布局与排版"那张表里已经写了值,快捷方式
-// 自己占一整节 —— 在这里再画一遍就是同一句话说三次。
-const BUNDLED_KINDS = ["logo", "loginBg", "mainBg", "siteIcon", "appIcon"];
+// 抽屉的"随附内容"。圆角在"布局与排版"那张表里已经写了值,快捷方式自己占
+// 一整节 —— 在这里再画一遍就是同一句话说三次。字体的名字也在那张表里,但
+// 随附的字体文件有多大只有这块 tile 说:名册字体不带文件(应用后路由器自己
+// 下载,由"需下载字体"脚注负责),所以只有 meta 里真有体积的字体才算随附。
+const BUNDLED_KINDS = ["font", "logo", "loginBg", "mainBg", "siteIcon", "appIcon"];
+
+// 自定义工具栏图标随配置走(toolbar_icon_<k>),字节要用户实打实下载,却一直
+// 只被并进"图片共 X"那句合计。这块 tile 是抽屉专属的,在这里合成而不进
+// tileEntriesFor:卡片 glyph 用的仍是共享的 toolbar entry(它说"有几条快捷
+// 方式"),这里说的是"随附了几张图标、共多大" —— 两个不同的问题。
+const toolbarIconsTile = (item) => {
+  const count = assetsOf(item).filter(
+    (asset) => asset && TOOLBAR_ICON_KINDS.indexOf(asset.kind) !== -1,
+  ).length;
+  if (!count) return null;
+  return {
+    kind: "toolbarIcons",
+    glyph: "⌘",
+    label: _("Toolbar icons ×%d").format(count),
+    title: _("Custom toolbar icons"),
+    meta: sizeLabel(assetBytesOf(item, TOOLBAR_ICON_KINDS)),
+  };
+};
 
 const buildBundledTiles = (item) => {
   const entries = tileEntriesFor(item);
   if (!entries) return buildLegacyCardTiles(item);
   if (!entries.length) return buildBuiltinTiles();
   const bundled = entries.filter(
-    (entry) => BUNDLED_KINDS.indexOf(entry.kind) !== -1,
+    (entry) =>
+      BUNDLED_KINDS.indexOf(entry.kind) !== -1 &&
+      (entry.kind !== "font" || entry.meta),
   );
+  const iconsTile = toolbarIconsTile(item);
+  if (iconsTile) bundled.push(iconsTile);
   return bundled.length ? buildTiles(bundled) : null;
 };
 
