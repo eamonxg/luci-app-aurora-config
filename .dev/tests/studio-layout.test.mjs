@@ -246,5 +246,125 @@ test("studio: publishing starts here, next to export/import", async () => {
   // 意图用 URL 参数传,不用 sessionStorage:刷新、回退、收藏行为都可预测。
   assert.match(src, /L\.url\("admin\/system\/aurora\/marketplace"\)/);
   assert.match(src, /"\?share=1"/);
-  assert.match(src, /\[exportButton, importButton, shareButton, resetButton\]/);
+  // One primary action; export, import and reset sit behind "More".
+  assert.match(
+    src,
+    /shareButton,\s*buildMoreMenu\(\[exportItem, importItem, E\("li", \{ role: "separator", class: "sep" \}\), resetItem\]\),/,
+  );
+});
+
+// ---------------------------------------------------------------------------
+// Header: a quiet version line, one primary action, the rest behind "More"
+
+const headerBlock = (src) =>
+  src.slice(src.indexOf("    const versionEntry ="), src.indexOf("    m.description = headerBar;"));
+
+test("header: versions are one muted line of x.y.z, with the full string in the title", async () => {
+  const src = await readFile(SRC, "utf8");
+  const head = headerBlock(src);
+  assert.match(head, /installed \? Object\.assign\(attrs, \{ title: installed \}\) : attrs,/);
+  assert.match(head, /E\("b", \{\}, label\),\s*" " \+ \(installed \? feedCheck\.shortVersion\(installed\) : _\("Unknown"\)\),/);
+  assert.match(head, /versionEntry\(\{ id: "theme-version" \}, _\("Theme"\), installedVersions\?\.theme\?\.installed_version\)/);
+  assert.match(head, /versionEntry\(\{ id: "config-version" \}, _\("Config"\), installedVersions\?\.config\?\.installed_version\)/);
+  assert.match(head, /const versionArea = E\("div", \{ class: "aurora-studio-versions" \}/);
+  // The three coloured pills are gone.
+  for (const pill of ['"label success"', '"label warning"', "`v${", '_("Theme: ")', '_("Config: ")'])
+    assert.ok(!src.includes(pill), pill);
+});
+
+test("header: an update hangs on the package it belongs to, and each package is judged alone", async () => {
+  const src = await readFile(SRC, "utf8");
+  const block = src.slice(src.indexOf("const showUpdateCapsule ="), src.indexOf('const s = m.section(form.NamedSection'));
+  assert.match(block, /\["luci-theme-aurora", "theme-version", installedVersions\?\.theme\?\.installed_version\],/);
+  assert.match(block, /\["luci-app-aurora-config", "config-version", installedVersions\?\.config\?\.installed_version\],/);
+  assert.match(block, /packages\.forEach\(\(\[pkg, id, installed\]\) => \{/);
+  assert.match(block, /feedCheck\.findManifestVersion\(\s*manifest,\s*channel,\s*format,\s*pkg,\s*\)/);
+  // Versions that cannot be ordered say nothing at all.
+  assert.match(block, /if \(!feedCheck\.isNewer\(installed, available\)\) return;/);
+  assert.match(block, /const entry = versionArea\.querySelector\("#" \+ id\);/);
+  assert.match(block, /entry\.classList\.add\("up"\);\s*entry\.appendChild\(document\.createTextNode\(" → "\)\);/);
+  assert.match(block, /E\("a", \{ href: L\.url\(packagePagePath\), title: available \}, \[label\]\)/);
+  assert.match(block, /_\("%s available"\)\.format\(/);
+  // A rebuild of the same x.y.z differs only in its r-stamp; then the stamp is shown.
+  assert.match(block, /short === feedCheck\.shortVersion\(installed\) \? available : short/);
+  assert.match(src, /const packagePagePath = feedCheck\.pickPackageManagerPath\(menuTree\);/);
+  // The manifest is the CDN's word: it only ever becomes a text node or an attribute.
+  assert.ok(!block.includes("innerHTML"));
+  // It stays on this line: nothing here feeds the inbox or the header count.
+  for (const inboxHook of ["inboxIndicator", "hubApi", "noticesCache", "setNoticesLocal"])
+    assert.ok(!src.includes(inboxHook), inboxHook);
+});
+
+test("header: no update means no accent colour anywhere on the line", async () => {
+  const src = await readFile(SRC, "utf8");
+  const css = src.slice(src.indexOf("const ensureToolbarStyles"), src.indexOf("const ensureBgCardStyles"));
+  const branded = [...css.matchAll(/^([^\n{}]+) \{[^}]*var\(--brand/gm)].map((m) => m[1].trim());
+  // Both only exist once an update was attached: the link itself, and the dot on ".up".
+  assert.deepEqual(branded, [".aurora-studio-versions a", ".aurora-studio-versions .up::before"]);
+  const head = headerBlock(src);
+  assert.ok(!head.includes('"up"') && !head.includes("E(\"a\""), "the resting line has neither");
+  assert.match(css, /\.aurora-studio-versions \{\s*color: var\(--text-subtle,/);
+  assert.match(css, /\.aurora-studio-versions b \{\s*color: var\(--text-muted,/);
+});
+
+test("header: Share is the one button; Export, Import and Reset are menu items with their handlers intact", async () => {
+  const src = await readFile(SRC, "utf8");
+  const bar = src.slice(src.indexOf("const buildConfigToolbarNode ="), src.indexOf("const buildMoreMenu ="));
+  assert.equal((bar.match(/E\(\s*"button",\s*\{\s*class: "cbi-button/g) || []).length, 1);
+  assert.match(bar, /class: "cbi-button cbi-button-action",\s*click: \(\) => \{\s*window\.location\.href =/);
+  for (const [name, label] of [
+    ["exportItem", "Export configuration"],
+    ["importItem", "Import configuration"],
+    ["resetItem", "Reset everything to defaults"],
+  ]) {
+    const item = bar.slice(bar.indexOf(`const ${name} = E(`));
+    assert.match(item, /^const \w+ = E\(\s*"li",\s*\{\s*role: "menuitem",\s*tabindex: "-1",/);
+    assert.ok(bar.includes(`_("${label}")`), label);
+  }
+  assert.match(bar, /const resetItem = E\(\s*"li",\s*\{\s*role: "menuitem",\s*tabindex: "-1",\s*class: "danger",/);
+  // Same flows as before: only the entry points moved.
+  assert.match(bar, /L\.resolveDefault\(callExportConfig\(\), null\)/);
+  assert.match(bar, /\.uploadFile\(CONFIG_IMPORT_PATH, btn\)/);
+  assert.match(bar, /ui\.showModal\(_\("Import Aurora Configuration\?"\)/);
+  assert.match(bar, /L\.resolveDefault\(\s*callImportConfig\(\),/);
+  assert.match(bar, /ui\.showModal\(_\("Reset All Aurora Settings"\)/);
+  assert.match(bar, /L\.resolveDefault\(callResetDefaults\(\), \{\}\)/);
+  // No version text in the menu.
+  assert.ok(!/installed_version|shortVersion/.test(bar));
+});
+
+test("header: the More menu is LuCI's dropdown shell, made operable as a menu", async () => {
+  const src = await readFile(SRC, "utf8");
+  const menu = src.slice(src.indexOf("const buildMoreMenu ="), src.indexOf("const FONT_DEFAULT_STACKS") > src.indexOf("const buildMoreMenu =") ? src.indexOf("const FONT_DEFAULT_STACKS") : src.indexOf("const versionEntry ="));
+  assert.match(menu, /class: "dropdown", role: "menu", id: "aurora-studio-more-menu", tabindex: "-1"/);
+  assert.match(menu, /class: "cbi-dropdown cbi-button aurora-studio-more",/);
+  for (const attr of ['role: "button"', 'tabindex: "0"', '"aria-label": _("More")', '"aria-haspopup": "menu"', '"aria-expanded": "false"', '"aria-controls": menu.id'])
+    assert.ok(menu.includes(attr), attr);
+  // [open] is what every theme's .cbi-dropdown > ul.dropdown keys its popover on.
+  assert.match(menu, /toggle\.setAttribute\("open", ""\);\s*toggle\.setAttribute\("aria-expanded", "true"\);/);
+  assert.match(menu, /toggle\.removeAttribute\("open"\);\s*toggle\.setAttribute\("aria-expanded", "false"\);/);
+  assert.match(menu, /entries\(\)\[0\]\.focus\(\);/);
+  assert.match(menu, /if \(ev\.key === "Escape" && isOpen\) close\(true\);/);
+  assert.match(menu, /if \(refocus\) toggle\.focus\(\);/);
+  assert.match(menu, /\["ArrowDown", "ArrowUp", "Home", "End"\]\.includes\(ev\.key\)/);
+  assert.match(menu, /else if \(ev\.key === "Tab"\) close\(false\);/);
+  assert.match(menu, /if \(!toggle\.contains\(ev\.target\)\) close\(false\);/);
+  assert.match(menu, /document\.addEventListener\("click", onOutside\);/);
+  assert.match(menu, /document\.removeEventListener\("click", onOutside\);/);
+  assert.match(menu, /if \(menu\.contains\(ev\.target\)\) close\(false\);/);
+});
+
+test("header: the new rules cover only what the theme's dropdown and buttons cannot say", async () => {
+  const src = await readFile(SRC, "utf8");
+  const css = src.slice(src.indexOf("const ensureToolbarStyles"), src.indexOf("const ensureBgCardStyles"));
+  // The popover surface, its items and their hover are the theme's.
+  for (const themeOwned of ["surface-overlay", "box-shadow", "backdrop", "border-radius: 1", ":hover {\n  background"])
+    assert.ok(!css.includes(themeOwned), themeOwned);
+  assert.match(css, /\.cbi-dropdown\.aurora-studio-more > ul\.dropdown \{\s*left: auto;\s*min-width: 0;\s*right: 0;\s*top: calc\(100% \+ 6px\);\s*width: min\(280px, calc\(100vw - 32px\)\);/);
+  assert.match(css, /li\.danger \{\s*color: var\(--danger,/);
+  const phone = css.slice(css.indexOf("@media (max-width: 600px) {"));
+  assert.match(phone, /\.aurora-studio-acts \{\s*flex: 1 1 100%;/);
+  assert.match(phone, /\.aurora-studio-acts > \.cbi-button:not\(\.aurora-studio-more\) \{\s*flex: 1;\s*min-height: 42px;/);
+  assert.match(phone, /\.cbi-dropdown\.aurora-studio-more \{\s*height: 42px;\s*width: 42px;/);
+  assert.match(phone, /@media \(max-width: 600px\), \(hover: none\) \{[\s\S]*li\[role="menuitem"\] \{\s*min-height: 42px;/);
 });

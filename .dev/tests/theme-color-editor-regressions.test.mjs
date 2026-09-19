@@ -142,8 +142,8 @@ test("preset selector moved to the Marketplace; toolbar keeps the config actions
     !/aurora\/gallery|"gallery"/.test(toolbarBlock),
     "the store entrance belongs to the tabmenu, not the toolbar",
   );
-  assert.match(toolbarBlock, /exportButton/, "config actions must survive the preset removal");
-  assert.match(toolbarBlock, /resetButton/, "reset must survive too");
+  assert.match(toolbarBlock, /exportItem/, "config actions must survive the preset removal");
+  assert.match(toolbarBlock, /resetItem/, "reset must survive too");
 });
 
 test("derivation falls back to preset colors when a source field is untouched", async () => {

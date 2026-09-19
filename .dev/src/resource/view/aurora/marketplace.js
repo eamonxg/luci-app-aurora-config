@@ -4,6 +4,10 @@
 "require uci";
 "require rpc";
 "require utils.hub-api as hubApi";
+"require utils.notices as notices";
+"require utils.markdown as markdown";
+"require utils.feed-check as feedCheck";
+"require preload.aurora-notices as inboxIndicator";
 "require utils.asset-upload as assetUpload";
 "require utils.theme-preview as themePreview";
 
@@ -173,6 +177,50 @@ const callApplyThemePreset = rpc.declare({
   method: "apply_theme_preset",
   params: ["name"],
 });
+
+// 直接走 ubus 的 uci set + commit,只碰 aurora 这一个配置。LuCI 的 uci.apply()
+// 会把本次会话里所有已保存未应用的改动一并提交,一个勾选框不该有这种副作用。
+const callUciSet = rpc.declare({
+  object: "uci",
+  method: "set",
+  params: ["config", "section", "values"],
+  reject: true,
+});
+
+const callUciCommit = rpc.declare({
+  object: "uci",
+  method: "commit",
+  params: ["config"],
+  reject: true,
+});
+
+const INBOX_NARROW_QUERY = "(max-width:760px)";
+
+const maskIcon = (paths, strokeWidth) =>
+  "url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' " +
+  "fill='none' stroke='black' stroke-width='" +
+  strokeWidth +
+  "' stroke-linecap='round' stroke-linejoin='round'%3e" +
+  paths.map((d) => "%3cpath d='" + d + "'/%3e").join("") +
+  "%3c/svg%3e\")";
+
+const ICON_RING = "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z";
+const LEVEL_ICONS = {
+  critical: maskIcon(
+    [
+      "M12 9v4M12 17h.01",
+      "M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z",
+    ],
+    2,
+  ),
+  warning: maskIcon([ICON_RING, "M12 8v4M12 16h.01"], 2),
+};
+const SOURCE_ICONS = {
+  router: maskIcon(["m12 3 8 4.5v9L12 21l-8-4.5v-9z", "M12 12 4 7.5M12 12l8-4.5M12 12v9"], 1.8),
+  store: maskIcon(["M4 9h16l-1-5H5zM5 9v11h14V9M9 20v-6h6v6"], 1.8),
+  shares: maskIcon(["M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8z", "M4 21a8 8 0 0 1 16 0"], 1.8),
+};
+const ICON_CHECK = maskIcon(["M20 6 9 17l-5-5"], 2.4);
 
 // ---------------------------------------------------------------------------
 // Palette helpers
@@ -1387,6 +1435,119 @@ const STORE_CSS =
   "background:var(--surface-sunken,rgba(0,0,0,0.04));" +
   "border:1px solid var(--hairline,rgba(0,0,0,0.12));}" +
   ".aurora-store-filebtn{display:inline-block;cursor:pointer;}" +
+  ".aurora-store-count{display:inline-grid;place-items:center;min-width:1.5em;height:1.5em;" +
+  "padding:0 .4em;margin-left:.45em;border-radius:99px;font-size:.72em;font-weight:700;" +
+  "background:var(--brand,#0086bf);color:var(--on-brand,#fff);" +
+  "font-variant-numeric:tabular-nums;}" +
+  ".aurora-store-inbox{display:grid;grid-template-columns:minmax(300px,400px) 1fr;" +
+  "margin-top:1em;border:1px solid var(--hairline,rgba(0,0,0,0.12));border-radius:14px;" +
+  "overflow:hidden;background:var(--surface,#fff);min-height:520px;}" +
+  ".aurora-store-inbox .list{border-right:1px solid var(--hairline,rgba(0,0,0,0.12));" +
+  "display:flex;flex-direction:column;min-width:0;}" +
+  ".aurora-store-inbox .bar{display:flex;align-items:center;gap:6px;padding:12px 12px 8px;}" +
+  ".aurora-store-inbox .sp{flex:1;}" +
+  ".aurora-store-inbox .pill{border:0;font:inherit;font-size:.82em;padding:.3em .85em;" +
+  "border-radius:99px;cursor:pointer;background:transparent;color:var(--text-muted,#777);}" +
+  ".aurora-store-inbox .pill:hover{color:var(--text,#111);}" +
+  ".aurora-store-inbox .pill.on{background:var(--surface-sunken,rgba(0,0,0,0.04));" +
+  "color:var(--text,#111);font-weight:600;}" +
+  ".aurora-store-inbox .ib{width:30px;height:30px;padding:0;border-radius:8px;border:0;" +
+  "background:transparent;display:grid;place-items:center;cursor:pointer;" +
+  "color:var(--text-subtle,#888);}" +
+  ".aurora-store-inbox .ib:hover,.aurora-store-inbox .ib:focus-visible{" +
+  "background:var(--surface-sunken,rgba(0,0,0,0.04));color:var(--text,#111);}" +
+  ".aurora-store-inbox .ib::before{content:'';width:15px;height:15px;background:currentColor;" +
+  "-webkit-mask:" + ICON_CHECK + " center/contain no-repeat;" +
+  "mask:" + ICON_CHECK + " center/contain no-repeat;}" +
+  ".aurora-store-inbox .ib.unread::before{width:8px;height:8px;border-radius:50%;" +
+  "-webkit-mask:none;mask:none;}" +
+  ".aurora-store-inbox .rows{flex:1;overflow:auto;padding:0 8px 8px;}" +
+  ".aurora-store-inbox .grp{padding:14px 10px 6px;font-size:.78em;" +
+  "color:var(--text-subtle,#888);}" +
+  ".aurora-store-inbox .row{display:flex;align-items:center;gap:12px;padding:10px;" +
+  "border-radius:10px;cursor:pointer;}" +
+  ".aurora-store-inbox .row:hover{background:var(--hover-faint,rgba(0,0,0,0.03));}" +
+  ".aurora-store-inbox .row.sel{background:var(--surface-sunken,rgba(0,0,0,0.04));}" +
+  ".aurora-store-inbox .av{flex:none;width:32px;height:32px;border-radius:50%;display:grid;" +
+  "place-items:center;background:var(--surface-sunken,rgba(0,0,0,0.04));" +
+  "color:var(--text-muted,#777);}" +
+  ".aurora-store-inbox .row.sel .av{background:var(--surface,#fff);}" +
+  ".aurora-store-inbox .av::before{content:'';width:16px;height:16px;background:currentColor;" +
+  "-webkit-mask:var(--aurora-store-glyph) center/contain no-repeat;" +
+  "mask:var(--aurora-store-glyph) center/contain no-repeat;}" +
+  ".aurora-store-inbox .av.router{--aurora-store-glyph:" + SOURCE_ICONS.router + ";}" +
+  ".aurora-store-inbox .av.store{--aurora-store-glyph:" + SOURCE_ICONS.store + ";}" +
+  ".aurora-store-inbox .av.shares{--aurora-store-glyph:" + SOURCE_ICONS.shares + ";}" +
+  ".aurora-store-inbox .tx{flex:1;min-width:0;}" +
+  ".aurora-store-inbox .tt{display:flex;align-items:center;gap:7px;}" +
+  ".aurora-store-inbox .tt b{min-width:0;overflow:hidden;text-overflow:ellipsis;" +
+  "white-space:nowrap;font-weight:500;color:var(--text-muted,#777);}" +
+  ".aurora-store-inbox .row.unread .tt b{color:var(--text,#111);font-weight:600;}" +
+  ".aurora-store-inbox .dot{flex:none;width:7px;height:7px;border-radius:50%;" +
+  "background:var(--brand,#0086bf);}" +
+  ".aurora-store-inbox .sn{font-size:.86em;color:var(--text-subtle,#888);overflow:hidden;" +
+  "text-overflow:ellipsis;white-space:nowrap;margin-top:2px;}" +
+  ".aurora-store-inbox .rt{flex:none;display:grid;justify-items:end;gap:3px;min-width:28px;}" +
+  ".aurora-store-inbox .lv{width:15px;height:15px;display:block;}" +
+  ".aurora-store-inbox .lv.critical,.aurora-store-inbox .lv.warning{background:currentColor;" +
+  "-webkit-mask:var(--aurora-store-lvl) center/contain no-repeat;" +
+  "mask:var(--aurora-store-lvl) center/contain no-repeat;}" +
+  ".aurora-store-inbox .lv.critical{--aurora-store-lvl:" + LEVEL_ICONS.critical + ";" +
+  "color:var(--danger,#c0392b);}" +
+  ".aurora-store-inbox .lv.warning{--aurora-store-lvl:" + LEVEL_ICONS.warning + ";" +
+  "color:var(--warning,#a86a00);}" +
+  ".aurora-store-inbox .tm{font-size:.76em;color:var(--text-subtle,#888);" +
+  "font-variant-numeric:tabular-nums;}" +
+  ".aurora-store-inbox .set{display:flex;align-items:center;gap:.6em;" +
+  "justify-content:flex-start;width:auto;margin:0;padding:10px 18px;font-size:.8em;" +
+  "color:var(--text-subtle,#888);border-top:1px solid var(--hairline,rgba(0,0,0,0.12));" +
+  "cursor:pointer;}" +
+  ".aurora-store-inbox .set input{margin:0;flex:none;}" +
+  ".aurora-store-inbox .set span{flex:1;text-align:left;}" +
+  ".aurora-store-inbox .detail{min-width:0;display:flex;flex-direction:column;}" +
+  ".aurora-store-inbox .top{display:flex;align-items:center;gap:4px;" +
+  "padding:10px 14px 10px 28px;border-bottom:1px solid var(--hairline,rgba(0,0,0,0.12));}" +
+  ".aurora-store-inbox .meta{font-size:.82em;color:var(--text-subtle,#888);}" +
+  ".aurora-store-inbox .body{padding:28px 40px 36px;max-width:46em;}" +
+  ".aurora-store-inbox .body h3{margin:0 0 .6em;font-size:1.45em;font-weight:650;" +
+  "letter-spacing:-.01em;word-break:break-word;}" +
+  ".aurora-store-inbox .acts{display:flex;gap:.5em;flex-wrap:wrap;margin-top:1.2em;}" +
+  ".aurora-store-inbox .empty{padding:2.4em 1em;text-align:center;" +
+  "color:var(--text-subtle,#888);font-size:.9em;}" +
+  ".aurora-store-inbox .lnk{background:none;border:0;padding:0;font:inherit;font-size:.82em;" +
+  "color:var(--brand,#0086bf);cursor:pointer;}" +
+  ".aurora-store-inbox .lnk:hover{text-decoration:underline;}" +
+  ".aurora-store-inbox .back{display:none;margin-right:.8em;}" +
+  ".aurora-store-md{color:var(--text-muted,#777);line-height:1.7;word-break:break-word;}" +
+  ".aurora-store-md p{margin:0 0 .9em;}" +
+  ".aurora-store-md ul,.aurora-store-md ol{margin:0 0 .9em;padding-left:1.3em;}" +
+  ".aurora-store-md ul{list-style:disc;}.aurora-store-md ol{list-style:decimal;}" +
+  ".aurora-store-md li{margin:.2em 0;}" +
+  ".aurora-store-md p,.aurora-store-md li{color:var(--text-muted,#777);}" +
+  ".aurora-store-md strong{color:var(--text,#111);font-weight:600;}" +
+  ".aurora-store-md code{font-family:var(--font-mono,ui-monospace,Menlo,monospace);" +
+  "font-size:.88em;padding:.1em .4em;border-radius:5px;" +
+  "background:var(--surface-sunken,rgba(0,0,0,0.04));}" +
+  ".aurora-store-md pre{margin:0 0 .9em;padding:.7em .9em;border-radius:8px;overflow:auto;" +
+  "background:var(--surface-sunken,rgba(0,0,0,0.04));}" +
+  ".aurora-store-md pre code{padding:0;background:none;}" +
+  ".aurora-store-md blockquote{margin:0 0 .9em;padding:.1em 0 .1em 1em;" +
+  "border-left:2px solid var(--hairline,rgba(0,0,0,0.12));color:var(--text-subtle,#888);}" +
+  ".aurora-store-md hr{border:0;border-top:1px solid var(--hairline,rgba(0,0,0,0.12));" +
+  "margin:1.2em 0;}" +
+  ".aurora-store-md a{color:var(--brand,#0086bf);}" +
+  ".aurora-store-md h4,.aurora-store-md h5,.aurora-store-md h6{margin:1.2em 0 .4em;" +
+  "color:var(--text,#111);font-size:1em;}" +
+  ".aurora-store-compat{margin:.5em 0 0;font-size:.8em;line-height:1.5;" +
+  "color:var(--text-muted,#777);}" +
+  ".aurora-store-dim{filter:grayscale(.8);opacity:.7;}" +
+  "@media " + INBOX_NARROW_QUERY + "{.aurora-store-inbox{grid-template-columns:1fr;}" +
+  ".aurora-store-inbox .list{border-right:0;}" +
+  ".aurora-store-inbox.has-sel .list{display:none;}" +
+  ".aurora-store-inbox:not(.has-sel) .detail{display:none;}" +
+  ".aurora-store-inbox .body{padding:20px;}" +
+  ".aurora-store-inbox .top{padding-left:14px;}" +
+  ".aurora-store-inbox .back{display:inline-block;}}" +
   // A card's quick-apply button is revealed by hovering the card. A touch
   // screen never hovers, so on a phone that button was simply unreachable --
   // the only way to apply from the grid was to open the drawer first. Keyed on
@@ -1469,6 +1630,7 @@ return view.extend({
       // upgrade, survives a browser change, and resets to zero on the clean
       // reflash that is exactly when the reminder should come back.
       keySaved: uci.get("aurora", "theme", "hub_key_saved") === "1",
+      noticesMuted: uci.get("aurora", "theme", "hub_notices") === "0",
       // This router's own navigation shape. It used to stand in for the
       // built-in presets' too, back when a preset changed only colours; now
       // every preview draws the configuration's own nav_type and this is read
@@ -2105,6 +2267,456 @@ return view.extend({
     };
 
     // ------------------------------------------------------------------
+    // Inbox
+
+    let inboxSnapshot = hubApi.noticesCache.getStale();
+    let meData = null;
+    let noticesMuted = loadData.noticesMuted;
+    let inboxFilter = "all";
+    let inboxSel = null;
+
+    const uiLang = (document.documentElement.lang || "en").replace(/_/g, "-");
+
+    const formatDay = (isoDay) => {
+      try {
+        return new Intl.DateTimeFormat(uiLang, { dateStyle: "medium", timeZone: "UTC" }).format(
+          new Date(isoDay + "T00:00:00Z"),
+        );
+      } catch (e) {
+        return isoDay;
+      }
+    };
+
+    const formatAge = (stamp) => {
+      const age = notices.ageOf(notices.stampMs(stamp), Date.now());
+      if (!age) return "";
+      try {
+        return new Intl.RelativeTimeFormat(uiLang, { style: "narrow", numeric: "auto" }).format(
+          age.value,
+          age.unit,
+        );
+      } catch (e) {
+        return "";
+      }
+    };
+
+    const quoted = (name) => "“" + (name || _("Untitled theme")) + "”";
+
+    const inboxItems = () => notices.inbox(inboxSnapshot, meData, hubApi.inboxState());
+
+    const SOURCE_LABELS = {
+      [notices.SOURCE_ROUTER]: _("This router"),
+      [notices.SOURCE_STORE]: _("Marketplace"),
+      [notices.SOURCE_SHARES]: _("Your shares"),
+    };
+
+    const markdownLink = (url) => {
+      const safe = notices.safeUrl(url);
+      return safe && !notices.isExternalUrl(safe) ? L.url(safe) : safe;
+    };
+
+    const inboxShown = () =>
+      inboxItems().filter((item) => inboxFilter === "all" || item.unread);
+
+    // 派生条目由现状得出,notices.js 只给事实;这里负责把事实写成话。
+    // 广播通知的正文是 Markdown;派生条目和审核员原话一律纯文本。
+    const describeItem = (item) => {
+      const source = SOURCE_LABELS[item.source];
+      if (item.kind === "notice") {
+        const shown = notices.present(item.notice, document.documentElement.lang);
+        return {
+          title: shown.title,
+          source: source,
+          time: formatAge(item.at),
+          snippet: markdown.toText(shown.body),
+          markdown: shown.body,
+          link: shown.url ? shown : null,
+        };
+      }
+
+      if (item.kind === "feed")
+        return {
+          title: _("Add the Aurora update source"),
+          source: source,
+          body: [
+            _("Upgrading Aurora needs its update source. Once added, upgrades happen in System → Software like any other OpenWrt package."),
+            _("From openwrt.eamonxg.fun; the signing key ships with this package."),
+          ].concat(
+            item.theme && item.app
+              ? _("Installed now: theme %s, configuration app %s.").format(item.theme, item.app)
+              : [],
+          ),
+          act: { label: _("Add update source"), run: confirmAddFeed },
+        };
+
+      const review = { label: _("Review my shares"), run: () => selectTab("mine") };
+      if (item.kind === "compat") {
+        const n = item.names.length;
+        const named = _("Published with an older configuration format: %s.").format(
+          item.names.map(quoted).join(", "),
+        );
+        if (item.state === "unsupported")
+          return {
+            title:
+              n === 1
+                ? _("1 of your shared themes is not listed for updated routers")
+                : _("%d of your shared themes are not listed for updated routers").format(n),
+            source: source,
+            body: [
+              named,
+              _("Updated routers no longer see them. Update each one from this router to relist it — the link, the downloads and the name are kept."),
+            ],
+            act: review,
+          };
+        return {
+          title:
+            n === 1
+              ? _("1 of your shared themes needs an update")
+              : _("%d of your shared themes need an update").format(n),
+          source: source,
+          body: [
+            named,
+            item.sunset
+              ? _("They stay listed for routers that have not upgraded. From %s, updated routers stop seeing them until you publish them again from this router — the link, the downloads and the name are kept.").format(formatDay(item.sunset))
+              : _("They stay listed for routers that have not upgraded. Later, updated routers stop seeing them until you publish them again from this router — the link, the downloads and the name are kept."),
+          ],
+          act: review,
+        };
+      }
+
+      if (item.kind === "rejected")
+        return {
+          title: _("Assets not approved: %s").format(quoted(item.name)),
+          source: source,
+          body: (item.reason ? [_("Reviewer’s note: %s").format(item.reason)] : []).concat(
+            _("The colours and layout of this theme are live. Only the assets are held back."),
+          ),
+          act: { label: _("Open %s").format(quoted(item.name)), run: () => selectTab("mine") },
+        };
+
+      return {
+        title: _("Taken down: %s").format(quoted(item.name)),
+        source: source,
+        body: [_("Taken down — no longer in the store. Nothing you can do from here.")],
+      };
+    };
+
+    const inboxChanged = () => {
+      renderTabLabel(INBOX_TAB);
+      inboxIndicator.update();
+      if (state.tab === "inbox") renderContent();
+    };
+
+    const updateInboxState = (next) => {
+      hubApi.setInboxState(next(hubApi.inboxState()));
+      inboxChanged();
+    };
+
+    const markRead = (key) =>
+      updateInboxState((st) => ({ read: notices.withKey(st.read, key), done: st.done }));
+
+    const markUnread = (key) =>
+      updateInboxState((st) => ({ read: notices.withoutKey(st.read, key), done: st.done }));
+
+    const markAllRead = () =>
+      updateInboxState((st) => ({
+        read: notices.withKeys(st.read, inboxItems()),
+        done: st.done,
+      }));
+
+    const markDone = (key) => {
+      if (inboxSel === key) inboxSel = null;
+      updateInboxState((st) => ({ read: st.read, done: notices.withKey(st.done, key) }));
+    };
+
+    const pickItem = (key) => {
+      inboxSel = key;
+      markRead(key);
+    };
+
+    // 现有的"添加更新源"流程,原样从工作台搬来:同一个确认框、同一个 rpcd 方法、
+    // 同样的三种结局。源一旦写进去,条目自己消失,顶栏计数跟着变。
+    const runAddFeed = () => {
+      ui.showModal(_("Add the Aurora update source"), [
+        E("p", { class: "spinning" }, _("Adding the update source…")),
+      ]);
+      return Promise.all([
+        L.resolveDefault(hubApi.callAddFeed(), { result: 1 }),
+        L.resolveDefault(ui.menu.load(), null),
+      ]).then(([ret, menuTree]) => {
+        ui.hideModal();
+        if (!ret || ret.result !== 0) {
+          ui.addNotification(
+            null,
+            E("p", {}, [
+              document.createTextNode(
+                _("Could not add the update source: %s").format(
+                  (ret && ret.error) || _("Unknown error"),
+                ),
+              ),
+            ]),
+            "warning",
+          );
+          return;
+        }
+        const softwarePage = feedCheck.pickPackageManagerPath(menuTree);
+        ui.addNotification(
+          null,
+          E(
+            "p",
+            {},
+            [
+              ret.index_refreshed
+                ? _("Update source added")
+                : _("The update source was written, but refreshing the index failed. Hit Refresh on the Software page later."),
+            ].concat(
+              softwarePage
+                ? [" ", E("a", { href: L.url(softwarePage) }, _("Go to Software"))]
+                : [],
+            ),
+          ),
+          ret.index_refreshed ? "info" : "warning",
+        );
+        inboxSnapshot = hubApi.setNoticesLocal(
+          Object.assign({}, inboxSnapshot && inboxSnapshot.local, { feedMissing: false }),
+        );
+        inboxChanged();
+      });
+    };
+
+    const confirmAddFeed = () =>
+      ui.showModal(_("Add the Aurora update source"), [
+        E(
+          "p",
+          {},
+          _("Afterwards you can upgrade Aurora in System → Software, like any other OpenWrt package."),
+        ),
+        E(
+          "p",
+          { class: "cbi-value-description" },
+          _("From openwrt.eamonxg.fun; the signing key ships with this package."),
+        ),
+        buildConfirmActions(runAddFeed, _("Add")),
+      ]);
+
+    const buildInboxRow = (item) => {
+      const copy = describeItem(item);
+      const title = [E("b", {}, [document.createTextNode(copy.title)])];
+      if (item.unread) title.unshift(E("span", { class: "dot" }));
+      return E(
+        "div",
+        {
+          class: "row" + (item.unread ? " unread" : "") + (item.key === inboxSel ? " sel" : ""),
+          click: () => pickItem(item.key),
+        },
+        [
+          E("span", { class: "av " + item.source }),
+          E("div", { class: "tx" }, [
+            E("div", { class: "tt" }, title),
+            E("div", { class: "sn" }, [
+              document.createTextNode(copy.markdown === undefined ? copy.body[0] : copy.snippet),
+            ]),
+          ]),
+          E("div", { class: "rt" }, [
+            E("span", { class: "lv" + (item.level === "info" ? "" : " " + item.level) }),
+            E("span", { class: "tm" }, [document.createTextNode(copy.time || "")]),
+          ]),
+        ],
+      );
+    };
+
+    const iconButton = (extraClass, label, onClick) =>
+      E("button", {
+        type: "button",
+        class: "ib" + extraClass,
+        title: label,
+        "aria-label": label,
+        click: onClick,
+      });
+
+    const buildInboxDetail = (item) => {
+      const copy = describeItem(item);
+      const body = E("div", { class: "aurora-store-md" });
+      if (copy.markdown === undefined)
+        copy.body.forEach((paragraph) =>
+          body.appendChild(E("p", {}, [document.createTextNode(paragraph)])),
+        );
+      else body.appendChild(markdown.render(copy.markdown, document, markdownLink));
+
+      const content = [E("h3", {}, [document.createTextNode(copy.title)]), body];
+      if (copy.link)
+        content.push(
+          E("div", { class: "acts" }, [
+            E(
+              "a",
+              Object.assign(
+                { class: "cbi-button cbi-button-action" },
+                copy.link.external
+                  ? { href: copy.link.url, target: "_blank", rel: "noreferrer" }
+                  : { href: L.url(copy.link.url) },
+              ),
+              _("Learn more"),
+            ),
+          ]),
+        );
+      else if (copy.act)
+        content.push(
+          E("div", { class: "acts" }, [
+            E(
+              "button",
+              { type: "button", class: "cbi-button cbi-button-action", click: copy.act.run },
+              [document.createTextNode(copy.act.label)],
+            ),
+          ]),
+        );
+
+      return [
+        E("div", { class: "top" }, [
+          E(
+            "button",
+            {
+              type: "button",
+              class: "lnk back",
+              click: () => {
+                inboxSel = null;
+                renderContent();
+              },
+            },
+            "← " + _("Inbox"),
+          ),
+          E("span", { class: "meta" }, [
+            document.createTextNode(copy.time ? copy.source + " · " + copy.time : copy.source),
+          ]),
+          E("span", { class: "sp" }),
+          iconButton(" unread", _("Mark unread"), () => markUnread(item.key)),
+          iconButton("", _("Done"), () => markDone(item.key)),
+        ]),
+        E("div", { class: "body" }, content),
+      ];
+    };
+
+    const buildNoticesToggle = () => {
+      const box = E("input", { type: "checkbox" });
+      box.checked = !noticesMuted;
+      box.addEventListener("change", () => {
+        const muted = !box.checked;
+        box.disabled = true;
+        callUciSet("aurora", "theme", { hub_notices: muted ? "0" : "1" })
+          .then(() => callUciCommit("aurora"))
+          .then(
+            () => {
+              noticesMuted = muted;
+              inboxSnapshot = hubApi.setNoticesMuted(muted);
+              inboxIndicator.update();
+            },
+            () => {
+              box.checked = !noticesMuted;
+              ui.addNotification(
+                null,
+                E("p", {}, _("Couldn't save that setting. Try again.")),
+                "warning",
+              );
+            },
+          )
+          .then(() => {
+            box.disabled = false;
+          });
+      });
+      return E("label", { class: "set" }, [
+        box,
+        E("span", {}, _("Show the unread count on every LuCI page")),
+      ]);
+    };
+
+    const buildInbox = () => {
+      const items = inboxItems();
+      const narrow = window.matchMedia(INBOX_NARROW_QUERY).matches;
+      // 窄屏上列表和详情二选一:替用户选中第一条,等于一进来就把列表藏了。
+      if (!items.some((item) => item.key === inboxSel))
+        inboxSel = narrow || !items.length ? null : items[0].key;
+      const current = items.filter((item) => item.key === inboxSel)[0];
+      const shown = inboxShown();
+
+      const rows = [];
+      [
+        [notices.GROUP_ACTION, _("Needs action")],
+        [notices.GROUP_UPDATES, _("Updates")],
+      ].forEach(([group, label]) => {
+        const part = shown.filter((item) => item.group === group);
+        if (!part.length) return;
+        rows.push(E("div", { class: "grp" }, label));
+        part.forEach((item) => rows.push(buildInboxRow(item)));
+      });
+
+      return E("div", { class: "aurora-store-inbox" + (current ? " has-sel" : "") }, [
+        E("div", { class: "list" }, [
+          E(
+            "div",
+            { class: "bar" },
+            [
+              ["all", _("All")],
+              ["unread", _("Unread")],
+            ]
+              .map(([key, label]) =>
+                E(
+                  "button",
+                  {
+                    type: "button",
+                    class: "pill" + (inboxFilter === key ? " on" : ""),
+                    click: () => {
+                      inboxFilter = key;
+                      renderContent();
+                    },
+                  },
+                  label,
+                ),
+              )
+              .concat(E("span", { class: "sp" }), iconButton("", _("Mark all read"), markAllRead)),
+          ),
+          E(
+            "div",
+            { class: "rows" },
+            rows.length ? rows : [E("div", { class: "empty" }, _("You’re all caught up."))],
+          ),
+          buildNoticesToggle(),
+        ]),
+        E(
+          "div",
+          { class: "detail" },
+          current
+            ? buildInboxDetail(current)
+            : [E("div", { class: "empty" }, _("Select a notification"))],
+        ),
+      ]);
+    };
+
+    // J/K/E/U 只属于 Inbox tab;带修饰键的组合(⌘K 是主题的命令面板)不归这里管。
+    let inboxMounted = false;
+    const onInboxKey = (ev) => {
+      if (rootEl.isConnected) inboxMounted = true;
+      else if (inboxMounted) return document.removeEventListener("keydown", onInboxKey);
+      if (state.tab !== "inbox" || ev.ctrlKey || ev.metaKey || ev.altKey) return;
+      if (ev.target.closest && ev.target.closest("input,textarea,select,[contenteditable]"))
+        return;
+      const shown = inboxShown();
+      const at = shown.findIndex((item) => item.key === inboxSel);
+      const key = String(ev.key).toLowerCase();
+      if (key === "j" && shown[at + 1]) pickItem(shown[at + 1].key);
+      else if (key === "k" && at > 0) pickItem(shown[at - 1].key);
+      else if (key === "e" && inboxSel) markDone(inboxSel);
+      else if (key === "u" && inboxSel) markUnread(inboxSel);
+    };
+    document.addEventListener("keydown", onInboxKey);
+
+    const onInboxHash = () => {
+      if (rootEl.isConnected) inboxMounted = true;
+      else if (inboxMounted) return window.removeEventListener("hashchange", onInboxHash);
+      if (window.location.hash === inboxIndicator.INBOX_HASH && state.tab !== "inbox")
+        selectTab("inbox");
+    };
+    window.addEventListener("hashchange", onInboxHash);
+
+    // ------------------------------------------------------------------
     // My shares
 
     const mySharesEl = E("div", { id: "aurora-hub-my-shares" });
@@ -2138,6 +2750,7 @@ return view.extend({
         // 身份卡是 renderContent 画的,而这次请求正是它等的那份数据 —— 加载态
         // 与空态的切换只有在这里重画才看得见。
         if (state.tab === "mine") renderContent();
+        return myFailed ? null : res.data;
       });
 
     const applyMe = (data) => {
@@ -2148,7 +2761,9 @@ return view.extend({
         id: (data && data.id) || null,
         nickname: (data && data.nickname) || null,
       };
+      meData = data || null;
       renderMyShares((data && data.configs) || []);
+      inboxChanged();
     };
 
     // An update rebuilds and re-sends the whole configuration -- logo, login
@@ -2240,12 +2855,22 @@ return view.extend({
       return null;
     };
 
+    const compatNoteFor = (item, compat) => {
+      if (compat === "unsupported")
+        return _("Updated routers no longer see this theme. Update it to relist — link and downloads are kept.");
+      const sunset = notices.sunsetDate(item);
+      return sunset
+        ? _("Listed until %s. Publish it again from this router to keep it listed.").format(formatDay(sunset))
+        : _("Publish it again from this router to keep it listed.");
+    };
+
     const buildMyShareRow = (item) => {
+      const compat = item.status === "removed" ? null : notices.compatBadge(item);
       const updateBtn = E(
         "button",
         {
           type: "button",
-          class: "cbi-button",
+          class: compat ? "cbi-button cbi-button-action" : "cbi-button",
           click: () => openUpdateForm(item),
         },
         _("Update with current configuration"),
@@ -2281,11 +2906,28 @@ return view.extend({
       const nameCell = E("td", { class: "td", style: "word-break:break-word;" }, [
         E(
           "span",
-          { style: "display:inline-flex;vertical-align:middle;margin-right:8px;" },
+          {
+            class: compat === "unsupported" ? "aurora-store-dim" : "",
+            style: "display:inline-flex;vertical-align:middle;margin-right:8px;",
+          },
           [buildDotRow(paletteOf(item))],
         ),
         document.createTextNode(item.name || _("Untitled theme")),
       ]);
+      if (compat)
+        nameCell.appendChild(
+          E(
+            "span",
+            { class: "aurora-store-pill risk", style: "margin-left:8px;" },
+            compat === "unsupported"
+              ? _("Not listed for updated routers")
+              : _("Needs update"),
+          ),
+        );
+      if (compat)
+        nameCell.appendChild(
+          E("div", { class: "aurora-store-compat" }, compatNoteFor(item, compat)),
+        );
 
       // 被下架的那一行:它不是错误,是这件作品此刻唯一的真相,而这里是作者
       // 唯一会被告知的地方 —— 公开的浏览接口按设计不会再列出它。
@@ -2324,7 +2966,7 @@ return view.extend({
                     "margin-top:2px;font-size:0.84em;color:var(--text-muted);" +
                     "border-left:2px solid var(--hairline);padding-left:0.6em;",
                 },
-                note.detail,
+                [document.createTextNode(note.detail)],
               ),
             );
           }
@@ -2578,7 +3220,26 @@ return view.extend({
             keySaved ? _("Backed up") : _("Not backed up"),
           ),
         );
-        meta = _("Signs everything you share. It lives only on this router.");
+        const counts = notices.compatCounts(meData);
+        const day = counts.sunset ? formatDay(counts.sunset) : "";
+        meta = [_("Signs everything you share. It lives only on this router.")]
+          .concat(
+            !counts.deprecated
+              ? []
+              : day
+                ? counts.deprecated === 1
+                  ? _("1 needs an update before %s").format(day)
+                  : _("%d need an update before %s").format(counts.deprecated, day)
+                : counts.deprecated === 1
+                  ? _("1 needs an update")
+                  : _("%d need an update").format(counts.deprecated),
+            !counts.unsupported
+              ? []
+              : counts.unsupported === 1
+                ? _("1 not listed for updated routers")
+                : _("%d not listed for updated routers").format(counts.unsupported),
+          )
+          .join(" · ");
         // 身份的三个动作全在这一处。备份是实心的那个(没备份时),改名和
         // 恢复是文字链 —— 它们不是这张卡要人做的事,只是要人找得到的事。
         //
@@ -3439,6 +4100,12 @@ return view.extend({
 
     // count 是惰性的:builtinItems 在渲染前就定好了,myShares 要等 hub_my_shares
     // 回来。两个都读的是渲染那一刻的值,而不是定义这张表时的值。
+    const INBOX_TAB = {
+      key: "inbox",
+      label: _("Inbox"),
+      badge: () => notices.unreadCount(inboxItems()),
+    };
+
     const TABS = [
       { key: "all", label: _("All") },
       { key: "builtin", label: _("Built-in"), count: () => builtinItems.length },
@@ -3451,6 +4118,7 @@ return view.extend({
         label: _("Mine"),
         count: () => myShares.length + (buildMineModel() ? 1 : 0),
       },
+      INBOX_TAB,
     ];
 
     const renderTabLabel = (tab) => {
@@ -3460,6 +4128,11 @@ return view.extend({
       btn.appendChild(document.createTextNode(tab.label));
       const n = tab.count ? tab.count() : 0;
       if (n) btn.appendChild(E("span", { class: "n" }, [document.createTextNode(String(n))]));
+      const unread = tab.badge ? tab.badge() : 0;
+      if (unread)
+        btn.appendChild(
+          E("span", { class: "aurora-store-count" }, [document.createTextNode(String(unread))]),
+        );
     };
 
     const tabButtons = {};
@@ -3655,6 +4328,8 @@ return view.extend({
         push(buildSectionTitle(_("My Shares"), ""));
         push(buildIdentityCard());
         push(mySharesEl);
+      } else if (state.tab === "inbox") {
+        push(buildInbox());
       }
     };
 
@@ -3663,6 +4338,16 @@ return view.extend({
       TABS.forEach((tab) =>
         tabButtons[tab.key].classList.toggle("active", tab.key === key),
       );
+      searchInput.style.display = key === "inbox" ? "none" : "";
+      // 顶栏指示器靠这个 hash 把人送到 Inbox;离开 Inbox 就摘掉它,否则再点一次
+      // 指示器时地址没变,hashchange 不会来。
+      const hash = key === "inbox" ? inboxIndicator.INBOX_HASH : "";
+      if (window.location.hash !== hash && window.history && window.history.replaceState)
+        window.history.replaceState(
+          window.history.state,
+          "",
+          window.location.pathname + window.location.search + hash,
+        );
       renderContent();
     };
 
@@ -3707,7 +4392,13 @@ return view.extend({
     // 已发布的作品,和"拿不到数据"是两回事。
     applyMe(hubApi.meCache.getStale());
     // 从工作台带着发布意图过来,直接落在"我的分享"上,不必再点一次标签。
-    selectTab(shareIntent ? "mine" : "all"); // 末行已 renderContent(),首帧在此成型
+    selectTab(
+      shareIntent
+        ? "mine"
+        : window.location.hash === inboxIndicator.INBOX_HASH
+          ? "inbox"
+          : "all",
+    ); // 末行已 renderContent(),首帧在此成型
 
     [
       styleEl,
@@ -3721,7 +4412,13 @@ return view.extend({
     // presets.json,在线列表与创作者档案来自上面两处缓存。两个请求回来后
     // 各自 reconcile,失败则保留当前这帧。
     fetchSort("hot");
-    refreshMyShares();
+    // 打开商店永远两路都刷,不看 preload 的 12 小时节流;hub_me 只跑这一趟。
+    hubApi
+      .refreshNotices({ muted: noticesMuted, me: refreshMyShares() })
+      .then((snapshot) => {
+        inboxSnapshot = snapshot;
+        inboxChanged();
+      });
 
     return rootEl;
   },

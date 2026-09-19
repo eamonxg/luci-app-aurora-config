@@ -18,7 +18,6 @@ const themeFormField = (key) =>
 const FEED_HOST = "openwrt.eamonxg.fun";
 const MANIFEST_URL = `https://${FEED_HOST}/manifest.json`;
 const MANIFEST_CACHE_KEY = "aurora.manifest";
-const FEED_NOTICE_KEY = "aurora.feed_notice_dismissed";
 
 // Version of the vendored @eamonxg/luci-theme-tokens engine -- stamped by
 // scripts/sync-tokens.mjs, verified by tests/theme-token-sync.test.mjs.
@@ -147,13 +146,6 @@ const callImportConfig = rpc.declare({
 const callResetDefaults = rpc.declare({
   object: "luci.aurora",
   method: "reset_defaults",
-});
-
-// The only rpcd method this feature adds, and it fires solely when the user
-// confirms the dialog. Feed status itself rides along on get_init_data.
-const callAddFeed = rpc.declare({
-  object: "luci.aurora",
-  method: "add_feed",
 });
 
 const callWritePwaManifest = rpc.declare({
@@ -1592,6 +1584,106 @@ const ensureColorGroupStyles = () => {
    shadcn/generic name, then something derived from currentColor -- because a
    bare var(--hairline) under a theme that never heard of it drops the whole
    declaration, which is how the borders vanished too. */
+// 菜单的浮层、项和 hover 用主题现成的 .cbi-dropdown > ul.dropdown;这里只补
+// 它表达不了的:安静的版本行、方形的"更多"、右对齐、分隔线、危险色、窄屏。
+const ensureToolbarStyles = () => {
+  if (document.getElementById("aurora-studio-head-styles")) return;
+  document.head.appendChild(
+    E(
+      "style",
+      { id: "aurora-studio-head-styles" },
+      `
+.aurora-studio-head {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+}
+.aurora-studio-versions {
+  color: var(--text-subtle, var(--muted-foreground, color-mix(in srgb, currentColor 55%, transparent)));
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  font-size: .88em;
+  gap: 4px 1.4em;
+  min-width: 0;
+}
+.aurora-studio-versions b {
+  color: var(--text-muted, var(--muted-foreground, color-mix(in srgb, currentColor 70%, transparent)));
+  font-weight: 500;
+}
+.aurora-studio-versions a {
+  color: var(--brand, var(--primary, currentColor));
+  font-weight: 600;
+  text-decoration: none;
+}
+.aurora-studio-versions a:hover {
+  text-decoration: underline;
+}
+.aurora-studio-versions .up::before {
+  background: var(--brand, var(--primary, currentColor));
+  border-radius: 50%;
+  content: "";
+  display: inline-block;
+  height: 6px;
+  margin-right: .5em;
+  vertical-align: middle;
+  width: 6px;
+}
+.aurora-studio-acts {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+.cbi-dropdown.aurora-studio-more {
+  cursor: pointer;
+  height: 38px;
+  justify-content: center;
+  min-width: 0;
+  position: relative;
+  width: 38px;
+}
+.cbi-dropdown.aurora-studio-more > ul.dropdown {
+  left: auto;
+  min-width: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  width: min(280px, calc(100vw - 32px));
+}
+.cbi-dropdown.aurora-studio-more > ul.dropdown > li.danger {
+  color: var(--danger, var(--destructive, #c0392b));
+}
+.cbi-dropdown.aurora-studio-more > ul.dropdown > li.sep {
+  background: var(--hairline, var(--border, color-mix(in srgb, currentColor 18%, transparent)));
+  height: 1px;
+  margin: 4px 0;
+  min-height: 0;
+  padding: 0;
+  pointer-events: none;
+}
+@media (max-width: 600px) {
+  .aurora-studio-acts {
+    flex: 1 1 100%;
+  }
+  .aurora-studio-acts > .cbi-button:not(.aurora-studio-more) {
+    flex: 1;
+    min-height: 42px;
+  }
+  .cbi-dropdown.aurora-studio-more {
+    height: 42px;
+    width: 42px;
+  }
+}
+@media (max-width: 600px), (hover: none) {
+  .cbi-dropdown.aurora-studio-more > ul.dropdown > li[role="menuitem"] {
+    min-height: 42px;
+  }
+}
+`,
+    ),
+  );
+};
+
 const ensureBgCardStyles = () => {
   if (document.getElementById("aurora-bg-card-styles")) return;
   document.head.appendChild(
@@ -2163,11 +2255,6 @@ return view.extend({
     // separate slot in form.js, so the header bar below still renders.
     const m = new form.Map("aurora");
 
-    const themeVersion =
-      installedVersions?.theme?.installed_version || _("Unknown");
-    const configVersion =
-      installedVersions?.config?.installed_version || _("Unknown");
-
     let so;
     const viewCtx = this;
 
@@ -2228,11 +2315,11 @@ return view.extend({
       // the store itself is one tabmenu entry away -- a header button for it
       // would be a second entrance to the same page. What is left here are the
       // config-level actions, which have nowhere else to live.
-      const exportButton = E(
-        "button",
+      const exportItem = E(
+        "li",
         {
-          class: "cbi-button cbi-button-apply",
-          title: _("Export Aurora Settings"),
+          role: "menuitem",
+          tabindex: "-1",
           click: ui.createHandlerFn(viewCtx, () => {
             return L.resolveDefault(callExportConfig(), null)
               .then((res) => {
@@ -2285,14 +2372,14 @@ return view.extend({
               });
           }),
         },
-        _("Export"),
+        _("Export configuration"),
       );
 
-      const importButton = E(
-        "button",
+      const importItem = E(
+        "li",
         {
-          class: "cbi-button cbi-button-add",
-          title: _("Import Aurora Settings"),
+          role: "menuitem",
+          tabindex: "-1",
           click: ui.createHandlerFn(viewCtx, function (ev) {
             const btn = ev.currentTarget || ev.target;
             const originalLabel = btn?.firstChild?.data;
@@ -2390,14 +2477,15 @@ return view.extend({
               });
           }),
         },
-        _("Import"),
+        _("Import configuration"),
       );
 
-      const resetButton = E(
-        "button",
+      const resetItem = E(
+        "li",
         {
-          class: "cbi-button cbi-button-reset",
-          title: _("Reset All Aurora Settings"),
+          role: "menuitem",
+          tabindex: "-1",
+          class: "danger",
           click: ui.createHandlerFn(viewCtx, () => {
             return ui.showModal(_("Reset All Aurora Settings"), [
               E(
@@ -2450,7 +2538,7 @@ return view.extend({
             ]);
           }),
         },
-        _("Reset"),
+        _("Reset everything to defaults"),
       );
 
       // 发布的起点在这里,不在商店。这一排本来就是对"整套配置"动手的地方 ——
@@ -2460,7 +2548,7 @@ return view.extend({
       const shareButton = E(
         "button",
         {
-          class: "cbi-button",
+          class: "cbi-button cbi-button-action",
           click: () => {
             window.location.href =
               L.url("admin/system/aurora/marketplace") + "?share=1";
@@ -2469,72 +2557,113 @@ return view.extend({
         _("Share to the store"),
       );
 
-      return E(
-        "div",
-        {
-          class: "aurora-config-toolbar",
-          style: "display:flex; flex-wrap:wrap; gap:0.5em; align-items:center;",
-        },
-        [exportButton, importButton, shareButton, resetButton],
-      );
+      return E("div", { class: "aurora-config-toolbar aurora-studio-acts" }, [
+        shareButton,
+        buildMoreMenu([exportItem, importItem, E("li", { role: "separator", class: "sep" }), resetItem]),
+      ]);
     };
 
-    // Named node on purpose: the update-source check appends an "update
-    // available" capsule here once it has compared the feed manifest.
-    const versionArea = E(
-      "div",
-      {
-        style:
-          "display: flex; flex-wrap: wrap; gap: 1em; align-items: center;",
-      },
-      [
-        E("span", { style: "white-space: nowrap;" }, [
-          document.createTextNode(_("Theme: ")),
-          E(
-            "span",
-            {
-              id: "theme-version",
-              class: "label success",
-            },
-            `v${themeVersion}`,
-          ),
-        ]),
-        E("span", { style: "white-space: nowrap;" }, [
-          document.createTextNode(_("Config: ")),
-          E(
-            "span",
-            {
-              id: "config-version",
-              class: "label success",
-            },
-            `v${configVersion}`,
-          ),
-        ]),
-      ],
-    );
+    // 外壳是 LuCI 的 .cbi-dropdown:开合状态就是它的 [open] 属性,浮层就是它的
+    // ul.dropdown,所以每个主题都按自己的下拉样式画这张菜单。
+    const buildMoreMenu = (items) => {
+      const menu = E(
+        "ul",
+        { class: "dropdown", role: "menu", id: "aurora-studio-more-menu", tabindex: "-1" },
+        items,
+      );
+      const toggle = E(
+        "div",
+        {
+          class: "cbi-dropdown cbi-button aurora-studio-more",
+          role: "button",
+          tabindex: "0",
+          title: _("More"),
+          "aria-label": _("More"),
+          "aria-haspopup": "menu",
+          "aria-expanded": "false",
+          "aria-controls": menu.id,
+        },
+        [E("span", { "aria-hidden": "true" }, "⋯"), menu],
+      );
+      const entries = () => Array.from(menu.querySelectorAll('[role="menuitem"]'));
 
-    const headerBar = E(
-      "div",
-      {
-        style:
-          "display: flex; flex-wrap: wrap; gap: 1em; align-items: center; justify-content: space-between;",
-      },
-      [versionArea, buildConfigToolbarNode()],
-    );
+      const onOutside = (ev) => {
+        if (!toggle.contains(ev.target)) close(false);
+      };
+      const close = (refocus) => {
+        toggle.removeAttribute("open");
+        toggle.setAttribute("aria-expanded", "false");
+        document.removeEventListener("click", onOutside);
+        if (refocus) toggle.focus();
+      };
+      const open = () => {
+        toggle.setAttribute("open", "");
+        toggle.setAttribute("aria-expanded", "true");
+        document.addEventListener("click", onOutside);
+        entries()[0].focus();
+      };
+
+      toggle.addEventListener("click", (ev) => {
+        if (menu.contains(ev.target)) close(false);
+        else if (toggle.hasAttribute("open")) close(true);
+        else open();
+      });
+
+      toggle.addEventListener("keydown", (ev) => {
+        const isOpen = toggle.hasAttribute("open");
+        const activate = ev.key === "Enter" || ev.key === " ";
+        if (ev.key === "Escape" && isOpen) close(true);
+        else if (ev.key === "Tab") close(false);
+        else if (!isOpen && (activate || ev.key === "ArrowDown")) open();
+        else if (isOpen && activate && menu.contains(ev.target)) ev.target.click();
+        else if (isOpen && ["ArrowDown", "ArrowUp", "Home", "End"].includes(ev.key)) {
+          const all = entries();
+          const at = all.indexOf(document.activeElement);
+          const next =
+            ev.key === "Home"
+              ? 0
+              : ev.key === "End"
+                ? all.length - 1
+                : (at + (ev.key === "ArrowDown" ? 1 : -1) + all.length) % all.length;
+          all[next].focus();
+        } else return;
+        if (ev.key !== "Tab") ev.preventDefault();
+      });
+
+      return toggle;
+    };
+
+    // Named node on purpose: once the feed manifest has been compared, each
+    // package's update is attached to that package's own entry in this line.
+    const versionEntry = (attrs, label, installed) =>
+      E(
+        "span",
+        installed ? Object.assign(attrs, { title: installed }) : attrs,
+        [
+          E("b", {}, label),
+          " " + (installed ? feedCheck.shortVersion(installed) : _("Unknown")),
+        ],
+      );
+
+    const versionArea = E("div", { class: "aurora-studio-versions" }, [
+      versionEntry({ id: "theme-version" }, _("Theme"), installedVersions?.theme?.installed_version),
+      versionEntry({ id: "config-version" }, _("Config"), installedVersions?.config?.installed_version),
+    ]);
+
+    ensureToolbarStyles();
+    const headerBar = E("div", { class: "aurora-studio-head" }, [
+      versionArea,
+      buildConfigToolbarNode(),
+    ]);
 
     m.description = headerBar;
 
     // ------------------------------------------------------------------
-    // Update source. Adding it is a local file operation and has to go
-    // through rpcd; checking for a newer build is a pure read and goes
-    // straight from the browser to the CDN, so the router takes no part.
+    // Update check. A pure read that goes straight from the browser to the
+    // CDN, so the router takes no part. Adding the update source itself lives
+    // in the Marketplace inbox.
 
     const packagePagePath = feedCheck.pickPackageManagerPath(menuTree);
-
-    const goToSoftware = (label) =>
-      packagePagePath
-        ? E("a", { class: "cbi-button", href: L.url(packagePagePath) }, label)
-        : null;
 
     const checkForUpdates = () => {
       // Not configured means there is nothing to compare against, so no
@@ -2566,16 +2695,18 @@ return view.extend({
         .catch(() => null);
     };
 
+    // 两个包各判各的,更新挂在它自己那一项后面。isNewer 判不出来就什么都不说,
+    // 所以没有更新时这一行不出现任何强调色。
     const showUpdateCapsule = (manifest) => {
       if (!manifest) return;
       const channel = feedStatus.channel || "snapshots";
       const format = feedStatus.pm === "opkg" ? "opkg" : "apk";
       const packages = [
-        ["luci-theme-aurora", themeVersion],
-        ["luci-app-aurora-config", configVersion],
+        ["luci-theme-aurora", "theme-version", installedVersions?.theme?.installed_version],
+        ["luci-app-aurora-config", "config-version", installedVersions?.config?.installed_version],
       ];
 
-      packages.forEach(([pkg, installed]) => {
+      packages.forEach(([pkg, id, installed]) => {
         const available = feedCheck.findManifestVersion(
           manifest,
           channel,
@@ -2583,147 +2714,21 @@ return view.extend({
           pkg,
         );
         if (!feedCheck.isNewer(installed, available)) return;
-        const label = _("Update available %s").format(available);
-        versionArea.appendChild(
+        const entry = versionArea.querySelector("#" + id);
+        if (!entry || entry.classList.contains("up")) return;
+        // 同一个 x.y.z 的重建只有 r 戳不同,那时把完整版本串写出来。
+        const short = feedCheck.shortVersion(available);
+        const label = _("%s available").format(
+          short === feedCheck.shortVersion(installed) ? available : short,
+        );
+        entry.classList.add("up");
+        entry.appendChild(document.createTextNode(" → "));
+        entry.appendChild(
           packagePagePath
-            ? E(
-                "a",
-                { class: "label warning", href: L.url(packagePagePath) },
-                label,
-              )
-            : E("span", { class: "label warning" }, label),
+            ? E("a", { href: L.url(packagePagePath), title: available }, [label])
+            : E("span", { title: available }, [label]),
         );
       });
-    };
-
-    const buildFeedNotice = () => {
-      if (feedStatus.pm === "unknown" || feedStatus.configured) return null;
-      if (localStorage.getItem(FEED_NOTICE_KEY) === "1") return null;
-
-      const notice = E("div", {
-        class: "alert-message warning",
-        style: "display:flex; gap:1em; align-items:center; flex-wrap:wrap;",
-      });
-
-      const fill = (nodes, className) => {
-        notice.className = className;
-        while (notice.firstChild) notice.removeChild(notice.firstChild);
-        nodes.filter(Boolean).forEach((node) => notice.appendChild(node));
-      };
-
-      const runAddFeed = () => {
-        ui.hideModal();
-        fill(
-          [E("span", { class: "spinning" }, _("Adding the update source…"))],
-          "alert-message",
-        );
-        return L.resolveDefault(callAddFeed(), { result: 1 }).then((ret) => {
-          if (ret?.result !== 0) {
-            fill(
-              [
-                E(
-                  "span",
-                  {},
-                  _("Could not add the update source: %s").format(
-                    ret?.error || _("Unknown error"),
-                  ),
-                ),
-              ],
-              "alert-message warning",
-            );
-            return;
-          }
-          if (!ret.index_refreshed) {
-            // The source is on disk; only the index refresh failed, and the
-            // Software page can redo that itself. Saying "failed" flatly here
-            // would send the user to undo work that succeeded.
-            fill(
-              [
-                E(
-                  "span",
-                  { style: "flex:1;" },
-                  _(
-                    "The update source was written, but refreshing the index failed. Hit Refresh on the Software page later.",
-                  ),
-                ),
-                goToSoftware(_("Go to Software")),
-              ],
-              "alert-message warning",
-            );
-            return;
-          }
-          fill(
-            [
-              E("span", { style: "flex:1;" }, _("Update source added")),
-              goToSoftware(_("Go to Software")),
-            ],
-            "alert-message success",
-          );
-        });
-      };
-
-      fill(
-        [
-          E(
-            "span",
-            { style: "flex:1;" },
-            _(
-              "Upgrading Aurora needs its update source. Once added, upgrades happen in System → Software like any other OpenWrt package.",
-            ),
-          ),
-          E(
-            "button",
-            {
-              class: "cbi-button cbi-button-action",
-              click: ui.createHandlerFn(viewCtx, () =>
-                ui.showModal(_("Add the Aurora update source"), [
-                  E(
-                    "p",
-                    {},
-                    _(
-                      "Afterwards you can upgrade Aurora in System → Software, like any other OpenWrt package.",
-                    ),
-                  ),
-                  E(
-                    "p",
-                    { class: "cbi-value-description" },
-                    _(
-                      "From openwrt.eamonxg.fun; the signing key ships with this package.",
-                    ),
-                  ),
-                  E("div", { class: "right" }, [
-                    E("button", { class: "btn", click: ui.hideModal }, _("Cancel")),
-                    " ",
-                    E(
-                      "button",
-                      { class: "btn cbi-button-action important", click: runAddFeed },
-                      _("Add"),
-                    ),
-                  ]),
-                ]),
-              ),
-            },
-            _("Add update source"),
-          ),
-          E(
-            "button",
-            {
-              class: "cbi-button",
-              "aria-label": _("Dismiss"),
-              // localStorage, not uci: closing a hint should not raise an
-              // unsaved-changes banner, nor cost a round trip.
-              click: () => {
-                localStorage.setItem(FEED_NOTICE_KEY, "1");
-                notice.parentNode?.removeChild(notice);
-              },
-            },
-            "×",
-          ),
-        ],
-        "alert-message warning",
-      );
-
-      return notice;
     };
 
     const s = m.section(form.NamedSection, "theme", "aurora");
@@ -3947,8 +3952,7 @@ return view.extend({
       // it never does the header simply stays as it is.
       checkForUpdates().then(showUpdateCapsule);
 
-      const notice = buildFeedNotice();
-      return notice ? E("div", {}, [notice, mapNode]) : mapNode;
+      return mapNode;
     });
 
   },

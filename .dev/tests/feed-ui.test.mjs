@@ -30,13 +30,16 @@ test("feed ui: the result is cached for the session", async () => {
   assert.match(src, /sessionStorage/);
 });
 
-test("feed ui: the dismissal is browser-side, not a uci change", async () => {
+test("feed ui: the update-source prompt left Studio for the Marketplace inbox", async () => {
   const src = await readFile(SRC, "utf8");
-  assert.match(src, /localStorage\.setItem\(FEED_NOTICE_KEY/);
+  for (const gone of ["buildFeedNotice", "FEED_NOTICE_KEY", "feed_notice_dismissed", "callAddFeed", "Add update source", "Upgrading Aurora needs"])
+    assert.ok(!src.includes(gone), gone);
   assert.ok(
     !/uci\.set\("aurora", "theme", "feed_/.test(src),
-    "writing uci would raise a phantom unsaved change just for closing a hint",
+    "nothing about the feed is a uci change",
   );
+  // "A newer build exists" is a different thing and stays in Studio.
+  assert.match(src, /_\("%s available"\)/);
 });
 
 test("feed ui: nothing is said when there is no update", async () => {
@@ -44,20 +47,18 @@ test("feed ui: nothing is said when there is no update", async () => {
   assert.ok(!/Up to date|已是最新/.test(src), "silence is the up-to-date state");
 });
 
-test("feed ui: only one new rpcd method exists", async () => {
-  const src = await readFile(SRC, "utf8");
-  assert.match(src, /method: "add_feed"/, "add_feed must be declared");
-  assert.ok(
-    !/method: "get_feed_status"/.test(src),
-    "feed status rides on get_init_data",
-  );
+test("feed ui: add_feed is the only rpcd method, and status still rides on get_init_data", async () => {
+  const hubApi = await readFile(srcPath("utils/hub-api.js"), "utf8");
+  assert.match(hubApi, /method: "add_feed"/, "add_feed must be declared");
+  for (const file of [hubApi, await readFile(SRC, "utf8")])
+    assert.ok(!/method: "get_feed_status"/.test(file), "feed status rides on get_init_data");
 });
 
 test("feed ui: a network failure degrades in silence", async () => {
   const src = await readFile(SRC, "utf8");
   const block = src.slice(
     src.indexOf("const checkForUpdates ="),
-    src.indexOf("const buildFeedNotice ="),
+    src.indexOf("const showUpdateCapsule ="),
   );
   assert.match(block, /\.catch\(\(\) => null\)/, "no error toast, no console noise");
 });

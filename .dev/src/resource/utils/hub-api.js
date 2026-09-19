@@ -1,12 +1,21 @@
 "use strict";
 "require baseclass";
 "require rpc";
+"require utils.notices as notices";
 
 const CACHE_KEY = "aurora.hub.list";
 const ME_CACHE_KEY = "aurora.hub.me";
+const NOTICES_CACHE_KEY = "aurora.hub.notices";
+const INBOX_READ_KEY = "aurora.hub.inboxRead";
+const INBOX_DONE_KEY = "aurora.hub.inboxDone";
+const NOTICES_CHECKED_KEY = "aurora.hub.noticesChecked";
 
 const HUB_BASE = "https://themes.eamonxg.fun";
 const HUB_TIMEOUT_MS = 15000;
+const HUB_NOT_FOUND = "invalid_id";
+
+// 本客户端读得懂的最高 payload schema。升 schema 时只改这一处。
+const CLIENT_SCHEMA = 1;
 
 // 浏览器直连 hub 的读路径。返回包络刻意与 rpcd 保持一致
 // （{result:0,data} / {result:1,error}），marketplace.js 无需感知传输方式的变化。
@@ -18,7 +27,7 @@ const hubFetch = (path) => {
     headers: { Accept: "application/json" },
   })
     .then((res) => {
-      if (res.status === 404) return { result: 1, error: "invalid_id" };
+      if (res.status === 404) return { result: 1, error: HUB_NOT_FOUND };
       if (!res.ok) return { result: 1, error: "hub_unreachable" };
       return res.json().then((data) => ({ result: 0, data }));
     })
@@ -89,26 +98,155 @@ const makeCache = (key, label) => ({
   },
 
   clear() {
-    localStorage.removeItem(key);
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {}
   },
 });
+
+const readStored = (key, fallback) => {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(key));
+    return parsed == null ? fallback : parsed;
+  } catch (e) {
+    return fallback;
+  }
+};
+
+const writeStored = (key, value) => {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (e) {}
+};
+
+const patchSnapshot = (cache, patch) => {
+  const stale = cache.getStale();
+  const snapshot = Object.assign(
+    {
+      notices: notices.sanitize(stale && stale.notices),
+      muted: Boolean(stale && stale.muted),
+      local: (stale && stale.local) || null,
+    },
+    patch,
+  );
+  cache.set(snapshot);
+  return snapshot;
+};
 
 return baseclass.extend({
   listCache: makeCache(CACHE_KEY, "list"),
 
   meCache: makeCache(ME_CACHE_KEY, "me"),
 
+  // { notices, muted, local }
+  noticesCache: makeCache(NOTICES_CACHE_KEY, "notices"),
+
+  CLIENT_SCHEMA: CLIENT_SCHEMA,
+
   callHubList(sort, page) {
     const safeSort = sort === "new" ? "new" : "hot";
     const safePage = Number.isInteger(page) && page > 0 ? page : 1;
     return hubFetch(
-      "/api/v1/themes/aurora/configs?sort=" + safeSort + "&page=" + safePage,
+      "/api/v1/themes/aurora/configs?sort=" +
+        safeSort +
+        "&page=" +
+        safePage +
+        "&schema=" +
+        CLIENT_SCHEMA,
     );
+  },
+
+  callHubNotices() {
+    return hubFetch("/api/v1/notices?theme=aurora&schema=" + CLIENT_SCHEMA).then((res) =>
+      res.error === HUB_NOT_FOUND ? { result: 0, data: { notices: [] } } : res,
+    );
+  },
+
+  noticesCheckedAt() {
+    const stamp = readStored(NOTICES_CHECKED_KEY, 0);
+    return Number.isFinite(stamp) ? stamp : 0;
+  },
+
+  markNoticesChecked(nowMs) {
+    writeStored(NOTICES_CHECKED_KEY, nowMs);
+  },
+
+  inboxState() {
+    const keys = (key) => {
+      const list = readStored(key, []);
+      return Array.isArray(list) ? list.filter((item) => typeof item === "string") : [];
+    };
+    return { read: keys(INBOX_READ_KEY), done: keys(INBOX_DONE_KEY) };
+  },
+
+  setInboxState(state) {
+    writeStored(INBOX_READ_KEY, state.read);
+    writeStored(INBOX_DONE_KEY, state.done);
+  },
+
+  // muted 与 local 随 feed 一起落缓存：preload 在两次轮询之间只读缓存，
+  // 读不到 uci，也不为"缺不缺更新源"去问 ubus。
+  setNoticesMuted(muted) {
+    return patchSnapshot(this.noticesCache, { muted: Boolean(muted) });
+  },
+
+  setNoticesLocal(local) {
+    return patchSnapshot(this.noticesCache, { local: local });
+  },
+
+  muteNotices() {
+    this.markNoticesChecked(Date.now());
+    return this.setNoticesMuted(true);
+  },
+
+  // options.me：调用方自己已经在跑 hub_me 时，把那份结果（或它的 promise）传
+  // 进来。不传则只在 feed 里有 creators 通知、或缓存显示本机发过作品时才调
+  // hub_me（路由器 → hub，约 1 s）。
+  refreshNotices(options) {
+    const opts = options || {};
+    const supplied =
+      opts.me === undefined ? null : Promise.resolve(opts.me).catch(() => null);
+    this.markNoticesChecked(Date.now());
+    const probed = L.resolveDefault(this.callGetInitData(), null).then((reply) =>
+      notices.localState(reply),
+    );
+    return Promise.all([this.callHubNotices(), probed]).then(([res, fresh]) => {
+      const stale = this.noticesCache.getStale();
+      const local = fresh || (stale && stale.local) || null;
+      const known = { feed: Boolean(res && res.result === 0), me: false, local: Boolean(fresh) };
+      const snapshot = {
+        notices: notices.sanitize(known.feed ? res.data && res.data.notices : stale && stale.notices),
+        muted: Boolean(opts.muted),
+        local: local,
+      };
+      const list = snapshot.notices;
+      const cachedMe = this.meCache.getStale();
+      const ask = () =>
+        known.feed &&
+        (list.some((notice) => notice.audience === "creators") || notices.hasShares(cachedMe))
+          ? L.resolveDefault(this.callHubMe(), null).then((reply) => {
+              const me = reply && reply.result === 0 && reply.data ? reply.data : null;
+              if (me) this.meCache.set(me);
+              return me;
+            })
+          : Promise.resolve(null);
+      return (supplied || ask()).then((me) => {
+        this.noticesCache.set(snapshot);
+        const active = notices.inbox(snapshot, me || cachedMe, null).map((item) => item.key);
+        const state = this.inboxState();
+        known.me = Boolean(me);
+        this.setInboxState({
+          read: notices.pruneKeys(state.read, active, known),
+          done: notices.pruneKeys(state.done, active, known),
+        });
+        return snapshot;
+      });
+    });
   },
 
   callHubGet(id) {
     if (!/^[A-Za-z0-9]+$/.test(String(id || ""))) {
-      return Promise.resolve({ result: 1, error: "invalid_id" });
+      return Promise.resolve({ result: 1, error: HUB_NOT_FOUND });
     }
     return hubFetch("/api/v1/themes/aurora/configs/" + id);
   },
@@ -220,6 +358,16 @@ return baseclass.extend({
     object: "luci.aurora",
     method: "hub_set_nickname",
     params: ["nickname"],
+  }),
+
+  callGetInitData: rpc.declare({
+    object: "luci.aurora",
+    method: "get_init_data",
+  }),
+
+  callAddFeed: rpc.declare({
+    object: "luci.aurora",
+    method: "add_feed",
   }),
 
   callHubMe: rpc.declare({

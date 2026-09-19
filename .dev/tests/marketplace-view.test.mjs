@@ -1666,3 +1666,356 @@ test("bundled tiles put a size on fonts and custom toolbar icons", async () => {
     "buildBundledTiles must actually append the toolbar icons tile",
   );
 });
+
+// ---------------------------------------------------------------------------
+// Inbox tab + schema compat
+
+// 只看代码:注释里解释"为什么不用 uci.apply()"正是该留下的东西。
+const codeOnly = (src) =>
+  src.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+
+const between = (src, from, to) => src.slice(src.indexOf(from), src.indexOf(to));
+
+test("inbox: it is the sixth tab, with an unread badge that is absent at zero", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(src, /^"require utils\.notices as notices";$/m);
+  assert.match(src, /^"require preload\.aurora-notices as inboxIndicator";$/m);
+  const tabs = between(src, "const TABS = [", "const renderTabLabel");
+  const keys = [...tabs.matchAll(/key: "([a-z]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(keys, ["all", "builtin", "hot", "new", "mine"]);
+  assert.match(tabs, /INBOX_TAB,\s*\];/, "Inbox comes last");
+  assert.match(src, /key: "inbox",\s*label: _\("Inbox"\),\s*badge: \(\) => notices\.unreadCount\(inboxItems\(\)\),/);
+  assert.match(
+    src,
+    /const unread = tab\.badge \? tab\.badge\(\) : 0;\s*if \(unread\)\s*btn\.appendChild\(\s*E\("span", \{ class: "aurora-store-count" \}/,
+  );
+});
+
+test("inbox: the search box steps aside while the tab is active", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(src, /searchInput\.style\.display = key === "inbox" \? "none" : "";/);
+  assert.match(src, /\} else if \(state\.tab === "inbox"\) \{\s*push\(buildInbox\(\)\);/);
+});
+
+test("inbox: the rejected inline design is gone", async () => {
+  const src = await readFile(SRC, "utf8");
+  for (const leftover of ["aurora-store-notice", "aurora-store-optout", "dismissNotice", "dismissedNotices", "compatLine"])
+    assert.ok(!src.includes(leftover), leftover);
+  assert.match(src, /\[\s*styleEl,\s*headEl,\s*contentEl,/, "nothing sits above the tab strip again");
+  assert.match(
+    src,
+    /push\(buildIdentityCard\(\)\);\s*\n\s*push\(mySharesEl\);/,
+    "the opt-out no longer lives under the identity card",
+  );
+});
+
+test("inbox: every hub-supplied string reaches the page through createTextNode", async () => {
+  const src = await readFile(SRC, "utf8");
+  const inbox = between(src, "const buildInboxRow", "const buildNoticesToggle");
+  for (const field of ["copy.title", "copy.act.label", "copy.source", "copy.snippet", "paragraph", "copy.time"]) {
+    const bare = new RegExp(`E\\(\\s*"[a-z0-9]+",\\s*\\{[^}]*\\},\\s*${field.replace(".", "\\.")}\\s*,?\\s*\\)`);
+    assert.ok(!bare.test(inbox), `${field} must never be a bare E() child`);
+  }
+  // describeItem is where share names and the reviewer's words enter; both
+  // only ever travel as format() arguments into strings that end up in text nodes.
+  const describe = between(src, "const describeItem", "const inboxChanged");
+  assert.match(describe, /notices\.present\(item\.notice, document\.documentElement\.lang\)/);
+  assert.match(describe, /_\("Reviewer’s note: %s"\)\.format\(item\.reason\)/);
+  assert.match(describe, /link: shown\.url \? shown : null/, "a url safeUrl rejected renders no action");
+});
+
+test("inbox: items come from the feed and from hub_me, through the pure module", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(
+    src,
+    /const inboxItems = \(\) => notices\.inbox\(inboxSnapshot, meData, hubApi\.inboxState\(\)\);/,
+  );
+  assert.match(src, /meData = data \|\| null;/);
+  const describe = between(src, "const describeItem", "const inboxChanged");
+  for (const kind of ['item.kind === "notice"', 'item.kind === "feed"', 'item.kind === "compat"', 'item.kind === "rejected"'])
+    assert.ok(describe.includes(kind), kind);
+  assert.match(describe, /item\.state === "unsupported"/);
+  assert.match(describe, /item\.names\.map\(quoted\)\.join\(", "\)/, "the summary names the affected shares");
+  assert.match(describe, /_\("Taken down: %s"\)/);
+  // No derivation, keying or counting of its own in the view.
+  const code = codeOnly(src);
+  for (const belongsInNotices of ['"compat:"', '"rejected:"', '"removed:"', '"feed:', "shortHash"])
+    assert.ok(!code.includes(belongsInNotices), belongsInNotices);
+  // Result-only copy: the mechanism word never reaches the user.
+  const strings = [...src.matchAll(/_\(\s*"((?:[^"\\]|\\.)*)"/g)].map((m) => m[1]);
+  assert.deepEqual(strings.filter((s) => /schema/i.test(s)), []);
+});
+
+test("inbox: read and done go through the shared store and update the header indicator at once", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(
+    src,
+    /const inboxChanged = \(\) => \{\s*renderTabLabel\(INBOX_TAB\);\s*inboxIndicator\.update\(\);\s*if \(state\.tab === "inbox"\) renderContent\(\);/,
+  );
+  assert.match(src, /hubApi\.setInboxState\(next\(hubApi\.inboxState\(\)\)\);\s*inboxChanged\(\);/);
+  assert.match(src, /read: notices\.withKey\(st\.read, key\), done: st\.done/);
+  assert.match(src, /read: notices\.withoutKey\(st\.read, key\), done: st\.done/);
+  assert.match(src, /read: notices\.withKeys\(st\.read, inboxItems\(\)\),/);
+  assert.match(src, /read: st\.read, done: notices\.withKey\(st\.done, key\)/);
+});
+
+test("inbox: opening the Marketplace refreshes both sources, whatever the preload's throttle says", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(
+    src,
+    /hubApi\s*\.refreshNotices\(\{ muted: noticesMuted, me: refreshMyShares\(\) \}\)\s*\.then\(\(snapshot\) => \{\s*inboxSnapshot = snapshot;\s*inboxChanged\(\);/,
+  );
+  assert.ok(!codeOnly(src).includes("isDue"), "the view must not throttle its own refresh");
+  // hub_me runs once: refreshMyShares hands its answer over.
+  assert.match(src, /return myFailed \? null : res\.data;/);
+  assert.equal((codeOnly(src).match(/hubApi\.callHubMe\(\)/g) || []).length, 1);
+  // First paint comes from the cache the preload shares.
+  assert.match(src, /let inboxSnapshot = hubApi\.noticesCache\.getStale\(\);/);
+});
+
+test("inbox: J/K/E/U only on the Inbox tab, never inside a field, never with a modifier", async () => {
+  const src = await readFile(SRC, "utf8");
+  const keys = between(src, "const onInboxKey", "const onInboxHash");
+  assert.match(keys, /if \(state\.tab !== "inbox" \|\| ev\.ctrlKey \|\| ev\.metaKey \|\| ev\.altKey\) return;/);
+  assert.match(keys, /ev\.target\.closest\("input,textarea,select,\[contenteditable\]"\)/);
+  assert.match(keys, /key === "j" && shown\[at \+ 1\]\) pickItem\(shown\[at \+ 1\]\.key\)/);
+  assert.match(keys, /key === "k" && at > 0\) pickItem\(shown\[at - 1\]\.key\)/);
+  assert.match(keys, /key === "e" && inboxSel\) markDone\(inboxSel\)/);
+  assert.match(keys, /key === "u" && inboxSel\) markUnread\(inboxSel\)/);
+  // A view that was swapped out of the document takes its listener with it.
+  assert.match(keys, /document\.removeEventListener\("keydown", onInboxKey\)/);
+});
+
+test("inbox: the header indicator deep-links through a location hash the view owns", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(src, /window\.location\.hash === inboxIndicator\.INBOX_HASH\s*\?\s*"inbox"/);
+  assert.match(src, /window\.addEventListener\("hashchange", onInboxHash\);/);
+  assert.match(src, /const hash = key === "inbox" \? inboxIndicator\.INBOX_HASH : "";/);
+  assert.match(src, /window\.history\.replaceState\(\s*window\.history\.state,/, "whatever a router keeps in history.state survives");
+  assert.ok(!codeOnly(src).includes('"#inbox"'), "the hash has one owner: the preload module");
+});
+
+test("inbox: the opt-out row writes aurora.theme.hub_notices and nothing else", async () => {
+  const src = await readFile(SRC, "utf8");
+  const code = codeOnly(src);
+  assert.match(src, /noticesMuted: uci\.get\("aurora", "theme", "hub_notices"\) === "0",/);
+  assert.match(src, /_\("Show the unread count on every LuCI page"\)/);
+  assert.match(code, /callUciSet\("aurora", "theme", \{ hub_notices: muted \? "0" : "1" \}\)/);
+  assert.match(code, /\.then\(\(\) => callUciCommit\("aurora"\)\)/);
+  // uci.apply() commits every change staged in the session, whichever page
+  // staged it. A checkbox must not apply somebody's half-finished network edit.
+  assert.ok(!/uci\.apply\(|ui\.changes\.apply\(|uci\.save\(/.test(code));
+  assert.match(code, /inboxSnapshot = hubApi\.setNoticesMuted\(muted\);\s*inboxIndicator\.update\(\);/);
+  // A failed write puts the box back where the router still is.
+  assert.match(code, /box\.checked = !noticesMuted;/);
+  assert.match(src, /handleSave:\s*null/);
+
+  const acl = JSON.parse(await readFile(repo("root/usr/share/rpcd/acl.d/luci-app-aurora.json"), "utf8"))[
+    "luci-app-aurora"
+  ];
+  assert.ok(acl.read.uci.includes("aurora"), "the preload reads the opt-out");
+  assert.ok(acl.write.uci.includes("aurora"), "the row writes it");
+  assert.ok(acl.read.ubus["luci.aurora"].includes("hub_me"), "the preload may ask hub_me");
+});
+
+test("my shares: a share that needs updating says so, and points at the update it already has", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(
+    src,
+    /const compat = item\.status === "removed" \? null : notices\.compatBadge\(item\);/,
+    "a taken-down share has no update button to send its author to",
+  );
+  assert.match(
+    src,
+    /class: "aurora-store-pill risk", style: "margin-left:8px;" \},\s*compat === "unsupported"\s*\? _\("Not listed for updated routers"\)\s*: _\("Needs update"\),/,
+  );
+  assert.match(src, /E\("div", \{ class: "aurora-store-compat" \}, compatNoteFor\(item, compat\)\)/);
+  assert.match(
+    src,
+    /_\("Listed until %s\. Publish it again from this router to keep it listed\."\)\.format\(formatDay\(sunset\)\)/,
+  );
+  assert.match(src, /_\("Publish it again from this router to keep it listed\."\)/);
+  assert.match(
+    src,
+    /_\("Updated routers no longer see this theme\. Update it to relist — link and downloads are kept\."\)/,
+  );
+  // The preview of a share updated routers no longer see is desaturated.
+  assert.match(src, /class: compat === "unsupported" \? "aurora-store-dim" : "",/);
+  assert.match(src, /\.aurora-store-dim\{filter:grayscale\(\.8\);opacity:\.7;\}/);
+
+  // The CTA is the existing update action, promoted -- not a second flow.
+  assert.match(
+    src,
+    /class: compat \? "cbi-button cbi-button-action" : "cbi-button",\s*\n\s*click: \(\) => openUpdateForm\(item\),/,
+  );
+  assert.equal((src.match(/_\("Update with current configuration"\)/g) || []).length, 1);
+  assert.equal((src.match(/openUpdateForm\(item\)/g) || []).length, 1);
+});
+
+test("my shares: the identity card's summary line gains the counts", async () => {
+  const src = await readFile(SRC, "utf8");
+  const card = between(src, "const buildIdentityCard", "const KEY_RE");
+  assert.match(card, /const counts = notices\.compatCounts\(meData\);/);
+  assert.match(card, /meta = \[_\("Signs everything you share\. It lives only on this router\."\)\]/);
+  assert.match(card, /\.join\(" · "\);/);
+  for (const [one, many] of [
+    ["1 needs an update before %s", "%d need an update before %s"],
+    ["1 needs an update", "%d need an update"],
+    ["1 not listed for updated routers", "%d not listed for updated routers"],
+  ]) {
+    assert.ok(card.includes(`_("${one}")`), one);
+    assert.ok(card.includes(`_("${many}").format(`), many);
+  }
+});
+
+test("hub_notices is not a colour or structure token, so the theme never injects it", async () => {
+  // header.ut turns every light_/dark_/struct_ option into a CSS custom
+  // property. Anything else in aurora.theme is inert there.
+  assert.ok(!/^(light_|dark_|struct_)/.test("hub_notices"));
+  for (const name of ["default", "sage-green", "amber-sand", "monochrome", "sky-blue"]) {
+    const template = await readFile(repo(`root/usr/share/aurora/${name}.template`), "utf8");
+    assert.ok(!template.includes("hub_notices"), `${name}.template must leave the default (on) implicit`);
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Inbox, second pass: quiet rows, icon buttons, Markdown, the update source
+
+test("inbox v2: list column is two pills, a quiet mark-all-read, plain group labels, rows, the opt-out", async () => {
+  const src = await readFile(SRC, "utf8");
+  const build = between(src, "const buildInbox = () =>", "let inboxMounted");
+  assert.match(build, /\["all", _\("All"\)\],\s*\["unread", _\("Unread"\)\],/);
+  assert.match(build, /class: "pill" \+ \(inboxFilter === key \? " on" : ""\)/);
+  assert.match(build, /iconButton\("", _\("Mark all read"\), markAllRead\)/);
+  // One line of muted text: no count, no rule, no uppercase.
+  assert.match(build, /rows\.push\(E\("div", \{ class: "grp" \}, label\)\);/);
+  assert.match(
+    build,
+    /\[notices\.GROUP_ACTION, _\("Needs action"\)\],\s*\[notices\.GROUP_UPDATES, _\("Updates"\)\],/,
+  );
+  assert.match(build, /if \(!part\.length\) return;/);
+  assert.ok(!build.includes("part.length)]"), "group headers carry no count");
+  assert.match(src, /\.aurora-store-inbox \.grp\{padding:14px 10px 6px;font-size:\.78em;" \+\s*"color:var\(--text-subtle,#888\);\}/);
+  assert.match(build, /_\("You’re all caught up\."\)/);
+  assert.match(build, /_\("Select a notification"\)/);
+  assert.match(build, /buildNoticesToggle\(\),\s*\]\),\s*E\(\s*"div",\s*\{ class: "detail" \}/);
+  assert.match(build, /"aurora-store-inbox" \+ \(current \? " has-sel" : ""\)/);
+  // The keyboard hint row is gone; the shortcuts are not.
+  for (const gone of ["kbd(", 'class: "foot"', '_("move")', '_("done")', '_("unread")'])
+    assert.ok(!src.includes(gone), gone);
+  assert.match(src, /key === "j" && shown\[at \+ 1\]\) pickItem/);
+});
+
+test("inbox v2: a row is a neutral source glyph, an unread dot, title, snippet, and level icon over time", async () => {
+  const src = await readFile(SRC, "utf8");
+  const row = between(src, "const buildInboxRow", "const iconButton");
+  assert.match(row, /class: "row" \+ \(item\.unread \? " unread" : ""\) \+ \(item\.key === inboxSel \? " sel" : ""\)/);
+  assert.match(row, /click: \(\) => pickItem\(item\.key\)/);
+  assert.match(row, /E\("span", \{ class: "av " \+ item\.source \}\)/);
+  assert.match(row, /if \(item\.unread\) title\.unshift\(E\("span", \{ class: "dot" \}\)\);/);
+  assert.match(row, /E\("b", \{\}, \[document\.createTextNode\(copy\.title\)\]\)/);
+  assert.match(row, /copy\.markdown === undefined \? copy\.body\[0\] : copy\.snippet/);
+  // info gets an empty slot: only warning and critical draw an icon.
+  assert.match(row, /class: "lv" \+ \(item\.level === "info" \? "" : " " \+ item\.level\)/);
+  assert.match(row, /E\("span", \{ class: "tm" \}, \[document\.createTextNode\(copy\.time \|\| ""\)\]\)/);
+  assert.ok(!row.includes('class: "done"'), "Done moved to the detail bar and the E key");
+  assert.match(src, /const pickItem = \(key\) => \{\s*inboxSel = key;\s*markRead\(key\);/);
+
+  for (const source of ["router", "store", "shares"])
+    assert.match(src, new RegExp(`\\.aurora-store-inbox \\.av\\.${source}\\{--aurora-store-glyph:`));
+  assert.match(src, /\.aurora-store-inbox \.av\{flex:none;width:32px;height:32px;border-radius:50%;/);
+  assert.match(src, /\.aurora-store-inbox \.dot\{flex:none;width:7px;height:7px;border-radius:50%;" \+\s*"background:var\(--brand,/);
+  assert.match(src, /\.aurora-store-inbox \.row\.sel\{background:var\(--surface-sunken,/);
+  assert.match(src, /\.aurora-store-inbox \.row\{[^}]*border-radius:10px;/);
+  assert.ok(!/\.aurora-store-inbox \.row\{[^}]*border-bottom/.test(src), "no separators between rows");
+  assert.match(src, /\.aurora-store-inbox \.row\.unread \.tt b\{color:var\(--text,#111\);font-weight:600;\}/);
+});
+
+test("inbox v2: one accent; danger and warning colour only the small level icon", async () => {
+  const src = await readFile(SRC, "utf8");
+  const css = between(src, '".aurora-store-inbox{display:grid;', '".aurora-store-compat{');
+  const coloured = [...css.matchAll(/([^{}"+]+)\{[^}]*var\(--(danger|warning|info)[a-z-]*,/g)].map((m) => m[1].trim());
+  assert.deepEqual(coloured, [".aurora-store-inbox .lv.critical", ".aurora-store-inbox .lv.warning"]);
+  for (const gone of ["aurora-store-chip", "aurora-store-lvl.", "aurora-store-kbd", "aurora-store-seg", "LEVEL_CHIPS", "Heads-up", "Action needed"])
+    assert.ok(!src.includes(gone), gone);
+});
+
+test("inbox v2: detail is a thin bar of source · time and two labelled icon buttons, then title, body, one action", async () => {
+  const src = await readFile(SRC, "utf8");
+  const detail = between(src, "const buildInboxDetail", "const buildNoticesToggle");
+  assert.match(detail, /E\("div", \{ class: "top" \}, \[/);
+  assert.match(detail, /class: "lnk back"/);
+  assert.match(detail, /"← " \+ _\("Inbox"\)/);
+  assert.match(detail, /copy\.time \? copy\.source \+ " · " \+ copy\.time : copy\.source/);
+  assert.match(detail, /iconButton\(" unread", _\("Mark unread"\), \(\) => markUnread\(item\.key\)\),\s*iconButton\("", _\("Done"\), \(\) => markDone\(item\.key\)\),/);
+  assert.match(src, /const iconButton = \(extraClass, label, onClick\) =>\s*E\("button", \{\s*type: "button",\s*class: "ib" \+ extraClass,\s*title: label,\s*"aria-label": label,/);
+  assert.match(detail, /E\("h3", \{\}, \[document\.createTextNode\(copy\.title\)\]\)/);
+  // The action block exists only when there is an action.
+  assert.match(detail, /if \(copy\.link\)/);
+  assert.match(detail, /else if \(copy\.act\)/);
+  assert.match(detail, /\[document\.createTextNode\(copy\.act\.label\)\]/, "the label can carry a share's name");
+  assert.match(detail, /target: "_blank", rel: "noreferrer"/);
+  assert.match(detail, /\{ href: L\.url\(copy\.link\.url\) \}/);
+  assert.match(src, /\.aurora-store-inbox \.ib:hover,\.aurora-store-inbox \.ib:focus-visible\{/);
+});
+
+test("inbox v2: broadcast bodies render as Markdown, everything derived stays plain text", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(src, /^"require utils\.markdown as markdown";$/m);
+  const detail = between(src, "const buildInboxDetail", "const buildNoticesToggle");
+  assert.match(detail, /if \(copy\.markdown === undefined\)\s*copy\.body\.forEach\(\(paragraph\) =>\s*body\.appendChild\(E\("p", \{\}, \[document\.createTextNode\(paragraph\)\]\)\),/);
+  assert.match(detail, /else body\.appendChild\(markdown\.render\(copy\.markdown, document, markdownLink\)\);/);
+  const describe = between(src, "const describeItem", "const inboxChanged");
+  assert.match(describe, /snippet: markdown\.toText\(shown\.body\),\s*markdown: shown\.body,/);
+  assert.equal((describe.match(/markdown:/g) || []).length, 1, "only the broadcast branch hands a body to the renderer");
+  assert.match(describe, /_\("Reviewer’s note: %s"\)\.format\(item\.reason\)/);
+  // Links inside a body pass the same rule as the notice's url field.
+  assert.match(
+    src,
+    /const markdownLink = \(url\) => \{\s*const safe = notices\.safeUrl\(url\);\s*return safe && !notices\.isExternalUrl\(safe\) \? L\.url\(safe\) : safe;/,
+  );
+});
+
+test("inbox v2: at 760px and below it is list OR detail, and nothing is opened on the user's behalf", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(src, /const INBOX_NARROW_QUERY = "\(max-width:760px\)";/);
+  assert.match(
+    src,
+    /if \(!items\.some\(\(item\) => item\.key === inboxSel\)\)\s*inboxSel = narrow \|\| !items\.length \? null : items\[0\]\.key;/,
+  );
+  const css = between(src, '"@media " + INBOX_NARROW_QUERY', '".aurora-store-inbox .back{display:inline-block;}}"');
+  assert.match(css, /\.aurora-store-inbox\{grid-template-columns:1fr;\}/);
+  assert.match(css, /\.aurora-store-inbox\.has-sel \.list\{display:none;\}/);
+  assert.match(css, /\.aurora-store-inbox:not\(\.has-sel\) \.detail\{display:none;\}/);
+  assert.match(src, /\.aurora-store-inbox \.back\{display:none;/);
+  assert.ok(!src.includes("px-") && !src.includes("lx-"), "prototype class names must not ship");
+});
+
+test("the update source: a Needs-action item that runs the add-feed flow Studio used to host", async () => {
+  const src = await readFile(SRC, "utf8");
+  const describe = between(src, "const describeItem", "const inboxChanged");
+  assert.match(describe, /act: \{ label: _\("Add update source"\), run: confirmAddFeed \}/);
+  assert.match(describe, /item\.theme && item\.app/);
+  const flow = between(src, "const runAddFeed", "const buildInboxRow");
+  // Same confirmation, same rpcd method, same three outcomes.
+  for (const msgid of [
+    "Add the Aurora update source",
+    "Afterwards you can upgrade Aurora in System → Software, like any other OpenWrt package.",
+    "From openwrt.eamonxg.fun; the signing key ships with this package.",
+    "Adding the update source…",
+    "Could not add the update source: %s",
+    "The update source was written, but refreshing the index failed. Hit Refresh on the Software page later.",
+    "Update source added",
+    "Go to Software",
+  ])
+    assert.ok(flow.includes(`_("${msgid}")`), msgid);
+  assert.match(flow, /L\.resolveDefault\(hubApi\.callAddFeed\(\), \{ result: 1 \}\)/);
+  assert.match(flow, /feedCheck\.pickPackageManagerPath\(menuTree\)/);
+  // Written means gone: the item leaves the list and the header count follows.
+  assert.match(
+    flow,
+    /inboxSnapshot = hubApi\.setNoticesLocal\(\s*Object\.assign\(\{\}, inboxSnapshot && inboxSnapshot\.local, \{ feedMissing: false \}\),\s*\);\s*inboxChanged\(\);/,
+  );
+  const failure = flow.slice(flow.indexOf("ret.result !== 0"), flow.indexOf("const softwarePage"));
+  assert.ok(!failure.includes("setNoticesLocal"), "a failed add leaves the item where it is");
+});

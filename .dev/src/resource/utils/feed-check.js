@@ -19,6 +19,13 @@ return baseclass.extend({
     return match ? Number(match[1]) : null;
   },
 
+  // "1.3.7-r20260916" → "1.3.7"。认不出 x.y.z 就原样返回,不猜。
+  shortVersion: function (version) {
+    const text = String(version == null ? "" : version);
+    const match = /^v?(\d+\.\d+\.\d+)(?![\d.])/.exec(text);
+    return match ? match[1] : text;
+  },
+
   // install.sh 写明 opkg 与 apk 的版本方案不可比较、脚本从不排序它们。
   // 这里沿用同一条纪律：只有两边都带 rYYYYMMDD 戳时才敢说"有新版"。
   // 判不出来就沉默 —— 误报"有新版"比不报更糟。
