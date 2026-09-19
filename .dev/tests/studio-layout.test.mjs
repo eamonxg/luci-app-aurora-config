@@ -299,8 +299,8 @@ test("header: no update means no accent colour anywhere on the line", async () =
   const src = await readFile(SRC, "utf8");
   const css = src.slice(src.indexOf("const ensureToolbarStyles"), src.indexOf("const ensureBgCardStyles"));
   const branded = [...css.matchAll(/^([^\n{}]+) \{[^}]*var\(--brand/gm)].map((m) => m[1].trim());
-  // Both only exist once an update was attached: the link itself, and the dot on ".up".
-  assert.deepEqual(branded, [".aurora-studio-versions a", ".aurora-studio-versions .up::before"]);
+  // Only the update link carries the brand colour, and it exists only once an update was attached.
+  assert.deepEqual(branded, [".aurora-studio-versions a"]);
   const head = headerBlock(src);
   assert.ok(!head.includes('"up"') && !head.includes("E(\"a\""), "the resting line has neither");
   assert.match(css, /\.aurora-studio-versions \{\s*color: var\(--text-subtle,/);
@@ -367,4 +367,9 @@ test("header: the new rules cover only what the theme's dropdown and buttons can
   assert.match(phone, /\.aurora-studio-acts > \.cbi-button:not\(\.aurora-studio-more\) \{\s*flex: 1;\s*min-height: 42px;/);
   assert.match(phone, /\.cbi-dropdown\.aurora-studio-more \{\s*height: 42px;\s*width: 42px;/);
   assert.match(phone, /@media \(max-width: 600px\), \(hover: none\) \{[\s\S]*li\[role="menuitem"\] \{\s*min-height: 42px;/);
+});
+
+test("the closed more-menu list takes no space", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.match(src, /\.cbi-dropdown\.aurora-studio-more:not\(\[open\]\) > ul\.dropdown \{\s*display: none;\s*\}/);
 });

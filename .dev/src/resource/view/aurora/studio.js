@@ -1614,21 +1614,11 @@ const ensureToolbarStyles = () => {
 }
 .aurora-studio-versions a {
   color: var(--brand, var(--primary, currentColor));
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: none;
 }
 .aurora-studio-versions a:hover {
   text-decoration: underline;
-}
-.aurora-studio-versions .up::before {
-  background: var(--brand, var(--primary, currentColor));
-  border-radius: 50%;
-  content: "";
-  display: inline-block;
-  height: 6px;
-  margin-right: .5em;
-  vertical-align: middle;
-  width: 6px;
 }
 .aurora-studio-acts {
   display: flex;
@@ -1649,6 +1639,9 @@ const ensureToolbarStyles = () => {
   right: 0;
   top: calc(100% + 6px);
   width: min(280px, calc(100vw - 32px));
+}
+.cbi-dropdown.aurora-studio-more:not([open]) > ul.dropdown {
+  display: none;
 }
 .cbi-dropdown.aurora-studio-more > ul.dropdown > li.danger {
   color: var(--danger, var(--destructive, #c0392b));
