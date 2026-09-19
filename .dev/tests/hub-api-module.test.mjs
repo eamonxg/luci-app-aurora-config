@@ -423,7 +423,7 @@ test("inbox state lives under its documented keys; the dismissed list is gone", 
     assert.equal(m.noticesCheckedAt(), 0);
     assert.deepEqual(m.inboxState(), { read: [], done: [] });
 
-    m.noticesCache.set({ notices: [], muted: false });
+    m.noticesCache.set({ notices: [] });
     m.markNoticesChecked(1790000000000);
     m.setInboxState({ read: ["n1", "rejected:c1"], done: ["n2"] });
 
@@ -433,7 +433,7 @@ test("inbox state lives under its documented keys; the dismissed list is gone", 
       "aurora.hub.notices",
       "aurora.hub.noticesChecked",
     ]);
-    assert.deepEqual(m.noticesCache.getStale(), { notices: [], muted: false });
+    assert.deepEqual(m.noticesCache.getStale(), { notices: [] });
     assert.equal(m.noticesCheckedAt(), 1790000000000);
     assert.deepEqual(m.inboxState(), { read: ["n1", "rejected:c1"], done: ["n2"] });
   });
@@ -472,7 +472,7 @@ test("inbox state survives corrupt, hostile and unavailable storage", async () =
     assert.doesNotThrow(() => m.setInboxState({ read: ["n1"], done: [] }));
     assert.doesNotThrow(() => m.noticesCache.set({ notices: [] }));
     assert.doesNotThrow(() => m.noticesCache.clear());
-    assert.doesNotThrow(() => m.muteNotices());
+    assert.doesNotThrow(() => m.setNoticesLocal(null));
   } finally {
     console.error = prevError;
     if (had) globalThis.localStorage = prev;
@@ -506,11 +506,11 @@ test("refreshNotices caches a sanitized feed, stamps the check and prunes read/d
         withStorage(async () => {
           m.setInboxState({ read: ["keep", "longGone"], done: ["info1", "alsoGone", "rejected:c9"] });
           const before = Date.now();
-          const snapshot = await m.refreshNotices({ muted: false });
+          const snapshot = await m.refreshNotices();
 
           assert.deepEqual(snapshot.notices.map((n) => n.id), ["keep", "info1"]);
           assert.equal("junk" in snapshot.notices[1], false);
-          assert.equal(snapshot.muted, false);
+          assert.equal("muted" in snapshot, false);
           assert.deepEqual(m.noticesCache.getStale(), snapshot);
           assert.ok(m.noticesCheckedAt() >= before);
           // hub_me was not asked, so nothing is known about derived items and
@@ -541,7 +541,7 @@ test("refreshNotices asks hub_me only for a creators notice or a router known to
         () =>
           withStorage(async () => {
             if (cachedMe) m.meCache.set(cachedMe);
-            await m.refreshNotices({ muted: false });
+            await m.refreshNotices();
             assert.deepEqual(rpc.calls, asked ? ["get_init_data", "hub_me"] : ["get_init_data"]);
             // The reply lands in the cache the preload derives its items from.
             assert.deepEqual(m.meCache.getStale(), asked ? fresh.data : cachedMe);
@@ -563,7 +563,7 @@ test("a failed hub_me keeps the cached profile and every derived key", async () 
             const cached = { id: "me", configs: [ownShare({ assets_status: "rejected" })] };
             m.meCache.set(cached);
             m.setInboxState({ read: ["gone"], done: ["rejected:c1", "removed:c7"] });
-            await m.refreshNotices({ muted: false });
+            await m.refreshNotices();
             assert.deepEqual(rpc.calls, ["get_init_data", "hub_me"]);
             assert.deepEqual(m.meCache.getStale(), cached);
             assert.deepEqual(m.inboxState(), { read: [], done: ["rejected:c1", "removed:c7"] });
@@ -591,7 +591,7 @@ test("a caller already running hub_me hands it over: no second call, and its ans
         () =>
           withStorage(async () => {
             m.setInboxState({ read: [], done: ["rejected:c1", "removed:c7"] });
-            await m.refreshNotices({ muted: false, me: makeMe() });
+            await m.refreshNotices({ me: makeMe() });
             assert.deepEqual(rpc.calls, ["get_init_data"]);
             assert.deepEqual(m.inboxState().done, doneAfter);
             // The view owns its own meCache write; this path must not clobber it.
@@ -600,21 +600,6 @@ test("a caller already running hub_me hands it over: no second call, and its ans
       ),
     );
   }
-});
-
-test("refreshNotices records the opt-out next to the feed", async () => {
-  const m = await load();
-  await withLuci(() =>
-    withFetch(
-      () => ({ status: 200, body: { notices: [feedNotice()] } }),
-      () =>
-        withStorage(async () => {
-          assert.equal((await m.refreshNotices({ muted: true })).muted, true);
-          assert.equal(m.noticesCache.getStale().notices.length, 1);
-          assert.equal((await m.refreshNotices()).muted, false);
-        }),
-    ),
-  );
 });
 
 test("a failed refresh keeps the previous feed and state, and still counts as a check", async () => {
@@ -631,9 +616,9 @@ test("a failed refresh keeps the previous feed and state, and still counts as a 
           m.meCache.set({ id: "me", configs: [ownShare()] });
           m.setInboxState({ read: ["old", "gone"], done: ["removed:c7"] });
           const before = Date.now();
-          const kept = { notices: [feedNotice({ id: "old" })], muted: false, local: null };
-          // Only the opt-out flag follows the caller: it came from uci, not the hub.
-          assert.deepEqual(await m.refreshNotices({ muted: false }), kept);
+          // A 1.2.x opt-out flag in the cache is dropped, not carried forward.
+          const kept = { notices: [feedNotice({ id: "old" })], local: null };
+          assert.deepEqual(await m.refreshNotices(), kept);
           assert.deepEqual(m.noticesCache.getStale(), kept);
           assert.deepEqual(m.inboxState(), { read: ["old", "gone"], done: ["removed:c7"] });
           assert.deepEqual(rpc.calls, ["get_init_data"], "an unreachable hub is not asked a second question");
@@ -653,48 +638,11 @@ test("a malformed feed body degrades to an empty list", async () => {
         () => ({ status: 200, body }),
         () =>
           withStorage(async () => {
-            assert.deepEqual(await m.refreshNotices({ muted: false }), { notices: [], muted: false, local: null });
+            assert.deepEqual(await m.refreshNotices(), { notices: [], local: null });
           }),
       ),
     );
   }
-});
-
-test("muteNotices flags the cache and stamps the check without touching the network", async () => {
-  const rpc = recordingRpc(null);
-  const m = await load(rpc);
-  await withFetch(
-    () => ({ status: 200, body: {} }),
-    async (calls) =>
-      withLocalStorage(() => {
-        m.noticesCache.set({ notices: [feedNotice()], muted: false });
-        const before = Date.now();
-        // The notices stay: the Inbox tab ignores the opt-out and seeds its
-        // first paint from this same cache.
-        const muted = { notices: [feedNotice()], muted: true, local: null };
-        assert.deepEqual(m.muteNotices(), muted);
-        assert.deepEqual(m.noticesCache.getStale(), muted);
-        assert.ok(m.noticesCheckedAt() >= before);
-        assert.deepEqual(calls, []);
-        assert.deepEqual(rpc.calls, []);
-      }),
-  );
-});
-
-test("setNoticesMuted flips the flag in place, whatever the cache held", async () => {
-  const m = await load();
-  withLocalStorage((store) => {
-    assert.deepEqual(m.setNoticesMuted(true), { notices: [], muted: true, local: null });
-    assert.equal(m.noticesCheckedAt(), 0, "a toggle is not a check");
-
-    m.noticesCache.set({ notices: [feedNotice()], muted: true });
-    assert.deepEqual(m.setNoticesMuted(false), { notices: [feedNotice()], muted: false, local: null });
-
-    store.set("aurora.hub.notices", JSON.stringify({ value: { notices: [{ id: "<x>" }] } }));
-    assert.deepEqual(m.setNoticesMuted(true), { notices: [], muted: true, local: null });
-    store.set("aurora.hub.notices", "{corrupt");
-    assert.deepEqual(m.setNoticesMuted(false), { notices: [], muted: false, local: null });
-  });
 });
 
 const initReply = (configured) => ({
@@ -711,7 +659,7 @@ test("refreshNotices probes the update source once and caches the verdict with t
       () =>
         withStorage(async () => {
           m.setInboxState({ read: ["feed:missing"], done: [] });
-          const snapshot = await m.refreshNotices({ muted: false });
+          const snapshot = await m.refreshNotices();
           assert.deepEqual(snapshot.local, { feedMissing: true, theme: "1.3.8", app: "1.2.0" });
           assert.deepEqual(m.noticesCache.getStale().local, snapshot.local);
           assert.deepEqual(m.inboxState().read, ["feed:missing"]);
@@ -733,9 +681,9 @@ test("once the source is configured the item's keys are pruned; an unanswered pr
         () => ({ status: 200, body: { notices: [] } }),
         () =>
           withStorage(async () => {
-            m.noticesCache.set({ notices: [], muted: false, local: { feedMissing: true, theme: "", app: "" } });
+            m.noticesCache.set({ notices: [], local: { feedMissing: true, theme: "", app: "" } });
             m.setInboxState({ read: ["feed:missing"], done: [] });
-            assert.deepEqual((await m.refreshNotices({ muted: false })).local, local);
+            assert.deepEqual((await m.refreshNotices()).local, local);
             assert.deepEqual(m.inboxState().read, read);
           }),
       ),
@@ -743,7 +691,7 @@ test("once the source is configured the item's keys are pruned; an unanswered pr
   }
 });
 
-test("the local verdict survives a dead hub, and a toggle, and can be set on its own", async () => {
+test("the local verdict survives a dead hub, and can be set on its own", async () => {
   const m = await load(recordingRpc(null, initReply(false)));
   await withLuci(() =>
     withFetch(
@@ -753,12 +701,10 @@ test("the local verdict survives a dead hub, and a toggle, and can be set on its
       () =>
         withStorage(async () => {
           // The router answers even when the hub does not.
-          assert.equal((await m.refreshNotices({ muted: false })).local.feedMissing, true);
-          assert.equal(m.setNoticesMuted(true).local.feedMissing, true);
+          assert.equal((await m.refreshNotices()).local.feedMissing, true);
           const after = m.setNoticesLocal({ feedMissing: false, theme: "1.3.8", app: "1.2.0" });
           assert.deepEqual(after, {
             notices: [],
-            muted: true,
             local: { feedMissing: false, theme: "1.3.8", app: "1.2.0" },
           });
           assert.deepEqual(m.noticesCache.getStale(), after);
@@ -776,4 +722,24 @@ test("hub-api declares the two local calls the inbox needs, and nothing new on t
   ];
   assert.ok(acl.read.ubus["luci.aurora"].includes("get_init_data"));
   assert.ok(acl.write.ubus["luci.aurora"].includes("add_feed"));
+});
+
+test("the opt-out is gone: no muting API, no muted flag written, a stale one dropped", async () => {
+  const src = await readFile(SRC, "utf8");
+  for (const gone of ["muted", "muteNotices", "setNoticesMuted", "hub_notices"]) assert.ok(!src.includes(gone), gone);
+  const m = await load(recordingRpc(null, null));
+  await withLuci(() =>
+    withFetch(
+      () => ({ status: 200, body: { notices: [feedNotice()] } }),
+      () =>
+        withStorage(async () => {
+          m.noticesCache.set({ notices: [], muted: true, local: null });
+          assert.equal("muted" in m.setNoticesLocal(null), false);
+          m.noticesCache.set({ notices: [], muted: true, local: null });
+          const snapshot = await m.refreshNotices();
+          assert.deepEqual(Object.keys(snapshot).sort(), ["local", "notices"]);
+          assert.equal("muted" in m.noticesCache.getStale(), false);
+        }),
+    ),
+  );
 });

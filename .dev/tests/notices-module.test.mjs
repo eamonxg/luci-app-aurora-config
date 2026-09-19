@@ -587,10 +587,9 @@ test("inbox: read and done are per key; done hides, and a changed key brings the
   assert.equal(m.unreadCount([null, { unread: true }, { unread: false }]), 1);
 });
 
-test("badgeCount: unread Needs-action plus unread warning/critical broadcasts, never info, nothing when muted", async () => {
+test("badgeCount: unread Needs-action plus unread warning/critical broadcasts, never info", async () => {
   const m = await load();
   const snapshot = {
-    muted: false,
     notices: [
       notice({ id: "w1" }),
       notice({ id: "c1", level: "critical" }),
@@ -607,11 +606,12 @@ test("badgeCount: unread Needs-action plus unread warning/critical broadcasts, n
   assert.equal(m.badgeCount(snapshot, null, none), 2);
   assert.equal(m.badgeCount(snapshot, me, { read: ["w1", "rejected:r1"], done: [] }), 2);
   assert.equal(m.badgeCount(snapshot, me, { read: [], done: ["c1", "removed:t1"] }), 2);
-  assert.equal(m.badgeCount({ ...snapshot, muted: true }, me, none), 0);
-  assert.equal(m.badgeCount({ muted: false, notices: [notice({ level: "info" })] }, null, none), 0);
+  // 1.2.x could cache an opt-out; there is none any more, so it counts.
+  assert.equal(m.badgeCount({ ...snapshot, muted: true }, me, none), 4);
+  assert.equal(m.badgeCount({ notices: [notice({ level: "info" })] }, null, none), 0);
   for (const junk of [null, undefined, "x", []]) assert.equal(m.badgeCount(junk, me, none), 0);
   // No feed yet, but a creator's own items still count.
-  assert.equal(m.badgeCount({ muted: false }, me, none), 2);
+  assert.equal(m.badgeCount({}, me, none), 2);
 });
 
 test("key lists: add once, remove, mark everything", async () => {
@@ -728,7 +728,7 @@ test("the feed item: one Needs-action entry from this router, first in the list,
     assert.deepEqual(m.deriveLocal(none), []);
   assert.deepEqual(m.deriveLocal({ feedMissing: true, theme: 5 })[0].theme, "");
 
-  const snapshot = { muted: false, local, notices: [notice({ id: "w1" })] };
+  const snapshot = { local, notices: [notice({ id: "w1" })] };
   const me = profile(share({ id: "r1", assets_status: "rejected" }));
   assert.deepEqual(
     m.inbox(snapshot, me, null).map((item) => item.source + "/" + item.key),
@@ -738,7 +738,6 @@ test("the feed item: one Needs-action entry from this router, first in the list,
   assert.equal(m.badgeCount(snapshot, null, { read: ["feed:missing"], done: [] }), 1);
   assert.equal(m.badgeCount(snapshot, null, { read: [], done: ["feed:missing"] }), 1);
   assert.equal(m.badgeCount({ ...snapshot, local: { ...local, feedMissing: false } }, null, null), 1);
-  assert.equal(m.badgeCount({ ...snapshot, muted: true }, null, null), 0);
 });
 
 test("the reviewer's note keeps its own, smaller cap", async () => {

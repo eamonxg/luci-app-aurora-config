@@ -353,7 +353,7 @@ return baseclass.extend({
   },
 
   badgeCount(snapshot, me, state) {
-    if (!isObject(snapshot) || snapshot.muted) return 0;
+    if (!isObject(snapshot)) return 0;
     return this.inbox(snapshot, me, state).filter(
       (item) =>
         item.unread && (item.group === GROUP_ACTION || BADGE_LEVELS.includes(item.level)),

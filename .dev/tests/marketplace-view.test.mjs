@@ -1711,7 +1711,7 @@ test("inbox: the rejected inline design is gone", async () => {
 
 test("inbox: every hub-supplied string reaches the page through createTextNode", async () => {
   const src = await readFile(SRC, "utf8");
-  const inbox = between(src, "const buildInboxRow", "const buildNoticesToggle");
+  const inbox = between(src, "const buildInboxRow", "const buildInbox = () =>");
   for (const field of ["copy.title", "copy.act.label", "copy.source", "copy.snippet", "paragraph", "copy.time"]) {
     const bare = new RegExp(`E\\(\\s*"[a-z0-9]+",\\s*\\{[^}]*\\},\\s*${field.replace(".", "\\.")}\\s*,?\\s*\\)`);
     assert.ok(!bare.test(inbox), `${field} must never be a bare E() child`);
@@ -1763,7 +1763,7 @@ test("inbox: opening the Marketplace refreshes both sources, whatever the preloa
   const src = await readFile(SRC, "utf8");
   assert.match(
     src,
-    /hubApi\s*\.refreshNotices\(\{ muted: noticesMuted, me: refreshMyShares\(\) \}\)\s*\.then\(\(snapshot\) => \{\s*inboxSnapshot = snapshot;\s*inboxChanged\(\);/,
+    /hubApi\s*\.refreshNotices\(\{ me: refreshMyShares\(\) \}\)\s*\.then\(\(snapshot\) => \{\s*inboxSnapshot = snapshot;\s*inboxChanged\(\);/,
   );
   assert.ok(!codeOnly(src).includes("isDue"), "the view must not throttle its own refresh");
   // hub_me runs once: refreshMyShares hands its answer over.
@@ -1793,29 +1793,6 @@ test("inbox: the header indicator deep-links through a location hash the view ow
   assert.match(src, /const hash = key === "inbox" \? inboxIndicator\.INBOX_HASH : "";/);
   assert.match(src, /window\.history\.replaceState\(\s*window\.history\.state,/, "whatever a router keeps in history.state survives");
   assert.ok(!codeOnly(src).includes('"#inbox"'), "the hash has one owner: the preload module");
-});
-
-test("inbox: the opt-out row writes aurora.theme.hub_notices and nothing else", async () => {
-  const src = await readFile(SRC, "utf8");
-  const code = codeOnly(src);
-  assert.match(src, /noticesMuted: uci\.get\("aurora", "theme", "hub_notices"\) === "0",/);
-  assert.match(src, /_\("Show the unread count on every LuCI page"\)/);
-  assert.match(code, /callUciSet\("aurora", "theme", \{ hub_notices: muted \? "0" : "1" \}\)/);
-  assert.match(code, /\.then\(\(\) => callUciCommit\("aurora"\)\)/);
-  // uci.apply() commits every change staged in the session, whichever page
-  // staged it. A checkbox must not apply somebody's half-finished network edit.
-  assert.ok(!/uci\.apply\(|ui\.changes\.apply\(|uci\.save\(/.test(code));
-  assert.match(code, /inboxSnapshot = hubApi\.setNoticesMuted\(muted\);\s*inboxIndicator\.update\(\);/);
-  // A failed write puts the box back where the router still is.
-  assert.match(code, /box\.checked = !noticesMuted;/);
-  assert.match(src, /handleSave:\s*null/);
-
-  const acl = JSON.parse(await readFile(repo("root/usr/share/rpcd/acl.d/luci-app-aurora.json"), "utf8"))[
-    "luci-app-aurora"
-  ];
-  assert.ok(acl.read.uci.includes("aurora"), "the preload reads the opt-out");
-  assert.ok(acl.write.uci.includes("aurora"), "the row writes it");
-  assert.ok(acl.read.ubus["luci.aurora"].includes("hub_me"), "the preload may ask hub_me");
 });
 
 test("my shares: a share that needs updating says so, and points at the update it already has", async () => {
@@ -1868,20 +1845,28 @@ test("my shares: the identity card's summary line gains the counts", async () =>
   }
 });
 
-test("hub_notices is not a colour or structure token, so the theme never injects it", async () => {
-  // header.ut turns every light_/dark_/struct_ option into a CSS custom
-  // property. Anything else in aurora.theme is inert there.
-  assert.ok(!/^(light_|dark_|struct_)/.test("hub_notices"));
+test("the opt-out is gone from the page: no toggle, no uci write, no leftover styles", async () => {
+  const src = await readFile(SRC, "utf8");
+  for (const gone of [
+    "hub_notices",
+    "noticesMuted",
+    "buildNoticesToggle",
+    "setNoticesMuted",
+    "callUciSet",
+    "callUciCommit",
+    '".aurora-store-inbox .set',
+    "Show the unread count on every LuCI page",
+    "Couldn't save that setting",
+  ])
+    assert.ok(!src.includes(gone), gone);
+  assert.match(src, /\.refreshNotices\(\{ me: refreshMyShares\(\) \}\)/);
   for (const name of ["default", "sage-green", "amber-sand", "monochrome", "sky-blue"]) {
     const template = await readFile(repo(`root/usr/share/aurora/${name}.template`), "utf8");
-    assert.ok(!template.includes("hub_notices"), `${name}.template must leave the default (on) implicit`);
+    assert.ok(!template.includes("hub_notices"), name);
   }
 });
 
-// ---------------------------------------------------------------------------
-// Inbox, second pass: quiet rows, icon buttons, Markdown, the update source
-
-test("inbox v2: list column is two pills, a quiet mark-all-read, plain group labels, rows, the opt-out", async () => {
+test("inbox v2: list column is two pills, a quiet mark-all-read, plain group labels, and the rows", async () => {
   const src = await readFile(SRC, "utf8");
   const build = between(src, "const buildInbox = () =>", "let inboxMounted");
   assert.match(build, /\["all", _\("All"\)\],\s*\["unread", _\("Unread"\)\],/);
@@ -1898,7 +1883,11 @@ test("inbox v2: list column is two pills, a quiet mark-all-read, plain group lab
   assert.match(src, /\.aurora-store-inbox \.grp\{padding:14px 10px 6px;font-size:\.78em;" \+\s*"color:var\(--text-subtle,#888\);\}/);
   assert.match(build, /_\("You’re all caught up\."\)/);
   assert.match(build, /_\("Select a notification"\)/);
-  assert.match(build, /buildNoticesToggle\(\),\s*\]\),\s*E\(\s*"div",\s*\{ class: "detail" \}/);
+  // The column ends with the rows: there is no opt-out any more.
+  assert.match(
+    build,
+    /rows\.length \? rows : \[E\("div", \{ class: "empty" \}, _\("You’re all caught up\."\)\)\],\s*\),\s*\]\),\s*E\(\s*"div",\s*\{ class: "detail" \}/,
+  );
   assert.match(build, /"aurora-store-inbox" \+ \(current \? " has-sel" : ""\)/);
   // The keyboard hint row is gone; the shortcuts are not.
   for (const gone of ["kbd(", 'class: "foot"', '_("move")', '_("done")', '_("unread")'])
@@ -1942,7 +1931,7 @@ test("inbox v2: one accent; danger and warning colour only the small level icon"
 
 test("inbox v2: detail is a thin bar of source · time and two labelled icon buttons, then title, body, one action", async () => {
   const src = await readFile(SRC, "utf8");
-  const detail = between(src, "const buildInboxDetail", "const buildNoticesToggle");
+  const detail = between(src, "const buildInboxDetail", "const buildInbox = () =>");
   assert.match(detail, /E\("div", \{ class: "top" \}, \[/);
   assert.match(detail, /class: "lnk back"/);
   assert.match(detail, /"← " \+ _\("Inbox"\)/);
@@ -1962,7 +1951,7 @@ test("inbox v2: detail is a thin bar of source · time and two labelled icon but
 test("inbox v2: broadcast bodies render as Markdown, everything derived stays plain text", async () => {
   const src = await readFile(SRC, "utf8");
   assert.match(src, /^"require utils\.markdown as markdown";$/m);
-  const detail = between(src, "const buildInboxDetail", "const buildNoticesToggle");
+  const detail = between(src, "const buildInboxDetail", "const buildInbox = () =>");
   assert.match(detail, /if \(copy\.markdown === undefined\)\s*copy\.body\.forEach\(\(paragraph\) =>\s*body\.appendChild\(E\("p", \{\}, \[document\.createTextNode\(paragraph\)\]\)\),/);
   assert.match(detail, /else body\.appendChild\(markdown\.render\(copy\.markdown, document, markdownLink\)\);/);
   const describe = between(src, "const describeItem", "const inboxChanged");

@@ -84,10 +84,10 @@ async function boot(options) {
   const uci = {
     load: (name) => {
       log.rpc.push("uci.load:" + name);
-      return opts.uciFails ? Promise.reject(new Error("denied")) : Promise.resolve();
+      return Promise.resolve();
     },
     get: (config, section, option) => {
-      const theme = "theme" in opts ? opts.theme : {};
+      const theme = { hub_notices: "0" };
       return option === undefined ? theme : theme && theme[option];
     },
   };
@@ -236,7 +236,7 @@ test("the preload declares baseclass and nothing else", async () => {
 });
 
 test("__init__ only parks a luci-loaded listener", async () => {
-  const world = await boot({ storage: fresh({ notices: [notice()], muted: false }) });
+  const world = await boot({ storage: fresh({ notices: [notice()] }) });
   try {
     world.init();
     assert.equal(world.listeners.length, 1);
@@ -263,7 +263,7 @@ test("__init__ only parks a luci-loaded listener", async () => {
 
 test("without a session -- the login page -- nothing is scheduled at all", async () => {
   for (const session of [null, undefined, ""]) {
-    const world = await boot({ session, storage: fresh({ notices: [notice()], muted: false }) });
+    const world = await boot({ session, storage: fresh({ notices: [notice()] }) });
     try {
       world.init();
       assert.equal(world.listeners.length, 0);
@@ -278,7 +278,7 @@ test("without a session -- the login page -- nothing is scheduled at all", async
 });
 
 test("browsers without requestIdleCallback fall back to a timeout", async () => {
-  const world = await boot({ idle: false, storage: fresh({ notices: [notice()], muted: false }) });
+  const world = await boot({ idle: false, storage: fresh({ notices: [notice()] }) });
   try {
     world.init();
     for (const { handler } of world.listeners) handler();
@@ -302,7 +302,6 @@ test("a check that is not due counts from the caches: no fetch, no ubus", async 
             notice({ id: "w2" }),
             notice({ id: "w3" }),
           ],
-          muted: false,
         },
         {
           "aurora.hub.me": cached(creator({ id: "s1", name: "Warm Paper", status: "active", assets_status: "rejected" })),
@@ -330,12 +329,11 @@ test("a check that is not due counts from the caches: no fetch, no ubus", async 
 
 test("nothing unread that matters: no indicator, no injected style", async () => {
   const quiet = [
-    fresh({ notices: [], muted: false }),
-    fresh({ notices: [notice({ level: "info" })], muted: false }),
-    fresh({ notices: [notice()], muted: false }, { "aurora.hub.inboxRead": JSON.stringify(["n1"]) }),
-    fresh({ notices: [notice()], muted: false }, { "aurora.hub.inboxDone": JSON.stringify(["n1"]) }),
-    fresh({ notices: [notice()], muted: true }),
-    fresh({ notices: [notice({ audience: "creators" })], muted: false }),
+    fresh({ notices: [] }),
+    fresh({ notices: [notice({ level: "info" })] }),
+    fresh({ notices: [notice()] }, { "aurora.hub.inboxRead": JSON.stringify(["n1"]) }),
+    fresh({ notices: [notice()] }, { "aurora.hub.inboxDone": JSON.stringify(["n1"]) }),
+    fresh({ notices: [notice({ audience: "creators" })] }),
     fresh("{corrupt"),
     { "aurora.hub.noticesChecked": JSON.stringify(Date.now() - HOUR) },
   ];
@@ -353,7 +351,7 @@ test("a creators broadcast counts once the cached profile shows an affected shar
   await run(
     {
       storage: fresh(
-        { notices: [notice({ audience: "creators" })], muted: false },
+        { notices: [notice({ audience: "creators" })] },
         { "aurora.hub.me": cached(creator({ id: "s1", status: "active", compat: { state: "deprecated" } })) },
       ),
     },
@@ -366,7 +364,7 @@ test("a creators broadcast counts once the cached profile shows an affected shar
 });
 
 test("one indicator and one style per document, however often it is refreshed", async () => {
-  await run({ storage: fresh({ notices: [notice(), notice({ id: "n2" })], muted: false }) }, async (world) => {
+  await run({ storage: fresh({ notices: [notice(), notice({ id: "n2" })] }) }, async (world) => {
     await world.preload.update();
     await world.preload.update();
     assert.equal(world.indicators.length, 1);
@@ -388,7 +386,7 @@ test("one indicator and one style per document, however often it is refreshed", 
 });
 
 test("clicking the indicator opens the Marketplace on its Inbox tab", async () => {
-  await run({ storage: fresh({ notices: [notice()], muted: false }) }, (world) => {
+  await run({ storage: fresh({ notices: [notice()] }) }, (world) => {
     assert.equal(world.preload.INBOX_HASH, "#inbox");
     world.indicators[0].handler();
     assert.equal(world.window.location.href, "/cgi-bin/luci/admin/system/aurora/marketplace#inbox");
@@ -396,7 +394,7 @@ test("clicking the indicator opens the Marketplace on its Inbox tab", async () =
 });
 
 test("the injected style draws the icon only where the theme hides indicator text", async () => {
-  await run({ storage: fresh({ notices: [notice()], muted: false }) }, (world) => {
+  await run({ storage: fresh({ notices: [notice()] }) }, (world) => {
     const [style] = world.styles;
     assert.equal(style.tag, "style");
     const css = style.textContent;
@@ -435,14 +433,14 @@ test("the injected style draws the icon only where the theme hides indicator tex
 });
 
 test("a theme that shows indicator text keeps LuCI's plain label", async () => {
-  await run({ storage: fresh({ notices: [notice()], muted: false }), indicatorFontSize: "13px" }, (world) => {
+  await run({ storage: fresh({ notices: [notice()] }), indicatorFontSize: "13px" }, (world) => {
     const [indicator] = world.indicators;
     assert.deepEqual([...indicator.classes], []);
     assert.match(indicator.textContent, /^Inbox \d+$/);
   });
 });
 
-test("a due check reads the opt-out, fetches the feed once, caches it and shows the count", async () => {
+test("a due check fetches the feed once, caches it and shows the count", async () => {
   const stale = { "aurora.hub.noticesChecked": JSON.stringify(Date.now() - 13 * HOUR) };
   for (const storage of [{}, stale]) {
     const before = Date.now();
@@ -452,14 +450,14 @@ test("a due check reads the opt-out, fetches the feed once, caches it and shows 
         feed: [notice(), notice({ id: "n9" }), notice({ id: "bad id" })],
       },
       (world) => {
-        assert.deepEqual(world.log.requires.slice(0, 3), ["utils.notices", "utils.hub-api", "uci"]);
-        assert.deepEqual(world.log.rpc, ["uci.load:aurora", "get_init_data"]);
+        assert.deepEqual(world.log.requires.slice(0, 2), ["utils.notices", "utils.hub-api"]);
+        assert.deepEqual(world.log.rpc, ["get_init_data"]);
         assert.deepEqual(world.log.fetches, [FEED_URL]);
         assert.equal(world.indicators[0].attrs["data-count"], "1");
 
         const snapshot = JSON.parse(world.store.get("aurora.hub.notices")).value;
         assert.deepEqual(snapshot.notices.map((n) => n.id), ["n1", "n9"]);
-        assert.equal(snapshot.muted, false);
+        assert.equal("muted" in snapshot, false);
         assert.ok(JSON.parse(world.store.get("aurora.hub.noticesChecked")) >= before);
         assert.deepEqual(JSON.parse(world.store.get("aurora.hub.inboxDone")), ["n9"]);
       },
@@ -471,12 +469,12 @@ test("hub_me runs only when due, and then only for a creators notice or a router
   const rejected = { id: "s1", name: "Warm Paper", status: "active", assets_status: "rejected" };
   const reply = { result: 0, data: creator(rejected) };
   const cases = [
-    { feed: [notice()], rpc: ["uci.load:aurora", "get_init_data"], count: "1" },
-    { feed: [notice({ audience: "creators" })], rpc: ["uci.load:aurora", "get_init_data", "hub_me"], count: "1" },
+    { feed: [notice()], rpc: ["get_init_data"], count: "1" },
+    { feed: [notice({ audience: "creators" })], rpc: ["get_init_data", "hub_me"], count: "1" },
     {
       feed: [notice()],
       storage: { "aurora.hub.me": cached(creator({ id: "s1", status: "active" })) },
-      rpc: ["uci.load:aurora", "get_init_data", "hub_me"],
+      rpc: ["get_init_data", "hub_me"],
       count: "2",
     },
   ];
@@ -488,7 +486,7 @@ test("hub_me runs only when due, and then only for a creators notice or a router
 
   // Not due: a creator's router still asks nothing.
   await run(
-    { storage: fresh({ notices: [], muted: false }, { "aurora.hub.me": cached(creator(rejected)) }), me: reply },
+    { storage: fresh({ notices: [] }, { "aurora.hub.me": cached(creator(rejected)) }), me: reply },
     (world) => {
       assert.deepEqual(world.log.rpc, []);
       assert.equal(world.indicators[0].attrs["data-count"], "1");
@@ -499,7 +497,7 @@ test("hub_me runs only when due, and then only for a creators notice or a router
 test("the missing update source counts, from a probe made only when due and cached with the feed", async () => {
   const init = { feed: { pm: "apk", configured: false, channel: "" }, versions: {} };
   const world = await run({ init, feed: [] }, (w) => {
-    assert.deepEqual(w.log.rpc, ["uci.load:aurora", "get_init_data"]);
+    assert.deepEqual(w.log.rpc, ["get_init_data"]);
     assert.equal(w.indicators[0].attrs["data-count"], "1");
     assert.equal(JSON.parse(w.store.get("aurora.hub.notices")).value.local.feedMissing, true);
   });
@@ -528,49 +526,6 @@ test("the preload never loads the Markdown renderer", async () => {
   );
 });
 
-test("hub_notices '0' means no poll and no indicator", async () => {
-  const before = Date.now();
-  const world = await run(
-    {
-      theme: { hub_notices: "0" },
-      feed: [notice()],
-      storage: { "aurora.hub.notices": cached({ notices: [notice()], muted: false }) },
-    },
-    (w) => {
-      assert.deepEqual(w.log.fetches, []);
-      assert.deepEqual(w.log.rpc, ["uci.load:aurora"]);
-      assert.equal(w.indicators.length, 0);
-      // The opt-out is remembered with the cache, so the pages of the next
-      // twelve hours neither re-read uci nor bring the count back.
-      const snapshot = JSON.parse(w.store.get("aurora.hub.notices")).value;
-      assert.equal(snapshot.muted, true);
-      assert.equal(snapshot.notices.length, 1, "the Inbox tab still seeds its first paint from here");
-      assert.ok(JSON.parse(w.store.get("aurora.hub.noticesChecked")) >= before);
-    },
-  );
-
-  await run({ storage: Object.fromEntries(world.store), feed: [notice()] }, (next) => {
-    assert.deepEqual(next.log.rpc, []);
-    assert.deepEqual(next.log.fetches, []);
-    assert.equal(next.indicators.length, 0);
-  });
-});
-
-test("any other hub_notices value, or none, leaves the count on", async () => {
-  for (const theme of [{}, { hub_notices: "1" }, { hub_notices: "" }])
-    await run({ theme, feed: [notice()] }, (world) => {
-      assert.deepEqual(world.log.fetches, [FEED_URL]);
-      assert.equal(world.indicators.length, 1);
-    });
-});
-
-test("a session that cannot read the aurora config gets no indicator", async () => {
-  await run({ theme: null, feed: [notice()] }, (world) => {
-    assert.deepEqual(world.log.fetches, []);
-    assert.equal(world.indicators.length, 0);
-  });
-});
-
 test("a hub without the endpoint, a dead network, a broken module: all silent", async () => {
   const rejections = [];
   const onRejection = (reason) => rejections.push(reason);
@@ -580,10 +535,8 @@ test("a hub without the endpoint, a dead network, a broken module: all silent", 
       { status: 404 },
       { status: 500 },
       { fetchFails: true },
-      { uciFails: true },
       { requireFails: "utils.notices" },
       { requireFails: "utils.hub-api" },
-      { requireFails: "uci" },
       { requireFails: "ui", feed: [notice()] },
     ]) {
       const world = await boot(options);
@@ -604,11 +557,11 @@ test("a hub without the endpoint, a dead network, a broken module: all silent", 
 });
 
 test("a failed poll still shows what the caches already held", async () => {
-  for (const options of [{ fetchFails: true }, { uciFails: true }])
+  for (const options of [{ fetchFails: true }, { status: 500 }])
     await run(
       {
         ...options,
-        storage: { "aurora.hub.notices": cached({ notices: [notice()], muted: false }) },
+        storage: { "aurora.hub.notices": cached({ notices: [notice()] }) },
       },
       (world) => assert.equal(world.indicators[0].attrs["data-count"], "1"),
     );
@@ -621,4 +574,25 @@ test("the shipped preload stays small: it is parsed before every page's DOM init
   const BUDGET = 2560;
   const { size } = await stat(repo("htdocs/luci-static/resources/preload/aurora-notices.js"));
   assert.ok(size < BUDGET, `preload artifact is ${size} bytes; the budget is ${BUDGET}`);
+});
+
+test("the count is always on: the preload never reads uci, and a 1.2.x opt-out in the cache is ignored", async () => {
+  const src = await readFile(SRC, "utf8");
+  assert.ok(!/\buci\b|hub_notices|muted/.test(src), "no opt-out is read or honoured");
+
+  // The world below would report hub_notices '0' if asked. Nobody asks.
+  const stale = fresh({ notices: [notice()], muted: true });
+  await run({ storage: stale }, (world) => {
+    assert.equal(world.indicators[0].attrs["data-count"], "1");
+    assert.ok(!world.log.requires.includes("uci"));
+    assert.deepEqual(world.log.rpc, []);
+  });
+
+  // Due, with the same stale flag: fetched, shown, and the flag is gone from the cache.
+  await run({ storage: { "aurora.hub.notices": cached({ notices: [], muted: true }) }, feed: [notice()] }, (world) => {
+    assert.equal(world.indicators[0].attrs["data-count"], "1");
+    assert.ok(!world.log.requires.includes("uci"));
+    assert.ok(!world.log.rpc.some((call) => call.startsWith("uci")));
+    assert.equal("muted" in JSON.parse(world.store.get("aurora.hub.notices")).value, false);
+  });
 });

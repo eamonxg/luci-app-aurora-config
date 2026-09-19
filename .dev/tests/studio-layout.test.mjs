@@ -259,50 +259,64 @@ test("studio: publishing starts here, next to export/import", async () => {
 const headerBlock = (src) =>
   src.slice(src.indexOf("    const versionEntry ="), src.indexOf("    m.description = headerBar;"));
 
-test("header: versions are one muted line of x.y.z, with the full string in the title", async () => {
+test("header: each package is its muted name, then its installed x.y.z in the theme's green .label", async () => {
   const src = await readFile(SRC, "utf8");
   const head = headerBlock(src);
-  assert.match(head, /installed \? Object\.assign\(attrs, \{ title: installed \}\) : attrs,/);
-  assert.match(head, /E\("b", \{\}, label\),\s*" " \+ \(installed \? feedCheck\.shortVersion\(installed\) : _\("Unknown"\)\),/);
+  assert.match(head, /E\("span", attrs, \[\s*E\("b", \{\}, label\),/);
+  // Current is the theme's own success colour; the full version string rides in title.
+  assert.match(
+    head,
+    /installed \? \{ class: "label success", title: installed \} : \{ class: "label" \},\s*installed \? feedCheck\.shortVersion\(installed\) : _\("Unknown"\),/,
+  );
   assert.match(head, /versionEntry\(\{ id: "theme-version" \}, _\("Theme"\), installedVersions\?\.theme\?\.installed_version\)/);
   assert.match(head, /versionEntry\(\{ id: "config-version" \}, _\("Config"\), installedVersions\?\.config\?\.installed_version\)/);
   assert.match(head, /const versionArea = E\("div", \{ class: "aurora-studio-versions" \}/);
-  // The three coloured pills are gone.
-  for (const pill of ['"label success"', '"label warning"', "`v${", '_("Theme: ")', '_("Config: ")'])
-    assert.ok(!src.includes(pill), pill);
+  // Nothing about an update exists until the manifest says so.
+  for (const later of ['"arrow"', '"up"', 'E("a"', '"label warning"']) assert.ok(!head.includes(later), later);
+  // The old separate pill and the "Theme: " prefixes are gone for good.
+  for (const gone of ['_("Update available %s")', "`v${", '_("Theme: ")', '_("Config: ")'])
+    assert.ok(!src.includes(gone), gone);
 });
 
-test("header: an update hangs on the package it belongs to, and each package is judged alone", async () => {
+test("header: a newer build turns that package's label to warning and hangs → link after it; the other stays green", async () => {
   const src = await readFile(SRC, "utf8");
   const block = src.slice(src.indexOf("const showUpdateCapsule ="), src.indexOf('const s = m.section(form.NamedSection'));
   assert.match(block, /\["luci-theme-aurora", "theme-version", installedVersions\?\.theme\?\.installed_version\],/);
   assert.match(block, /\["luci-app-aurora-config", "config-version", installedVersions\?\.config\?\.installed_version\],/);
   assert.match(block, /packages\.forEach\(\(\[pkg, id, installed\]\) => \{/);
   assert.match(block, /feedCheck\.findManifestVersion\(\s*manifest,\s*channel,\s*format,\s*pkg,\s*\)/);
-  // Versions that cannot be ordered say nothing at all.
+  // Versions that cannot be ordered say nothing at all: the label stays green, no arrow, no link.
   assert.match(block, /if \(!feedCheck\.isNewer\(installed, available\)\) return;/);
   assert.match(block, /const entry = versionArea\.querySelector\("#" \+ id\);/);
-  assert.match(block, /entry\.classList\.add\("up"\);\s*entry\.appendChild\(document\.createTextNode\(" → "\)\);/);
+  assert.match(
+    block,
+    /entry\.classList\.add\("up"\);\s*entry\.querySelector\("\.label"\)\.className = "label warning";\s*entry\.appendChild\(E\("span", \{ class: "arrow", "aria-hidden": "true" \}, "→"\)\);/,
+  );
   assert.match(block, /E\("a", \{ href: L\.url\(packagePagePath\), title: available \}, \[label\]\)/);
   assert.match(block, /_\("%s available"\)\.format\(/);
   // A rebuild of the same x.y.z differs only in its r-stamp; then the stamp is shown.
   assert.match(block, /short === feedCheck\.shortVersion\(installed\) \? available : short/);
   assert.match(src, /const packagePagePath = feedCheck\.pickPackageManagerPath\(menuTree\);/);
-  // The manifest is the CDN's word: it only ever becomes a text node or an attribute.
   assert.ok(!block.includes("innerHTML"));
   // It stays on this line: nothing here feeds the inbox or the header count.
   for (const inboxHook of ["inboxIndicator", "hubApi", "noticesCache", "setNoticesLocal"])
     assert.ok(!src.includes(inboxHook), inboxHook);
 });
 
-test("header: no update means no accent colour anywhere on the line", async () => {
+test("header: the row's colours are the theme's .label classes; the new rules only space and align", async () => {
   const src = await readFile(SRC, "utf8");
   const css = src.slice(src.indexOf("const ensureToolbarStyles"), src.indexOf("const ensureBgCardStyles"));
-  const branded = [...css.matchAll(/^([^\n{}]+) \{[^}]*var\(--brand/gm)].map((m) => m[1].trim());
-  // Only the update link carries the brand colour, and it exists only once an update was attached.
-  assert.deepEqual(branded, [".aurora-studio-versions a"]);
-  const head = headerBlock(src);
-  assert.ok(!head.includes('"up"') && !head.includes("E(\"a\""), "the resting line has neither");
+  const rowRules = [...css.matchAll(/^(\.aurora-studio-versions[^{]*) \{([^}]*)\}/gm)];
+  const label = rowRules.find((m) => m[1] === ".aurora-studio-versions .label");
+  assert.ok(label, "the label only gets spacing and numerals");
+  assert.deepEqual(
+    label[2].trim().split(/;\s*/).filter(Boolean).map((d) => d.split(":")[0].trim()).sort(),
+    ["font-variant-numeric", "margin-left"],
+  );
+  const arrow = rowRules.find((m) => m[1] === ".aurora-studio-versions .arrow");
+  assert.ok(arrow && !/color|background/.test(arrow[2]), "the arrow inherits the muted row colour");
+  // No colour of our own on any label: success and warning are the theme's.
+  assert.ok(!/\.label\.(success|warning)|\.label[^{]*\{[^}]*(color|background)/.test(css));
   assert.match(css, /\.aurora-studio-versions \{\s*color: var\(--text-subtle,/);
   assert.match(css, /\.aurora-studio-versions b \{\s*color: var\(--text-muted,/);
 });

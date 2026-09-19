@@ -124,7 +124,6 @@ const patchSnapshot = (cache, patch) => {
   const snapshot = Object.assign(
     {
       notices: notices.sanitize(stale && stale.notices),
-      muted: Boolean(stale && stale.muted),
       local: (stale && stale.local) || null,
     },
     patch,
@@ -138,7 +137,7 @@ return baseclass.extend({
 
   meCache: makeCache(ME_CACHE_KEY, "me"),
 
-  // { notices, muted, local }
+  // { notices, local }
   noticesCache: makeCache(NOTICES_CACHE_KEY, "notices"),
 
   CLIENT_SCHEMA: CLIENT_SCHEMA,
@@ -184,19 +183,10 @@ return baseclass.extend({
     writeStored(INBOX_DONE_KEY, state.done);
   },
 
-  // muted 与 local 随 feed 一起落缓存：preload 在两次轮询之间只读缓存，
-  // 读不到 uci，也不为"缺不缺更新源"去问 ubus。
-  setNoticesMuted(muted) {
-    return patchSnapshot(this.noticesCache, { muted: Boolean(muted) });
-  },
-
+  // local 随 feed 一起落缓存：preload 在两次轮询之间只读缓存，
+  // 不为"缺不缺更新源"去问 ubus。
   setNoticesLocal(local) {
     return patchSnapshot(this.noticesCache, { local: local });
-  },
-
-  muteNotices() {
-    this.markNoticesChecked(Date.now());
-    return this.setNoticesMuted(true);
   },
 
   // options.me：调用方自己已经在跑 hub_me 时，把那份结果（或它的 promise）传
@@ -216,7 +206,6 @@ return baseclass.extend({
       const known = { feed: Boolean(res && res.result === 0), me: false, local: Boolean(fresh) };
       const snapshot = {
         notices: notices.sanitize(known.feed ? res.data && res.data.notices : stale && stale.notices),
-        muted: Boolean(opts.muted),
         local: local,
       };
       const list = snapshot.notices;

@@ -1605,12 +1605,20 @@ const ensureToolbarStyles = () => {
   flex: 1 1 auto;
   flex-wrap: wrap;
   font-size: .88em;
-  gap: 4px 1.4em;
+  align-items: center;
+  gap: 4px 1.6em;
   min-width: 0;
 }
 .aurora-studio-versions b {
   color: var(--text-muted, var(--muted-foreground, color-mix(in srgb, currentColor 70%, transparent)));
   font-weight: 500;
+}
+.aurora-studio-versions .label {
+  font-variant-numeric: tabular-nums;
+  margin-left: .45em;
+}
+.aurora-studio-versions .arrow {
+  margin: 0 .35em;
 }
 .aurora-studio-versions a {
   color: var(--brand, var(--primary, currentColor));
@@ -2628,15 +2636,16 @@ return view.extend({
 
     // Named node on purpose: once the feed manifest has been compared, each
     // package's update is attached to that package's own entry in this line.
+    // 颜色全交给主题的 .label:当前是 success,有新版时换成 warning。
     const versionEntry = (attrs, label, installed) =>
-      E(
-        "span",
-        installed ? Object.assign(attrs, { title: installed }) : attrs,
-        [
-          E("b", {}, label),
-          " " + (installed ? feedCheck.shortVersion(installed) : _("Unknown")),
-        ],
-      );
+      E("span", attrs, [
+        E("b", {}, label),
+        E(
+          "span",
+          installed ? { class: "label success", title: installed } : { class: "label" },
+          installed ? feedCheck.shortVersion(installed) : _("Unknown"),
+        ),
+      ]);
 
     const versionArea = E("div", { class: "aurora-studio-versions" }, [
       versionEntry({ id: "theme-version" }, _("Theme"), installedVersions?.theme?.installed_version),
@@ -2715,7 +2724,8 @@ return view.extend({
           short === feedCheck.shortVersion(installed) ? available : short,
         );
         entry.classList.add("up");
-        entry.appendChild(document.createTextNode(" → "));
+        entry.querySelector(".label").className = "label warning";
+        entry.appendChild(E("span", { class: "arrow", "aria-hidden": "true" }, "→"));
         entry.appendChild(
           packagePagePath
             ? E("a", { href: L.url(packagePagePath), title: available }, [label])

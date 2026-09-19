@@ -55,20 +55,12 @@ const update = () =>
     },
   );
 
-const poll = (hubApi) =>
-  L.require("uci").then((uci) =>
-    uci.load("aurora").then(() => {
-      const theme = uci.get("aurora", "theme");
-      return !theme || theme.hub_notices === "0"
-        ? hubApi.muteNotices()
-        : hubApi.refreshNotices({ muted: false });
-    }),
-  );
-
 const run = () =>
   Promise.all([L.require("utils.notices"), L.require("utils.hub-api")])
     .then(([notices, hubApi]) =>
-      notices.isDue(hubApi.noticesCheckedAt(), Date.now()) ? poll(hubApi).catch(() => null) : null,
+      notices.isDue(hubApi.noticesCheckedAt(), Date.now())
+        ? hubApi.refreshNotices().catch(() => null)
+        : null,
     )
     .then(update);
 

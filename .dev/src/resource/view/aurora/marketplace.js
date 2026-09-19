@@ -178,22 +178,6 @@ const callApplyThemePreset = rpc.declare({
   params: ["name"],
 });
 
-// 直接走 ubus 的 uci set + commit,只碰 aurora 这一个配置。LuCI 的 uci.apply()
-// 会把本次会话里所有已保存未应用的改动一并提交,一个勾选框不该有这种副作用。
-const callUciSet = rpc.declare({
-  object: "uci",
-  method: "set",
-  params: ["config", "section", "values"],
-  reject: true,
-});
-
-const callUciCommit = rpc.declare({
-  object: "uci",
-  method: "commit",
-  params: ["config"],
-  reject: true,
-});
-
 const INBOX_NARROW_QUERY = "(max-width:760px)";
 
 const maskIcon = (paths, strokeWidth) =>
@@ -1498,12 +1482,6 @@ const STORE_CSS =
   "color:var(--warning,#a86a00);}" +
   ".aurora-store-inbox .tm{font-size:.76em;color:var(--text-subtle,#888);" +
   "font-variant-numeric:tabular-nums;}" +
-  ".aurora-store-inbox .set{display:flex;align-items:center;gap:.6em;" +
-  "justify-content:flex-start;width:auto;margin:0;padding:10px 18px;font-size:.8em;" +
-  "color:var(--text-subtle,#888);border-top:1px solid var(--hairline,rgba(0,0,0,0.12));" +
-  "cursor:pointer;}" +
-  ".aurora-store-inbox .set input{margin:0;flex:none;}" +
-  ".aurora-store-inbox .set span{flex:1;text-align:left;}" +
   ".aurora-store-inbox .detail{min-width:0;display:flex;flex-direction:column;}" +
   ".aurora-store-inbox .top{display:flex;align-items:center;gap:4px;" +
   "padding:10px 14px 10px 28px;border-bottom:1px solid var(--hairline,rgba(0,0,0,0.12));}" +
@@ -1630,7 +1608,6 @@ return view.extend({
       // upgrade, survives a browser change, and resets to zero on the clean
       // reflash that is exactly when the reminder should come back.
       keySaved: uci.get("aurora", "theme", "hub_key_saved") === "1",
-      noticesMuted: uci.get("aurora", "theme", "hub_notices") === "0",
       // This router's own navigation shape. It used to stand in for the
       // built-in presets' too, back when a preset changed only colours; now
       // every preview draws the configuration's own nav_type and this is read
@@ -2271,7 +2248,6 @@ return view.extend({
 
     let inboxSnapshot = hubApi.noticesCache.getStale();
     let meData = null;
-    let noticesMuted = loadData.noticesMuted;
     let inboxFilter = "all";
     let inboxSel = null;
 
@@ -2595,39 +2571,6 @@ return view.extend({
       ];
     };
 
-    const buildNoticesToggle = () => {
-      const box = E("input", { type: "checkbox" });
-      box.checked = !noticesMuted;
-      box.addEventListener("change", () => {
-        const muted = !box.checked;
-        box.disabled = true;
-        callUciSet("aurora", "theme", { hub_notices: muted ? "0" : "1" })
-          .then(() => callUciCommit("aurora"))
-          .then(
-            () => {
-              noticesMuted = muted;
-              inboxSnapshot = hubApi.setNoticesMuted(muted);
-              inboxIndicator.update();
-            },
-            () => {
-              box.checked = !noticesMuted;
-              ui.addNotification(
-                null,
-                E("p", {}, _("Couldn't save that setting. Try again.")),
-                "warning",
-              );
-            },
-          )
-          .then(() => {
-            box.disabled = false;
-          });
-      });
-      return E("label", { class: "set" }, [
-        box,
-        E("span", {}, _("Show the unread count on every LuCI page")),
-      ]);
-    };
-
     const buildInbox = () => {
       const items = inboxItems();
       const narrow = window.matchMedia(INBOX_NARROW_QUERY).matches;
@@ -2678,7 +2621,6 @@ return view.extend({
             { class: "rows" },
             rows.length ? rows : [E("div", { class: "empty" }, _("You’re all caught up."))],
           ),
-          buildNoticesToggle(),
         ]),
         E(
           "div",
@@ -4414,7 +4356,7 @@ return view.extend({
     fetchSort("hot");
     // 打开商店永远两路都刷,不看 preload 的 12 小时节流;hub_me 只跑这一趟。
     hubApi
-      .refreshNotices({ muted: noticesMuted, me: refreshMyShares() })
+      .refreshNotices({ me: refreshMyShares() })
       .then((snapshot) => {
         inboxSnapshot = snapshot;
         inboxChanged();
