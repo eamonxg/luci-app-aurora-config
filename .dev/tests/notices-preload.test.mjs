@@ -28,6 +28,7 @@ const notice = (over) => ({
 async function boot(options) {
   const opts = options || {};
   const log = { requires: [], fetches: [], rpc: [], storageReads: 0, storageWrites: 0, hidden: [] };
+  let moves;
   const store = new Map(Object.entries(opts.storage || {}));
   const listeners = [];
   const idle = [];
@@ -43,7 +44,12 @@ async function boot(options) {
     querySelector: (selector) =>
       indicators.find((node) => selector === `span[data-indicator="${node.id}"]`) || null,
   };
-  const window = { setTimeout: (cb, ms) => timeouts.push({ cb, ms }), location: { href: "" } };
+  moves = log.moves = [];
+  const window = {
+    setTimeout: (cb, ms) => timeouts.push({ cb, ms }),
+    location: { href: "" },
+    getComputedStyle: () => ({ fontSize: opts.indicatorFontSize ?? "0px" }),
+  };
   if (opts.idle !== false) window.requestIdleCallback = (cb) => idle.push(cb);
 
   const E = (tag, attrs) => ({ tag, attrs: attrs || {}, textContent: "" });
@@ -55,7 +61,15 @@ async function boot(options) {
     showIndicator: (id, label, handler, style) => {
       let node = indicators.find((candidate) => candidate.id === id);
       if (!node) {
-        node = { id, attrs: {}, setAttribute: (name, value) => (node.attrs[name] = String(value)) };
+        const classes = new Set();
+        node = {
+          id,
+          attrs: {},
+          classes,
+          classList: { add: (name) => classes.add(name) },
+          setAttribute: (name, value) => (node.attrs[name] = String(value)),
+          parentNode: { appendChild: (child) => moves.push(child.id) },
+        };
         indicators.push(node);
       }
       Object.assign(node, { textContent: label, handler, style });
@@ -381,27 +395,22 @@ test("clicking the indicator opens the Marketplace on its Inbox tab", async () =
   });
 });
 
-test("the injected style draws the icon and badge for Aurora only", async () => {
+test("the injected style draws the icon only where the theme hides indicator text", async () => {
   await run({ storage: fresh({ notices: [notice()], muted: false }) }, (world) => {
     const [style] = world.styles;
     assert.equal(style.tag, "style");
     const css = style.textContent;
     const rules = css.split("}").filter((rule) => rule.trim());
     assert.equal(rules.length, 3);
-    // Aurora sets data-nav-type on <body>. Anywhere else no rule matches and
-    // LuCI's plain text indicator ("Inbox 3") is what shows.
     for (const rule of rules)
-      assert.ok(
-        rule.startsWith('body[data-nav-type] #indicators span[data-indicator="aurora-inbox"]'),
-        rule.slice(0, 80),
-      );
+      assert.ok(rule.startsWith('#indicators span[data-indicator="aurora-inbox"].aurora-inbox-icon'), rule.slice(0, 80));
+    assert.doesNotMatch(css, /data-nav-type/);
+    assert.match(rules[0], /\{position:relative;order:1;/);
     assert.match(css, /::before\{-webkit-mask:var\(--aurora-inbox-icon\) center\/cover no-repeat;mask:var\(--aurora-inbox-icon\) center\/cover no-repeat\}/);
     assert.match(css, /--aurora-inbox-icon:url\("data:image\/svg\+xml,/);
-    // #indicators is row-reverse and every other indicator has the default
-    // order 0, so the largest order is the leftmost slot: poll-status and
-    // uci-changes stay where they were.
-    assert.match(rules[0], /\{position:relative;order:1;/);
-    assert.equal((css.match(/order:/g) || []).length, 1);
+    const [indicator] = world.indicators;
+    assert.deepEqual([...indicator.classes], ["aurora-inbox-icon"]);
+    assert.deepEqual(world.log.moves, ["aurora-inbox"]);
     // The theme's uci-changes badge: -top-0.5 -right-0.5 min-h-3 min-w-3 px-0.5
     // text-[8px] font-bold leading-none rounded-full bg-danger text-on-brand.
     const badge = css.slice(css.indexOf("[data-count]::after{"));
@@ -422,6 +431,14 @@ test("the injected style draws the icon and badge for Aurora only", async () => 
       "line-height:1",
     ])
       assert.ok(badge.includes(declaration), declaration);
+  });
+});
+
+test("a theme that shows indicator text keeps LuCI's plain label", async () => {
+  await run({ storage: fresh({ notices: [notice()], muted: false }), indicatorFontSize: "13px" }, (world) => {
+    const [indicator] = world.indicators;
+    assert.deepEqual([...indicator.classes], []);
+    assert.match(indicator.textContent, /^Inbox \d+$/);
   });
 });
 
