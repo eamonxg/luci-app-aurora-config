@@ -259,15 +259,13 @@ test("studio: publishing starts here, next to export/import", async () => {
 const headerBlock = (src) =>
   src.slice(src.indexOf("    const versionEntry ="), src.indexOf("    m.description = headerBar;"));
 
-test("header: each package is its muted name, then its installed x.y.z in the theme's green .label", async () => {
+test("header: each package is its muted name, then its full installed version in the theme's green .label", async () => {
   const src = await readFile(SRC, "utf8");
   const head = headerBlock(src);
   assert.match(head, /E\("span", attrs, \[\s*E\("b", \{\}, label\),/);
-  // Current is the theme's own success colour; the full version string rides in title.
-  assert.match(
-    head,
-    /installed \? \{ class: "label success", title: installed \} : \{ class: "label" \},\s*installed \? feedCheck\.shortVersion\(installed\) : _\("Unknown"\),/,
-  );
+  // Current is the theme's own success colour, and the version is shown whole.
+  assert.match(head, /\{ class: installed \? "label success" : "label" \},\s*installed \|\| _\("Unknown"\),/);
+  assert.ok(!src.includes("shortVersion"));
   assert.match(head, /versionEntry\(\{ id: "theme-version" \}, _\("Theme"\), installedVersions\?\.theme\?\.installed_version\)/);
   assert.match(head, /versionEntry\(\{ id: "config-version" \}, _\("Config"\), installedVersions\?\.config\?\.installed_version\)/);
   assert.match(head, /const versionArea = E\("div", \{ class: "aurora-studio-versions" \}/);
@@ -292,10 +290,8 @@ test("header: a newer build turns that package's label to warning and hangs → 
     block,
     /entry\.classList\.add\("up"\);\s*entry\.querySelector\("\.label"\)\.className = "label warning";\s*entry\.appendChild\(E\("span", \{ class: "arrow", "aria-hidden": "true" \}, "→"\)\);/,
   );
-  assert.match(block, /E\("a", \{ href: L\.url\(packagePagePath\), title: available \}, \[label\]\)/);
-  assert.match(block, /_\("%s available"\)\.format\(/);
-  // A rebuild of the same x.y.z differs only in its r-stamp; then the stamp is shown.
-  assert.match(block, /short === feedCheck\.shortVersion\(installed\) \? available : short/);
+  assert.match(block, /E\("a", \{ href: L\.url\(packagePagePath\) \}, \[label\]\)/);
+  assert.match(block, /const label = _\("%s available"\)\.format\(available\);/);
   assert.match(src, /const packagePagePath = feedCheck\.pickPackageManagerPath\(menuTree\);/);
   assert.ok(!block.includes("innerHTML"));
   // It stays on this line: nothing here feeds the inbox or the header count.

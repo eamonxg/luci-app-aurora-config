@@ -109,17 +109,3 @@ test("pickPackageManagerPath yields null when there is no software page", async 
   );
 });
 
-test("shortVersion shows x.y.z and leaves anything else as it is", async () => {
-  const m = await load();
-  assert.equal(m.shortVersion("1.3.7-r20260916"), "1.3.7");
-  assert.equal(m.shortVersion("1.2.1"), "1.2.1");
-  assert.equal(m.shortVersion("v1.3.7-r1"), "1.3.7");
-  assert.equal(m.shortVersion("1.3.7~abc"), "1.3.7");
-  // Not x.y.z: say what is installed rather than a guess at it.
-  assert.equal(m.shortVersion("26.192.49224.6b21ba7"), "26.192.49224.6b21ba7");
-  assert.equal(m.shortVersion("1.3.71.2"), "1.3.71.2");
-  assert.equal(m.shortVersion("git-abc"), "git-abc");
-  assert.equal(m.shortVersion(""), "");
-  assert.equal(m.shortVersion(null), "");
-  assert.equal(m.shortVersion(undefined), "");
-});

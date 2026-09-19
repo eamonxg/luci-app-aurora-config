@@ -2642,8 +2642,8 @@ return view.extend({
         E("b", {}, label),
         E(
           "span",
-          installed ? { class: "label success", title: installed } : { class: "label" },
-          installed ? feedCheck.shortVersion(installed) : _("Unknown"),
+          { class: installed ? "label success" : "label" },
+          installed || _("Unknown"),
         ),
       ]);
 
@@ -2718,18 +2718,14 @@ return view.extend({
         if (!feedCheck.isNewer(installed, available)) return;
         const entry = versionArea.querySelector("#" + id);
         if (!entry || entry.classList.contains("up")) return;
-        // 同一个 x.y.z 的重建只有 r 戳不同,那时把完整版本串写出来。
-        const short = feedCheck.shortVersion(available);
-        const label = _("%s available").format(
-          short === feedCheck.shortVersion(installed) ? available : short,
-        );
+        const label = _("%s available").format(available);
         entry.classList.add("up");
         entry.querySelector(".label").className = "label warning";
         entry.appendChild(E("span", { class: "arrow", "aria-hidden": "true" }, "→"));
         entry.appendChild(
           packagePagePath
-            ? E("a", { href: L.url(packagePagePath), title: available }, [label])
-            : E("span", { title: available }, [label]),
+            ? E("a", { href: L.url(packagePagePath) }, [label])
+            : E("span", {}, [label]),
         );
       });
     };
